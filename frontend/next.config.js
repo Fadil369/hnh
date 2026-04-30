@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  output: 'export',
+  images: { unoptimized: true },
   env: {
-    API_URL: process.env.API_URL || 'https://hnh-gharnata-api.brainsait-fadil.dev',
+    API_URL: process.env.API_URL || 'https://hnh-gharnata-api.brainsait-fadil.workers.dev',
+    BSMA_API: process.env.BSMA_API || 'https://bsma.elfadil.com',
   },
 }
 
