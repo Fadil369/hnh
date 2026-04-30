@@ -92,12 +92,13 @@ async function handleEligibility(request, env) {
   return new Response(JSON.stringify({ eligibility: result || { status: 'pending' }, source: result ? 'cache' : 'oracle' }), { headers: jsonHeaders });
 }
 
-addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event));
-});
+export default {
+  async fetch(request, env, ctx) {
+    return handleRequest(request, env);
+  }
+};
 
-async function handleRequest(event) {
-  const request = event.request;
+async function handleRequest(request, env) {
   const url = new URL(request.url);
   const path = url.pathname;
   const method = request.method;
@@ -116,12 +117,12 @@ async function handleRequest(event) {
   }
 
   try {
-    if (path.startsWith('/api/patients')) return await handlePatients(request, event);
-    if (path.startsWith('/api/appointments')) return await handleAppointments(request, event);
-    if (path.startsWith('/api/eligibility')) return await handleEligibility(request, event);
-    if (path.startsWith('/api/claims')) return await handleClaims(request, event);
-    if (path.startsWith('/api/providers')) return await handleProviders(request, event);
-    if (path.startsWith('/api/departments')) return await handleDepartments(request, event);
+    if (path.startsWith('/api/patients')) return await handlePatients(request, env);
+    if (path.startsWith('/api/appointments')) return await handleAppointments(request, env);
+    if (path.startsWith('/api/eligibility')) return await handleEligibility(request, env);
+    if (path.startsWith('/api/claims')) return await handleClaims(request, env);
+    if (path.startsWith('/api/providers')) return await handleProviders(request, env);
+    if (path.startsWith('/api/departments')) return await handleDepartments(request, env);
     return new Response(JSON.stringify({ error: 'Not found' }), { status: 404, headers: jsonHeaders });
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: jsonHeaders });
