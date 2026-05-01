@@ -404,31 +404,19 @@ CREATE INDEX IF NOT EXISTS idx_rag_category ON rag_documents(category);
 -- SCHEMA MIGRATIONS (v2 → v3: Unified Hub)
 -- ============================================
 
--- Add contract_type alias (contracts had contract_class; add contract_type for SBS portal)
--- SQLite ALTER TABLE: only ADD COLUMN is supported
-CREATE TABLE IF NOT EXISTS contracts_v3 (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    payer_id TEXT NOT NULL,
-    payer_name TEXT,
-    contract_type TEXT,
-    contract_class TEXT,
-    start_date TEXT,
-    end_date TEXT,
-    status TEXT DEFAULT 'active',
-    discount_percentage REAL,
-    tariff_rules TEXT,
-    contract_details TEXT,
-    oracle_contract_id TEXT,
-    created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now'))
-);
+-- Add missing columns to contracts table (needed by SBS portal)
+ALTER TABLE contracts ADD COLUMN contract_type TEXT;
+ALTER TABLE contracts ADD COLUMN contract_details TEXT;
+ALTER TABLE contracts ADD COLUMN updated_at TEXT DEFAULT (datetime('now'));
 
--- Add updated_at to prior_authorizations if not exists (migration guard via CREATE TABLE)
-CREATE TABLE IF NOT EXISTS prior_authorizations_meta (
-    pa_id INTEGER PRIMARY KEY,
-    updated_at TEXT DEFAULT (datetime('now')),
-    FOREIGN KEY (pa_id) REFERENCES prior_authorizations(id)
-);
+-- Backfill contract_type from legacy contract_class where not yet set
+UPDATE contracts
+SET contract_type = contract_class
+WHERE contract_type IS NULL
+  AND contract_class IS NOT NULL;
+
+-- Add updated_at to prior_authorizations (needed for NPHIES PA async callback)
+ALTER TABLE prior_authorizations ADD COLUMN updated_at TEXT DEFAULT (datetime('now'));
 
 -- Portal session tracking
 CREATE TABLE IF NOT EXISTS portal_sessions (

@@ -9,14 +9,17 @@ binding = "DB"
 database_name = "hnh-gharnata"
 database_id = "d6960732-d5d0-4271-84e9-ba988c9c32dc"
 
-# Environment variables
+# Non-secret environment variables
 [vars]
 ORACLE_BRIDGE_URL = "https://oracle-bridge.brainsait.org"
-ORACLE_API_KEY = "bsma-oracle-b2af3196522b556636b09f5d268cb976"
 NPHIES_MIRROR_URL = "https://nphies-mirror.brainsait-fadil.workers.dev"
-API_KEY = "hnh-gharnata-2026-secure-key"
 FACILITY_LICENSE = "10000000000988"
 HUB_VERSION = "3.0.0"
+
+# Secrets — set these via wrangler CLI or CI, do NOT commit values here:
+#   wrangler secret put ORACLE_API_KEY
+#   wrangler secret put API_KEY
+#   wrangler secret put NPHIES_TOKEN
 
 # Custom domains (requires Cloudflare zone configuration)
 # routes = [
