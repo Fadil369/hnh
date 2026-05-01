@@ -425,8 +425,21 @@ async function handleNphies(req, env, sub) {
   }
   if (sub === '/eligibility') return handleEligibility(req, env);
   if (sub === '/gss') {
-    const d = await nphiesMirror(env, '/gss/gharnata');
-    return ok({ data: d, source: 'nphies-mirror' });
+    // /gss/gharnata needs a sync first if no cached data
+    let d = await nphiesMirror(env, '/gss/gharnata');
+    if (!d?.ok) {
+      // Try to trigger sync
+      try {
+        const base = env.NPHIES_MIRROR_URL || 'https://nphies-mirror.brainsait-fadil.workers.dev';
+        await fetch(\`\${base}/mirror/sync\`, { method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({facility:'gharnata'}) });
+        d = await nphiesMirror(env, '/gss/gharnata');
+      } catch {}
+    }
+    // Fall back to mirror status if no GSS data
+    const status = d?.ok ? d : await nphiesMirror(env, '/mirror/status');
+    return ok({ data: status, source: 'nphies-mirror', synced: d?.ok || false });
   }
   if (sub === '/prior-auth') return handlePriorAuth(req, env);
   if (sub === '/network') {
@@ -1170,7 +1183,7 @@ async function handlePortalHub(req, env, sub) {
     return ok({ source: 'fallback', data: null });
   }
 
-  // /api/portal/coverage — insurance coverage records (from brainsait-healthcare-d1)
+  // /api/portal/coverage — insurance coverage records (from SBS HEALTHCARE_DB)
   if (sub === '/coverage') {
     const r = await fetch('https://sbs.elfadil.com/claimlinc/coverage/batch', {
       method: 'POST',
@@ -1179,7 +1192,14 @@ async function handlePortalHub(req, env, sub) {
     }).catch(() => null);
     if (r?.ok) {
       const d = await r.json();
-      return ok({ source: 'sbs-live', ...d });
+      return ok({ source: 'sbs-healthcare-d1', total: d.total, coverage: d.coverage });
+    }
+    // Direct fallback: hnh-gharnata insurance table
+    const ins = await env.DB.prepare(
+      'SELECT id, payer_code as member_id, payer_name, plan_name, status FROM insurance LIMIT 50'
+    ).all().catch(()=>({results:[]}));
+    if (ins?.results?.length > 0) {
+      return ok({ source: 'hnh-d1', total: ins.results.length, coverage: ins.results });
     }
     return ok({ coverage: [], total: 0, source: 'unavailable' });
   }
