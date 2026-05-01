@@ -409,7 +409,9 @@ ALTER TABLE contracts ADD COLUMN contract_type TEXT;
 ALTER TABLE contracts ADD COLUMN contract_details TEXT;
 ALTER TABLE contracts ADD COLUMN updated_at TEXT DEFAULT (datetime('now'));
 
--- Backfill contract_type from legacy contract_class where not yet set
+-- Backfill contract_type from legacy contract_class where not yet set.
+-- NOTE: This runs on each schema apply but is safe — WHERE contract_type IS NULL
+-- ensures it only touches rows that haven't been migrated yet.
 UPDATE contracts
 SET contract_type = contract_class
 WHERE contract_type IS NULL

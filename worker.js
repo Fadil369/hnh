@@ -337,7 +337,7 @@ async function handleVisits(request, env) {
     const result = await env.DB.prepare(
       `UPDATE visits SET diagnosis_code = ?, diagnosis_description = ?, status = ? WHERE id = ?`
     ).bind(data.diagnosis_code, data.diagnosis_description, data.status || 'open', visitId).run();
-    if (!result.meta || !result.meta.changes) {
+    if (!result.meta || result.meta.changes < 1) {
       return new Response(JSON.stringify({ error: 'Visit not found' }), { status: 404, headers: JSON_HEADERS });
     }
     return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
@@ -602,7 +602,7 @@ async function handleNphies(request, env) {
           url: oracleBridgeBase,
           error: !oracleReachable
             ? (oracleCheck.status === 'rejected'
-              ? (oracleCheck.reason?.message || String(oracleCheck.reason))
+              ? (oracleCheck.reason?.message || JSON.stringify(oracleCheck.reason) || 'unknown error')
               : `HTTP ${oracleCheck.value?.status || 'unknown'}`)
             : undefined,
         },
@@ -692,8 +692,8 @@ async function handleContracts(request, env) {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     ).bind(
       data.payer_id, data.payer_name,
-      data.contract_type || data.contract_class,
-      data.contract_type,
+      data.contract_class || data.contract_type,   // contract_class: legacy field, prefer explicit class value
+      data.contract_type || data.contract_class,   // contract_type: new field, fall back to class if unset
       data.start_date, data.end_date,
       data.status || 'active',
       data.discount_percentage || null,
@@ -812,9 +812,16 @@ async function handleSchema(env) {
 
 // ─── Auth Helper ───────────────────────────────────────────────────────────
 function requireApiKey(request, env) {
-  const key = request.headers.get('X-API-Key') || '';
   const expected = env.API_KEY || '';
-  if (!expected || key === expected) return null; // pass if no key configured or key matches
+  // Fail closed: if API_KEY is not configured, deny all protected requests
+  if (!expected) {
+    return new Response(
+      JSON.stringify({ error: 'Service unavailable: API_KEY secret is not configured.' }),
+      { status: 503, headers: JSON_HEADERS }
+    );
+  }
+  const key = request.headers.get('X-API-Key') || '';
+  if (key === expected) return null; // authenticated
   return new Response(
     JSON.stringify({ error: 'Unauthorized. Provide a valid X-API-Key header.' }),
     { status: 401, headers: JSON_HEADERS }
