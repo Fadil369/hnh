@@ -1,40 +1,41 @@
-name = "hnh-gharnata-api"
-main = "worker.js"
-compatibility_date = "2025-04-01"
-# account_id = "your-cloudflare-account-id"  # Set via CLOUDFLARE_ACCOUNT_ID env var or wrangler login
+# HNH Unified Worker — wrangler.toml
+# Replaces: hnh-portal + hnh-gharnata-api → hnh-unified (v4.0.0)
 
-# D1 Database binding
+name = "hnh-unified"
+main = "worker.js"
+compatibility_date = "2026-05-01"
+account_id = "d7b99530559ab4f2545e9bdc72a7ab9b"
+
+[ai]
+binding = "AI"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "hnh-gharnata"
 database_id = "d6960732-d5d0-4271-84e9-ba988c9c32dc"
 
-# Non-secret environment variables
 [vars]
-ORACLE_BRIDGE_URL = "https://oracle-bridge.brainsait.org"
-NPHIES_MIRROR_URL = "https://nphies-mirror.brainsait-fadil.workers.dev"
-FACILITY_LICENSE = "10000000000988"
-HUB_VERSION = "3.0.0"
+ORACLE_BRIDGE_URL  = "https://oracle-bridge.brainsait.org"
+NPHIES_MIRROR_URL  = "https://nphies-mirror.brainsait-fadil.workers.dev"
+FACILITY_LICENSE   = "10000000000988"
+HOSPITAL_NAME      = "Hayat National Hospital - Gharnata"
+HUB_VERSION        = "4.0.0"
 
-# Secrets — set these via wrangler CLI or CI, do NOT commit values here:
+# Secrets (set via wrangler secret put, never commit values):
 #   wrangler secret put ORACLE_API_KEY
 #   wrangler secret put API_KEY
 #   wrangler secret put NPHIES_TOKEN
+#   wrangler secret put ELEVENLABS_API_KEY
 
-# Custom domains (requires Cloudflare zone configuration)
-# routes = [
-#   { pattern = "api.elfadil.com/*", zone_name = "elfadil.com" },
-#   { pattern = "bsma.elfadil.com/api/*", zone_name = "elfadil.com" },
-#   { pattern = "givc.elfadil.com/api/*", zone_name = "elfadil.com" },
-#   { pattern = "sbs.elfadil.com/api/*", zone_name = "elfadil.com" },
-# ]
+# Custom domain (add after DNS points to this worker):
+# [[routes]]
+# pattern = "hnh.brainsait.org/*"
+# zone_name = "brainsait.org"
 
-# Staging environment
 [env.staging]
-name = "hnh-unified-hub-staging"
-vars = { NPHIES_ENVIRONMENT = "sandbox", HUB_VERSION = "3.0.0-staging" }
+name = "hnh-unified-staging"
+vars = { HUB_VERSION = "4.0.0-staging" }
 
-# Production environment
 [env.production]
-name = "hnh-unified-hub-production"
-vars = { NPHIES_ENVIRONMENT = "production", HUB_VERSION = "3.0.0" }
+name = "hnh-unified"
+vars = { HUB_VERSION = "4.0.0" }
