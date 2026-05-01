@@ -18,16 +18,23 @@ function ThemeToggle({ dark, onToggle }: { dark: boolean; onToggle: () => void }
 
 const NAV_ITEMS = [
   { href: '/', label: 'الرئيسية', labelEn: 'Home', icon: '🏠' },
+  { href: '/portal', label: 'المنافذ', labelEn: 'Portals', icon: '🌐' },
   { href: '/patients', label: 'المرضى', labelEn: 'Patients', icon: '👤' },
   { href: '/appointments', label: 'المواعيد', labelEn: 'Appointments', icon: '📅' },
-  { href: '/providers', label: 'الأطباء', labelEn: 'Providers', icon: '👨‍⚕️' },
+  { href: '/eligibility', label: 'الأهلية', labelEn: 'Eligibility', icon: '✅' },
   { href: '/claims', label: 'المطالبات', labelEn: 'Claims', icon: '📋' },
-  { href: '/knowledge', label: 'المعرفة', labelEn: 'KB', icon: '📚' },
+]
+
+const PORTAL_NAV = [
+  { href: '/givc', label: 'GIVC', icon: '🩺', color: 'bg-emerald-600' },
+  { href: '/sbs', label: 'SBS', icon: '💰', color: 'bg-violet-600' },
+  { href: '/nphies', label: 'NPHIES', icon: '🏛️', color: 'bg-amber-600' },
 ]
 
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
   const [dark, setDark] = useState(false)
   const [mobileMenu, setMobileMenu] = useState(false)
+  const [portalMenu, setPortalMenu] = useState(false)
 
   useEffect(() => {
     const saved = localStorage.getItem('hnh-theme')
@@ -37,6 +44,12 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
       setDark(true)
       document.documentElement.classList.add('dark')
     }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setPortalMenu(false); setMobileMenu(false) }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
   }, [])
 
   const toggleDark = () => {
@@ -70,6 +83,51 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
                   {item.icon} {item.label}
                 </a>
               ))}
+
+              {/* Portal Switcher */}
+              <div className="relative">
+                <button
+                  onClick={() => setPortalMenu(!portalMenu)}
+                  aria-haspopup="menu"
+                  aria-expanded={portalMenu}
+                  className="px-3 py-1.5 rounded-lg text-sm hover:opacity-80 transition-opacity flex items-center gap-1"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
+                >
+                  🌐 بوابات
+                  <span className="text-xs opacity-70">▾</span>
+                </button>
+                {portalMenu && (
+                  <div
+                    role="menu"
+                    className="absolute left-0 top-full mt-1 rounded-xl shadow-xl overflow-hidden z-50 min-w-40"
+                    style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+                  >
+                    {PORTAL_NAV.map(p => (
+                      <a
+                        key={p.href}
+                        href={p.href}
+                        role="menuitem"
+                        onClick={() => setPortalMenu(false)}
+                        className="flex items-center gap-2 px-4 py-3 text-sm hover:opacity-80 transition-opacity"
+                        style={{ color: 'var(--text)' }}
+                      >
+                        <span className={`${p.color} text-white px-2 py-0.5 rounded text-xs font-bold`}>{p.label}</span>
+                        <span>{p.icon}</span>
+                      </a>
+                    ))}
+                    <a
+                      href="https://portal.nphies.sa"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      role="menuitem"
+                      className="flex items-center gap-2 px-4 py-3 text-sm hover:opacity-80 transition-opacity border-t"
+                      style={{ color: 'var(--text-secondary)', borderColor: 'var(--border)' }}
+                    >
+                      <span className="text-xs">↗ portal.nphies.sa</span>
+                    </a>
+                  </div>
+                )}
+              </div>
             </nav>
 
             <div className="flex items-center gap-2">
@@ -98,6 +156,18 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
                   <span className="opacity-60 mr-2" dir="ltr">({item.labelEn})</span>
                 </a>
               ))}
+              <div className="border-t my-1" style={{ borderColor: 'rgba(255,255,255,0.2)' }} />
+              {PORTAL_NAV.map(p => (
+                <a
+                  key={p.href}
+                  href={p.href}
+                  onClick={() => setMobileMenu(false)}
+                  className="px-3 py-2 rounded-lg text-sm"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
+                >
+                  {p.icon} {p.label}
+                </a>
+              ))}
             </nav>
           )}
         </div>
@@ -109,6 +179,14 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
 
       <footer className="border-t py-6 mt-12" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
         <div className="container mx-auto px-4 text-center">
+          <div className="flex flex-wrap justify-center gap-3 mb-3 text-xs">
+            <a href="/portal" className="hover:underline" style={{ color: 'var(--primary)' }}>🌐 Hub</a>
+            <a href="https://bsma.elfadil.com" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--primary)' }}>🙂 BSMA</a>
+            <a href="https://givc.elfadil.com" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--primary)' }}>🩺 GIVC</a>
+            <a href="https://sbs.elfadil.com" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--primary)' }}>💰 SBS</a>
+            <a href="https://portal.nphies.sa" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--primary)' }}>🏛️ NPHIES</a>
+            <a href="https://oracle-bridge.brainsait.org" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--primary)' }}>🔷 Oracle</a>
+          </div>
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
             © 2026 مستشفى حيات الوطني - غرنطا | Powered by{' '}
             <a href="https://brainsait.org" className="underline hover:opacity-80" style={{ color: 'var(--primary)' }}>
@@ -116,7 +194,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
             </a>
           </p>
           <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>
-            Hayat National Hospital · Gharnata Branch · جميع الحقوق محفوظة
+            Hayat National Hospital · Gharnata Branch · Unified Hub v3.0 · جميع الحقوق محفوظة
           </p>
         </div>
       </footer>
@@ -125,3 +203,4 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
     </>
   )
 }
+
