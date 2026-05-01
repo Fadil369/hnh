@@ -29,6 +29,8 @@ export default function NphiesPage() {
   const [eligResult, setEligResult] = useState<EligibilityResult | null>(null)
   const [eligLoading, setEligLoading] = useState(false)
   const [tab, setTab] = useState<'status' | 'eligibility' | 'pa' | 'gss'>('status')
+  const [gssData, setGssData] = useState<Record<string, unknown> | null>(null)
+  const [gssLoading, setGssLoading] = useState(false)
 
   useEffect(() => {
     fetchStatus()
@@ -264,7 +266,7 @@ export default function NphiesPage() {
       {tab === 'gss' && (
         <div className="card p-6">
           <h3 className="text-lg font-bold mb-4">بيانات GSS (قائمة الدافعين) | GSS Data</h3>
-          <div className="p-8 text-center rounded-lg" style={{ backgroundColor: 'var(--bg)' }}>
+          <div className="p-8 text-center rounded-lg mb-4" style={{ backgroundColor: 'var(--bg)' }}>
             <div className="text-4xl mb-2">📡</div>
             <p style={{ color: 'var(--text-secondary)' }}>
               بيانات GSS متزامنة من NPHIES Mirror
@@ -274,17 +276,26 @@ export default function NphiesPage() {
             </p>
             <button
               onClick={async () => {
+                setGssLoading(true)
                 try {
                   const res = await fetch(`${API}/api/nphies/gss`)
                   const data = await res.json()
-                  alert(JSON.stringify(data, null, 2).slice(0, 500) + '...')
-                } catch { alert('فشل في جلب بيانات GSS') }
+                  setGssData(data)
+                } catch { setGssData({ error: 'فشل في جلب بيانات GSS' }) }
+                setGssLoading(false)
               }}
               className="btn-primary mt-4"
+              disabled={gssLoading}
             >
-              جلب بيانات GSS
+              {gssLoading ? 'جاري الجلب...' : 'جلب بيانات GSS'}
             </button>
           </div>
+          {gssData && (
+            <div className="rounded-lg overflow-auto max-h-96 p-4 text-xs font-mono"
+              style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)' }}>
+              <pre>{JSON.stringify(gssData, null, 2)}</pre>
+            </div>
+          )}
         </div>
       )}
     </div>

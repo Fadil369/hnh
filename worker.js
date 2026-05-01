@@ -41,12 +41,13 @@ async function nphiesLookup(env, type, branch = 'gharnata') {
 
 // ─── NPHIES Direct Client (portal.nphies.sa) ──────────────────────────────
 async function nphiesDirect(env, path, options = {}) {
+  if (!env.NPHIES_TOKEN) return null;
   const base = 'https://portal.nphies.sa';
   try {
     const res = await fetch(`${base}${path}`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${env.NPHIES_TOKEN || ''}`,
+        'Authorization': `Bearer ${env.NPHIES_TOKEN}`,
         'X-Facility': FACILITY_LICENSE,
         ...options.headers,
       },
@@ -402,7 +403,7 @@ async function handleLabResults(request, env) {
   let oracleResults = null;
   if (patientId) {
     try {
-      const or = await oracleBridge(env, `/api/lab/results?patient_id=${patientId}`);
+      const or = await oracleBridge(env, `/api/lab/results?patient_id=${encodeURIComponent(patientId)}`);
       if (or.ok) oracleResults = await or.json();
     } catch {}
   }
@@ -703,6 +704,7 @@ async function handleOracleSync(request, env) {
       const res = await oracleBridge(env, `/api/${mod}/sync?facility=${FACILITY_LICENSE}`);
       results[mod] = res.ok ? await res.json() : { error: 'sync failed' };
     } catch (e) {
+      console.error(`Oracle sync failed for module ${mod}:`, e.message);
       results[mod] = { error: e.message };
     }
   }

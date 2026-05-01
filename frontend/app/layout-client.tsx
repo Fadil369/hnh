@@ -44,6 +44,12 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
       setDark(true)
       document.documentElement.classList.add('dark')
     }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setPortalMenu(false); setMobileMenu(false) }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
   }, [])
 
   const toggleDark = () => {
@@ -82,6 +88,8 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
               <div className="relative">
                 <button
                   onClick={() => setPortalMenu(!portalMenu)}
+                  aria-haspopup="menu"
+                  aria-expanded={portalMenu}
                   className="px-3 py-1.5 rounded-lg text-sm hover:opacity-80 transition-opacity flex items-center gap-1"
                   style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
                 >
@@ -89,12 +97,16 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
                   <span className="text-xs opacity-70">▾</span>
                 </button>
                 {portalMenu && (
-                  <div className="absolute left-0 top-full mt-1 rounded-xl shadow-xl overflow-hidden z-50 min-w-40"
-                    style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}>
+                  <div
+                    role="menu"
+                    className="absolute left-0 top-full mt-1 rounded-xl shadow-xl overflow-hidden z-50 min-w-40"
+                    style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+                  >
                     {PORTAL_NAV.map(p => (
                       <a
                         key={p.href}
                         href={p.href}
+                        role="menuitem"
                         onClick={() => setPortalMenu(false)}
                         className="flex items-center gap-2 px-4 py-3 text-sm hover:opacity-80 transition-opacity"
                         style={{ color: 'var(--text)' }}
@@ -107,6 +119,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
                       href="https://portal.nphies.sa"
                       target="_blank"
                       rel="noopener noreferrer"
+                      role="menuitem"
                       className="flex items-center gap-2 px-4 py-3 text-sm hover:opacity-80 transition-opacity border-t"
                       style={{ color: 'var(--text-secondary)', borderColor: 'var(--border)' }}
                     >
