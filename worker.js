@@ -557,7 +557,7 @@ async function handleChat(request, env) {
   if (!env.AI) {
     return jsonRes({
       success: true,
-      response: 'أهلاً! أنا بسمة، مساعدة مستشفى حيات. يمكنني مساعدتك في حجز المواعيد والاستفسارات الطبية. Hello! I\'m Basma, Hayat Hospital\'s AI assistant.',
+      response: 'أهلاً! أنا بسمة، مساعدة مستشفى الحياة الوطني. يمكنني مساعدتك في حجز المواعيد والاستفسارات الطبية. Hello! I\'m Basma, Hayat Hospital\'s AI assistant.',
       session_id: sid,
     });
   }
@@ -594,7 +594,7 @@ function serveHTML(lang = 'ar') {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${t('مستشفى حيات الوطني | HNH', 'Hayat National Hospital | HNH')}</title>
+<title>${t('مستشفيات الحياة الوطني | HNH', 'Hayat National Hospital | HNH')}</title>
 <meta name="description" content="${t('مجموعة مستشفيات الحياة الوطني — 25+ عاماً من التميز', 'Hayat National Hospitals Group — 25+ years of excellence')}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
@@ -725,7 +725,7 @@ body { font-family: var(--font); color: var(--text); background: var(--bg); line
   <div class="header-inner">
     <a href="/" class="logo">
       <div class="logo-icon">🏥</div>
-      <div class="logo-text">${t('حيات الوطني', 'Hayat National')}<small>BrainSAIT Healthcare OS v${VERSION}</small></div>
+      <div class="logo-text">${t('الحياة الوطني', 'Hayat National')}<small>BrainSAIT Healthcare OS v${VERSION}</small></div>
     </a>
     <nav class="nav" id="mainNav">
       <a href="#departments">${t('الأقسام', 'Departments')}</a>
@@ -794,7 +794,7 @@ body { font-family: var(--font); color: var(--text); background: var(--bg); line
   <div class="container">
     <div class="footer-grid">
       <div>
-        <h4>${t('مستشفى حيات الوطني', 'Hayat National Hospital')}</h4>
+        <h4>${t('مستشفى الحياة الوطني', 'Hayat National Hospital')}</h4>
         <p style="font-size:0.88rem;margin-bottom:12px;">${t('نظام BrainSAIT Healthcare OS — Oracle + NPHIES', 'BrainSAIT Healthcare OS — Oracle + NPHIES')}</p>
         <div class="api-live" style="display:inline-flex;">● API v${VERSION}</div>
       </div>
@@ -812,7 +812,7 @@ body { font-family: var(--font); color: var(--text); background: var(--bg); line
         <a href="https://wa.me/966920000094">${t('واتساب', 'WhatsApp')}</a>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 ${t('مستشفى حيات الوطني', 'Hayat National Hospital')} — BrainSAIT Healthcare OS ${VERSION}</div>
+    <div class="footer-bottom">© 2026 ${t('مستشفى الحياة الوطني', 'Hayat National Hospital')} — BrainSAIT Healthcare OS ${VERSION}</div>
   </div>
 </footer>
 
