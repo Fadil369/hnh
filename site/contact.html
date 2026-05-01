@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اتصل بنا | مستشفى الحياة الوطني</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="header"><div class="container header-inner"><a href="index.html" class="logo"><div class="logo-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="logo-text">الحياة الوطني<small>BrainSAIT</small></div></a><nav class="nav"><a href="index.html">الرئيسية</a><a href="departments.html">الأقسام</a><a href="doctors.html">أطباؤنا</a><a href="branches.html">فروعنا</a><a href="contact.html">اتصل بنا</a><a href="contact.html" class="nav-cta">احجز موعد</a></nav><button class="mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button></div></header>
+
+<section class="page-hero"><div class="container"><div class="breadcrumb"><a href="index.html">الرئيسية</a><span>/</span><span>اتصل بنا</span></div><h1>اتصل بنا</h1><p>نحن هنا لمساعدتك في أي وقت</p></div></section>
+
+<section class="section bg-white"><div class="container">
+  <div class="contact-grid">
+    <div class="animate-left">
+      <h3 style="margin-bottom:24px;">حجز موعد</h3>
+      <form id="appointmentForm" onsubmit="bookAppointment(event)">
+        <div class="form-row">
+          <div class="form-group"><label>الاسم الكامل</label><input type="text" id="aptName" required></div>
+          <div class="form-group"><label>رقم الجوال</label><input type="tel" id="aptPhone" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="aptEmail"></div>
+          <div class="form-group"><label>رقم الهوية/الإقامة</label><input type="text" id="aptNationalId"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>الفرع</label><select id="aptBranch" required><option value="">اختر الفرع</option></select></div>
+          <div class="form-group"><label>التخصص</label><select id="aptSpec" required><option value="">اختر التخصص</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>تاريخ الموعد</label><input type="date" id="aptDate" required></div>
+          <div class="form-group"><label>وقت الموعد</label><select id="aptTime" required>
+            <option value="">اختر الوقت</option>
+            <option value="08:00">08:00 ص</option><option value="09:00">09:00 ص</option><option value="10:00">10:00 ص</option>
+            <option value="11:00">11:00 ص</option><option value="12:00">12:00 م</option><option value="13:00">01:00 م</option>
+            <option value="14:00">02:00 م</option><option value="15:00">03:00 م</option><option value="16:00">04:00 م</option>
+            <option value="17:00">05:00 م</option><option value="18:00">06:00 م</option><option value="19:00">07:00 م</option>
+            <option value="20:00">08:00 م</option><option value="21:00">09:00 م</option>
+          </select></div>
+        </div>
+        <div class="form-group"><label>ملاحظات</label><textarea id="aptNotes" rows="3" placeholder="أي ملاحظات إضافية..."></textarea></div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;" id="aptSubmitBtn">تأكيد الحجز</button>
+      </form>
+    </div>
+    <div class="animate-right">
+      <h3 style="margin-bottom:24px;">معلومات التواصل</h3>
+      <div class="contact-info-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div><div><h4>الهاتف</h4><p><a href="tel:966920000094" style="color:var(--primary);font-weight:600;">+966920000094</a></p></div></div>
+      <div class="contact-info-card"><div class="icon-box" style="background:var(--gradient-accent);"><svg viewBox="0 0 24 24" style="fill:var(--navy);"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><div><h4>البريد الإلكتروني</h4><p><a href="mailto:info@hayathospitals.com" style="color:var(--primary);">info@hayathospitals.com</a></p></div></div>
+      <div class="contact-info-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div><div><h4>المقر الرئيسي</h4><p>المملكة العربية السعودية</p><p style="font-size:0.9rem;color:var(--text-light);">طريق الرياض الدائري الشرحي — حي الربوة</p></div></div>
+      <div class="contact-info-card"><div class="icon-box" style="background:var(--gradient-accent);"><svg viewBox="0 0 24 24" style="fill:var(--navy);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/></svg></div><div><h4>ساعات العمل</h4><p>العيادات الخارجية: 8 صباحاً - 10 مساءً</p><p>الطوارئ: 24 ساعة / 7 أيام</p></div></div>
+
+      <div style="margin-top:24px;padding:20px;background:var(--bg-light);border-radius:var(--radius-md);">
+        <h4 style="margin-bottom:12px;">النظام المتصل</h4>
+        <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:8px;">هذا النموذج متصل مباشرة بـ BrainSAIT Healthcare OS</p>
+        <span class="api-status live">● hnh.brainsait.org/api</span>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section class="cta-section"><div class="container"><h2>صحتك أولاً</h2><p>اتصل بنا الآن</p><div class="cta-buttons"><a href="tel:966920000094" class="btn btn-accent btn-lg">اتصل بنا</a></div></div></section>
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>© 2026 مستشفى الحياة الوطني — BrainSAIT Healthcare OS</p></div></div></footer>
+
+<script src="js/common.js"></script>
+<script>
+// Populate branch and specialty dropdowns from live API
+(async () => {
+  try {
+    const [{ branches }, { providers }] = await Promise.all([HNH.getBranches(), HNH.getProviders()]);
+    const l = HNH.currentLang();
+    const branchSel = document.getElementById('aptBranch');
+    branches.forEach(b => {
+      const o = document.createElement('option');
+      o.value = b.id || b.name_en;
+      o.textContent = l==='ar' ? b.name_ar : b.name_en;
+      branchSel.appendChild(o);
+    });
+    const specs = [...new Set(providers.map(p => p.specialty).filter(Boolean))].sort();
+    const specSel = document.getElementById('aptSpec');
+    specs.forEach(s => {
+      const o = document.createElement('option');
+      o.value = s;
+      o.textContent = s;
+      specSel.appendChild(o);
+    });
+  } catch(e) { console.error('Failed to load form data:', e); }
+})();
+
+async function bookAppointment(e) {
+  e.preventDefault();
+  const btn = document.getElementById('aptSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'جاري الحجز...';
+
+  try {
+    // First register patient if needed
+    const patientData = {
+      first_name_ar: document.getElementById('aptName').value.split(' ')[0],
+      last_name_ar: document.getElementById('aptName').value.split(' ').slice(1).join(' '),
+      first_name_en: document.getElementById('aptName').value.split(' ')[0],
+      last_name_en: document.getElementById('aptName').value.split(' ').slice(1).join(' '),
+      phone: document.getElementById('aptPhone').value,
+      email: document.getElementById('aptEmail').value,
+      national_id: document.getElementById('aptNationalId').value || null,
+    };
+
+    // Create appointment
+    const aptData = {
+      patient_name: document.getElementById('aptName').value,
+      phone: document.getElementById('aptPhone').value,
+      branch: document.getElementById('aptBranch').value,
+      specialty: document.getElementById('aptSpec').value,
+      date: document.getElementById('aptDate').value,
+      time: document.getElementById('aptTime').value,
+      notes: document.getElementById('aptNotes').value,
+    };
+
+    const result = await HNH.createAppointment(aptData);
+    HNH.showToast(HNH.currentLang() === 'ar' ? 'تم حجز موعدك بنجاح!' : 'Appointment booked successfully!', 'success');
+    document.getElementById('appointmentForm').reset();
+  } catch(err) {
+    HNH.showToast(err.message || 'حدث خطأ، يرجى المحاولة مرة أخرى', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'تأكيد الحجز';
+  }
+}
+</script>
+</body>
+</html>

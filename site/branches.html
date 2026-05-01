@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فروعنا | مستشفى الحياة الوطني</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="header"><div class="container header-inner"><a href="index.html" class="logo"><div class="logo-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="logo-text">الحياة الوطني<small>BrainSAIT</small></div></a><nav class="nav"><a href="index.html">الرئيسية</a><a href="departments.html">الأقسام</a><a href="doctors.html">أطباؤنا</a><a href="branches.html">فروعنا</a><a href="contact.html">اتصل بنا</a><a href="contact.html" class="nav-cta">احجز موعد</a></nav><button class="mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button></div></header>
+
+<section class="page-hero"><div class="container"><div class="breadcrumb"><a href="index.html">الرئيسية</a><span>/</span><span>فروعنا</span></div><h1>فروعنا</h1><p>خمسة فروع في مختلف مناطق المملكة <span class="api-status live" style="margin-right:8px;">● Live API</span></p></div></section>
+
+<section class="section bg-white"><div class="container"><div class="grid-2" id="branchesGrid"><div class="loading"><div class="spinner"></div></div></div></div></section>
+
+<section class="cta-section"><div class="container"><h2>صحتك أولاً</h2><p>احجز موعدك الآن</p><div class="cta-buttons"><a href="contact.html" class="btn btn-accent btn-lg">احجز موعد</a><a href="tel:966920000094" class="btn btn-white btn-lg">اتصل بنا</a></div></div></section>
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>© 2026 مستشفى الحياة الوطني — BrainSAIT Healthcare OS</p></div></div></footer>
+
+<script src="js/common.js"></script>
+<script>
+(async () => {
+  try {
+    const { branches } = await HNH.getBranches();
+    const l = HNH.currentLang();
+    const grid = document.getElementById('branchesGrid');
+    grid.innerHTML = branches.map((b, i) => `
+      <div class="card branch-card animate-on-scroll delay-${(i%2)+1}" style="padding:0;overflow:hidden;">
+        <div style="background:var(--gradient-primary);padding:32px;color:white;position:relative;">
+          <div class="branch-icon" style="background:rgba(255,255,255,0.2);margin-bottom:12px;">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <h3 style="color:white;margin-bottom:4px;">${l==='ar' ? b.name_ar : b.name_en}</h3>
+          <span style="color:rgba(255,255,255,0.7);font-size:0.9rem;">${l==='ar' ? b.city_ar : b.city_en}</span>
+        </div>
+        <div style="padding:24px;">
+          ${b.address_ar ? `<p style="color:var(--text-light);margin-bottom:8px;font-size:0.9rem;">${l==='ar' ? b.address_ar : b.address_en}</p>` : ''}
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+            ${b.beds ? `<span style="padding:6px 14px;background:var(--off-white);border-radius:var(--radius-full);font-size:0.8rem;">${b.beds} سرير</span>` : ''}
+            ${b.phone ? `<span style="padding:6px 14px;background:var(--off-white);border-radius:var(--radius-full);font-size:0.8rem;">${b.phone}</span>` : ''}
+            ${b.status ? `<span style="padding:6px 14px;background:rgba(16,185,129,0.1);color:var(--success);border-radius:var(--radius-full);font-size:0.8rem;font-weight:600;">${b.status}</span>` : ''}
+          </div>
+          <a href="contact.html" class="btn btn-primary btn-sm">حجز موعد</a>
+        </div>
+      </div>
+    `).join('');
+    setTimeout(() => {
+      document.querySelectorAll('.animate-on-scroll:not(.animated)').forEach(el => {
+        new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('animated'); }); }, { threshold: 0.1 }).observe(el);
+      });
+    }, 50);
+  } catch(e) {
+    document.getElementById('branchesGrid').innerHTML = '<p style="color:var(--danger);">فشل تحميل البيانات</p>';
+  }
+})();
+</script>
+</body>
+</html>

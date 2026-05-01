@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://hnh.brainsait.org/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://hnh.brainsait.org/about.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hnh.brainsait.org/departments.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hnh.brainsait.org/doctors.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hnh.brainsait.org/branches.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hnh.brainsait.org/contact.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+</urlset>

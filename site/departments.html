@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الأقسام الطبية | مستشفى الحياة الوطني</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="header"><div class="container header-inner"><a href="index.html" class="logo"><div class="logo-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="logo-text">الحياة الوطني<small>BrainSAIT</small></div></a><nav class="nav"><a href="index.html">الرئيسية</a><a href="departments.html">الأقسام</a><a href="doctors.html">أطباؤنا</a><a href="branches.html">فروعنا</a><a href="contact.html">اتصل بنا</a><a href="contact.html" class="nav-cta">احجز موعد</a></nav><button class="mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button></div></header>
+
+<section class="page-hero"><div class="container"><div class="breadcrumb"><a href="index.html">الرئيسية</a><span>/</span><span>الأقسام الطبية</span></div><h1>الأقسام الطبية</h1><p>نغطي أكثر من 42 تخصصاً طبياً لخدمتكم <span class="api-status live" style="margin-right:8px;">● Live API</span></p></div></section>
+
+<section class="section bg-white"><div class="container">
+  <div class="filter-bar animate-on-scroll">
+    <input type="text" id="deptSearch" placeholder="ابحث عن قسم..." oninput="filterDepts()">
+    <button class="filter-chip active" onclick="filterCat(this,'all')">الكل</button>
+    <button class="filter-chip" onclick="filterCat(this,'medical')">طبية</button>
+    <button class="filter-chip" onclick="filterCat(this,'surgical')">جراحية</button>
+    <button class="filter-chip" onclick="filterCat(this,'support')">مساندة</button>
+  </div>
+  <div class="grid-3" id="deptGrid"><div class="loading"><div class="spinner"></div></div></div>
+</div></section>
+
+<section class="cta-section"><div class="container"><h2>صحتك أولاً</h2><p>احجز موعدك الآن</p><div class="cta-buttons"><a href="contact.html" class="btn btn-accent btn-lg">احجز موعد</a></div></div></section>
+
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>© 2026 مستشفى الحياة الوطني — BrainSAIT Healthcare OS</p></div></div></footer>
+
+<script src="js/common.js"></script>
+<script>
+let allDepts = [], currentCat = 'all';
+
+(async () => {
+  try {
+    const { providers } = await HNH.getProviders();
+    const l = HNH.currentLang();
+    const deptMap = {};
+    providers.forEach(p => {
+      const dept = p.department || p.specialty;
+      if (!dept) return;
+      if (!deptMap[dept]) deptMap[dept] = { name: dept, count: 0, cat: categorize(dept) };
+      deptMap[dept].count++;
+    });
+    allDepts = Object.values(deptMap).sort((a, b) => b.count - a.count);
+    renderDepts();
+  } catch(e) {
+    document.getElementById('deptGrid').innerHTML = '<p style="color:var(--danger);">فشل تحميل البيانات</p>';
+  }
+})();
+
+function categorize(d) {
+  const surgical = ['جراحة','Surgery','Orthopedics','ENT','Urology','Plastic','Neurosurgery','Cardiothoracic','Vascular','Bariatric','Oral'];
+  const support = ['Emergency','طوارئ','Radiology','أشعة','Lab','Pharmacy','Nutrition','Rehabilitation','طبيعي','Psychiatry','نفسية'];
+  for (const s of surgical) if (d.includes(s)) return 'surgical';
+  for (const s of support) if (d.includes(s)) return 'support';
+  return 'medical';
+}
+
+function renderDepts() {
+  const grid = document.getElementById('deptGrid');
+  const search = document.getElementById('deptSearch').value.toLowerCase();
+  const filtered = allDepts.filter(d => {
+    const matchCat = currentCat === 'all' || d.cat === currentCat;
+    const matchSearch = !search || d.name.toLowerCase().includes(search);
+    return matchCat && matchSearch;
+  });
+  grid.innerHTML = filtered.map((d, i) => `
+    <div class="card dept-card animate-on-scroll delay-${(i%6)+1}">
+      <div class="dept-icon"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
+      <h4>${d.name}</h4>
+      <p style="font-size:0.85rem;color:var(--text-light);">${d.count} طبيب</p>
+    </div>
+  `).join('');
+  setTimeout(() => {
+    document.querySelectorAll('.animate-on-scroll:not(.animated)').forEach(el => {
+      new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('animated'); }); }, { threshold: 0.1 }).observe(el);
+    });
+  }, 50);
+}
+
+function filterCat(btn, cat) {
+  currentCat = cat;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderDepts();
+}
+function filterDepts() { renderDepts(); }
+</script>
+</body>
+</html>
