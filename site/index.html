@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مستشفى الحياة الوطني | Hayat National Hospital</title>
+<meta name="description" content="مجموعة مستشفيات الحياة الوطني — أكثر من 25 عاماً من التميز في الرعاية الصحية. 5 فروع، 269 طبيب، 42 قسم طبي.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+      <div class="logo-text">الحياة الوطني<small>BrainSAIT Healthcare OS</small></div>
+    </a>
+    <nav class="nav" id="mainNav">
+      <a href="index.html" data-i18n="nav.home">الرئيسية</a>
+      <a href="about.html" data-i18n="nav.about">عن المجموعة</a>
+      <a href="departments.html" data-i18n="nav.departments">الأقسام الطبية</a>
+      <a href="doctors.html" data-i18n="nav.doctors">أطباؤنا</a>
+      <a href="branches.html" data-i18n="nav.branches">فروعنا</a>
+      <a href="contact.html" data-i18n="nav.contact">اتصل بنا</a>
+      <button class="lang-btn" onclick="HNH.setLang(HNH.currentLang()==='ar'?'en':'ar')">EN/عربي</button>
+      <a href="contact.html" class="nav-cta" data-i18n="nav.book">احجز موعد</a>
+    </nav>
+    <button class="mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <span class="api-status live">● Live Data</span>
+      <h1 style="margin-top:16px;">
+        مجموعة مستشفيات<br>
+        <span class="accent">الحياة الوطني</span>
+      </h1>
+      <p>أكثر من 25 عاماً من التميز في الرعاية الصحية المتكاملة في المملكة العربية السعودية. نظام BrainSAIT Healthcare OS متصل بقاعدة البيانات الحية.</p>
+      <div class="hero-buttons">
+        <a href="contact.html" class="btn btn-accent btn-lg">احجز موعدك الآن</a>
+        <a href="departments.html" class="btn btn-outline btn-lg">تصفح الأقسام</a>
+      </div>
+
+      <!-- Live Stats -->
+      <div class="stats-bar" id="liveStats">
+        <div class="stat-card"><div class="stat-number live" id="statProviders">—</div><div class="stat-label">طبيب</div></div>
+        <div class="stat-card"><div class="stat-number live" id="statBranches">—</div><div class="stat-label">فروع</div></div>
+        <div class="stat-card"><div class="stat-number live" id="statDepts">—</div><div class="stat-label">قسم طبي</div></div>
+        <div class="stat-card"><div class="stat-number live" id="statBeds">—</div><div class="stat-label">سرير</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Departments Preview -->
+<section class="section bg-white">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <h2>الأقسام الطبية</h2>
+      <p>نغطي أكثر من 42 تخصصاً طبياً</p>
+    </div>
+    <div class="grid-4" id="deptGrid">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+    <div class="text-center" style="margin-top:32px;">
+      <a href="departments.html" class="btn btn-outline">عرض جميع الأقسام</a>
+    </div>
+  </div>
+</section>
+
+<!-- Branches -->
+<section class="section bg-light">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <h2>فروعنا</h2>
+      <p>خمسة فروع في مختلف مناطق المملكة</p>
+    </div>
+    <div class="grid-3" id="branchesGrid">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Doctors Preview -->
+<section class="section bg-white">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <h2>أطباؤنا</h2>
+      <p>فريق من أمهر الأطباء والاستشاريين</p>
+    </div>
+    <div class="grid-4" id="doctorsGrid">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+    <div class="text-center" style="margin-top:32px;">
+      <a href="doctors.html" class="btn btn-outline">عرض جميع الأطباء</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <h2>صحتك أولاً</h2>
+    <p>احجز موعدك الآن واحصل على أفضل رعاية طبية</p>
+    <div class="cta-buttons">
+      <a href="contact.html" class="btn btn-accent btn-lg">احجز موعد</a>
+      <a href="tel:966920000094" class="btn btn-white btn-lg">اتصل بنا</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>مستشفى الحياة الوطني</h4>
+        <p style="margin-bottom:16px;">نظام BrainSAIT Healthcare OS المتصل بقاعدة البيانات الحية — Oracle + NPHIES</p>
+        <span class="api-status live">API Connected</span>
+      </div>
+      <div>
+        <h4>روابط سريعة</h4>
+        <a href="about.html">عن المجموعة</a>
+        <a href="departments.html">الأقسام الطبية</a>
+        <a href="doctors.html">أطباؤنا</a>
+        <a href="branches.html">فروعنا</a>
+      </div>
+      <div>
+        <h4>خدماتنا</h4>
+        <a href="contact.html">حجز موعد</a>
+        <a href="departments.html">العيادات الخارجية</a>
+        <a href="departments.html">الطوارئ</a>
+        <a href="departments.html">الجراحات</a>
+      </div>
+      <div>
+        <h4>تواصل معنا</h4>
+        <a href="tel:966920000094">+966920000094</a>
+        <a href="mailto:info@hayathospitals.com">info@hayathospitals.com</a>
+        <p style="margin-top:8px;font-size:0.85rem;">الرياض، المملكة العربية السعودية</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 مستشفى الحياة الوطني — مشغل بـ BrainSAIT Healthcare OS</p>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/966920000094" class="wa-float" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492l4.624-1.47A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75c-2.115 0-4.142-.665-5.847-1.884l-.42-.279-2.746.874.874-2.746-.279-.42A9.713 9.713 0 012.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75z"/></svg>
+</a>
+
+<!-- Back to Top -->
+<button class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+</button>
+
+<script src="js/common.js"></script>
+<script>
+// Load live stats
+(async () => {
+  try {
+    const { stats } = await HNH.getStats();
+    document.getElementById('statProviders').textContent = stats.total_providers?.toLocaleString() || '—';
+    document.getElementById('statBranches').textContent = stats.total_branches?.toLocaleString() || '—';
+    document.getElementById('statDepts').textContent = stats.total_departments?.toLocaleString() || '—';
+    document.getElementById('statBeds').textContent = stats.total_beds?.toLocaleString() || '—';
+  } catch(e) { console.error('Stats load failed:', e); }
+})();
+
+// Load departments preview (from providers data)
+(async () => {
+  try {
+    const { providers } = await HNH.getProviders();
+    const depts = [...new Set(providers.map(p => p.department).filter(Boolean))].slice(0, 8);
+    const l = HNH.currentLang();
+    const grid = document.getElementById('deptGrid');
+    grid.innerHTML = depts.map((d, i) => `
+      <div class="card dept-card animate-on-scroll delay-${(i%4)+1}">
+        <div class="dept-icon"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
+        <h4>${d}</h4>
+        <p style="font-size:0.85rem;color:var(--text-light);">${providers.filter(p => p.department === d).length} طبيب</p>
+      </div>
+    `).join('');
+  } catch(e) { console.error('Depts load failed:', e); }
+})();
+
+// Load branches
+(async () => {
+  try {
+    const { branches } = await HNH.getBranches();
+    const l = HNH.currentLang();
+    const grid = document.getElementById('branchesGrid');
+    grid.innerHTML = branches.map((b, i) => `
+      <div class="card branch-card animate-on-scroll delay-${(i%3)+1}" style="padding:0;overflow:hidden;">
+        <div style="background:var(--gradient-primary);padding:32px;color:white;">
+          <div class="branch-icon" style="background:rgba(255,255,255,0.2);margin-bottom:12px;">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <h3 style="color:white;margin-bottom:4px;">${l==='ar' ? b.name_ar : b.name_en}</h3>
+          <span style="color:rgba(255,255,255,0.7);font-size:0.9rem;">${l==='ar' ? b.city_ar : b.city_en}</span>
+        </div>
+        <div style="padding:24px;">
+          <p style="color:var(--text-light);margin-bottom:12px;font-size:0.9rem;">
+            ${b.beds ? `${b.beds} سرير` : ''} ${b.phone ? `· ${b.phone}` : ''}
+          </p>
+          <a href="contact.html" class="btn btn-primary btn-sm">حجز موعد</a>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) { console.error('Branches load failed:', e); }
+})();
+
+// Load doctors preview
+(async () => {
+  try {
+    const { providers } = await HNH.getProviders('?limit=8');
+    const l = HNH.currentLang();
+    const grid = document.getElementById('doctorsGrid');
+    grid.innerHTML = providers.slice(0, 8).map((d, i) => `
+      <div class="card doctor-card animate-on-scroll delay-${(i%4)+1}">
+        <div class="doctor-photo">${(l==='ar' ? d.name_ar : d.name_en).split(' ').pop().charAt(0)}</div>
+        <h4>${l==='ar' ? d.name_ar : d.name_en}</h4>
+        <div class="specialty">${d.specialty}</div>
+        <div class="branch-tag">${d.branch}</div>
+        <a href="contact.html" class="btn btn-primary btn-sm">${l==='ar' ? 'احجز الآن' : 'Book Now'}</a>
+      </div>
+    `).join('');
+  } catch(e) { console.error('Doctors load failed:', e); }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أطباؤنا | مستشفى الحياة الوطني</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="header"><div class="container header-inner"><a href="index.html" class="logo"><div class="logo-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="logo-text">الحياة الوطني<small>BrainSAIT</small></div></a><nav class="nav"><a href="index.html">الرئيسية</a><a href="departments.html">الأقسام</a><a href="doctors.html">أطباؤنا</a><a href="branches.html">فروعنا</a><a href="contact.html">اتصل بنا</a><a href="contact.html" class="nav-cta">احجز موعد</a></nav><button class="mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button></div></header>
+
+<section class="page-hero"><div class="container"><div class="breadcrumb"><a href="index.html">الرئيسية</a><span>/</span><span>أطباؤنا</span></div><h1>أطباؤنا</h1><p id="doctorCount">جاري التحميل... <span class="api-status live" style="margin-right:8px;">● Live API</span></p></div></section>
+
+<section class="section bg-white"><div class="container">
+  <div class="filter-bar animate-on-scroll">
+    <input type="text" id="doctorSearch" placeholder="ابحث عن طبيب..." oninput="filterDoctors()">
+    <select id="specFilter" onchange="filterDoctors()"><option value="">جميع التخصصات</option></select>
+    <select id="branchFilter" onchange="filterDoctors()"><option value="">جميع الفروع</option></select>
+  </div>
+  <div class="grid-4" id="doctorsGrid"><div class="loading"><div class="spinner"></div></div></div>
+  <div class="text-center" style="margin-top:32px;" id="loadMoreWrap"><button class="btn btn-outline" id="loadMoreBtn" onclick="loadMore()">عرض المزيد</button></div>
+</div></section>
+
+<section class="cta-section"><div class="container"><h2>صحتك أولاً</h2><p>احجز موعدك الآن</p><div class="cta-buttons"><a href="contact.html" class="btn btn-accent btn-lg">احجز موعد</a></div></div></section>
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>© 2026 مستشفى الحياة الوطني — BrainSAIT Healthcare OS</p></div></div></footer>
+
+<script src="js/common.js"></script>
+<script>
+let allDoctors = [], filtered = [], visible = 16, l;
+
+(async () => {
+  try {
+    const data = await HNH.getProviders();
+    allDoctors = data.providers || [];
+    l = HNH.currentLang();
+    document.getElementById('doctorCount').textContent = `${allDoctors.length} طبيب متصل بقاعدة البيانات`;
+
+    // Populate filters
+    const specs = [...new Set(allDoctors.map(d => d.specialty).filter(Boolean))].sort();
+    const branches = [...new Set(allDoctors.map(d => d.branch).filter(Boolean))].sort();
+    const specSel = document.getElementById('specFilter');
+    specs.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; specSel.appendChild(o); });
+    const brSel = document.getElementById('branchFilter');
+    branches.forEach(b => { const o = document.createElement('option'); o.value = b; o.textContent = b; brSel.appendChild(o); });
+
+    filtered = [...allDoctors];
+    renderDoctors();
+  } catch(e) {
+    document.getElementById('doctorsGrid').innerHTML = '<p style="color:var(--danger);">فشل تحميل البيانات</p>';
+  }
+})();
+
+function renderDoctors() {
+  const grid = document.getElementById('doctorsGrid');
+  const toShow = filtered.slice(0, visible);
+  grid.innerHTML = toShow.map((d, i) => `
+    <div class="card doctor-card animate-on-scroll delay-${(i%4)+1}">
+      <div class="doctor-photo">${(l==='ar' ? d.name_ar : d.name_en).split(' ').pop().charAt(0)}</div>
+      <h4>${l==='ar' ? d.name_ar : d.name_en}</h4>
+      <div class="specialty">${d.specialty}</div>
+      <div class="branch-tag">${d.branch}</div>
+      ${d.experience_years ? `<p style="font-size:0.8rem;color:var(--text-light);margin-bottom:8px;">${d.experience_years} سنة خبرة</p>` : ''}
+      ${d.rating ? `<p style="font-size:0.85rem;color:var(--accent);margin-bottom:8px;">${'★'.repeat(d.rating)}${'☆'.repeat(5-d.rating)}</p>` : ''}
+      <a href="contact.html" class="btn btn-primary btn-sm">${l==='ar' ? 'احجز الآن' : 'Book Now'}</a>
+    </div>
+  `).join('');
+  document.getElementById('loadMoreBtn').style.display = visible >= filtered.length ? 'none' : '';
+  setTimeout(() => {
+    document.querySelectorAll('.animate-on-scroll:not(.animated)').forEach(el => {
+      new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('animated'); }); }, { threshold: 0.1 }).observe(el);
+    });
+  }, 50);
+}
+
+function filterDoctors() {
+  const search = document.getElementById('doctorSearch').value.toLowerCase();
+  const spec = document.getElementById('specFilter').value;
+  const branch = document.getElementById('branchFilter').value;
+  filtered = allDoctors.filter(d => {
+    const name = (l==='ar' ? d.name_ar : d.name_en).toLowerCase();
+    return (!search || name.includes(search)) && (!spec || d.specialty === spec) && (!branch || d.branch === branch);
+  });
+  visible = 16;
+  renderDoctors();
+}
+
+function loadMore() { visible += 16; renderDoctors(); }
+</script>
+</body>
+</html>
