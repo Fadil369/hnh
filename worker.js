@@ -1106,6 +1106,10 @@ export default {
       const sub = path.replace('/api/nphies', '') || '';
       return handleNphies(req, env, sub);
     }
+    if (path.startsWith('/api/portal')) {
+      const sub = path.replace('/api/portal', '') || '';
+      return handlePortalHub(req, env, sub);
+    }
     if (path === '/api/insurance')                return ok({ partners: INSURANCE_PARTNERS });
 
     // ── Protected API ─────────────────────────────────────────
@@ -1132,3 +1136,103 @@ export default {
     return serveHTML(url.searchParams.get('lang') || 'ar');
   },
 };
+
+// ═══════════════════════════════════════════════════════════════
+// PORTAL INTEGRATION HUB — /api/portal/*
+// Called by BSMA, GIVC, SBS to get unified HNH data
+// ═══════════════════════════════════════════════════════════════
+
+async function handlePortalHub(req, env, sub) {
+  const url = new URL(req.url);
+
+  // /api/portal/network — live NPHIES network summary (from BSMA /basma/network)
+  if (sub === '/network') {
+    try {
+      const r = await fetch('https://bsma.elfadil.com/basma/network', {
+        headers: { 'X-Source': 'hnh-unified', 'X-Hospital': 'gharnata' }
+      });
+      if (r.ok) {
+        const d = await r.json();
+        return ok({ source: 'bsma-live', network: d });
+      }
+    } catch {}
+    // Fallback to claimlinc-api
+    const d = await claimlinc(env, '/nphies/network/summary');
+    return ok({ source: 'claimlinc', network: d });
+  }
+
+  // /api/portal/mirror — NPHIES mirror sync status
+  if (sub === '/mirror') {
+    try {
+      const r = await fetch('https://bsma.elfadil.com/basma/mirror');
+      return ok({ source: 'bsma-mirror', data: r.ok ? await r.json() : null });
+    } catch {}
+    return ok({ source: 'fallback', data: null });
+  }
+
+  // /api/portal/coverage — insurance coverage records (from brainsait-healthcare-d1)
+  if (sub === '/coverage') {
+    const r = await fetch('https://sbs.elfadil.com/claimlinc/coverage/batch', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'active' })
+    }).catch(() => null);
+    if (r?.ok) {
+      const d = await r.json();
+      return ok({ source: 'sbs-live', ...d });
+    }
+    return ok({ coverage: [], total: 0, source: 'unavailable' });
+  }
+
+  // /api/portal/eligibility — unified eligibility check
+  if (sub === '/eligibility' && req.method === 'POST') {
+    const body = await req.json().catch(() => ({}));
+    // Try SBS ClaimLinc first (has real coverage records)
+    try {
+      const r = await fetch('https://sbs.elfadil.com/claimlinc/eligibility', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ patient_identifier: body.patient_identifier || body.national_id, service_code: body.service_code || 'outpatient' })
+      });
+      if (r.ok) {
+        const d = await r.json();
+        return ok({ source: 'sbs-claimlinc', ...d });
+      }
+    } catch {}
+    // Fallback to Oracle Bridge
+    return handleEligibility(req, env);
+  }
+
+  // /api/portal/drugs — drug formulary search
+  if (sub === '/drugs') {
+    return handleDrugs(req, env);
+  }
+
+  // /api/portal/appointments — merged appointments (all sources)
+  if (sub === '/appointments') {
+    const date = url.searchParams.get('date') || new Date().toISOString().split('T')[0];
+    return handleAppointments(new Request(req.url + (req.url.includes('?') ? '&' : '?') + `date=${date}`), env);
+  }
+
+  // /api/portal/stats — full unified stats for all portals
+  if (sub === '/stats') {
+    const [hnh, network] = await Promise.all([
+      handleStats(env).then(r => r.json()).catch(() => ({})),
+      fetch('https://bsma.elfadil.com/basma/network').then(r => r.json()).catch(() => null),
+    ]);
+    return ok({
+      hnh: hnh.stats || {},
+      nphies: network ? {
+        network_sar:      network.financials?.network_total_sar,
+        approval_rate:    network.financials?.network_approval_rate_pct,
+        total_claims:     network.financials?.total_claims_gss,
+        pa_total:         network.prior_auth?.network_total,
+        by_branch:        network.by_branch,
+        as_of:            network.as_of,
+      } : null,
+      insurance_partners: INSURANCE_PARTNERS,
+    });
+  }
+
+  return err(`Portal endpoint not found: /api/portal${sub}`, 404);
+}
