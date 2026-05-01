@@ -1,4 +1,4 @@
-name = "hnh-unified-hub"
+name = "hnh-gharnata-api"
 main = "worker.js"
 compatibility_date = "2025-04-01"
 # account_id = "your-cloudflare-account-id"  # Set via CLOUDFLARE_ACCOUNT_ID env var or wrangler login
