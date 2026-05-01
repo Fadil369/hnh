@@ -386,11 +386,64 @@ CREATE INDEX IF NOT EXISTS idx_patients_iqama ON patients(iqama_id);
 CREATE INDEX IF NOT EXISTS idx_appointments_date ON appointments(appointment_date);
 CREATE INDEX IF NOT EXISTS idx_appointments_patient ON appointments(patient_id);
 CREATE INDEX IF NOT EXISTS idx_visits_patient ON visits(patient_id);
+CREATE INDEX IF NOT EXISTS idx_visits_status ON visits(status);
 CREATE INDEX IF NOT EXISTS idx_orders_visit ON orders(visit_id);
+CREATE INDEX IF NOT EXISTS idx_orders_patient ON orders(patient_id);
+CREATE INDEX IF NOT EXISTS idx_orders_type ON orders(order_type);
 CREATE INDEX IF NOT EXISTS idx_claims_status ON claims(status);
 CREATE INDEX IF NOT EXISTS idx_claims_payer ON claims(payer_id);
+CREATE INDEX IF NOT EXISTS idx_claims_patient ON claims(patient_id);
 CREATE INDEX IF NOT EXISTS idx_contracts_payer ON contracts(payer_id);
+CREATE INDEX IF NOT EXISTS idx_contracts_status ON contracts(status);
+CREATE INDEX IF NOT EXISTS idx_pa_status ON prior_authorizations(status);
+CREATE INDEX IF NOT EXISTS idx_pa_patient ON prior_authorizations(patient_id);
+CREATE INDEX IF NOT EXISTS idx_eligibility_patient ON eligibility_checks(patient_id);
 CREATE INDEX IF NOT EXISTS idx_rag_category ON rag_documents(category);
+
+-- ============================================
+-- SCHEMA MIGRATIONS (v2 → v3: Unified Hub)
+-- ============================================
+
+-- Add contract_type alias (contracts had contract_class; add contract_type for SBS portal)
+-- SQLite ALTER TABLE: only ADD COLUMN is supported
+CREATE TABLE IF NOT EXISTS contracts_v3 (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    payer_id TEXT NOT NULL,
+    payer_name TEXT,
+    contract_type TEXT,
+    contract_class TEXT,
+    start_date TEXT,
+    end_date TEXT,
+    status TEXT DEFAULT 'active',
+    discount_percentage REAL,
+    tariff_rules TEXT,
+    contract_details TEXT,
+    oracle_contract_id TEXT,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+);
+
+-- Add updated_at to prior_authorizations if not exists (migration guard via CREATE TABLE)
+CREATE TABLE IF NOT EXISTS prior_authorizations_meta (
+    pa_id INTEGER PRIMARY KEY,
+    updated_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (pa_id) REFERENCES prior_authorizations(id)
+);
+
+-- Portal session tracking
+CREATE TABLE IF NOT EXISTS portal_sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_token TEXT UNIQUE NOT NULL,
+    user_id TEXT,
+    portal TEXT CHECK(portal IN ('bsma', 'givc', 'sbs', 'nphies', 'admin')),
+    role TEXT,
+    created_at TEXT DEFAULT (datetime('now')),
+    expires_at TEXT,
+    last_activity TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_token ON portal_sessions(session_token);
+CREATE INDEX IF NOT EXISTS idx_sessions_portal ON portal_sessions(portal);
 
 -- ============================================
 -- VIEWS

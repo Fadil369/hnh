@@ -51,9 +51,13 @@ export default function Home() {
   ]
 
   const quickActions = [
+    { href: '/portal', icon: '🌐', labelAr: 'المركز الموحد', labelEn: 'Unified Hub', color: 'bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/30' },
     { href: '/appointments', icon: '📅', labelAr: 'حجز موعد', labelEn: 'Book Appointment', color: 'bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30' },
-    { href: '/patients', icon: '👤', labelAr: 'تسجيل مريض', labelEn: 'Register Patient', color: 'bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/30' },
-    { href: '/providers', icon: '👨‍⚕️', labelAr: 'البحث عن طبيب', labelEn: 'Find Doctor', color: 'bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30' },
+    { href: '/eligibility', icon: '✅', labelAr: 'التحقق الأهلية', labelEn: 'Check Eligibility', color: 'bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/30' },
+    { href: '/patients', icon: '👤', labelAr: 'تسجيل مريض', labelEn: 'Register Patient', color: 'bg-cyan-50 dark:bg-cyan-900/20 hover:bg-cyan-100 dark:hover:bg-cyan-900/30' },
+    { href: '/givc', icon: '🩺', labelAr: 'بوابة GIVC', labelEn: 'Provider Portal', color: 'bg-teal-50 dark:bg-teal-900/20 hover:bg-teal-100 dark:hover:bg-teal-900/30' },
+    { href: '/sbs', icon: '💰', labelAr: 'بوابة SBS', labelEn: 'Billing & RCM', color: 'bg-violet-50 dark:bg-violet-900/20 hover:bg-violet-100 dark:hover:bg-violet-900/30' },
+    { href: '/nphies', icon: '🏛️', labelAr: 'بوابة NPHIES', labelEn: 'Gov Insurance', color: 'bg-amber-50 dark:bg-amber-900/20 hover:bg-amber-100 dark:hover:bg-amber-900/30' },
     { href: '/claims', icon: '📋', labelAr: 'إنشاء مطالبة', labelEn: 'Create Claim', color: 'bg-rose-50 dark:bg-rose-900/20 hover:bg-rose-100 dark:hover:bg-rose-900/30' },
     { href: '/knowledge', icon: '📚', labelAr: 'قاعدة المعرفة', labelEn: 'Knowledge Base', color: 'bg-amber-50 dark:bg-amber-900/20 hover:bg-amber-100 dark:hover:bg-amber-900/30' },
   ]
@@ -67,8 +71,8 @@ export default function Home() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h2 className="text-3xl font-bold mb-1">مرحباً بكم في مستشفى حيات الوطني</h2>
-            <p className="text-lg opacity-90">بوابة خدمات المرضى - فرع غرنطا</p>
-            <p className="text-sm opacity-70 mt-1">Hayat National Hospital - Gharnata Branch Patient Portal</p>
+            <p className="text-lg opacity-90">المركز الموحد للرعاية الصحية</p>
+            <p className="text-sm opacity-70 mt-1">Unified Healthcare Hub · BSMA · GIVC · SBS · NPHIES · Oracle</p>
           </div>
           <div className="text-left" dir="ltr">
             <p className="text-sm opacity-80">{todayDate}</p>
@@ -100,7 +104,7 @@ export default function Home() {
           <span>خدمات سريعة</span>
           <span className="text-sm font-normal mr-2" style={{ color: 'var(--text-secondary)' }}>Quick Services</span>
         </h3>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div className="grid grid-cols-3 md:grid-cols-9 gap-3">
           {quickActions.map((action, i) => (
             <a
               key={i}

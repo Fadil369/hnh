@@ -1,4 +1,4 @@
-name = "hnh-gharnata-api"
+name = "hnh-unified-hub"
 main = "worker.js"
 compatibility_date = "2025-04-01"
 
@@ -14,3 +14,23 @@ ORACLE_BRIDGE_URL = "https://oracle-bridge.brainsait.org"
 ORACLE_API_KEY = "bsma-oracle-b2af3196522b556636b09f5d268cb976"
 NPHIES_MIRROR_URL = "https://nphies-mirror.brainsait-fadil.workers.dev"
 API_KEY = "hnh-gharnata-2026-secure-key"
+FACILITY_LICENSE = "10000000000988"
+HUB_VERSION = "3.0.0"
+
+# Custom domains (requires Cloudflare zone configuration)
+# routes = [
+#   { pattern = "api.elfadil.com/*", zone_name = "elfadil.com" },
+#   { pattern = "bsma.elfadil.com/api/*", zone_name = "elfadil.com" },
+#   { pattern = "givc.elfadil.com/api/*", zone_name = "elfadil.com" },
+#   { pattern = "sbs.elfadil.com/api/*", zone_name = "elfadil.com" },
+# ]
+
+# Staging environment
+[env.staging]
+name = "hnh-unified-hub-staging"
+vars = { NPHIES_ENVIRONMENT = "sandbox", HUB_VERSION = "3.0.0-staging" }
+
+# Production environment
+[env.production]
+name = "hnh-unified-hub-production"
+vars = { NPHIES_ENVIRONMENT = "production", HUB_VERSION = "3.0.0" }

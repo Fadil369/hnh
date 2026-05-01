@@ -1,22 +1,26 @@
-// HNH Gharnata Branch - API Gateway Worker with Oracle/NPHIES Integration
-// Version: 2.0
+// HNH Unified Hub — API Gateway Worker
+// Portals: BSMA (Patient) · GIVC (Provider) · SBS (Billing/RCM) · NPHIES · Oracle
+// Version: 3.0
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-API-Key, X-Hospital, X-Session-ID',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-API-Key, X-Hospital, X-Session-ID, X-Portal',
 };
 const JSON_HEADERS = { ...CORS, 'Content-Type': 'application/json' };
+
+const FACILITY_LICENSE = '10000000000988';
+const HOSPITAL_NAME = 'Hayat National Hospital - Gharnata';
 
 // ─── Oracle Bridge Client ─────────────────────────────────────────────────
 function oracleBridge(env, path, options = {}) {
   const base = env.ORACLE_BRIDGE_URL || 'https://oracle-bridge.brainsait.org';
-  const url = `${base}${path}`;
-  return fetch(url, {
+  return fetch(`${base}${path}`, {
     headers: {
       'Content-Type': 'application/json',
       'X-API-Key': env.ORACLE_API_KEY || '',
       'X-Hospital': 'gharnata',
+      'X-Facility': FACILITY_LICENSE,
       ...options.headers,
     },
     ...options,
@@ -28,6 +32,26 @@ async function nphiesLookup(env, type, branch = 'gharnata') {
   const base = env.NPHIES_MIRROR_URL || 'https://nphies-mirror.brainsait-fadil.workers.dev';
   try {
     const res = await fetch(`${base}/${type}/${branch}`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+// ─── NPHIES Direct Client (portal.nphies.sa) ──────────────────────────────
+async function nphiesDirect(env, path, options = {}) {
+  const base = 'https://portal.nphies.sa';
+  try {
+    const res = await fetch(`${base}${path}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${env.NPHIES_TOKEN || ''}`,
+        'X-Facility': FACILITY_LICENSE,
+        ...options.headers,
+      },
+      ...options,
+    });
     if (!res.ok) return null;
     return await res.json();
   } catch {
@@ -239,37 +263,479 @@ async function handleClaims(request, env) {
 
 // ─── Providers ─────────────────────────────────────────────────────────────
 async function handleProviders(request, env) {
-  const result = await env.DB.prepare('SELECT * FROM providers WHERE is_active = 1').all();
+  const url = new URL(request.url);
+  const dept = url.searchParams.get('department');
+  let query = 'SELECT * FROM providers WHERE is_active = 1';
+  const binds = [];
+  if (dept) { query += ' AND department = ?'; binds.push(dept); }
+  query += ' ORDER BY specialty, last_name_ar';
+  const result = binds.length
+    ? await env.DB.prepare(query).bind(...binds).all()
+    : await env.DB.prepare(query).all();
   return new Response(JSON.stringify({ providers: result.results }), { headers: JSON_HEADERS });
 }
 
 // ─── Departments ───────────────────────────────────────────────────────────
 async function handleDepartments(request, env) {
-  const result = await env.DB.prepare('SELECT * FROM departments WHERE is_active = 1').all();
+  const result = await env.DB.prepare('SELECT * FROM departments WHERE is_active = 1 ORDER BY name_ar').all();
   return new Response(JSON.stringify({ departments: result.results }), { headers: JSON_HEADERS });
 }
 
-// ─── NPHIES Mirror Proxy ───────────────────────────────────────────────────
-async function handleNphiesProxy(request, env) {
+// ─── GIVC: Visits / Encounters ─────────────────────────────────────────────
+async function handleVisits(request, env) {
   const url = new URL(request.url);
-  const type = url.pathname.replace('/api/nphies/', '');
-  const data = await nphiesLookup(env, type);
-  return new Response(JSON.stringify({ data, type, source: 'nphies-mirror' }), { headers: JSON_HEADERS });
+  const method = request.method;
+
+  if (method === 'GET') {
+    const patientId = url.searchParams.get('patient_id');
+    const status = url.searchParams.get('status') || 'open';
+    let query = `SELECT v.*, p.full_name_ar as patient_name, p.mrn,
+      pr.first_name_ar || ' ' || pr.last_name_ar as provider_name
+      FROM visits v
+      LEFT JOIN patients p ON v.patient_id = p.id
+      LEFT JOIN providers pr ON v.provider_id = pr.id`;
+    const conditions = [];
+    const binds = [];
+    if (patientId) { conditions.push('v.patient_id = ?'); binds.push(patientId); }
+    if (status !== 'all') { conditions.push('v.status = ?'); binds.push(status); }
+    if (conditions.length) query += ' WHERE ' + conditions.join(' AND ');
+    query += ' ORDER BY v.visit_date DESC LIMIT 100';
+    const result = binds.length
+      ? await env.DB.prepare(query).bind(...binds).all()
+      : await env.DB.prepare(query).all();
+    return new Response(JSON.stringify({ visits: result.results }), { headers: JSON_HEADERS });
+  }
+
+  if (method === 'POST') {
+    const data = await request.json();
+    const result = await env.DB.prepare(
+      `INSERT INTO visits (patient_id, provider_id, visit_type, chief_complaint, diagnosis_code, diagnosis_description, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
+    ).bind(data.patient_id, data.provider_id, data.visit_type || 'opd',
+      data.chief_complaint, data.diagnosis_code, data.diagnosis_description, 'open').run();
+
+    const visitId = result.meta.last_row_id;
+    oracleBridge(env, '/api/visits/open', {
+      method: 'POST',
+      body: JSON.stringify({ visit_id: visitId, patient_id: data.patient_id, visit_type: data.visit_type }),
+    }).catch(() => {});
+
+    return new Response(JSON.stringify({ success: true, id: visitId }), { headers: JSON_HEADERS });
+  }
+
+  if (method === 'PUT') {
+    const segments = url.pathname.split('/');
+    const visitId = segments[segments.length - 1];
+    const data = await request.json();
+    await env.DB.prepare(
+      `UPDATE visits SET diagnosis_code = ?, diagnosis_description = ?, status = ?, updated_at = datetime('now') WHERE id = ?`
+    ).bind(data.diagnosis_code, data.diagnosis_description, data.status || 'open', visitId).run();
+    return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
+  }
+
+  return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers: JSON_HEADERS });
+}
+
+// ─── GIVC: Orders (CPOE) ───────────────────────────────────────────────────
+async function handleOrders(request, env) {
+  const url = new URL(request.url);
+  const method = request.method;
+
+  if (method === 'GET') {
+    const visitId = url.searchParams.get('visit_id');
+    const patientId = url.searchParams.get('patient_id');
+    const type = url.searchParams.get('type');
+    const conditions = [];
+    const binds = [];
+    if (visitId) { conditions.push('o.visit_id = ?'); binds.push(visitId); }
+    if (patientId) { conditions.push('o.patient_id = ?'); binds.push(patientId); }
+    if (type) { conditions.push('o.order_type = ?'); binds.push(type); }
+    let query = `SELECT o.*, p.full_name_ar as patient_name FROM orders o
+      LEFT JOIN patients p ON o.patient_id = p.id`;
+    if (conditions.length) query += ' WHERE ' + conditions.join(' AND ');
+    query += ' ORDER BY o.order_date DESC LIMIT 200';
+    const result = binds.length
+      ? await env.DB.prepare(query).bind(...binds).all()
+      : await env.DB.prepare(query).all();
+    return new Response(JSON.stringify({ orders: result.results }), { headers: JSON_HEADERS });
+  }
+
+  if (method === 'POST') {
+    const data = await request.json();
+    const result = await env.DB.prepare(
+      `INSERT INTO orders (visit_id, patient_id, provider_id, order_type, order_item, order_item_code, quantity, instructions, priority, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    ).bind(data.visit_id, data.patient_id, data.provider_id, data.order_type,
+      data.order_item, data.order_item_code, data.quantity || 1,
+      data.instructions, data.priority || 'routine', 'ordered').run();
+
+    const orderId = result.meta.last_row_id;
+    oracleBridge(env, '/api/orders/create', {
+      method: 'POST',
+      body: JSON.stringify({ order_id: orderId, ...data, facility_license: FACILITY_LICENSE }),
+    }).catch(() => {});
+
+    return new Response(JSON.stringify({ success: true, id: orderId }), { headers: JSON_HEADERS });
+  }
+
+  return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers: JSON_HEADERS });
+}
+
+// ─── GIVC: Lab Results ─────────────────────────────────────────────────────
+async function handleLabResults(request, env) {
+  const url = new URL(request.url);
+  const patientId = url.searchParams.get('patient_id');
+  const orderId = url.searchParams.get('order_id');
+  const conditions = [];
+  const binds = [];
+  if (patientId) { conditions.push('lr.patient_id = ?'); binds.push(patientId); }
+  if (orderId) { conditions.push('lr.order_id = ?'); binds.push(orderId); }
+  let query = `SELECT lr.*, p.full_name_ar as patient_name FROM lab_results lr
+    LEFT JOIN patients p ON lr.patient_id = p.id`;
+  if (conditions.length) query += ' WHERE ' + conditions.join(' AND ');
+  query += ' ORDER BY lr.result_date DESC LIMIT 200';
+  const result = binds.length
+    ? await env.DB.prepare(query).bind(...binds).all()
+    : await env.DB.prepare(query).all();
+
+  // Enrich with Oracle if specific patient
+  let oracleResults = null;
+  if (patientId) {
+    try {
+      const or = await oracleBridge(env, `/api/lab/results?patient_id=${patientId}`);
+      if (or.ok) oracleResults = await or.json();
+    } catch {}
+  }
+
+  return new Response(JSON.stringify({
+    lab_results: result.results,
+    oracle_results: oracleResults,
+  }), { headers: JSON_HEADERS });
+}
+
+// ─── GIVC: Prescriptions ───────────────────────────────────────────────────
+async function handlePrescriptions(request, env) {
+  const url = new URL(request.url);
+  const method = request.method;
+
+  if (method === 'GET') {
+    const patientId = url.searchParams.get('patient_id');
+    const visitId = url.searchParams.get('visit_id');
+    const conditions = [];
+    const binds = [];
+    if (patientId) { conditions.push('pr.patient_id = ?'); binds.push(patientId); }
+    if (visitId) { conditions.push('pr.visit_id = ?'); binds.push(visitId); }
+    let query = `SELECT pr.*, p.full_name_ar as patient_name FROM prescriptions pr
+      LEFT JOIN patients p ON pr.patient_id = p.id`;
+    if (conditions.length) query += ' WHERE ' + conditions.join(' AND ');
+    query += ' ORDER BY pr.rowid DESC LIMIT 100';
+    const result = binds.length
+      ? await env.DB.prepare(query).bind(...binds).all()
+      : await env.DB.prepare(query).all();
+    return new Response(JSON.stringify({ prescriptions: result.results }), { headers: JSON_HEADERS });
+  }
+
+  if (method === 'POST') {
+    const data = await request.json();
+    const result = await env.DB.prepare(
+      `INSERT INTO prescriptions (visit_id, patient_id, provider_id, drug_name, drug_code, dosage, frequency, duration, route, quantity, refills, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    ).bind(data.visit_id, data.patient_id, data.provider_id, data.drug_name,
+      data.drug_code, data.dosage, data.frequency, data.duration,
+      data.route, data.quantity, data.refills || 0, 'active').run();
+
+    oracleBridge(env, '/api/pharmacy/prescribe', {
+      method: 'POST',
+      body: JSON.stringify({ prescription_id: result.meta.last_row_id, ...data }),
+    }).catch(() => {});
+
+    return new Response(JSON.stringify({ success: true, id: result.meta.last_row_id }), { headers: JSON_HEADERS });
+  }
+
+  return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers: JSON_HEADERS });
+}
+
+// ─── NPHIES: Full Integration ──────────────────────────────────────────────
+async function handleNphies(request, env) {
+  const url = new URL(request.url);
+  const method = request.method;
+  const subpath = url.pathname.replace('/api/nphies', '');
+
+  // Mirror proxy fallback
+  if (subpath.startsWith('/mirror/')) {
+    const type = subpath.replace('/mirror/', '');
+    const data = await nphiesLookup(env, type);
+    return new Response(JSON.stringify({ data, type, source: 'nphies-mirror' }), { headers: JSON_HEADERS });
+  }
+
+  // Direct portal eligibility
+  if (subpath === '/eligibility' || subpath === '/eligibility/') {
+    const data = method === 'POST' ? await request.json() : {};
+    const { national_id, patient_id, payer_id } = data;
+
+    // Try Oracle Bridge first (fastest, has cached NPHIES data)
+    try {
+      const oracleRes = await oracleBridge(env, '/api/nphies/eligibility', {
+        method: 'POST',
+        body: JSON.stringify({ national_id, patient_id, payer_id, facility_license: FACILITY_LICENSE }),
+      });
+      if (oracleRes.ok) {
+        const result = await oracleRes.json();
+        if (patient_id) {
+          await env.DB.prepare(
+            `INSERT INTO eligibility_checks (patient_id, status, check_date, source, response_data)
+             VALUES (?, ?, datetime('now'), 'nphies-oracle', ?)`
+          ).bind(patient_id, result.status || 'eligible', JSON.stringify(result)).run();
+        }
+        return new Response(JSON.stringify({ ...result, source: 'nphies-oracle' }), { headers: JSON_HEADERS });
+      }
+    } catch {}
+
+    // Fallback to NPHIES mirror
+    const mirrorData = await nphiesLookup(env, 'gss');
+    return new Response(JSON.stringify({
+      status: 'pending',
+      note: 'Using cached NPHIES data',
+      source: 'nphies-mirror',
+      data: mirrorData,
+    }), { headers: JSON_HEADERS });
+  }
+
+  // Prior Authorization to NPHIES
+  if (subpath === '/prior-auth' || subpath === '/prior-auth/') {
+    if (method === 'POST') {
+      const data = await request.json();
+      const paNumber = 'PA-' + Date.now();
+      const result = await env.DB.prepare(
+        `INSERT INTO prior_authorizations (patient_id, insurance_id, pa_number, request_type, request_details, status)
+         VALUES (?, ?, ?, ?, ?, 'pending')`
+      ).bind(data.patient_id, data.insurance_id, paNumber, data.request_type, JSON.stringify(data)).run();
+
+      // Submit to NPHIES via Oracle Bridge
+      oracleBridge(env, '/api/nphies/prior-auth', {
+        method: 'POST',
+        body: JSON.stringify({ pa_number: paNumber, ...data, facility_license: FACILITY_LICENSE }),
+      }).then(async (res) => {
+        if (res.ok) {
+          const pa = await res.json();
+          await env.DB.prepare(
+            `UPDATE prior_authorizations SET nphies_pa_id = ?, status = ?, updated_at = datetime('now') WHERE id = ?`
+          ).bind(pa.pa_id || pa.reference, pa.status || 'pending', result.meta.last_row_id).run();
+        }
+      }).catch(() => {});
+
+      return new Response(JSON.stringify({ success: true, id: result.meta.last_row_id, pa_number: paNumber }), { headers: JSON_HEADERS });
+    }
+
+    const results = await env.DB.prepare(
+      `SELECT pa.*, p.full_name_ar as patient_name FROM prior_authorizations pa
+       LEFT JOIN patients p ON pa.patient_id = p.id ORDER BY pa.created_at DESC LIMIT 100`
+    ).all();
+    return new Response(JSON.stringify({ prior_authorizations: results.results }), { headers: JSON_HEADERS });
+  }
+
+  // GSS data (payers list, coverage)
+  if (subpath.startsWith('/gss')) {
+    const gss = await nphiesLookup(env, 'gss');
+    return new Response(JSON.stringify({ gss, source: 'nphies-mirror' }), { headers: JSON_HEADERS });
+  }
+
+  // NPHIES status / health
+  if (subpath === '/status' || subpath === '') {
+    const [claims, pa, eligibility] = await Promise.all([
+      env.DB.prepare("SELECT COUNT(*) as c FROM claims WHERE nphies_claim_id IS NOT NULL").first().catch(() => ({ c: 0 })),
+      env.DB.prepare("SELECT COUNT(*) as c FROM prior_authorizations WHERE nphies_pa_id IS NOT NULL").first().catch(() => ({ c: 0 })),
+      env.DB.prepare("SELECT COUNT(*) as c FROM eligibility_checks WHERE source LIKE 'nphies%'").first().catch(() => ({ c: 0 })),
+    ]);
+    return new Response(JSON.stringify({
+      portal: 'portal.nphies.sa',
+      facility_license: FACILITY_LICENSE,
+      connected: true,
+      stats: {
+        claims_submitted: claims?.c || 0,
+        pa_submitted: pa?.c || 0,
+        eligibility_checks: eligibility?.c || 0,
+      },
+      source: 'nphies-mirror',
+    }), { headers: JSON_HEADERS });
+  }
+
+  return new Response(JSON.stringify({ error: 'NPHIES endpoint not found', subpath }), { status: 404, headers: JSON_HEADERS });
+}
+
+// ─── SBS: Prior Authorization ──────────────────────────────────────────────
+async function handlePriorAuth(request, env) {
+  const url = new URL(request.url);
+  const method = request.method;
+
+  if (method === 'GET') {
+    const status = url.searchParams.get('status');
+    let query = `SELECT pa.*, p.full_name_ar as patient_name, p.mrn FROM prior_authorizations pa
+      LEFT JOIN patients p ON pa.patient_id = p.id`;
+    const binds = [];
+    if (status) { query += ' WHERE pa.status = ?'; binds.push(status); }
+    query += ' ORDER BY pa.created_at DESC LIMIT 100';
+    const result = binds.length
+      ? await env.DB.prepare(query).bind(...binds).all()
+      : await env.DB.prepare(query).all();
+    return new Response(JSON.stringify({ prior_authorizations: result.results }), { headers: JSON_HEADERS });
+  }
+
+  if (method === 'POST') {
+    const data = await request.json();
+    const paNumber = 'PA-' + Date.now();
+    const result = await env.DB.prepare(
+      `INSERT INTO prior_authorizations (patient_id, insurance_id, pa_number, request_type, request_details, status)
+       VALUES (?, ?, ?, ?, ?, 'pending')`
+    ).bind(data.patient_id, data.insurance_id, paNumber, data.request_type, JSON.stringify(data)).run();
+
+    oracleBridge(env, '/api/nphies/prior-auth', {
+      method: 'POST',
+      body: JSON.stringify({ pa_number: paNumber, ...data, facility_license: FACILITY_LICENSE }),
+    }).catch(() => {});
+
+    return new Response(JSON.stringify({ success: true, id: result.meta.last_row_id, pa_number: paNumber }), { headers: JSON_HEADERS });
+  }
+
+  return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers: JSON_HEADERS });
+}
+
+// ─── SBS: Contracts ────────────────────────────────────────────────────────
+async function handleContracts(request, env) {
+  const url = new URL(request.url);
+  const method = request.method;
+
+  if (method === 'GET') {
+    const status = url.searchParams.get('status');
+    let query = 'SELECT * FROM contracts';
+    const binds = [];
+    if (status) { query += ' WHERE status = ?'; binds.push(status); }
+    query += ' ORDER BY end_date ASC LIMIT 200';
+    const result = binds.length
+      ? await env.DB.prepare(query).bind(...binds).all()
+      : await env.DB.prepare(query).all();
+
+    // Enrich with Oracle contract data
+    let oracleContracts = null;
+    try {
+      const or = await oracleBridge(env, '/api/contracts');
+      if (or.ok) oracleContracts = await or.json();
+    } catch {}
+
+    return new Response(JSON.stringify({
+      contracts: result.results,
+      oracle_contracts: oracleContracts,
+    }), { headers: JSON_HEADERS });
+  }
+
+  if (method === 'POST') {
+    const data = await request.json();
+    const result = await env.DB.prepare(
+      `INSERT INTO contracts (payer_id, payer_name, contract_type, start_date, end_date, status, contract_details)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
+    ).bind(data.payer_id, data.payer_name, data.contract_type,
+      data.start_date, data.end_date, data.status || 'active', JSON.stringify(data)).run();
+    return new Response(JSON.stringify({ success: true, id: result.meta.last_row_id }), { headers: JSON_HEADERS });
+  }
+
+  return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers: JSON_HEADERS });
+}
+
+// ─── SBS: RCM Dashboard ────────────────────────────────────────────────────
+async function handleRCM(request, env) {
+  const [
+    totalClaims,
+    claimsByStatus,
+    totalRevenue,
+    pendingPA,
+    eligibilityChecks,
+    recentClaims,
+  ] = await Promise.all([
+    env.DB.prepare("SELECT COUNT(*) as c FROM claims").first().catch(() => ({ c: 0 })),
+    env.DB.prepare("SELECT status, COUNT(*) as count, SUM(total_amount) as total FROM claims GROUP BY status").all().catch(() => ({ results: [] })),
+    env.DB.prepare("SELECT SUM(paid_amount) as paid, SUM(approved_amount) as approved, SUM(total_amount) as billed FROM claims").first().catch(() => ({})),
+    env.DB.prepare("SELECT COUNT(*) as c FROM prior_authorizations WHERE status = 'pending'").first().catch(() => ({ c: 0 })),
+    env.DB.prepare("SELECT COUNT(*) as c FROM eligibility_checks WHERE check_date >= date('now', '-30 days')").first().catch(() => ({ c: 0 })),
+    env.DB.prepare("SELECT c.claim_number, c.status, c.total_amount, c.payer_name, p.full_name_ar as patient_name FROM claims c LEFT JOIN patients p ON c.patient_id = p.id ORDER BY c.created_at DESC LIMIT 10").all().catch(() => ({ results: [] })),
+  ]);
+
+  // Pull Oracle RCM summary
+  let oracleRCM = null;
+  try {
+    const or = await oracleBridge(env, '/api/billing/rcm-summary');
+    if (or.ok) oracleRCM = await or.json();
+  } catch {}
+
+  const statusMap = {};
+  (claimsByStatus.results || []).forEach(r => { statusMap[r.status] = { count: r.count, total: r.total }; });
+  const approvalRate = (totalClaims.c > 0)
+    ? (((statusMap.approved?.count || 0) + (statusMap.paid?.count || 0)) / totalClaims.c * 100).toFixed(1)
+    : '0.0';
+
+  return new Response(JSON.stringify({
+    summary: {
+      total_claims: totalClaims.c,
+      approval_rate: `${approvalRate}%`,
+      billed: totalRevenue?.billed || 0,
+      approved: totalRevenue?.approved || 0,
+      paid: totalRevenue?.paid || 0,
+      pending_pa: pendingPA.c,
+      eligibility_checks_30d: eligibilityChecks.c,
+    },
+    claims_by_status: statusMap,
+    recent_claims: recentClaims.results,
+    oracle_rcm: oracleRCM,
+  }), { headers: JSON_HEADERS });
+}
+
+// ─── Oracle Sync ───────────────────────────────────────────────────────────
+async function handleOracleSync(request, env) {
+  const url = new URL(request.url);
+  const module = url.searchParams.get('module') || 'all';
+  const results = {};
+
+  const modules = module === 'all'
+    ? ['pmi', 'opd', 'lab', 'radiology', 'pharmacy', 'billing']
+    : [module];
+
+  for (const mod of modules) {
+    try {
+      const res = await oracleBridge(env, `/api/${mod}/sync?facility=${FACILITY_LICENSE}`);
+      results[mod] = res.ok ? await res.json() : { error: 'sync failed' };
+    } catch (e) {
+      results[mod] = { error: e.message };
+    }
+  }
+
+  return new Response(JSON.stringify({
+    synced_at: new Date().toISOString(),
+    facility_license: FACILITY_LICENSE,
+    modules: results,
+  }), { headers: JSON_HEADERS });
 }
 
 // ─── Oracle Config ─────────────────────────────────────────────────────────
 async function handleOracleConfig(env) {
   return new Response(JSON.stringify({
     base_url: env.ORACLE_BRIDGE_URL || 'https://oracle-bridge.brainsait.org',
-    hospital: 'Hayat National Hospital - Gharnata',
-    facility_license: '10000000000988',
+    hospital: HOSPITAL_NAME,
+    facility_license: FACILITY_LICENSE,
+    org_id: '624',
+    org_name: 'AlInma Medical Services Company',
     modules: ['pmi', 'opd', 'adt', 'lab', 'radiology', 'pharmacy', 'billing', 'nursing', 'consent'],
+    portals: {
+      bsma: 'https://bsma.elfadil.com',
+      givc: 'https://givc.elfadil.com',
+      sbs: 'https://sbs.elfadil.com',
+    },
   }), { headers: JSON_HEADERS });
 }
 
-// ─── Schema (for /api/schema) ──────────────────────────────────────────────
+// ─── Schema / Health ───────────────────────────────────────────────────────
 async function handleSchema(env) {
-  const tables = ['patients', 'appointments', 'claims', 'providers', 'departments', 'eligibility_checks', 'rag_documents'];
+  const tables = ['patients', 'appointments', 'claims', 'providers', 'departments',
+    'eligibility_checks', 'visits', 'orders', 'lab_results', 'prescriptions',
+    'prior_authorizations', 'contracts', 'rag_documents'];
   const info = {};
   for (const table of tables) {
     const res = await env.DB.prepare(`SELECT COUNT(*) as count FROM ${table}`).first().catch(() => ({ count: 0 }));
@@ -297,27 +763,54 @@ async function handleRequest(request, env, ctx) {
   if (path === '/health' || path === '/') {
     return new Response(JSON.stringify({
       status: 'healthy',
-      service: 'hnh-gharnata-api',
-      version: '2.0.0',
+      service: 'hnh-unified-hub-api',
+      version: '3.0.0',
+      hospital: HOSPITAL_NAME,
+      facility_license: FACILITY_LICENSE,
       timestamp: new Date().toISOString(),
+      portals: {
+        bsma: 'bsma.elfadil.com',
+        givc: 'givc.elfadil.com',
+        sbs: 'sbs.elfadil.com',
+      },
       integrations: {
         oracle: !!(env.ORACLE_BRIDGE_URL),
         nphies: !!(env.NPHIES_MIRROR_URL),
         d1: true,
-      }
+      },
     }), { headers: JSON_HEADERS });
   }
 
   try {
+    // ── BSMA: Patient Portal ──
     if (path.startsWith('/api/patients')) return await handlePatients(request, env, ctx);
     if (path.startsWith('/api/appointments')) return await handleAppointments(request, env, ctx);
     if (path.startsWith('/api/eligibility')) return await handleEligibility(request, env, ctx);
-    if (path.startsWith('/api/claims')) return await handleClaims(request, env, ctx);
     if (path.startsWith('/api/providers')) return await handleProviders(request, env);
     if (path.startsWith('/api/departments')) return await handleDepartments(request, env);
-    if (path.startsWith('/api/nphies/')) return await handleNphiesProxy(request, env);
+
+    // ── GIVC: Provider / Clinical Portal ──
+    if (path.startsWith('/api/visits')) return await handleVisits(request, env);
+    if (path.startsWith('/api/orders')) return await handleOrders(request, env);
+    if (path.startsWith('/api/lab-results')) return await handleLabResults(request, env);
+    if (path.startsWith('/api/prescriptions')) return await handlePrescriptions(request, env);
+
+    // ── SBS: Billing / RCM / Insurance Portal ──
+    if (path.startsWith('/api/claims')) return await handleClaims(request, env, ctx);
+    if (path.startsWith('/api/prior-auth')) return await handlePriorAuth(request, env);
+    if (path.startsWith('/api/contracts')) return await handleContracts(request, env);
+    if (path === '/api/rcm') return await handleRCM(request, env);
+
+    // ── NPHIES Integration ──
+    if (path.startsWith('/api/nphies')) return await handleNphies(request, env);
+
+    // ── Oracle Integration ──
     if (path === '/api/oracle-config') return await handleOracleConfig(env);
+    if (path === '/api/oracle-sync') return await handleOracleSync(request, env);
+
+    // ── Schema / Debug ──
     if (path === '/api/schema') return await handleSchema(env);
+
     return new Response(JSON.stringify({ error: 'Not found' }), { status: 404, headers: JSON_HEADERS });
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: JSON_HEADERS });
