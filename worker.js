@@ -431,7 +431,7 @@ async function handleNphies(req, env, sub) {
       // Try to trigger sync
       try {
         const base = env.NPHIES_MIRROR_URL || 'https://nphies-mirror.brainsait-fadil.workers.dev';
-        await fetch(\`\${base}/mirror/sync\`, { method: 'POST',
+        await fetch(`${base}/mirror/sync`, { method: 'POST',
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify({facility:'gharnata'}) });
         d = await nphiesMirror(env, '/gss/gharnata');
