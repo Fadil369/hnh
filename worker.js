@@ -448,9 +448,9 @@ async function handleDrugs(req, env) {
 
   if (!env.HIS_DB) return err('HIS_DB binding not configured', 503);
 
-  let q = 'SELECT * FROM drug_formulary WHERE 1=1';
+  let q = 'SELECT code, display, category, price, unit_type, manufacturer FROM drug_formulary WHERE 1=1';
   const b = [];
-  if (search) { q += ' AND (name_en LIKE ? OR name_ar LIKE ? OR drug_code LIKE ?)'; const s=`%${search}%`; b.push(s,s,s); }
+  if (search) { q += ' AND (display LIKE ? OR code LIKE ? OR category LIKE ?)'; const s=`%${search}%`; b.push(s,s,s); }
   if (cat)    { q += ' AND category=?'; b.push(cat); }
   q += ` LIMIT ${limit}`;
 
