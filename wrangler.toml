@@ -1,7 +1,7 @@
 # HNH Unified Worker — wrangler.toml
 # Replaces: hnh-portal + hnh-gharnata-api → hnh-unified (v4.0.0)
 
-name = "hnh-unified"
+name = "hnh-gharnata-api"
 main = "worker.js"
 compatibility_date = "2026-05-01"
 account_id = "d7b99530559ab4f2545e9bdc72a7ab9b"
