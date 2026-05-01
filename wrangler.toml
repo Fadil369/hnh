@@ -1,6 +1,4 @@
-# HNH Unified Worker — wrangler.toml
-# Replaces: hnh-portal + hnh-gharnata-api → hnh-unified (v4.0.0)
-
+# HNH Unified Worker v5.0 — wrangler.toml
 name = "hnh-unified"
 main = "worker.js"
 compatibility_date = "2026-05-01"
@@ -9,33 +7,39 @@ account_id = "d7b99530559ab4f2545e9bdc72a7ab9b"
 [ai]
 binding = "AI"
 
+# Primary: HNH Gharnata schema (patients, appointments, claims, providers)
 [[d1_databases]]
 binding = "DB"
 database_name = "hnh-gharnata"
 database_id = "d6960732-d5d0-4271-84e9-ba988c9c32dc"
 
+# HIS Database: real appointments (4), drug formulary (1000), medical records
+[[d1_databases]]
+binding = "HIS_DB"
+database_name = "his_database"
+database_id = "f79d9487-fd6e-45e0-aaf1-ea9f2a69493d"
+
+# Basma Production: 181 RAG clinical documents (OASIS/Hayat), oracle_sync
+[[d1_databases]]
+binding = "BASMA_DB"
+database_name = "basma_production"
+database_id = "c30dd8f8-62f6-42f6-ad47-d442bf3bde7d"
+
 [vars]
 ORACLE_BRIDGE_URL  = "https://oracle-bridge.brainsait.org"
 NPHIES_MIRROR_URL  = "https://nphies-mirror.brainsait-fadil.workers.dev"
 FACILITY_LICENSE   = "10000000000988"
-HOSPITAL_NAME      = "Hayat National Hospital - Gharnata"
-HUB_VERSION        = "4.0.0"
+HUB_VERSION        = "5.0.0"
 
-# Secrets (set via wrangler secret put, never commit values):
-#   wrangler secret put ORACLE_API_KEY
-#   wrangler secret put API_KEY
-#   wrangler secret put NPHIES_TOKEN
-#   wrangler secret put ELEVENLABS_API_KEY
+# Secrets (wrangler secret put):
+#   API_KEY          ← protects /api/claims /api/visits /api/orders /api/rcm
+#   ORACLE_API_KEY   ← Oracle Bridge authentication
+#   NPHIES_TOKEN     ← Direct NPHIES portal (optional)
+#   ELEVENLABS_API_KEY ← Basma TTS (optional)
 
-# Custom domain (add after DNS points to this worker):
-# [[routes]]
-# pattern = "hnh.brainsait.org/*"
-# zone_name = "brainsait.org"
-
-[env.staging]
-name = "hnh-unified-staging"
-vars = { HUB_VERSION = "4.0.0-staging" }
+# Route (already configured via CF API):
+# hnh.brainsait.org/* → hnh-unified
 
 [env.production]
 name = "hnh-unified"
-vars = { HUB_VERSION = "4.0.0" }
+vars = { HUB_VERSION = "5.0.0" }
