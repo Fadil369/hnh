@@ -252,6 +252,11 @@ const BLOG_POSTS = [
     title_ar:'إدارة دورة الإيرادات بالذكاء الاصطناعي: 5 خوارزميات كشف الاحتيال + NPHIES',
     excerpt_en:'BrainSAIT RCM system uses Isolation Forest ML, duplicate billing detection, upcoding alerts, and FHIR R4 validation to protect hospital revenue — with full bilingual AR/EN support.',
     excerpt_ar:'يستخدم نظام BrainSAIT للإيرادات Isolation Forest، وكشف الفوترة المكررة، وتنبيهات الترميز المرتفع، وFHIR R4 — بدعم ثنائي اللغة.' },
+  { id:'deepseek-healthcare-ai', slug:'deepseek-v3-healthcare-basma-voice', category:'tech', emoji:'🎙️', featured:true, read_min:5, author:'BrainSAIT AI Team', date:'2026-05-01',
+    title_en:'DeepSeek V3 Powers Basma — Bilingual Healthcare Voice Agent',
+    title_ar:'DeepSeek V3 يُشغّل بسمة — وكيل صوتي ثنائي اللغة للرعاية الصحية',
+    excerpt_en:'How Hayat National Hospitals deployed DeepSeek V3 as primary AI engine for Basma voice agent — Arabic-first, NPHIES-integrated, with ElevenLabs TTS and Oracle Bridge real-time lookup.',
+    excerpt_ar:'كيف نشرت مستشفيات الحياة الوطني DeepSeek V3 محرك ذكاء اصطناعي رئيسي لبسمة — بالعربية أولاً، مدمج مع NPHIES، مع TTS من ElevenLabs وBridge Oracle لحظياً.' },
 ];
 
 const COURSES = [
@@ -1830,10 +1835,10 @@ async function apiPortalHub(env) {
     }).then(r => r.ok ? r.json() : null),
   ]);
 
-  const net    = bsmaNet.value;
-  const givc   = givcData.value;
-  const sbs    = sbsData.value;
-  const oracle = oracleData.value;
+  const net    = bsmaNet.status    === 'fulfilled' ? bsmaNet.value    : null;
+  const givc   = givcData.status   === 'fulfilled' ? givcData.value   : null;
+  const sbs    = sbsData.status    === 'fulfilled' ? sbsData.value    : null;
+  const oracle = oracleData.status === 'fulfilled' ? oracleData.value : null;
   const fin    = net?.financials || {};
   const br     = net?.by_branch || {};
 
