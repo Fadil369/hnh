@@ -72,7 +72,7 @@ const I18N = {
   ar: {
     'nav.home': 'الرئيسية', 'nav.about': 'عن المجموعة', 'nav.departments': 'الأقسام الطبية',
     'nav.doctors': 'أطباؤنا', 'nav.branches': 'فروعنا', 'nav.contact': 'اتصل بنا',
-    'nav.blog': 'المدونة', 'nav.achievements': 'الإنجازات', 'nav.academy': 'أكاديمية الحياة',
+    'nav.blog': 'المدونة الصحية', 'nav.achievements': 'الإنجازات', 'nav.academy': 'أكاديمية الحياة',
     'nav.careers': 'التوظيف', 'nav.offers': 'العروض', 'nav.book': 'احجز موعد',
     'cta.title': 'صحتك أولاً', 'cta.subtitle': 'احجز موعدك الآن واحصل على أفضل رعاية طبية',
     'cta.bookBtn': 'احجز موعد', 'cta.callBtn': 'اتصل بنا',
@@ -83,11 +83,13 @@ const I18N = {
     'form.branch': 'الفرع', 'form.message': 'رسالتك', 'form.submit': 'إرسال الرسالة',
     'form.select': 'اختر', 'form.success': 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.',
     'form.appointment.success': 'تم حجز موعدك بنجاح!',
+    'nav.packages': 'باقات الرعاية', 'nav.faq': 'الأسئلة الشائعة', 'faq.title': 'الأسئلة الشائعة', 'packages.title': 'باقات الفحص الشامل', 'blog.title': 'المدونة الصحية',
+    'footer.name': 'مستشفيات الحياة الوطني', 'footer.desc': 'نظام BrainSAIT Healthcare OS المتصل بقاعدة البيانات الحية', 'footer.quickLinks': 'روابط سريعة', 'footer.services': 'خدماتنا', 'footer.contact': 'تواصل معنا',
   },
   en: {
     'nav.home': 'Home', 'nav.about': 'About', 'nav.departments': 'Departments',
     'nav.doctors': 'Doctors', 'nav.branches': 'Branches', 'nav.contact': 'Contact',
-    'nav.blog': 'Blog', 'nav.achievements': 'Achievements', 'nav.academy': 'Life Academy',
+    'nav.blog': 'Health Blog', 'nav.achievements': 'Achievements', 'nav.academy': 'Life Academy',
     'nav.careers': 'Careers', 'nav.offers': 'Offers', 'nav.book': 'Book Appointment',
     'cta.title': 'Your Health First', 'cta.subtitle': 'Book your appointment now and get the best medical care',
     'cta.bookBtn': 'Book Appointment', 'cta.callBtn': 'Call Us',
@@ -98,6 +100,8 @@ const I18N = {
     'form.branch': 'Branch', 'form.message': 'Your Message', 'form.submit': 'Send Message',
     'form.select': 'Select', 'form.success': 'Your message has been sent successfully!',
     'form.appointment.success': 'Your appointment has been booked successfully!',
+    'nav.packages': 'Health Packages', 'nav.faq': 'FAQ', 'faq.title': 'Frequently Asked Questions', 'packages.title': 'Comprehensive Health Packages', 'blog.title': 'Health Blog',
+    'footer.name': 'Hayat National Hospitals', 'footer.desc': 'BrainSAIT Healthcare OS connected to live database', 'footer.quickLinks': 'Quick Links', 'footer.services': 'Our Services', 'footer.contact': 'Contact Us',
   }
 };
 
