@@ -8,7 +8,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '7.0.0';
+const VERSION        = '7.1.0';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
