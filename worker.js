@@ -2163,6 +2163,31 @@ export default {
       return new Response(buildHTML(lang), { headers: HTML_H });
     }
 
+    // ── Sitemap + Robots ──────────────────────────────────────
+    if (path === '/sitemap.xml') {
+      const base = 'https://hnh.brainsait.org';
+      const blogUrls = BLOG_POSTS.map(p =>
+        '  <url><loc>' + base + '/blog/' + p.id + '</loc><changefreq>monthly</changefreq><priority>0.8</priority>' +
+        '<xhtml:link rel="alternate" hreflang="ar" href="' + base + '/blog/' + p.id + '?lang=ar"/>' +
+        '<xhtml:link rel="alternate" hreflang="en" href="' + base + '/blog/' + p.id + '?lang=en"/></url>'
+      ).join('\n');
+      const courseUrls = COURSES.map(c =>
+        '  <url><loc>' + base + '/academy/' + c.id + '</loc><changefreq>monthly</changefreq><priority>0.8</priority>' +
+        '<xhtml:link rel="alternate" hreflang="ar" href="' + base + '/academy/' + c.id + '?lang=ar"/>' +
+        '<xhtml:link rel="alternate" hreflang="en" href="' + base + '/academy/' + c.id + '?lang=en"/></url>'
+      ).join('\n');
+      const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
+        '  <url><loc>' + base + '/</loc><changefreq>daily</changefreq><priority>1.0</priority>' +
+        '<xhtml:link rel="alternate" hreflang="ar" href="' + base + '/?lang=ar"/>' +
+        '<xhtml:link rel="alternate" hreflang="en" href="' + base + '/?lang=en"/></url>\n' +
+        blogUrls + '\n' + courseUrls + '\n</urlset>';
+      return new Response(sitemap, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=3600' } });
+    }
+    if (path === '/robots.txt') {
+      return new Response('User-agent: *\nAllow: /\nSitemap: https://hnh.brainsait.org/sitemap.xml\n', { headers: { 'Content-Type': 'text/plain' } });
+    }
+
     // ── Public JSON API ───────────────────────────────────────
     if (path === '/health' || path === '/api/health')     return apiHealth(env);
     if (path === '/api/stats')                             return apiStats(env);
@@ -2259,7 +2284,7 @@ export default {
     // Academy
     if (path === '/api/academy/courses')                   return apiAcademy(req, null);
     if (path.startsWith('/api/academy/courses/'))          return apiAcademy(req, path.slice('/api/academy/courses/'.length));
-    if (path === '/api/academy/stats')                     return ok({ total_courses: 9, total_hours: 104, accreditation: 'SCFHS CPD + CHI', repos: ['nphies-course-platform','sbs','brainsait-rcm','open-webui','brainsait-mcp-dxt'] });
+    if (path === '/api/academy/stats')                     return ok({ total_courses: COURSES.length, total_hours: 104, accreditation: 'SCFHS CPD + CHI', repos: ['nphies-course-platform','sbs','brainsait-rcm','open-webui','brainsait-mcp-dxt'] });
 
     if (path === '/api/portal-hub')                        return apiPortalHub(env);
 
