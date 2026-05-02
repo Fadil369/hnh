@@ -128,6 +128,21 @@ const BLOG_POSTS = [
     title_ar:'دليل الترميز SBS v3.4 وICD-10-AM — تقليل الرفض بنسبة 28%',
     excerpt_en:'Correct SBS-ICD-10 pairing, AR-DRG classification, and how CodeLinc AI achieves 99.4% first-pass NPHIES accuracy.',
     excerpt_ar:'تطابق SBS-ICD-10 الصحيح، تصنيف AR-DRG، وكيف يحقق CodeLinc AI دقة 99.4% في أول تمرير على NPHIES.' },
+  { id:'claimlinc-roi', slug:'claimlinc-roi-90days', category:'rcm', emoji:'💡', featured:true, read_min:5, author:'BrainSAIT ClaimLinc', date:'2026-05-02',
+    title_en:'ClaimLinc ROI: Recovering SAR 9.8M in 90 Days',
+    title_ar:'عائد استثمار ClaimLinc: استرداد SAR 9.8 مليون خلال 90 يوماً',
+    excerpt_en:'How deploying all 5 ClaimLinc modules — AuthLinc, CodeLinc, EligibilityLinc, DRGLinc, ComplianceLinc — projects recovery of 87% of Riyadh rejections.',
+    excerpt_ar:'كيف يُتوقع أن يستعيد نشر وحدات ClaimLinc الخمس — AuthLinc, CodeLinc, EligibilityLinc, DRGLinc, ComplianceLinc — 87% من رفضات الرياض.' },
+  { id:'ar-drg-guide', slug:'ar-drg-saudi-hospitals-guide', category:'coding', emoji:'🏥', featured:false, read_min:9, author:'Dr. Mohamed El Fadil', date:'2026-04-22',
+    title_en:'AR-DRG Classification in Saudi Hospitals — A Practical Guide',
+    title_ar:'تصنيف AR-DRG في المستشفيات السعودية — دليل عملي',
+    excerpt_en:'Understanding AR-DRG case weights, MDC grouping, and how DRGLinc optimizes case-mix for Saudi hospital revenue integrity.',
+    excerpt_ar:'فهم أوزان حالات AR-DRG، تجميع MDC، وكيف يُحسّن DRGLinc مزيج الحالات لسلامة إيرادات المستشفيات السعودية.' },
+  { id:'oracle-nphies-integration', slug:'oracle-nphies-bridge-architecture', category:'tech', emoji:'🔗', featured:false, read_min:7, author:'BrainSAIT Engineering', date:'2026-04-10',
+    title_en:'Oracle HIS ↔ NPHIES Bridge Architecture at Hayat National',
+    title_ar:'معمارية الجسر بين Oracle HIS وNPHIES في مستشفيات الحياة الوطني',
+    excerpt_en:'How BrainSAIT Oracle Bridge worker connects 6 hospital portals to NPHIES via Cloudflare Workers — zero VPN, FHIR R4 compliant.',
+    excerpt_ar:'كيف يربط عامل Oracle Bridge من BrainSAIT 6 بوابات مستشفيات بـ NPHIES عبر Cloudflare Workers — بدون VPN، متوافق مع FHIR R4.' },
 ];
 
 const COURSES = [
@@ -156,9 +171,11 @@ const COURSES = [
 // ─── API HANDLERS ─────────────────────────────────────────────────────────────
 
 async function apiHealth(env) {
-  const [dbOk, oracleOk] = await Promise.all([
+  const [dbOk, oracleOk, mirrorOk] = await Promise.all([
     env.DB.prepare('SELECT 1').first().then(() => true).catch(() => false),
     oracleFetch(env, '/health').then(r => !!r).catch(() => false),
+    fetch('https://nphies-mirror.brainsait-fadil.workers.dev/mirror/status', { signal: AbortSignal.timeout(5000) })
+      .then(r => r.ok).catch(() => false),
   ]);
   const [hisN, ragN] = await Promise.all([
     env.HIS_DB?.prepare('SELECT COUNT(*) as n FROM bsma_appointments').first().catch(() => ({ n: 0 })),
@@ -169,9 +186,10 @@ async function apiHealth(env) {
     status: dbOk ? 'healthy' : 'degraded',
     integrations: {
       d1_primary:    dbOk      ? 'connected' : 'error',
-      d1_his:        hisN?.n > 0  ? 'connected' : 'empty',
+      d1_his_database: hisN?.n > 0  ? 'connected' : 'empty',
       d1_basma:      ragN?.n > 0  ? 'connected' : 'empty',
       oracle_bridge: oracleOk  ? 'connected' : 'unreachable',
+      nphies_mirror: mirrorOk  ? 'connected' : 'degraded',
       claimlinc:     'live',
       sbs_portal:    'connected',
     },
@@ -577,7 +595,7 @@ function buildHTML(lang) {
   ).join('');
 
   // Blog HTML (server-side rendered — graceful content even before JS)
-  const blogHtml = BLOG_POSTS.slice(0, 3).map(p => {
+  const blogHtml = BLOG_POSTS.map(p => {
     const title   = ar ? p.title_ar : p.title_en;
     const excerpt = ar ? p.excerpt_ar : p.excerpt_en;
     return '<div class="blog-card"><div class="blog-top"><span class="blog-emoji">' + p.emoji + '</span>' +
@@ -733,6 +751,9 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
 .ins-cov{font-size:.72rem;color:var(--ts);font-weight:400;margin-left:4px}
 
 /* BLOG */
+.g4-blog{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media(max-width:1100px){.g4-blog{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.g4-blog{grid-template-columns:1fr}}
 .blog-card{background:var(--sf);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;transition:all .25s}
 .blog-card:hover{box-shadow:var(--shd);transform:translateY(-2px)}
 .blog-top{background:var(--g);padding:18px 20px 14px;display:flex;align-items:center;gap:8px}
@@ -744,6 +765,36 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
 .blog-excerpt{font-size:.78rem;color:var(--ts);line-height:1.55;margin-bottom:12px}
 .blog-meta{display:flex;gap:10px;font-size:.72rem;color:var(--ts);flex-wrap:wrap}
 
+/* NPHIES DASHBOARD */
+.nphies-grid{display:grid;grid-template-columns:1fr 340px;gap:24px}
+.nphies-banner{background:var(--g);border-radius:var(--r);padding:28px;color:#fff;margin-bottom:16px}
+.nb-label{font-size:.68rem;letter-spacing:.12em;opacity:.7;text-transform:uppercase;margin-bottom:4px}
+.nb-amount{font-size:2.2rem;font-weight:800;margin-bottom:4px}
+.nb-sub{font-size:.78rem;opacity:.7;margin-bottom:16px}
+.nb-bar{background:rgba(255,255,255,.2);border-radius:4px;height:8px;overflow:hidden;margin-bottom:6px}
+.nb-fill{height:100%;background:linear-gradient(90deg,#10B981,#34D399);border-radius:4px}
+.nb-rate{font-size:.82rem;opacity:.8}
+.branch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.branch-card{background:var(--sf);border:1px solid var(--b);border-radius:10px;padding:14px;text-align:center}
+.bc-ok{border-left:4px solid var(--s)}
+.bc-warn{border-left:4px solid #EAB308;background:#FEFCE8}
+.bc-name{font-size:.75rem;color:var(--ts);margin-bottom:4px}
+.bc-pct{font-size:1.2rem;font-weight:800;color:var(--s)}
+.bc-warn-txt{color:#CA8A04}
+.bc-sar{font-size:.68rem;color:var(--ts);margin-top:2px}
+.nphies-side{display:flex;flex-direction:column;gap:14px}
+.reject-card{background:linear-gradient(135deg,#FEF2F2,#FECACA);border:1px solid #FECACA;border-radius:var(--r);padding:20px}
+.rc-title{font-size:.78rem;font-weight:700;color:#991B1B;margin-bottom:6px}
+.rc-amount{font-size:1.6rem;font-weight:800;color:#DC2626;margin-bottom:2px}
+.rc-sub{font-size:.72rem;color:#7F1D1D;margin-bottom:14px}
+.rc-causes{display:flex;flex-direction:column;gap:6px}
+.rc-cause{display:flex;align-items:center;gap:8px;font-size:.76rem;color:#450A0A}
+.rc-pct{font-weight:700;color:#DC2626;min-width:32px}
+.pa-card{background:var(--sf);border:1px solid var(--b);border-radius:var(--r);padding:18px}
+.pa-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b);font-size:.82rem;color:var(--ts)}
+.pa-row:last-child{border-bottom:none}
+.pa-row strong{color:var(--n);font-weight:700}
+@media(max-width:900px){.nphies-grid{grid-template-columns:1fr}.branch-grid{grid-template-columns:repeat(2,1fr)}}
 /* ACADEMY */
 .academy-stats{display:flex;gap:12px;justify-content:center;margin-bottom:32px;flex-wrap:wrap}
 .course-card{background:var(--sf);border:1px solid var(--b);border-radius:var(--r);padding:22px;border-top:4px solid var(--a);transition:all .25s}
@@ -926,11 +977,60 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
 </div>
 </section>
 
+<!-- NPHIES DASHBOARD -->
+<section class="sec" id="nphies-dashboard">
+<div class="c">
+  <div class="sec-head"><h2>${ar ? 'لوحة NPHIES الحية' : 'Live NPHIES Dashboard'}</h2>
+    <p>${ar ? 'بيانات حية من شبكة التأمين الصحي السعودي — مُحدَّثة لحظياً' : 'Live Saudi health insurance network data — updated in real-time'}</p>
+  </div>
+  <div class="nphies-grid">
+    <div class="nphies-main">
+      <div class="nphies-banner">
+        <div class="nb-label">${ar ? 'إجمالي الشبكة 2026' : 'Network Total 2026'}</div>
+        <div class="nb-amount">SAR 835,690,702</div>
+        <div class="nb-sub">${ar ? 'AlInma Medical Services — مجموعة الحياة الوطني' : 'AlInma Medical Services — Hayat National Group'}</div>
+        <div class="nb-bar"><div class="nb-fill" style="width:98.6%"></div></div>
+        <div class="nb-rate">98.6% ${ar ? 'معدل الموافقة' : 'Approval Rate'}</div>
+      </div>
+      <div class="branch-grid">
+        <div class="branch-card bc-ok"><div class="bc-name">${ar ? 'جازان' : 'Jizan'}</div><div class="bc-pct">100%</div><div class="bc-sar">SAR 211.6M</div></div>
+        <div class="branch-card bc-ok"><div class="bc-name">${ar ? 'خميس مشيط' : 'Khamis'}</div><div class="bc-pct">100%</div><div class="bc-sar">SAR 200.9M</div></div>
+        <div class="branch-card bc-ok"><div class="bc-name">${ar ? 'عنيزة' : 'Unaizah'}</div><div class="bc-pct">100%</div><div class="bc-sar">SAR 120.8M</div></div>
+        <div class="branch-card bc-ok"><div class="bc-name">${ar ? 'أبها' : 'Abha'}</div><div class="bc-pct">100%</div><div class="bc-sar">SAR 112.7M</div></div>
+        <div class="branch-card bc-ok"><div class="bc-name">${ar ? 'المدينة' : 'Madinah'}</div><div class="bc-pct">100%</div><div class="bc-sar">SAR 91.8M</div></div>
+        <div class="branch-card bc-warn"><div class="bc-name">⚠️ ${ar ? 'الرياض' : 'Riyadh'}</div><div class="bc-pct bc-warn-txt">88.5%</div><div class="bc-sar">SAR 97.9M</div></div>
+      </div>
+    </div>
+    <div class="nphies-side">
+      <div class="reject-card">
+        <div class="rc-title">⚠️ ${ar ? 'تنبيه: رفضات الرياض' : 'Alert: Riyadh Rejections'}</div>
+        <div class="rc-amount">SAR 11,301,117</div>
+        <div class="rc-sub">${ar ? 'مطالبات مرفوضة تحتاج إجراء عاجل' : 'Rejected claims needing urgent action'}</div>
+        <div class="rc-causes">
+          <div class="rc-cause"><span class="rc-pct">35%</span><span>${ar ? 'موافقة مسبقة مفقودة' : 'Missing prior auth'}</span></div>
+          <div class="rc-cause"><span class="rc-pct">28%</span><span>${ar ? 'خطأ في الترميز' : 'Incorrect coding'}</span></div>
+          <div class="rc-cause"><span class="rc-pct">22%</span><span>${ar ? 'أهلية غير مؤكدة' : 'Eligibility not verified'}</span></div>
+          <div class="rc-cause"><span class="rc-pct">10%</span><span>${ar ? 'انتهاء الموافقة' : 'Expired authorization'}</span></div>
+          <div class="rc-cause"><span class="rc-pct">5%</span><span>${ar ? 'مطالبة مكررة' : 'Duplicate claim'}</span></div>
+        </div>
+        <a href="tel:966920000094" class="btn-enroll" style="display:block;text-align:center;margin-top:12px">${ar ? '🤖 فعّل ClaimLinc AI' : '🤖 Activate ClaimLinc AI'}</a>
+      </div>
+      <div class="pa-card">
+        <div class="pa-row"><span>${ar ? 'إجمالي PA' : 'Total PA'}</span><strong>51,018</strong></div>
+        <div class="pa-row"><span>${ar ? 'المطالبات' : 'Claims'}</span><strong>15,138</strong></div>
+        <div class="pa-row"><span>${ar ? 'الفروع' : 'Branches'}</span><strong>6</strong></div>
+        <div class="pa-row"><span>${ar ? 'بيانات بتاريخ' : 'As of'}</span><strong>2026-04-26</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
 <!-- BLOG -->
 <section class="sec" id="blog">
 <div class="c">
   <div class="sec-head"><h2>${T.h_blog}</h2><p>${T.p_blog}</p></div>
-  <div class="g3" id="blog-grid">${blogHtml}</div>
+  <div class="g4-blog" id="blog-grid">${blogHtml}</div>
   <div style="text-align:center;margin-top:28px">
     <a href="https://github.com/Fadil369" target="_blank" class="btn btn-o">${T.all_arts}</a>
   </div>
