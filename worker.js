@@ -14,7 +14,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '8.1.0';
+const VERSION        = '8.2.0';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -112,6 +112,99 @@ const TUNNEL_STATUS = {
   jizan:   { reachable: false, ms: 3101,  loginPath: '/prod/faces/Login.jsf',  note: '502 — 172.17.4.84 private IP, Oracle server unreachable' },
   abha:    { reachable: false, ms: 10000, loginPath: '/Oasis/faces/Home',       note: 'timeout — 172.19.1.1 private IP, cloudflared not running on-site' },
 };
+
+// ─── NPHIES DENIAL INTELLIGENCE MAP ──────────────────────────────────────────
+// Saudi NPHIES adjustment / rejection codes with action routing, document requirements,
+// recoverability scoring, and appeal deadline guidance (per CCHI/MOH billing rules).
+// track: 'resubmit' | 'appeal' | 'new_claim' | 'write_off'
+// recoverable: likelihood claim value is recoverable (true/false)
+// deadline_days: calendar days to act from rejection date
+const NPHIES_DENIAL = {
+  // ── Administrative ────────────────────────────────────────────────────────
+  A001: { label: 'Member not found',              track:'resubmit',   recoverable:true,  deadline_days:15, score:90,
+    action: 'Re-verify member ID and insurance number in NPHIES 270/271. Confirm national ID on Oracle HIS.',
+    docs: ['National ID copy','Insurance card copy','Eligibility 271 response','Enrollment confirmation from payer'] },
+  A002: { label: 'Duplicate claim',               track:'review',     recoverable:false, deadline_days:7,  score:20,
+    action: 'Cross-check claim_id in Oracle HIS. Void if truly duplicate; escalate if original was never paid.',
+    docs: ['Original claim','Oracle encounter record','Payment EOB or denial letter for original'] },
+  A003: { label: 'Authorization required',         track:'resubmit',   recoverable:true,  deadline_days:15, score:85,
+    action: 'Attach existing PA number or obtain retroactive PA from payer. Link to Oracle encounter.',
+    docs: ['PA approval letter','Clinical justification','Oracle appointment record','Physician order'] },
+  A004: { label: 'Member not eligible on DOS',    track:'resubmit',   recoverable:true,  deadline_days:15, score:75,
+    action: 'Request real-time NPHIES 270/271 for exact date of service. Check enrollment gaps.',
+    docs: ['Eligibility 271 for DOS','Insurance card','Patient registration form','Payer enrollment data'] },
+  A005: { label: 'Benefit exhausted',             track:'appeal',     recoverable:true,  deadline_days:30, score:60,
+    action: 'Submit contractual appeal with full utilization log. Request benefit reinstatement letter.',
+    docs: ['Benefit schedule','Annual utilization report','Medical necessity letter','Specialist referral'] },
+  A006: { label: 'Referral required',             track:'resubmit',   recoverable:true,  deadline_days:15, score:80,
+    action: 'Attach GP referral or internal consultation request from Oracle HIS.',
+    docs: ['Referral letter','GP clinical notes','Internal consultation form'] },
+  A007: { label: 'Non-participating provider',   track:'appeal',     recoverable:true,  deadline_days:30, score:55,
+    action: 'Submit emergency exception or network gap appeal. Attach facility credentials.',
+    docs: ['Facility MOH license','Emergency justification','Network gap request','Out-of-network rate schedule'] },
+  // ── Clinical ──────────────────────────────────────────────────────────────
+  C001: { label: 'Not medically necessary',       track:'appeal',     recoverable:true,  deadline_days:30, score:70,
+    action: 'Submit clinical peer-to-peer appeal with physician attestation and evidence-based guidelines.',
+    docs: ['Clinical notes (full encounter)','Physician attestation letter','Clinical guideline reference','MDT decision if applicable'] },
+  C002: { label: 'Experimental/Investigational',  track:'appeal',     recoverable:true,  deadline_days:30, score:50,
+    action: 'Provide published clinical trial evidence and MDT decision supporting treatment.',
+    docs: ['PubMed/WHO clinical studies','MDT meeting minutes','Ethics committee approval','Physician attestation'] },
+  C003: { label: 'Service not covered',           track:'review',     recoverable:false, deadline_days:7,  score:15,
+    action: 'Verify policy exclusions — classify as patient responsibility or bill supplemental plan.',
+    docs: ['Policy document','Benefit exclusion list','Patient financial responsibility form'] },
+  C004: { label: 'PA expired — service delayed',  track:'resubmit',   recoverable:true,  deadline_days:15, score:80,
+    action: 'Request new PA or appeal with clinical continuity rationale explaining delay.',
+    docs: ['Original PA','Updated clinical notes','Physician delay justification','Scheduling constraints evidence'] },
+  C005: { label: 'Inappropriate level of care',  track:'appeal',     recoverable:true,  deadline_days:30, score:65,
+    action: 'Submit InterQual/Milliman criteria appeal proving acuity justified admission level.',
+    docs: ['InterQual criteria print','Admission physician notes','Nursing assessments','Vital sign records'] },
+  C006: { label: 'Observation vs admission',      track:'appeal',     recoverable:true,  deadline_days:30, score:60,
+    action: 'Appeal admission criteria — attach physician admission order with clinical rationale.',
+    docs: ['Physician admission order','Clinical criteria checklist','Nursing assessment','Discharge summary'] },
+  // ── Technical/Coding ──────────────────────────────────────────────────────
+  T001: { label: 'Invalid ICD-10 code',          track:'resubmit',   recoverable:true,  deadline_days:15, score:95,
+    action: 'Clinical coding audit — correct ICD-10 from encounter documentation. Resubmit corrected FHIR.',
+    docs: ['Corrected FHIR claim JSON','Encounter clinical notes','Coding audit worksheet','ICD-10 reference'] },
+  T002: { label: 'Invalid procedure/CPT code',   track:'resubmit',   recoverable:true,  deadline_days:15, score:92,
+    action: 'Verify CPT against operative report and facility fee schedule. Correct and resubmit.',
+    docs: ['Corrected FHIR claim JSON','Operative/procedure report','Fee schedule','Coding audit worksheet'] },
+  T003: { label: 'Missing required FHIR field',  track:'resubmit',   recoverable:true,  deadline_days:10, score:98,
+    action: 'Complete all mandatory FHIR R4 fields. Run NPHIES validator before resubmit.',
+    docs: ['Completed FHIR claim JSON','NPHIES field validation report','Supporting clinical docs'] },
+  T004: { label: 'Coordination of benefits',     track:'resubmit',   recoverable:true,  deadline_days:15, score:80,
+    action: 'Attach primary payer EOB and resubmit as secondary claim with COB flag.',
+    docs: ['Primary payer EOB','COB form','Insurance coordination agreement'] },
+  T005: { label: 'Unbundling violation',         track:'resubmit',   recoverable:true,  deadline_days:15, score:85,
+    action: 'Consolidate unbundled codes per NPHIES/CCI bundling rules. Resubmit corrected claim.',
+    docs: ['Corrected FHIR claim JSON','CCI bundling reference','Procedure notes'] },
+  T006: { label: 'Modifier missing/incorrect',   track:'resubmit',   recoverable:true,  deadline_days:15, score:90,
+    action: 'Add or correct HCPCS/CPT modifier. Verify modifier with procedure documentation.',
+    docs: ['Corrected FHIR claim JSON','Procedure documentation','Modifier reference table'] },
+  // ── Financial/Contractual ─────────────────────────────────────────────────
+  F001: { label: 'Fee schedule variance',        track:'appeal',     recoverable:true,  deadline_days:60, score:70,
+    action: 'Submit contractual rate appeal referencing signed fee schedule. Calculate underpayment delta.',
+    docs: ['Signed fee schedule','Underpayment calculation sheet','Contract reference page','Billing rate justification'] },
+  F002: { label: 'Exceeds maximum allowable',    track:'appeal',     recoverable:true,  deadline_days:30, score:55,
+    action: 'Appeal with invoice, market rate comparison, and clinical complexity justification.',
+    docs: ['Supplier invoice','Market rate benchmark','Clinical complexity justification','Contract addendum if applicable'] },
+  F003: { label: 'Global period — included',     track:'review',     recoverable:false, deadline_days:7,  score:25,
+    action: 'Confirm if service falls within global surgical period. Recode with complication modifier if clinically distinct.',
+    docs: ['Surgery date record','Global period reference','Complication clinical notes','Modifier justification'] },
+  F004: { label: 'Patient deductible/co-pay',    track:'write_off',  recoverable:false, deadline_days:30, score:5,
+    action: 'Bill patient per financial responsibility agreement. Document collection attempt.',
+    docs: ['Patient financial agreement','Itemized statement','Collection notice template'] },
+  // ── Default fallback ──────────────────────────────────────────────────────
+  UNKNOWN: { label: 'Unknown/unclassified rejection', track:'review', recoverable:true, deadline_days:15, score:50,
+    action: 'Manual review required. Contact payer for clarification, then classify and re-route.',
+    docs: ['Full claim copy','Payer rejection notice','Denial reason clarification letter from payer'] },
+};
+
+// Derive 3 submission tracks from NPHIES_DENIAL map
+// Track 1 = resubmit | Track 2 = appeal | Track 3 = new_claim
+function classifyDenial(code) {
+  return NPHIES_DENIAL[code] || NPHIES_DENIAL['UNKNOWN'];
+}
+
 
 async function oracleFetch(env, path, opts = {}) {
   try {
@@ -813,6 +906,343 @@ async function apiRCM(env) {
   const approved = (sm.approved?.count || 0) + (sm.paid?.count || 0);
   const rate = summary?.total > 0 ? ((approved / summary.total) * 100).toFixed(1) : '0.0';
   return ok({ summary: { total_claims: summary?.total || 0, approval_rate: rate + '%', billed: summary?.billed || 0, paid: summary?.paid || 0, pending_pa: pending?.n || 0 }, claims_by_status: sm, nphies_network: network });
+}
+
+// ─── DENIAL & RESUBMISSION ENGINE ────────────────────────────────────────────
+
+async function apiDenialStats(env) {
+  const rows = await env.DB.prepare(
+    "SELECT status, COUNT(*) as n, COALESCE(SUM(total_amount),0) as total FROM claims WHERE status IN ('rejected','under_review','resubmitted','appealed','recovered','written_off') GROUP BY status"
+  ).all().catch(() => ({ results: [] }));
+  const sm = {};
+  let totalRejected = 0, totalSAR = 0, recovered = 0, resubmitted = 0, appealed = 0;
+  (rows.results || []).forEach(r => {
+    sm[r.status] = { count: r.n, sar: r.total };
+    totalSAR += r.total;
+    if (r.status === 'rejected' || r.status === 'under_review') totalRejected += r.n;
+    if (r.status === 'recovered') recovered += r.n;
+    if (r.status === 'resubmitted') resubmitted += r.n;
+    if (r.status === 'appealed') appealed += r.n;
+  });
+  const total = Object.values(sm).reduce((a, v) => a + v.count, 0);
+  const recoveryRate = total > 0 ? ((recovered / total) * 100).toFixed(1) : '0.0';
+  return ok({
+    summary: {
+      total_rejected:   totalRejected,
+      total_sar:        totalSAR,
+      recovered:        recovered,
+      resubmitted:      resubmitted,
+      appealed:         appealed,
+      recovery_rate:    recoveryRate + '%',
+    },
+    by_status: sm,
+    tracks: {
+      track1_resubmit:  (sm.resubmitted?.count  || 0),
+      track2_appeal:    (sm.appealed?.count      || 0),
+      track3_new_claim: 0, // populated via ingest
+    },
+    nphies_codes: Object.keys(NPHIES_DENIAL).length,
+    source: 'live',
+  });
+}
+
+async function apiDenialList(req, env) {
+  const url    = new URL(req.url);
+  const track  = url.searchParams.get('track')  || '';
+  const status = url.searchParams.get('status') || '';
+  const limit  = Math.min(parseInt(url.searchParams.get('limit') || '100'), 500);
+  const offset = parseInt(url.searchParams.get('offset') || '0');
+  let q = "SELECT c.id, c.claim_number, c.payer_name, c.total_amount, c.paid_amount, c.status, c.created_at, c.nphies_claim_id, p.full_name_ar as patient_name FROM claims c LEFT JOIN patients p ON c.patient_id=p.id WHERE c.status IN ('rejected','under_review','resubmitted','appealed','recovered','written_off')";
+  const b = [];
+  if (status) { q += ' AND c.status=?'; b.push(status); }
+  q += ' ORDER BY c.total_amount DESC LIMIT ' + limit + ' OFFSET ' + offset;
+  const r = b.length ? await env.DB.prepare(q).bind(...b).all() : await env.DB.prepare(q).all();
+  // Enrich each claim with denial intelligence
+  const claims = (r.results || []).map(c => {
+    const code = (c.denial_code || 'UNKNOWN').toUpperCase();
+    const intel = classifyDenial(code);
+    return { ...c, denial_code: code, intel };
+  });
+  return ok({ claims, total: claims.length, limit, offset });
+}
+
+async function apiDenialIngest(req, env) {
+  const body = await req.json().catch(() => ({}));
+  const items = Array.isArray(body) ? body : (body.rejections || []);
+  if (!items.length) return err('No rejection records provided. Send array of {claim_number, payer, total_amount, rejection_code, rejection_reason, date_of_service, national_id}', 400);
+
+  let inserted = 0, skipped = 0;
+  const batchResult = [];
+
+  for (const item of items) {
+    const code  = (item.rejection_code || 'UNKNOWN').toUpperCase();
+    const intel = classifyDenial(code);
+    const num   = item.claim_number || ('RCM-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7));
+    const track = intel.track;
+    const recoverable = intel.recoverable;
+    try {
+      const r = await env.DB.prepare(
+        'INSERT OR IGNORE INTO claims (claim_number, claim_type, payer_name, total_amount, status, nphies_claim_id) VALUES (?,?,?,?,?,?)'
+      ).bind(
+        num,
+        'professional',
+        item.payer || item.payer_name || 'Unknown Payer',
+        parseFloat(item.total_amount || item.amount || 0),
+        'rejected',
+        item.nphies_claim_id || item.reference_id || null,
+      ).run();
+      if (r.meta.changes > 0) {
+        inserted++;
+        batchResult.push({ claim_number: num, code, track, recoverable, score: intel.score, action: intel.action });
+      } else {
+        skipped++;
+      }
+    } catch { skipped++; }
+  }
+
+  // Auto-triage summary
+  const trackCounts = batchResult.reduce((acc, c) => {
+    acc[c.track] = (acc[c.track] || 0) + 1;
+    return acc;
+  }, {});
+
+  return ok({
+    ingested:   inserted,
+    skipped,
+    total_sent: items.length,
+    tracks:     trackCounts,
+    preview:    batchResult.slice(0, 10),
+    next_step:  'POST /api/rcm/denial/analyze with {claim_number} to get full action plan',
+  }, 201);
+}
+
+async function apiDenialAnalyze(req, env) {
+  const body        = await req.json().catch(() => ({}));
+  const claimNumber = body.claim_number || '';
+  const codeRaw     = (body.rejection_code || body.code || 'UNKNOWN').toUpperCase();
+
+  // Load from DB if claim_number provided
+  let dbClaim = null;
+  if (claimNumber) {
+    dbClaim = await env.DB.prepare(
+      'SELECT c.*, p.full_name_ar as patient_name, p.national_id FROM claims c LEFT JOIN patients p ON c.patient_id=p.id WHERE c.claim_number=?'
+    ).bind(claimNumber).first().catch(() => null);
+  }
+
+  const code  = dbClaim?.denial_code || codeRaw;
+  const intel = classifyDenial(code);
+
+  // Try to pull Oracle HIS encounter data for Riyadh (only reachable hospital)
+  let oracleData = null;
+  if (dbClaim?.nphies_claim_id && TUNNEL_STATUS.riyadh.reachable) {
+    oracleData = await oracleCall(env, 'GET', '/claims?reference=' + encodeURIComponent(dbClaim.nphies_claim_id), null, 'riyadh').catch(() => null);
+  }
+
+  // Eligibility re-check via NPHIES ClaimLinc
+  let eligibility = null;
+  if (dbClaim?.patient_id || body.national_id) {
+    try {
+      const elRes = await fetch(`${CLAIMLINC_BASE}/eligibility`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-API-Key': env.CLAIMLINC_KEY || CLAIMLINC_KEY },
+        body: JSON.stringify({ national_id: body.national_id || dbClaim?.national_id, payer: dbClaim?.payer_name, facility_license: FACILITY_LIC }),
+        signal: AbortSignal.timeout(8000),
+      });
+      if (elRes.ok) eligibility = await elRes.json();
+    } catch {}
+  }
+
+  const dueDate = new Date();
+  dueDate.setDate(dueDate.getDate() + intel.deadline_days);
+
+  return ok({
+    claim_number:   claimNumber || 'N/A',
+    denial_code:    code,
+    intel: {
+      label:          intel.label,
+      track:          intel.track,
+      recoverable:    intel.recoverable,
+      recoverability_score: intel.score,
+      action:         intel.action,
+      required_docs:  intel.docs,
+      deadline:       dueDate.toISOString().split('T')[0],
+      deadline_days:  intel.deadline_days,
+    },
+    oracle_encounter: oracleData,
+    eligibility_check: eligibility,
+    claim_data:     dbClaim,
+    recommendations: [
+      intel.recoverable
+        ? 'PROCEED — Estimated ' + intel.score + '% recovery probability'
+        : 'REVIEW — Low recovery likelihood. Consider write-off or patient billing.',
+      intel.track === 'resubmit'    ? 'FAST-TRACK: Correct and resubmit within ' + intel.deadline_days + ' days'  : '',
+      intel.track === 'appeal'      ? 'FORMAL APPEAL: Compile appeal package within ' + intel.deadline_days + ' days' : '',
+      intel.track === 'new_claim'   ? 'NEW CLAIM: Link to original — use prior_claim_id field in FHIR R4'            : '',
+      intel.track === 'write_off'   ? 'PATIENT BILLING: Issue itemized statement. Document collection attempt.'       : '',
+    ].filter(Boolean),
+    fhir_fields_needed: code.startsWith('T') ? ['diagnosis.system', 'diagnosis.code', 'procedure.system', 'procedure.code', 'supportingInfo'] : [],
+    nphies_portal:    'https://portal.nphies.sa',
+    oracle_riyadh:    TUNNEL_STATUS.riyadh.reachable ? 'https://oracle-riyadh.brainsait.org' : 'offline',
+  });
+}
+
+async function apiDenialRequirements(req, env) {
+  const url  = new URL(req.url);
+  const code = (url.searchParams.get('code') || 'UNKNOWN').toUpperCase();
+  const intel = classifyDenial(code);
+  return ok({
+    denial_code: code,
+    label:       intel.label,
+    track:       intel.track,
+    documents: intel.docs.map((d, i) => ({
+      id:        i + 1,
+      name:      d,
+      required:  true,
+      source:    d.includes('FHIR') ? 'generated'
+               : d.includes('Oracle') ? 'oracle-riyadh'
+               : d.includes('NPHIES') || d.includes('271') || d.includes('270') ? 'nphies-claimlinc'
+               : 'manual-upload',
+      collected: false,
+    })),
+    oracle_available: TUNNEL_STATUS.riyadh.reachable,
+    nphies_available: true,
+    action:      intel.action,
+    deadline_days: intel.deadline_days,
+  });
+}
+
+async function apiDenialRevalidate(req, env) {
+  const body = await req.json().catch(() => ({}));
+  const { claim_number, fhir_payload, national_id, payer } = body;
+
+  const results = { claim_number, timestamp: new Date().toISOString(), checks: [] };
+
+  // 1. FHIR R4 structural validation (basic field check)
+  if (fhir_payload) {
+    const fhir = typeof fhir_payload === 'string' ? JSON.parse(fhir_payload) : fhir_payload;
+    const required = ['resourceType', 'id', 'status', 'type', 'use', 'patient', 'created', 'provider', 'insurance', 'item'];
+    const missing  = required.filter(f => !fhir[f]);
+    results.checks.push({
+      check:   'FHIR R4 Structure',
+      passed:  missing.length === 0,
+      missing,
+      note:    missing.length === 0 ? 'All required fields present' : 'Fix missing fields before submission',
+    });
+    // Diagnosis check
+    const hasDiag = (fhir.diagnosis || []).length > 0;
+    results.checks.push({ check: 'Diagnosis codes', passed: hasDiag, note: hasDiag ? 'Diagnosis present' : 'At least one ICD-10 diagnosis required' });
+    // Procedure check
+    const hasProc = (fhir.item || []).length > 0;
+    results.checks.push({ check: 'Procedure items', passed: hasProc, note: hasProc ? (fhir.item.length + ' items found') : 'No claim items — required' });
+    // Supporting info
+    const hasSup = (fhir.supportingInfo || []).length > 0;
+    results.checks.push({ check: 'Supporting info', passed: hasSup, note: hasSup ? (fhir.supportingInfo.length + ' attachments') : 'No supporting info (may be required per denial type)' });
+  } else {
+    results.checks.push({ check: 'FHIR R4 Structure', passed: false, note: 'No FHIR payload provided — required for resubmission' });
+  }
+
+  // 2. NPHIES eligibility re-check
+  let eligibilityPassed = false;
+  if (national_id) {
+    try {
+      const er = await fetch(`${CLAIMLINC_BASE}/eligibility`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-API-Key': env.CLAIMLINC_KEY || CLAIMLINC_KEY },
+        body: JSON.stringify({ national_id, payer: payer || '', facility_license: FACILITY_LIC }),
+        signal: AbortSignal.timeout(8000),
+      });
+      if (er.ok) {
+        const ed = await er.json();
+        eligibilityPassed = ed.eligible === true || ed.status === 'active';
+        results.checks.push({ check: 'NPHIES Eligibility 270/271', passed: eligibilityPassed, note: eligibilityPassed ? 'Member eligible' : 'Member not eligible — check enrollment dates' });
+      } else {
+        results.checks.push({ check: 'NPHIES Eligibility 270/271', passed: false, note: 'Eligibility check failed — manual verification required' });
+      }
+    } catch {
+      results.checks.push({ check: 'NPHIES Eligibility 270/271', passed: null, note: 'ClaimLinc timeout — try again or verify manually on portal.nphies.sa' });
+    }
+  } else {
+    results.checks.push({ check: 'NPHIES Eligibility 270/271', passed: null, note: 'national_id not provided — skip or supply for live check' });
+  }
+
+  // 3. Oracle HIS cross-check
+  if (claim_number && TUNNEL_STATUS.riyadh.reachable) {
+    const oracleCheck = await oracleCall(env, 'GET', '/claims?claim_number=' + encodeURIComponent(claim_number), null, 'riyadh').catch(() => null);
+    results.checks.push({ check: 'Oracle HIS encounter match', passed: !!oracleCheck, note: oracleCheck ? 'Encounter found in Oracle HIS' : 'Encounter not found — verify in HIS manually' });
+  } else {
+    results.checks.push({ check: 'Oracle HIS encounter match', passed: null, note: TUNNEL_STATUS.riyadh.reachable ? 'claim_number needed' : 'Oracle Riyadh reachable — pass claim_number for HIS lookup' });
+  }
+
+  const allPassed   = results.checks.every(c => c.passed === true);
+  const passCount   = results.checks.filter(c => c.passed === true).length;
+  results.ready     = allPassed;
+  results.score     = Math.round((passCount / results.checks.length) * 100);
+  results.verdict   = allPassed ? 'READY FOR SUBMISSION' : passCount >= 2 ? 'CONDITIONALLY READY — fix flagged items first' : 'NOT READY — multiple validation failures';
+  results.next_step = allPassed ? 'POST /api/rcm/denial/submit with claim_number and fhir_payload' : 'Fix failing checks, then re-run validation';
+  return ok(results);
+}
+
+async function apiDenialSubmit(req, env) {
+  const body = await req.json().catch(() => ({}));
+  const { claim_number, fhir_payload, track, appeal_reason, national_id } = body;
+  if (!claim_number) return err('claim_number required', 400);
+
+  const ref = 'SUBM-' + Date.now();
+  const ts  = new Date().toISOString();
+
+  // Route to correct submission mechanism based on track
+  let submissionResult = null;
+  let submissionTarget = '';
+
+  if (track === 'resubmit' || track === 'new_claim') {
+    // Submit via NPHIES ClaimLinc
+    submissionTarget = 'nphies-claimlinc';
+    try {
+      const sr = await fetch(`${CLAIMLINC_BASE}/claims/submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-API-Key': env.CLAIMLINC_KEY || CLAIMLINC_KEY },
+        body: JSON.stringify({ claim_number, fhir_payload, facility_license: FACILITY_LIC, submission_type: track === 'new_claim' ? 'new_with_prior_linkage' : 'resubmission', reference_id: ref }),
+        signal: AbortSignal.timeout(20000),
+      });
+      if (sr.ok) submissionResult = await sr.json();
+    } catch {}
+  } else if (track === 'appeal') {
+    // Formal appeal via Oracle Riyadh portal (if reachable) + NPHIES appeal endpoint
+    submissionTarget = TUNNEL_STATUS.riyadh.reachable ? 'oracle-riyadh + nphies-appeal' : 'nphies-appeal';
+    if (TUNNEL_STATUS.riyadh.reachable) {
+      submissionResult = await oracleCall(env, 'POST', '/claims/appeal', { claim_number, appeal_reason: appeal_reason || '', fhir_payload, reference_id: ref }, 'riyadh').catch(() => null);
+    }
+    // Also post to ClaimLinc appeal endpoint
+    if (!submissionResult) {
+      try {
+        const ar = await fetch(`${CLAIMLINC_BASE}/claims/appeal`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-API-Key': env.CLAIMLINC_KEY || CLAIMLINC_KEY },
+          body: JSON.stringify({ claim_number, appeal_reason, facility_license: FACILITY_LIC, reference_id: ref }),
+          signal: AbortSignal.timeout(20000),
+        });
+        if (ar.ok) submissionResult = await ar.json();
+      } catch {}
+    }
+  }
+
+  // Update claim status in D1
+  const newStatus = track === 'appeal' ? 'appealed' : 'resubmitted';
+  await env.DB.prepare('UPDATE claims SET status=? WHERE claim_number=?').bind(newStatus, claim_number).run().catch(() => {});
+
+  return ok({
+    reference_id:       ref,
+    claim_number,
+    track,
+    status:             newStatus,
+    submitted_at:       ts,
+    target:             submissionTarget,
+    nphies_response:    submissionResult,
+    portal_link:        'https://portal.nphies.sa/claim/' + (submissionResult?.claim_id || claim_number),
+    oracle_link:        TUNNEL_STATUS.riyadh.reachable ? 'https://oracle-riyadh.brainsait.org/prod/faces/Claims' : null,
+    tracking_note:      submissionResult ? 'Submission accepted — track via NPHIES portal' : 'Submission queued — check portal in 2-4 hours',
+    next_step:          'Monitor via GET /api/rcm/denial/list and NPHIES portal',
+  });
 }
 
 async function apiSync(env, type) {
@@ -2089,6 +2519,674 @@ function sendChat() {
 </html>`;
 }
 
+// ─── DENIAL & RESUBMISSION WORKBENCH PAGE ────────────────────────────────────
+function buildDenialWorkbench(lang) {
+  const ar   = lang === 'ar';
+  const dir  = ar ? 'rtl' : 'ltr';
+  const font = ar ? "'Tajawal',sans-serif" : "'Inter',sans-serif";
+
+  const T = {
+    title:    ar ? 'مركز الطعون وإعادة التقديم' : 'Denial & Resubmission Center',
+    sub:      ar ? 'فريق المطالبات المرفوضة — RCM' : 'Rejected Claims Team — RCM Department',
+    back:     ar ? '← بوابة HNH' : '← HNH Portal',
+    p1:       ar ? '①  استيراد' : '①  Ingest',
+    p2:       ar ? '②  فرز ذكي' : '②  Triage',
+    p3:       ar ? '③  إثراء' : '③  Enrich',
+    p4:       ar ? '④  تحقق' : '④  Validate',
+    p5:       ar ? '⑤  تقديم' : '⑤  Submit',
+    t1:       ar ? 'إعادة تقديم' : 'Resubmit',
+    t2:       ar ? 'طعن تعاقدي' : 'Appeal',
+    t3:       ar ? 'مطالبة جديدة' : 'New Claim',
+    tw:       ar ? 'شطب' : 'Write-off',
+    paste:    ar ? 'لصق بيانات JSON' : 'Paste JSON Data',
+    ingest:   ar ? 'استيراد الرفوضات' : 'Import Rejections',
+    clr:      ar ? 'مسح' : 'Clear',
+    analyze:  ar ? 'تحليل تلقائي' : 'Auto-Analyze',
+    validate: ar ? 'تحقق NPHIES' : 'Validate NPHIES',
+    submit:   ar ? 'تقديم' : 'Submit',
+    appeal:   ar ? 'طعن رسمي' : 'Formal Appeal',
+    docs:     ar ? 'المستندات المطلوبة' : 'Required Documents',
+    action:   ar ? 'خطة العمل' : 'Action Plan',
+    code:     ar ? 'كود الرفض' : 'Denial Code',
+    payer:    ar ? 'الجهة الدافعة' : 'Payer',
+    amount:   ar ? 'المبلغ (SAR)' : 'Amount (SAR)',
+    track:    ar ? 'المسار' : 'Track',
+    score:    ar ? 'احتمال الاسترداد' : 'Recovery Score',
+    deadline: ar ? 'الموعد النهائي' : 'Deadline',
+    empty:    ar ? 'لا توجد مطالبات مرفوضة — ابدأ بالاستيراد' : 'No rejected claims — start by importing',
+    hint:     ar ? 'مثال JSON: [{\"claim_number\":\"CLM-001\",\"payer\":\"Bupa\",\"total_amount\":1500,\"rejection_code\":\"C001\",\"rejection_reason\":\"Not medically necessary\",\"date_of_service\":\"2026-04-01\"}]'
+                : 'Example JSON: [{"claim_number":"CLM-001","payer":"Bupa","total_amount":1500,"rejection_code":"C001","rejection_reason":"Not medically necessary","date_of_service":"2026-04-01"}]',
+    codes:    ar ? '🔑 أكواد NPHIES الشائعة' : '🔑 Common NPHIES Codes',
+    oracle:   ar ? '🔷 Oracle الرياض' : '🔷 Oracle Riyadh',
+    nphies:   ar ? '🏛️ بوابة NPHIES' : '🏛️ NPHIES Portal',
+    sbs:      ar ? '💰 نظام SBS' : '💰 SBS Billing',
+  };
+
+  const TRACK_COLOR = { resubmit: '#2563EB', appeal: '#7C3AED', new_claim: '#059669', review: '#D97706', write_off: '#6B7280' };
+  const TRACK_LABEL = ar
+    ? { resubmit: 'إعادة تقديم', appeal: 'طعن', new_claim: 'مطالبة جديدة', review: 'مراجعة', write_off: 'شطب' }
+    : { resubmit: 'Resubmit', appeal: 'Appeal', new_claim: 'New Claim', review: 'Review', write_off: 'Write-off' };
+
+  // Top 8 codes for quick-reference panel
+  const TOP_CODES = ['A001','A003','A004','C001','C004','T001','T002','T003'];
+  const codeRows = TOP_CODES.map(c => {
+    const d = NPHIES_DENIAL[c];
+    return '<tr><td class="cc">' + c + '</td><td>' + d.label + '</td><td><span class="trk" style="background:' + TRACK_COLOR[d.track] + '">' + (ar ? TRACK_LABEL[d.track] : d.track) + '</span></td><td class="sc">' + d.score + '%</td></tr>';
+  }).join('');
+
+  return new Response(`<!DOCTYPE html>
+<html lang="${lang}" dir="${dir}">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${T.title} | HNH</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#2563EB;--purple:#7C3AED;--green:#059669;--amber:#D97706;--red:#DC2626;--gray:#6B7280;--bg:#F0F4FA;--card:#fff;--border:#E2E8F0;--txt:#0F172A;--sub:#64748B}
+body{font-family:${font};background:var(--bg);color:var(--txt);min-height:100vh;padding:0 0 80px}
+a{color:inherit;text-decoration:none}
+.hdr{background:linear-gradient(135deg,#1E1B4B,#312E81);color:#fff;padding:20px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.hdr-left{display:flex;flex-direction:column;gap:4px}
+.hdr-back{color:#A5B4FC;font-size:.82rem;display:inline-flex;align-items:center;gap:4px;margin-bottom:4px}
+.hdr-back:hover{color:#fff}
+.hdr-title{font-size:1.4rem;font-weight:800;letter-spacing:-.5px}
+.hdr-sub{font-size:.85rem;color:#C7D2FE;opacity:.9}
+.hdr-badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{padding:5px 12px;border-radius:20px;font-size:.75rem;font-weight:600;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1)}
+.badge.ruh{border-color:#4ADE80;color:#4ADE80}
+.badge.nph{border-color:#60A5FA;color:#60A5FA}
+.container{max-width:1400px;margin:0 auto;padding:24px 20px}
+/* Pipeline */
+.pipeline{display:flex;gap:0;margin-bottom:28px;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid var(--border)}
+.pipe-step{flex:1;padding:14px 10px;text-align:center;cursor:pointer;border-right:1px solid var(--border);transition:all .2s;position:relative}
+.pipe-step:last-child{border-right:none}
+.pipe-step:hover{background:#F8FAFF}
+.pipe-step.active{background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border-bottom:3px solid var(--blue)}
+.pipe-step.done{background:#F0FDF4;border-bottom:3px solid var(--green)}
+.pipe-icon{font-size:1.4rem;margin-bottom:4px}
+.pipe-label{font-size:.72rem;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.5px}
+/* Grid */
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+/* KPI cards */
+.kcard{background:var(--card);border-radius:12px;padding:18px 20px;border:1px solid var(--border);box-shadow:0 1px 6px rgba(0,0,0,.04)}
+.kcard-n{font-size:2rem;font-weight:800;line-height:1}
+.kcard-l{font-size:.78rem;color:var(--sub);margin-top:4px;font-weight:500}
+.kcard.blue{border-left:4px solid var(--blue)}
+.kcard.purple{border-left:4px solid var(--purple)}
+.kcard.green{border-left:4px solid var(--green)}
+.kcard.amber{border-left:4px solid var(--amber)}
+/* Track boards */
+.track-board{background:var(--card);border-radius:14px;padding:18px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.track-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.track-title{font-weight:700;font-size:.95rem}
+.track-count{font-size:1.4rem;font-weight:800}
+.track1{border-top:4px solid var(--blue)}
+.track2{border-top:4px solid var(--purple)}
+.track3{border-top:4px solid var(--green)}
+.track4{border-top:4px solid var(--gray)}
+/* Claim rows */
+.claim-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid var(--border);margin-bottom:8px;cursor:pointer;transition:all .15s;background:#FAFBFF}
+.claim-row:hover{border-color:var(--blue);box-shadow:0 2px 8px rgba(37,99,235,.12)}
+.claim-row.selected{border-color:var(--blue);background:#EFF6FF;box-shadow:0 2px 12px rgba(37,99,235,.18)}
+.cr-num{font-size:.72rem;font-weight:600;color:var(--sub);min-width:90px}
+.cr-payer{font-size:.82rem;flex:1;font-weight:500}
+.cr-sar{font-size:.85rem;font-weight:700;min-width:80px;text-align:right}
+.cr-code{font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:10px;background:#EFF6FF;color:var(--blue)}
+.trk{font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:10px;color:#fff}
+/* Ingest area */
+.ingest-box{background:var(--card);border-radius:14px;padding:20px;border:1px dashed #93C5FD;margin-bottom:20px}
+.ingest-box:hover{border-color:var(--blue);background:#FAFCFF}
+textarea.jarea{width:100%;height:160px;font-family:'JetBrains Mono','Fira Code',monospace;font-size:.78rem;border:1px solid var(--border);border-radius:8px;padding:12px;resize:vertical;background:#F8FAFF;color:var(--txt);outline:none}
+textarea.jarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.hint-text{font-size:.72rem;color:var(--sub);margin-top:6px;line-height:1.5}
+/* Buttons */
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn{padding:9px 18px;border-radius:8px;font-weight:600;font-size:.83rem;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#1D4ED8}
+.btn-success{background:var(--green);color:#fff}
+.btn-success:hover{background:#047857}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-purple:hover{background:#6D28D9}
+.btn-ghost{background:transparent;color:var(--sub);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+/* Detail panel */
+.detail-panel{background:var(--card);border-radius:14px;padding:20px;border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.dp-title{font-weight:700;font-size:1rem;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.dp-section{margin-bottom:16px}
+.dp-label{font-size:.72rem;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.dp-action{background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;padding:12px;font-size:.85rem;line-height:1.6;color:#92400E}
+.doc-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.doc-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:7px;background:#F8FAFF;border:1px solid var(--border);font-size:.82rem}
+.doc-item.oracle{border-color:#60A5FA;background:#EFF6FF}
+.doc-item.nphies{border-color:#A78BFA;background:#F5F3FF}
+.doc-item.generated{border-color:#34D399;background:#ECFDF5}
+.doc-src{font-size:.68rem;padding:2px 7px;border-radius:8px;font-weight:600;margin-left:auto}
+.src-oracle{background:#DBEAFE;color:var(--blue)}
+.src-nphies{background:#EDE9FE;color:var(--purple)}
+.src-gen{background:#D1FAE5;color:var(--green)}
+.src-manual{background:#FEF3C7;color:#92400E}
+/* Codes table */
+.codes-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.codes-table th{background:#F8FAFF;padding:8px 10px;text-align:left;font-weight:600;color:var(--sub);border-bottom:2px solid var(--border);font-size:.72rem;text-transform:uppercase}
+.codes-table td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.codes-table tr:hover td{background:#F8FAFF}
+.cc{font-weight:700;color:var(--blue);font-family:monospace}
+.sc{font-weight:700;color:var(--green)}
+/* Result box */
+.result-box{background:#F0FDF4;border:1px solid #86EFAC;border-radius:8px;padding:14px;font-size:.82rem;line-height:1.6;margin-top:10px}
+.result-box.err{background:#FFF1F2;border-color:#FECDD3;color:var(--red)}
+.result-box.warn{background:#FFFBEB;border-color:#FDE68A;color:#92400E}
+/* Tabs */
+.tab-row{display:flex;gap:0;margin-bottom:16px;background:#F1F5F9;border-radius:8px;padding:4px;width:fit-content}
+.tab{padding:7px 16px;border-radius:6px;font-size:.8rem;font-weight:600;cursor:pointer;color:var(--sub);border:none;background:transparent;transition:all .15s}
+.tab.active{background:var(--card);color:var(--blue);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+/* Validation checks */
+.check-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.check-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:#F8FAFF;border:1px solid var(--border);font-size:.83rem}
+.check-item.pass{border-color:#86EFAC;background:#F0FDF4}
+.check-item.fail{border-color:#FECDD3;background:#FFF1F2}
+.check-item.warn{border-color:#FDE68A;background:#FFFBEB}
+/* Ext links */
+.ext-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.ext-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:.8rem;font-weight:600;text-decoration:none;border:1px solid var(--border);color:var(--txt);background:var(--card);transition:all .15s}
+.ext-btn:hover{border-color:var(--blue);color:var(--blue);box-shadow:0 2px 8px rgba(37,99,235,.12)}
+/* Empty */
+.empty-state{text-align:center;padding:40px 20px;color:var(--sub)}
+.empty-icon{font-size:3rem;margin-bottom:12px}
+/* Loading */
+.loader{display:inline-block;width:16px;height:16px;border:2px solid rgba(37,99,235,.2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin-left:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:1024px){.grid-3{grid-template-columns:1fr 1fr}.grid-4{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.grid-3,.grid-2,.grid-4{grid-template-columns:1fr}.pipeline{flex-direction:column}.pipe-step{border-right:none;border-bottom:1px solid var(--border)}.hdr{padding:16px 20px}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-left">
+    <a class="hdr-back" href="/">${T.back}</a>
+    <div class="hdr-title">⚕️ ${T.title}</div>
+    <div class="hdr-sub">${T.sub}</div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge ruh">🔷 Oracle RUH ✅</span>
+    <span class="badge nph">🏛️ NPHIES Live</span>
+    <span class="badge" id="hdr-total">…</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Pipeline phases -->
+  <div class="pipeline">
+    <div class="pipe-step active" onclick="showPhase(1)" id="ph1"><div class="pipe-icon">📥</div><div class="pipe-label">${T.p1}</div></div>
+    <div class="pipe-step" onclick="showPhase(2)" id="ph2"><div class="pipe-icon">🧠</div><div class="pipe-label">${T.p2}</div></div>
+    <div class="pipe-step" onclick="showPhase(3)" id="ph3"><div class="pipe-icon">🗂️</div><div class="pipe-label">${T.p3}</div></div>
+    <div class="pipe-step" onclick="showPhase(4)" id="ph4"><div class="pipe-icon">✅</div><div class="pipe-label">${T.p4}</div></div>
+    <div class="pipe-step" onclick="showPhase(5)" id="ph5"><div class="pipe-icon">🚀</div><div class="pipe-label">${T.p5}</div></div>
+  </div>
+
+  <!-- KPI strip -->
+  <div class="grid-4" id="kpi-strip">
+    <div class="kcard blue"><div class="kcard-n" id="kpi-total">—</div><div class="kcard-l">${ar ? 'إجمالي الرفوضات' : 'Total Rejections'}</div></div>
+    <div class="kcard amber"><div class="kcard-n" id="kpi-sar">—</div><div class="kcard-l">${ar ? 'SAR قيد الاسترداد' : 'SAR at Risk'}</div></div>
+    <div class="kcard green"><div class="kcard-n" id="kpi-rate">—</div><div class="kcard-l">${ar ? 'معدل الاسترداد' : 'Recovery Rate'}</div></div>
+    <div class="kcard purple"><div class="kcard-n" id="kpi-codes">${Object.keys(NPHIES_DENIAL).length - 1}</div><div class="kcard-l">${ar ? 'أكواد مدعومة' : 'Codes Supported'}</div></div>
+  </div>
+
+  <!-- PHASE 1: INGEST -->
+  <div id="phase-1">
+    <div class="grid-2">
+      <div>
+        <div class="ingest-box">
+          <div style="font-weight:700;margin-bottom:10px">📥 ${T.ingest}</div>
+          <textarea class="jarea" id="json-input" placeholder="${T.hint}"></textarea>
+          <div class="hint-text">${ar ? 'الصق بيانات Excel المصدرة بتنسيق JSON، أو اكتب المطالبة يدوياً.' : 'Paste Excel-exported JSON data, or enter rejection manually.'}</div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="ingestData()">${T.ingest} <span id="ingest-loader" style="display:none" class="loader"></span></button>
+            <button class="btn btn-ghost" onclick="document.getElementById('json-input').value=''">${T.clr}</button>
+            <button class="btn btn-ghost" onclick="loadSample()">${ar ? 'بيانات تجريبية' : 'Load Sample'}</button>
+          </div>
+        </div>
+        <div id="ingest-result"></div>
+      </div>
+      <div>
+        <div class="track-board" style="height:100%">
+          <div class="track-hdr">
+            <div class="track-title">🔑 ${T.codes}</div>
+          </div>
+          <table class="codes-table">
+            <thead><tr><th>${T.code}</th><th>${ar ? 'السبب' : 'Reason'}</th><th>${T.track}</th><th>${T.score}</th></tr></thead>
+            <tbody>${codeRows}</tbody>
+          </table>
+          <div style="margin-top:12px;font-size:.75rem;color:var(--sub)">${ar ? '+ 20 كوداً إضافياً مدعوماً | A=إداري C=سريري T=تقني F=مالي' : '+ 20 more codes | A=Admin C=Clinical T=Technical F=Financial'}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2: TRIAGE (claim list + per-claim detail) -->
+  <div id="phase-2" style="display:none">
+    <div class="grid-3" style="margin-bottom:16px">
+      <div class="track-board track1">
+        <div class="track-hdr">
+          <div class="track-title">① ${T.t1}</div>
+          <div class="track-count" id="t1-count" style="color:var(--blue)">—</div>
+        </div>
+        <div id="t1-list"><div class="empty-state"><div class="empty-icon">📋</div><div>${T.empty}</div></div></div>
+      </div>
+      <div class="track-board track2">
+        <div class="track-hdr">
+          <div class="track-title">② ${T.t2}</div>
+          <div class="track-count" id="t2-count" style="color:var(--purple)">—</div>
+        </div>
+        <div id="t2-list"><div class="empty-state"><div class="empty-icon">⚖️</div><div>${T.empty}</div></div></div>
+      </div>
+      <div class="track-board track3">
+        <div class="track-hdr">
+          <div class="track-title">③ ${T.t3} / ${T.tw}</div>
+          <div class="track-count" id="t3-count" style="color:var(--green)">—</div>
+        </div>
+        <div id="t3-list"><div class="empty-state"><div class="empty-icon">🆕</div><div>${T.empty}</div></div></div>
+      </div>
+    </div>
+    <!-- Per-claim detail -->
+    <div id="claim-detail" style="display:none">
+      <div class="detail-panel">
+        <div class="dp-title" id="dp-title">📄 —</div>
+        <div class="grid-2">
+          <div>
+            <div class="dp-section">
+              <div class="dp-label">${T.action}</div>
+              <div class="dp-action" id="dp-action">—</div>
+            </div>
+            <div class="dp-section">
+              <div class="dp-label">${T.docs}</div>
+              <ul class="doc-list" id="dp-docs"></ul>
+            </div>
+          </div>
+          <div>
+            <div class="dp-section">
+              <div class="dp-label">${T.code} / ${T.track} / ${T.score} / ${T.deadline}</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+                <span class="cr-code" id="dp-code">—</span>
+                <span class="trk" id="dp-track">—</span>
+                <span style="font-weight:700;font-size:.9rem" id="dp-score">—</span>
+                <span style="font-size:.8rem;color:var(--sub)" id="dp-deadline">—</span>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-success" onclick="validateClaim()">${T.validate} <span id="val-loader" style="display:none" class="loader"></span></button>
+              <button class="btn btn-purple" onclick="submitClaim('appeal')">${T.appeal}</button>
+              <button class="btn btn-primary" onclick="submitClaim('resubmit')">${T.submit}</button>
+            </div>
+            <div id="dp-result" style="margin-top:10px"></div>
+          </div>
+        </div>
+        <div class="ext-links">
+          <a class="ext-btn" href="https://oracle-riyadh.brainsait.org/prod/faces/Login.jsf" target="_blank">${T.oracle} ↗</a>
+          <a class="ext-btn" href="https://portal.nphies.sa" target="_blank">${T.nphies} ↗</a>
+          <a class="ext-btn" href="https://sbs.elfadil.com/claims" target="_blank">${T.sbs} ↗</a>
+          <a class="ext-btn" href="/api/rcm/denial/list" target="_blank">📊 API ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3: ENRICH — document checklist per code -->
+  <div id="phase-3" style="display:none">
+    <div class="detail-panel">
+      <div class="dp-title">🗂️ ${ar ? 'جمع المستندات والمعلومات' : 'Document Collection & Enrichment'}</div>
+      <div style="margin-bottom:12px;font-size:.85rem;color:var(--sub)">${ar ? 'اختر كود الرفض للحصول على قائمة المستندات المطلوبة تلقائياً من Oracle/NPHIES/السجلات الطبية.' : 'Select rejection code to get the auto-generated document checklist — pulled from Oracle HIS, NPHIES ClaimLinc, and clinical records.'}</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+        <select id="enrich-code" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:.85rem;background:var(--card)" onchange="loadRequirements()">
+          <option value="">${ar ? 'اختر كود الرفض...' : 'Select denial code...'}</option>
+          ${Object.keys(NPHIES_DENIAL).filter(k => k !== 'UNKNOWN').map(k => '<option value="' + k + '">' + k + ' — ' + NPHIES_DENIAL[k].label + '</option>').join('')}
+        </select>
+        <button class="btn btn-primary" onclick="loadRequirements()">${ar ? 'تحميل القائمة' : 'Load Checklist'}</button>
+      </div>
+      <div id="enrich-result"></div>
+    </div>
+  </div>
+
+  <!-- PHASE 4: VALIDATE -->
+  <div id="phase-4" style="display:none">
+    <div class="detail-panel">
+      <div class="dp-title">✅ ${ar ? 'التحقق والمطابقة مع NPHIES' : 'NPHIES Validation & Matching'}</div>
+      <div style="font-size:.85rem;color:var(--sub);margin-bottom:16px">${ar ? 'أدخل رقم المطالبة + رقم الهوية + FHIR payload للتحقق الشامل قبل الإعادة.' : 'Enter claim number + national ID + FHIR payload for full pre-submission validation.'}</div>
+      <div class="grid-2" style="gap:12px;margin-bottom:12px">
+        <input id="val-claim" style="padding:9px 12px;border-radius:8px;border:1px solid var(--border);font-size:.85rem;width:100%" placeholder="${ar ? 'رقم المطالبة (CLM-...)' : 'Claim number (CLM-...)'}">
+        <input id="val-nid"   style="padding:9px 12px;border-radius:8px;border:1px solid var(--border);font-size:.85rem;width:100%" placeholder="${ar ? 'رقم الهوية الوطنية' : 'National ID'}">
+        <input id="val-payer" style="padding:9px 12px;border-radius:8px;border:1px solid var(--border);font-size:.85rem;width:100%" placeholder="${ar ? 'اسم الجهة الدافعة' : 'Payer name'}">
+      </div>
+      <textarea id="val-fhir" class="jarea" style="height:120px" placeholder='${ar ? 'FHIR R4 JSON (اختياري — للتحقق الهيكلي)' : 'FHIR R4 JSON (optional — for structural check)'}'></textarea>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn btn-primary" onclick="runFullValidation()">${ar ? 'تشغيل التحقق الشامل' : 'Run Full Validation'} <span id="fv-loader" style="display:none" class="loader"></span></button>
+      </div>
+      <div id="val-result" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- PHASE 5: SUBMIT -->
+  <div id="phase-5" style="display:none">
+    <div class="detail-panel">
+      <div class="dp-title">🚀 ${ar ? 'التقديم النهائي والطعن' : 'Final Submission & Appeal'}</div>
+      <div style="font-size:.85rem;color:var(--sub);margin-bottom:16px">${ar ? 'يتم التقديم عبر Oracle الرياض (للحالات السريرية) وبوابة NPHIES ClaimLinc (للإعادة التقنية).' : 'Submission routes via Oracle Riyadh (clinical cases) and NPHIES ClaimLinc (technical resubmissions).'}</div>
+      <div class="grid-2" style="gap:12px;margin-bottom:12px">
+        <input id="sub-claim"  style="padding:9px 12px;border-radius:8px;border:1px solid var(--border);font-size:.85rem;width:100%" placeholder="${ar ? 'رقم المطالبة' : 'Claim number'}">
+        <select id="sub-track" style="padding:9px 12px;border-radius:8px;border:1px solid var(--border);font-size:.85rem;background:var(--card)">
+          <option value="resubmit">${ar ? 'إعادة تقديم' : 'Resubmit (Track 1)'}</option>
+          <option value="appeal">${ar ? 'طعن رسمي' : 'Formal Appeal (Track 2)'}</option>
+          <option value="new_claim">${ar ? 'مطالبة جديدة مع ربط' : 'New Claim + Prior Link (Track 3)'}</option>
+        </select>
+      </div>
+      <textarea id="sub-reason" class="jarea" style="height:90px" placeholder="${ar ? 'سبب الطعن أو ملاحظات الإعادة (اختياري)' : 'Appeal reason or resubmission notes (optional)'}"></textarea>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn btn-primary" onclick="finalSubmit()">${ar ? 'إرسال عبر NPHIES / Oracle' : 'Submit via NPHIES / Oracle'} <span id="sub-loader" style="display:none" class="loader"></span></button>
+      </div>
+      <div id="sub-result" style="margin-top:14px"></div>
+      <div class="ext-links" style="margin-top:20px">
+        <a class="ext-btn" href="https://oracle-riyadh.brainsait.org/prod/faces/Login.jsf" target="_blank">🔷 ${ar ? 'Oracle الرياض' : 'Oracle Riyadh'} ↗</a>
+        <a class="ext-btn" href="https://portal.nphies.sa" target="_blank">🏛️ NPHIES Portal ↗</a>
+        <a class="ext-btn" href="/api/rcm/denial/stats" target="_blank">📊 Stats API ↗</a>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// string concatenation ONLY — no template literals
+var API = '';
+var currentClaim = null;
+var allClaims = [];
+
+// ── Phase navigation ────────────────────────────────────────────────────────
+function showPhase(n) {
+  for (var i = 1; i <= 5; i++) {
+    var ph = document.getElementById('phase-' + i);
+    var st = document.getElementById('ph'  + i);
+    if (ph) ph.style.display  = i === n ? '' : 'none';
+    if (st) {
+      st.classList.remove('active');
+      if (i === n) st.classList.add('active');
+    }
+  }
+}
+
+// ── Load KPI stats ──────────────────────────────────────────────────────────
+function loadStats() {
+  fetch(API + '/api/rcm/denial/stats')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var s = d.summary || {};
+      var tot = document.getElementById('kpi-total');
+      var sar = document.getElementById('kpi-sar');
+      var rt  = document.getElementById('kpi-rate');
+      var hdr = document.getElementById('hdr-total');
+      if (tot) tot.textContent = Number(s.total_rejected || 0).toLocaleString();
+      if (sar) sar.textContent = 'SAR ' + (Number(s.total_sar || 0) / 1000).toFixed(0) + 'K';
+      if (rt)  rt.textContent  = s.recovery_rate || '—';
+      if (hdr) hdr.textContent = (s.total_rejected || 0) + ' ' + '${ar ? 'مطالبة مرفوضة' : 'rejections'}';
+    })
+    .catch(function() {});
+}
+
+// ── Load claim list ──────────────────────────────────────────────────────────
+function loadClaimList() {
+  fetch(API + '/api/rcm/denial/list')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      allClaims = d.claims || [];
+      renderTracks(allClaims);
+    })
+    .catch(function() {});
+}
+
+function renderTracks(claims) {
+  var t1 = claims.filter(function(c) { return c.intel && c.intel.track === 'resubmit'; });
+  var t2 = claims.filter(function(c) { return c.intel && c.intel.track === 'appeal'; });
+  var t3 = claims.filter(function(c) { return c.intel && (c.intel.track === 'new_claim' || c.intel.track === 'review' || c.intel.track === 'write_off'); });
+
+  var c1 = document.getElementById('t1-count');
+  var c2 = document.getElementById('t2-count');
+  var c3 = document.getElementById('t3-count');
+  if (c1) c1.textContent = t1.length;
+  if (c2) c2.textContent = t2.length;
+  if (c3) c3.textContent = t3.length;
+
+  renderTrackList('t1-list', t1);
+  renderTrackList('t2-list', t2);
+  renderTrackList('t3-list', t3);
+}
+
+function renderTrackList(elId, items) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  if (!items.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div>${ar ? 'لا توجد مطالبات' : 'No claims'}</div></div>';
+    return;
+  }
+  var html = '';
+  items.slice(0, 20).forEach(function(c) {
+    var trk  = (c.intel && c.intel.track) || 'review';
+    var col  = trk === 'resubmit' ? '#2563EB' : trk === 'appeal' ? '#7C3AED' : trk === 'new_claim' ? '#059669' : '#D97706';
+    html += '<div class="claim-row" onclick="openClaim(' + JSON.stringify(c) + ')">';
+    html += '<div class="cr-num">' + (c.claim_number || '—') + '</div>';
+    html += '<div class="cr-payer">' + (c.payer_name || '—') + '</div>';
+    html += '<div class="cr-sar">SAR ' + Number(c.total_amount || 0).toLocaleString() + '</div>';
+    html += '<div class="cr-code">' + (c.denial_code || '?') + '</div>';
+    html += '</div>';
+  });
+  el.innerHTML = html;
+}
+
+function openClaim(c) {
+  currentClaim = c;
+  var intel = c.intel || {};
+  document.getElementById('claim-detail').style.display = '';
+  document.getElementById('dp-title').textContent  = '📄 ' + (c.claim_number || '—') + ' — ' + (c.payer_name || '—');
+  document.getElementById('dp-action').textContent  = intel.action || '—';
+  document.getElementById('dp-code').textContent    = c.denial_code || '—';
+  document.getElementById('dp-score').textContent   = (intel.score !== undefined ? intel.score + '% ${ar ? 'احتمال' : 'recovery'}' : '—');
+  var trkEl = document.getElementById('dp-track');
+  if (trkEl) {
+    trkEl.textContent   = intel.track || '—';
+    trkEl.style.background = intel.track === 'resubmit' ? '#2563EB' : intel.track === 'appeal' ? '#7C3AED' : '#059669';
+  }
+  var due = new Date();
+  due.setDate(due.getDate() + (intel.deadline_days || 15));
+  document.getElementById('dp-deadline').textContent = '${ar ? 'موعد:' : 'Due:'} ' + due.toLocaleDateString();
+
+  var docList = document.getElementById('dp-docs');
+  if (docList && intel.docs) {
+    var html = '';
+    intel.docs.forEach(function(doc) {
+      var src = doc.indexOf('FHIR') >= 0 ? 'generated' : doc.indexOf('Oracle') >= 0 ? 'oracle' : doc.indexOf('NPHIES') >= 0 || doc.indexOf('271') >= 0 ? 'nphies' : 'manual';
+      var srcCls  = src === 'oracle' ? 'src-oracle' : src === 'nphies' ? 'src-nphies' : src === 'generated' ? 'src-gen' : 'src-manual';
+      var srcLabel= src === 'oracle' ? 'Oracle HIS' : src === 'nphies' ? 'NPHIES' : src === 'generated' ? 'Auto-gen' : '${ar ? 'يدوي' : 'Manual'}';
+      var itemCls = src === 'oracle' ? 'doc-item oracle' : src === 'nphies' ? 'doc-item nphies' : src === 'generated' ? 'doc-item generated' : 'doc-item';
+      html += '<li class="' + itemCls + '">☐ ' + doc + '<span class="doc-src ' + srcCls + '">' + srcLabel + '</span></li>';
+    });
+    docList.innerHTML = html;
+  }
+  document.getElementById('dp-result').innerHTML = '';
+  document.getElementById('claim-detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Ingest ──────────────────────────────────────────────────────────────────
+function ingestData() {
+  var raw = document.getElementById('json-input').value.trim();
+  if (!raw) return;
+  var data;
+  try { data = JSON.parse(raw); } catch(e) { showResult('ingest-result', '${ar ? 'JSON غير صالح: ' : 'Invalid JSON: '}' + e.message, 'err'); return; }
+  var ldr = document.getElementById('ingest-loader');
+  if (ldr) ldr.style.display = '';
+  fetch(API + '/api/rcm/denial/ingest', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (ldr) ldr.style.display = 'none';
+      var msg = '✅ ${ar ? 'تم استيراد' : 'Imported'} ' + (d.ingested || 0) + ' ${ar ? 'مطالبة' : 'claims'}. '
+        + '${ar ? 'تخطي:' : 'Skipped:'} ' + (d.skipped || 0) + '. '
+        + '${ar ? 'المسارات:' : 'Tracks:'} '
+        + Object.entries(d.tracks || {}).map(function(e) { return e[0] + ':' + e[1]; }).join(' | ');
+      showResult('ingest-result', msg, 'success');
+      loadStats();
+      loadClaimList();
+      if ((d.ingested || 0) > 0) setTimeout(function() { showPhase(2); }, 1200);
+    })
+    .catch(function(e) { if (ldr) ldr.style.display = 'none'; showResult('ingest-result', 'Error: ' + e.message, 'err'); });
+}
+
+function loadSample() {
+  var sample = [
+    { claim_number: 'CLM-2026-0441', payer: 'Bupa Arabia', total_amount: 4250, rejection_code: 'C001', rejection_reason: 'Not medically necessary', date_of_service: '2026-04-01', national_id: '1012345678' },
+    { claim_number: 'CLM-2026-0442', payer: 'Tawuniya',    total_amount: 1800, rejection_code: 'T001', rejection_reason: 'Invalid ICD-10 code J06.9',  date_of_service: '2026-04-03', national_id: '1098765432' },
+    { claim_number: 'CLM-2026-0443', payer: 'MedGulf',     total_amount: 9100, rejection_code: 'A003', rejection_reason: 'Authorization required',      date_of_service: '2026-04-05', national_id: '2034567890' },
+    { claim_number: 'CLM-2026-0444', payer: 'AXA Gulf',    total_amount: 3300, rejection_code: 'F001', rejection_reason: 'Fee schedule variance',       date_of_service: '2026-04-07', national_id: '1056789012' },
+    { claim_number: 'CLM-2026-0445', payer: 'Bupa Arabia', total_amount: 6750, rejection_code: 'C004', rejection_reason: 'PA expired',                  date_of_service: '2026-03-28', national_id: '1078901234' },
+  ];
+  document.getElementById('json-input').value = JSON.stringify(sample, null, 2);
+}
+
+// ── Validate from detail panel ──────────────────────────────────────────────
+function validateClaim() {
+  if (!currentClaim) return;
+  var ldr = document.getElementById('val-loader');
+  if (ldr) ldr.style.display = '';
+  fetch(API + '/api/rcm/denial/revalidate', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ claim_number: currentClaim.claim_number, national_id: currentClaim.national_id || '' }),
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (ldr) ldr.style.display = 'none';
+    var icon  = d.ready ? '✅' : '⚠️';
+    var color = d.ready ? 'success' : 'warn';
+    var msg   = icon + ' ' + (d.verdict || '—') + ' (Score: ' + (d.score || 0) + '%)';
+    showResult('dp-result', msg, color);
+    if (d.ready) showPhase(5);
+  })
+  .catch(function(e) { if (ldr) ldr.style.display = 'none'; showResult('dp-result', 'Error: ' + e.message, 'err'); });
+}
+
+// ── Submit from detail panel ────────────────────────────────────────────────
+function submitClaim(track) {
+  if (!currentClaim) return;
+  fetch(API + '/api/rcm/denial/submit', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ claim_number: currentClaim.claim_number, track: track || (currentClaim.intel && currentClaim.intel.track) || 'resubmit' }),
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    showResult('dp-result', '🚀 ' + (d.tracking_note || '${ar ? 'تم الإرسال' : 'Submitted'}') + ' | Ref: ' + (d.reference_id || '—'), 'success');
+    loadStats();
+    loadClaimList();
+  })
+  .catch(function(e) { showResult('dp-result', 'Error: ' + e.message, 'err'); });
+}
+
+// ── Phase 3: Requirements ────────────────────────────────────────────────────
+function loadRequirements() {
+  var code = document.getElementById('enrich-code').value;
+  if (!code) return;
+  fetch(API + '/api/rcm/denial/requirements?code=' + encodeURIComponent(code))
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var html = '<div class="dp-section"><div class="dp-label">' + d.label + ' — ' + (d.track || '') + ' | ${ar ? 'الموعد:' : 'Deadline:'} ' + d.deadline_days + ' ${ar ? 'يوم' : 'days'}</div>';
+      html += '<div class="dp-action" style="margin-bottom:12px">' + (d.action || '') + '</div>';
+      html += '<div class="dp-label">${ar ? 'المستندات المطلوبة' : 'Required Documents'}</div><ul class="doc-list">';
+      (d.documents || []).forEach(function(doc) {
+        var srcCls   = doc.source === 'oracle-riyadh' ? 'src-oracle' : doc.source === 'nphies-claimlinc' ? 'src-nphies' : doc.source === 'generated' ? 'src-gen' : 'src-manual';
+        var itemCls  = doc.source === 'oracle-riyadh' ? 'doc-item oracle' : doc.source === 'nphies-claimlinc' ? 'doc-item nphies' : doc.source === 'generated' ? 'doc-item generated' : 'doc-item';
+        var srcLabel = doc.source === 'oracle-riyadh' ? 'Oracle HIS' : doc.source === 'nphies-claimlinc' ? 'NPHIES' : doc.source === 'generated' ? 'Auto-gen' : '${ar ? 'يدوي' : 'Manual'}';
+        html += '<li class="' + itemCls + '"><input type="checkbox" style="margin-right:8px"> ' + doc.name + '<span class="doc-src ' + srcCls + '">' + srcLabel + '</span></li>';
+      });
+      html += '</ul></div>';
+      var oracle_note = d.oracle_available
+        ? '<div style="margin-top:10px;font-size:.8rem;color:#2563EB">🔷 ${ar ? 'Oracle الرياض متاح — يمكن جلب السجلات تلقائياً' : 'Oracle Riyadh reachable — records can be auto-fetched'}</div>'
+        : '<div style="margin-top:10px;font-size:.8rem;color:#D97706">⚠️ ${ar ? 'Oracle هذا الفرع غير متاح — يلزم جلب السجلات يدوياً' : 'Oracle offline for this branch — manual record fetch required'}</div>';
+      html += oracle_note;
+      document.getElementById('enrich-result').innerHTML = html;
+    })
+    .catch(function(e) { document.getElementById('enrich-result').innerHTML = '<div class="result-box err">Error: ' + e.message + '</div>'; });
+}
+
+// ── Phase 4: Full validation ────────────────────────────────────────────────
+function runFullValidation() {
+  var claim  = document.getElementById('val-claim').value.trim();
+  var nid    = document.getElementById('val-nid').value.trim();
+  var payer  = document.getElementById('val-payer').value.trim();
+  var fhir   = document.getElementById('val-fhir').value.trim();
+  var ldr    = document.getElementById('fv-loader');
+  if (ldr) ldr.style.display = '';
+  var payload = { claim_number: claim, national_id: nid, payer: payer };
+  if (fhir) { try { payload.fhir_payload = JSON.parse(fhir); } catch(e) {} }
+  fetch(API + '/api/rcm/denial/revalidate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (ldr) ldr.style.display = 'none';
+      var html = '<div class="check-list">';
+      (d.checks || []).forEach(function(c) {
+        var cls = c.passed === true ? 'check-item pass' : c.passed === false ? 'check-item fail' : 'check-item warn';
+        var icon = c.passed === true ? '✅' : c.passed === false ? '❌' : '⚠️';
+        html += '<div class="' + cls + '">' + icon + ' <strong>' + c.check + '</strong> — ' + (c.note || '') + '</div>';
+      });
+      html += '</div>';
+      html += '<div class="result-box' + (d.ready ? '' : ' warn') + '" style="margin-top:12px"><strong>' + (d.verdict || '') + '</strong> — Score: ' + (d.score || 0) + '%<br>' + (d.next_step || '') + '</div>';
+      document.getElementById('val-result').innerHTML = html;
+      if (d.ready) setTimeout(function() { showPhase(5); }, 800);
+    })
+    .catch(function(e) { if (ldr) ldr.style.display = 'none'; document.getElementById('val-result').innerHTML = '<div class="result-box err">Error: ' + e.message + '</div>'; });
+}
+
+// ── Phase 5: Final submit ───────────────────────────────────────────────────
+function finalSubmit() {
+  var claim  = document.getElementById('sub-claim').value.trim();
+  var track  = document.getElementById('sub-track').value;
+  var reason = document.getElementById('sub-reason').value.trim();
+  if (!claim) { showResult('sub-result', '${ar ? 'رقم المطالبة مطلوب' : 'Claim number required'}', 'err'); return; }
+  var ldr = document.getElementById('sub-loader');
+  if (ldr) ldr.style.display = '';
+  fetch(API + '/api/rcm/denial/submit', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ claim_number: claim, track: track, appeal_reason: reason }),
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (ldr) ldr.style.display = 'none';
+    var msg = '🚀 ' + (d.tracking_note || '${ar ? 'تم الإرسال' : 'Submitted'}') + '<br>📌 Ref: ' + (d.reference_id || '—') + '<br>🏛️ ' + (d.portal_link || '');
+    showResult('sub-result', msg, 'success');
+    loadStats();
+  })
+  .catch(function(e) { if (ldr) ldr.style.display = 'none'; showResult('sub-result', 'Error: ' + e.message, 'err'); });
+}
+
+// ── Utility ─────────────────────────────────────────────────────────────────
+function showResult(elId, msg, type) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  var cls = type === 'err' ? 'result-box err' : type === 'warn' ? 'result-box warn' : 'result-box';
+  el.innerHTML = '<div class="' + cls + '">' + msg + '</div>';
+}
+
+// Init
+loadStats();
+</script>
+</body>
+</html>`, {
+    headers: {
+      'Content-Type':  'text/html;charset=UTF-8',
+      'Cache-Control': 'no-cache, must-revalidate',
+      'X-HNH-Version': VERSION,
+    },
+  });
+}
+
 // ─── USER JOURNEY PAGES ────────────────────────────────────────────────────────
 function buildRolePage(role, lang) {
   const ar = lang === 'ar';
@@ -2159,6 +3257,7 @@ function buildRolePage(role, lang) {
         { icon: '✅', label: ar ? 'الموافقات المسبقة'   : 'Prior Authorizations', href: 'https://sbs.elfadil.com/pa',            ext: true },
         { icon: '📊', label: ar ? 'تحليل NPHIES'        : 'NPHIES Analysis',      href: '/api/nphies/analysis',                  ext: false },
         { icon: '🔍', label: ar ? 'الأهلية التأمينية'   : 'Eligibility Check',    href: '/api/eligibility',                      ext: false },
+        { icon: '🚫', label: ar ? 'مكتب الرفض والإعادة' : 'Denial & Resubmission', href: '/denial',                              ext: false },
       ],
       info: ar
         ? 'إدارة المطالبات عبر نظام SBS وبوابة NPHIES. الشبكة: SAR 835M، معدل الموافقة 98.6% (الرياض 88.5% ⚠️).'
@@ -2670,6 +3769,7 @@ async function handleRequest(req, env, url, path) {
   if (path === '/admin')     return buildRolePage('admin',     _rl);
   if (path === '/billing')   return buildRolePage('billing',   _rl);
   if (path === '/status')    return buildRolePage('status',    _rl);
+  if (path === '/denial')    return buildDenialWorkbench(_rl);
 
   // ── Sitemap + Robots ──────────────────────────────────────
   if (path === '/sitemap.xml') {
@@ -2848,6 +3948,13 @@ async function handleRequest(req, env, url, path) {
 
     if (path.startsWith('/api/claims'))    return apiClaims(req, env);
     if (path === '/api/rcm')               return apiRCM(env);
+    if (path === '/api/rcm/denial/stats')       return apiDenialStats(env);
+    if (path === '/api/rcm/denial/list')        return apiDenialList(req, env);
+    if (path === '/api/rcm/denial/ingest')      return apiDenialIngest(req, env);
+    if (path === '/api/rcm/denial/analyze')     return apiDenialAnalyze(req, env);
+    if (path === '/api/rcm/denial/requirements') return apiDenialRequirements(req, env);
+    if (path === '/api/rcm/denial/revalidate')  return apiDenialRevalidate(req, env);
+    if (path === '/api/rcm/denial/submit')      return apiDenialSubmit(req, env);
     if (path.startsWith('/api/sync/'))     return apiSync(env, path.slice('/api/sync/'.length));
 
     if (path === '/api/schema') {
