@@ -14,7 +14,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '7.9.0';
+const VERSION        = '8.0.0';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -33,7 +33,7 @@ const SEC = {
   'Strict-Transport-Security': 'max-age=63072000; includeSubDomains',
 };
 const JSON_H = { ...CORS, ...SEC, 'Content-Type': 'application/json; charset=utf-8' };
-const HTML_H = { ...SEC, 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=60' };
+const HTML_H = { ...SEC, 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' };
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 const ok  = d       => new Response(JSON.stringify({ success: true,  ...d }), { headers: JSON_H });
@@ -1156,6 +1156,10 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
     <div class="logo-tx">${T.title}<small>BrainSAIT Healthcare OS v${VERSION}</small></div>
   </a>
   <nav class="nav" id="main-nav">
+    <a href="/patient${lang === 'en' ? '?lang=en' : ''}">${ar ? '🙂 مريض' : '🙂 Patient'}</a>
+    <a href="/clinician${lang === 'en' ? '?lang=en' : ''}">${ar ? '🩺 طبيب' : '🩺 Clinician'}</a>
+    <a href="/billing${lang === 'en' ? '?lang=en' : ''}">${ar ? '💰 فواتير' : '💰 Billing'}</a>
+    <a href="/status${lang === 'en' ? '?lang=en' : ''}">${ar ? '📊 الحالة' : '📊 Status'}</a>
     <a href="#depts">${T.depts}</a>
     <a href="#branches">${T.branches}</a>
     <a href="#doctors">${T.doctors}</a>
@@ -1197,11 +1201,11 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
         <div class="hv-title">🏥 NPHIES Network Dashboard</div>
         <div class="hv-sub">${ar ? 'شبكة مستشفيات الحياة الوطني — بيانات حية' : 'Hayat National Hospital Group — Live Data'}</div>
       </div>
-      <div class="hv-metric"><span class="hv-label">${ar ? 'إجمالي الشبكة' : 'Network Total'}</span><span class="hv-val">SAR 835.7M</span></div>
-      <div class="hv-metric"><span class="hv-label">${ar ? 'معدل الموافقة' : 'Approval Rate'}</span><span class="hv-val"><span class="hv-badge badge-ok">98.6%</span></span></div>
-      <div class="hv-metric"><span class="hv-label">${ar ? 'المطالبات' : 'Claims'}</span><span class="hv-val">15,138</span></div>
-      <div class="hv-metric"><span class="hv-label">${ar ? 'الرياض (⚠️)' : 'Riyadh (⚠️)'}</span><span class="hv-val"><span class="hv-badge badge-warn">88.5%</span></span></div>
-      <div class="hv-metric"><span class="hv-label">${ar ? 'كلينك AI — الاسترداد' : 'ClaimLinc AI Recovery'}</span><span class="hv-val">SAR 9.8M</span></div>
+      <div class="hv-metric"><span class="hv-label">${ar ? 'إجمالي الشبكة' : 'Network Total'}</span><span class="hv-val" id="hv-sar">SAR 835.7M</span></div>
+      <div class="hv-metric"><span class="hv-label">${ar ? 'معدل الموافقة' : 'Approval Rate'}</span><span class="hv-val"><span class="hv-badge badge-ok" id="hv-rate">98.6%</span></span></div>
+      <div class="hv-metric"><span class="hv-label">${ar ? 'المطالبات' : 'Claims'}</span><span class="hv-val" id="hv-claims">15,138</span></div>
+      <div class="hv-metric"><span class="hv-label">${ar ? 'الرياض (⚠️)' : 'Riyadh (⚠️)'}</span><span class="hv-val"><span class="hv-badge badge-warn" id="hv-riyadh">88.5%</span></span></div>
+      <div class="hv-metric"><span class="hv-label">${ar ? 'كلينك AI — الاسترداد' : 'ClaimLinc AI Recovery'}</span><span class="hv-val" id="hv-recovery">SAR 9.8M</span></div>
     </div>
   </div>
 </div>
@@ -1214,10 +1218,10 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
   <span class="int-tag status-tag" id="bsma-badge" onclick="goPortal('bsma')" title="Patient Portal — bsma.elfadil.com">🙂 BSMA <span class="pulse">●</span></span>
   <span class="int-tag status-tag" id="givc-badge" onclick="goPortal('givc')" title="Clinician Portal — givc.elfadil.com">🩺 GIVC <span class="pulse">●</span></span>
   <span class="int-tag status-tag" id="sbs-badge"  onclick="goPortal('sbs')"  title="Billing Portal — sbs.elfadil.com">💰 SBS  <span class="pulse">●</span></span>
-  <span class="int-tag status-tag" id="oracle-tag" onclick="goPortal('oracle')" title="Oracle HIS Bridge">🔷 Oracle <span class="pulse" id="oracle-dot">●</span></span>
+  <span class="int-tag status-tag" id="oracle-tag" onclick="goPortal('oracle')" title="${ar ? 'Oracle HIS — النفق متوقف (انتهت مهلة جميع الفروع)' : 'Oracle HIS — Tunnel degraded (all branches timeout)'}">🔷 Oracle ⚠</span>
   <span class="int-tag status-tag" id="nphies-tag" onclick="goPortal('nphies')" title="NPHIES Portal">🏛️ NPHIES <span class="pulse">●</span></span>
-  <span class="int-tag" id="sar-badge" title="Total NPHIES Network">💰 SAR <span id="sar-val">835.7M</span></span>
-  <span class="int-tag" id="rate-badge" title="Network Approval Rate"><span id="rate-val">98.6</span>% ${ar ? 'موافقة' : '✓ Approval'}</span>
+  <span class="int-tag" id="sar-badge" title="${ar ? 'إجمالي شبكة NPHIES' : 'Total NPHIES Network'}">💰 SAR <span id="sar-val">835.7M</span></span>
+  <span class="int-tag" id="rate-badge" title="${ar ? 'معدل موافقة الشبكة' : 'Network Approval Rate'}"><span id="rate-val">98.6</span>% ${ar ? 'موافقة' : '✓ Approval'}</span>
   <span class="int-tag" style="cursor:pointer" onclick="document.getElementById('portals').scrollIntoView({behavior:'smooth'})">${ar ? '🎙️ بسمة AI' : '🎙️ Basma AI'}</span>
 </div></div>
 </div>
@@ -1379,7 +1383,7 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
           <div class="pc-name">Oracle OASIS</div>
           <div class="pc-sub">${ar ? 'نظام المستشفى HIS' : 'Hospital HIS'}</div>
         </div>
-        <div class="pc-badge" id="oracle-status"><span class="dot-live"></span>${ar ? 'مباشر' : 'Live'}</div>
+        <div class="pc-badge" id="oracle-status" style="background:rgba(239,68,68,.12);color:#EF4444"><span class="dot-live" style="background:#EF4444"></span>${ar ? 'متدهور' : 'Degraded'}</div>
       </div>
       <div class="pc-body">
         <ul class="pc-features">
@@ -1644,14 +1648,116 @@ function makeEl(tag, attrs, html) {
   return el;
 }
 
-// Stats
-fetchJSON('/api/stats', function(d) {
-  var s = d.stats || {};
-  var pEl = document.getElementById('stat-prov');
-  var dEl = document.getElementById('stat-dept');
-  if (pEl) pEl.textContent = (s.total_providers || 269).toLocaleString();
-  if (dEl) dEl.textContent = (s.total_departments || 20).toLocaleString();
-});
+// ── PORTAL ROLE FILTER ───────────────────────────────────────
+function setRole(btn, role) {
+  document.querySelectorAll('.role-tab').forEach(function(t) { t.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.portal-card').forEach(function(card) {
+    var roles = card.getAttribute('data-roles') || 'all';
+    if (role === 'all' || roles.split(' ').includes(role)) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+}
+
+function goPortal(key) {
+  var portals = {
+    bsma:   'https://bsma.elfadil.com',
+    givc:   'https://givc.elfadil.com',
+    sbs:    'https://sbs.elfadil.com',
+    oracle: 'https://oracle-bridge.brainsait.org/health',
+    nphies: 'https://portal.nphies.sa'
+  };
+  if (portals[key]) window.open(portals[key], '_blank');
+}
+
+// Dashboard — single call replaces /api/stats + /api/portal-hub
+(function loadDashboard() {
+  fetch(API + '/api/dashboard')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var s   = d.stats  || {};
+      var net = d.nphies || {};
+
+      // Hero stats
+      var pEl = document.getElementById('stat-prov');
+      var dEl = document.getElementById('stat-dept');
+      if (pEl) pEl.textContent = (d.total_providers || s.total_providers || 269).toLocaleString();
+      if (dEl) dEl.textContent = (s.total_departments || 20).toLocaleString();
+
+      // Hero card live values
+      var hvSar  = document.getElementById('hv-sar');
+      var hvRate = document.getElementById('hv-rate');
+      var hvCl   = document.getElementById('hv-claims');
+      if (hvSar  && net.total_sar)     hvSar.textContent  = 'SAR ' + (net.total_sar / 1e6).toFixed(1) + 'M';
+      if (hvRate && net.approval_rate) hvRate.textContent = net.approval_rate + '%';
+      if (hvCl   && net.total_claims)  hvCl.textContent   = Number(net.total_claims).toLocaleString();
+
+      // Integration strip — SAR + approval rate
+      var sarEl  = document.getElementById('sar-val');
+      var rateEl = document.getElementById('rate-val');
+      if (sarEl  && net.total_sar)     sarEl.textContent  = (net.total_sar / 1e6).toFixed(1) + 'M';
+      if (rateEl && net.approval_rate) rateEl.textContent = net.approval_rate;
+
+      // BSMA card stats
+      var bPa = document.getElementById('bsma-pa');
+      var bCl = document.getElementById('bsma-claims');
+      if (bPa) bPa.textContent = Number(net.total_pa || 51018).toLocaleString();
+      if (bCl) bCl.textContent = Number(net.total_claims || 15138).toLocaleString();
+
+      // SBS coverage
+      var sbsCov = document.getElementById('sbs-cov');
+      if (sbsCov && d.coverage) sbsCov.textContent = d.coverage.total || 6;
+
+      // GIVC approval rate
+      var gRate = document.getElementById('givc-rate');
+      if (gRate && net.approval_rate) gRate.textContent = net.approval_rate + '%';
+
+      // Oracle badge in integration strip
+      var oTag = document.getElementById('oracle-tag');
+      if (oTag) oTag.innerHTML = d.oracle_status
+        ? '🔷 Oracle <span class="pulse">●</span>'
+        : '🔷 Oracle ⚠';
+
+      // Oracle portal card status
+      var oCard = document.getElementById('oracle-status');
+      if (oCard) {
+        if (d.oracle_status) {
+          oCard.style.background = 'rgba(74,222,128,.15)';
+          oCard.style.color = '#10B981';
+          oCard.querySelector('.dot-live').style.background = '#4ADE80';
+          oCard.innerHTML = '<span class="dot-live" style="background:#4ADE80"></span>' + (AR ? 'مباشر' : 'Live');
+        }
+        // stays degraded (red) if oracle_status === false — already rendered server-side
+      }
+
+      // NPHIES strip badge
+      var nTag = document.getElementById('nphies-tag');
+      if (nTag && net.total_sar > 0) nTag.innerHTML = '🏛️ NPHIES <span class="pulse">●</span>';
+
+      // Portal card status badges (from portals map)
+      Object.keys(d.portals || {}).forEach(function(k) {
+        var el = document.getElementById(k + '-status');
+        if (!el) return;
+        var live = (d.portals[k].status || d.portals[k]) === 'live' || d.portals[k].status === 'live';
+        el.style.background = live ? 'rgba(74,222,128,.2)' : 'rgba(239,68,68,.15)';
+        var dot = el.querySelector('.dot-live');
+        if (dot) dot.style.background = live ? '#4ADE80' : '#EF4444';
+      });
+    })
+    .catch(function() {});
+
+  // GIVC live queue (separate — slow external endpoint)
+  fetch('https://givc.elfadil.com/api/queue', { signal: AbortSignal.timeout(5000) })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var el = document.getElementById('givc-queue');
+      if (el) el.textContent = (d.queue || []).length;
+    })
+    .catch(function() {});
+})();
 
 // Providers → Departments + Doctors
 var allProviders = [];
@@ -1808,83 +1914,161 @@ function sendChat() {
   .catch(function() { typing.textContent = AR ? 'عذراً، خطأ مؤقت.' : 'Sorry, temporary error.'; });
 }
 
-// ── PORTAL HUB — Live data loader + role filtering ─────────────
-function setRole(btn, role) {
-  document.querySelectorAll('.role-tab').forEach(function(t) { t.classList.remove('active'); });
-  btn.classList.add('active');
-  document.querySelectorAll('.portal-card').forEach(function(card) {
-    var roles = card.getAttribute('data-roles') || 'all';
-    if (role === 'all' || roles.split(' ').includes(role)) {
-      card.classList.remove('hidden');
-    } else {
-      card.classList.add('hidden');
-    }
-  });
-}
-
-function goPortal(key) {
-  var portals = {bsma:'https://bsma.elfadil.com',givc:'https://givc.elfadil.com',
-    sbs:'https://sbs.elfadil.com',oracle:'https://oracle-bridge.brainsait.org/health',
-    nphies:'https://portal.nphies.sa'};
-  if (portals[key]) window.open(portals[key], '_blank');
-}
-
-(function loadPortalHub() {
-  fetch(API + '/api/portal-hub')
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      var net = d.nphies || {};
-
-      // SAR + approval in strip
-      var sarEl = document.getElementById('sar-val');
-      var rateEl = document.getElementById('rate-val');
-      if (sarEl && net.network_sar) sarEl.textContent = (net.network_sar / 1e6).toFixed(1) + 'M';
-      if (rateEl && net.approval_rate) rateEl.textContent = net.approval_rate;
-
-      // BSMA card stats
-      var bPa = document.getElementById('bsma-pa');
-      var bCl = document.getElementById('bsma-claims');
-      if (bPa) bPa.textContent = (net.total_pa || 51018).toLocaleString();
-      if (bCl) bCl.textContent = (net.total_claims || 15138).toLocaleString();
-
-      // SBS coverage
-      var sbsCov = document.getElementById('sbs-cov');
-      if (sbsCov && d.coverage) sbsCov.textContent = d.coverage.total || 6;
-
-      // GIVC approval rate
-      var gRate = document.getElementById('givc-rate');
-      if (gRate && net.approval_rate) gRate.textContent = net.approval_rate + '%';
-
-      // Oracle + NPHIES badges in strip
-      var oTag = document.getElementById('oracle-tag');
-      if (oTag) oTag.innerHTML = (d.oracle_status ? '🔷 Oracle <span class="pulse">●</span>' : '🔷 Oracle ~');
-      var nTag = document.getElementById('nphies-tag');
-      if (nTag && net.network_sar > 0) nTag.innerHTML = '🏛️ NPHIES <span class="pulse">●</span>';
-
-      // Portal status badges
-      Object.keys(d.portals || {}).forEach(function(k) {
-        var el = document.getElementById(k + '-status');
-        if (!el) return;
-        var live = d.portals[k].status === 'live';
-        el.style.background = live ? 'rgba(74,222,128,.2)' : 'rgba(239,68,68,.15)';
-        el.querySelector('.dot-live').style.background = live ? '#4ADE80' : '#EF4444';
-      });
-    })
-    .catch(function() {});
-
-  // GIVC queue separately (may be slow)
-  fetch('https://givc.elfadil.com/api/queue', { signal: AbortSignal.timeout(5000) })
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      var el = document.getElementById('givc-queue');
-      if (el) el.textContent = (d.queue || []).length;
-    })
-    .catch(function() {});
-})();
 
 </script>
 </body>
 </html>`;
+}
+
+// ─── USER JOURNEY PAGES ────────────────────────────────────────────────────────
+function buildRolePage(role, lang) {
+  const ar = lang === 'ar';
+  const font = ar ? "'Tajawal', sans-serif" : "'Inter', sans-serif";
+  const dir  = ar ? 'rtl' : 'ltr';
+
+  const ROLES = {
+    patient: {
+      icon:  '🙂',
+      title: ar ? 'بوابة المريض' : 'Patient Portal',
+      sub:   ar ? 'وصول سريع لخدماتك الصحية' : 'Quick access to your healthcare services',
+      color: '#0066CC',
+      links: [
+        { icon: '📅', label: ar ? 'حجز موعد'       : 'Book Appointment',   href: 'https://bsma.elfadil.com/appointments',    ext: true },
+        { icon: '📋', label: ar ? 'سجلاتي الطبية'   : 'My Medical Records', href: 'https://bsma.elfadil.com/records',          ext: true },
+        { icon: '💊', label: ar ? 'وصفاتي'           : 'My Prescriptions',   href: 'https://bsma.elfadil.com/prescriptions',   ext: true },
+        { icon: '💳', label: ar ? 'فواتيري'          : 'My Bills',           href: 'https://bsma.elfadil.com/billing',         ext: true },
+        { icon: '📞', label: ar ? 'اتصل بنا'         : 'Call Us',            href: 'tel:966920000094',                          ext: false },
+        { icon: '🎙️', label: ar ? 'بسمة AI'          : 'Basma AI Assistant', href: '/#chat',                                   ext: false },
+      ],
+      info: ar
+        ? 'مرحباً بك في بوابة المرضى. يمكنك حجز المواعيد، الاطلاع على سجلاتك الطبية، ومتابعة فواتيرك بسهولة.'
+        : 'Welcome to the Patient Portal. Book appointments, view your medical records, and track your bills — all in one place.',
+    },
+    clinician: {
+      icon:  '🩺',
+      title: ar ? 'بوابة الطاقم الطبي' : 'Clinician Portal',
+      sub:   ar ? 'نظام متكامل للأطباء والممرضين' : 'Integrated system for doctors and nurses',
+      color: '#10B981',
+      links: [
+        { icon: '📊', label: ar ? 'لوحة التحكم الطبية' : 'Clinical Dashboard',  href: 'https://givc.elfadil.com',               ext: true },
+        { icon: '🧾', label: ar ? 'الترميز الطبي'       : 'Medical Coding',      href: 'https://givc.elfadil.com/coding',        ext: true },
+        { icon: '👥', label: ar ? 'قائمة انتظاري'       : 'My Queue',            href: 'https://givc.elfadil.com/queue',         ext: true },
+        { icon: '🔍', label: ar ? 'بحث المرضى'          : 'Patient Search',      href: 'https://givc.elfadil.com/patients',      ext: true },
+        { icon: '📋', label: ar ? 'الأوامر الطبية'      : 'Orders',              href: 'https://givc.elfadil.com/orders',        ext: true },
+        { icon: '🔬', label: ar ? 'نتائج المختبر'       : 'Lab Results',         href: 'https://givc.elfadil.com/lab',           ext: true },
+      ],
+      info: ar
+        ? 'الوصول إلى جميع الأدوات السريرية: سجلات المرضى، الترميز، قوائم الانتظار، والنتائج عبر نظام GIVC.'
+        : 'Access all clinical tools: patient records, coding, queues, and results via the GIVC system.',
+    },
+    admin: {
+      icon:  '⚙️',
+      title: ar ? 'بوابة الإدارة' : 'Admin Portal',
+      sub:   ar ? 'إدارة الموارد والعمليات التشغيلية' : 'Resource and operations management',
+      color: '#6366F1',
+      links: [
+        { icon: '🏥', label: ar ? 'Oracle OASIS HIS'    : 'Oracle OASIS HIS',    href: 'https://oracle-bridge.brainsait.org',    ext: true },
+        { icon: '📊', label: ar ? 'تقارير الإيرادات'    : 'Revenue Reports',     href: 'https://sbs.elfadil.com/reports',        ext: true },
+        { icon: '👨‍⚕️', label: ar ? 'الأطباء والموارد'   : 'Providers & Staff',   href: '/api/providers',                         ext: false },
+        { icon: '🌿', label: ar ? 'فروع المجموعة'       : 'Group Branches',      href: '/api/branches',                          ext: false },
+        { icon: '📊', label: ar ? 'لوحة NPHIES'         : 'NPHIES Dashboard',    href: '/api/nphies/analysis',                   ext: false },
+        { icon: '🔒', label: ar ? 'الوصول الآمن'        : 'Secure Access',       href: 'https://oracle-bridge.brainsait.org/health', ext: true },
+      ],
+      info: ar
+        ? 'إدارة مستشفيات مجموعة الحياة الوطني عبر Oracle OASIS، وتقارير SBS، ومتابعة نظام NPHIES.'
+        : 'Manage Hayat National Hospitals Group via Oracle OASIS, SBS reports, and NPHIES monitoring.',
+    },
+    billing: {
+      icon:  '💰',
+      title: ar ? 'بوابة الفوترة' : 'Billing Portal',
+      sub:   ar ? 'إدارة المطالبات والفوترة الطبية' : 'Claims and medical billing management',
+      color: '#F59E0B',
+      links: [
+        { icon: '💸', label: ar ? 'نظام الفوترة SBS'    : 'SBS Billing System',   href: 'https://sbs.elfadil.com',               ext: true },
+        { icon: '🏛️', label: ar ? 'بوابة NPHIES'        : 'NPHIES Portal',        href: 'https://portal.nphies.sa',              ext: true },
+        { icon: '📋', label: ar ? 'مطالبات GSS'         : 'GSS Claims',           href: 'https://sbs.elfadil.com/claims',        ext: true },
+        { icon: '✅', label: ar ? 'الموافقات المسبقة'   : 'Prior Authorizations', href: 'https://sbs.elfadil.com/pa',            ext: true },
+        { icon: '📊', label: ar ? 'تحليل NPHIES'        : 'NPHIES Analysis',      href: '/api/nphies/analysis',                  ext: false },
+        { icon: '🔍', label: ar ? 'الأهلية التأمينية'   : 'Eligibility Check',    href: '/api/eligibility',                      ext: false },
+      ],
+      info: ar
+        ? 'إدارة المطالبات عبر نظام SBS وبوابة NPHIES. الشبكة: SAR 835M، معدل الموافقة 98.6% (الرياض 88.5% ⚠️).'
+        : 'Manage claims via SBS and NPHIES. Network: SAR 835M, approval rate 98.6% (Riyadh 88.5% ⚠️).',
+    },
+    status: {
+      icon:  '📊',
+      title: ar ? 'حالة الأنظمة' : 'System Status',
+      sub:   ar ? 'حالة جميع الأنظمة في الوقت الفعلي' : 'Real-time status of all systems',
+      color: '#0066CC',
+      links: [
+        { icon: '🙂', label: 'BSMA — Patient Portal',      href: 'https://bsma.elfadil.com',                    ext: true },
+        { icon: '🩺', label: 'GIVC — Clinician Portal',    href: 'https://givc.elfadil.com',                    ext: true },
+        { icon: '💰', label: 'SBS  — Billing Portal',      href: 'https://sbs.elfadil.com',                     ext: true },
+        { icon: '🔷', label: 'Oracle Bridge — Health',     href: 'https://oracle-bridge.brainsait.org/health',  ext: true },
+        { icon: '🏛️', label: 'NPHIES Portal',              href: 'https://portal.nphies.sa',                    ext: true },
+        { icon: '🎙️', label: 'Basma Voice Agent',          href: '/voice/health',                               ext: false },
+      ],
+      info: ar
+        ? 'Oracle Tunnel: ❌ كل الفروع متوقفة عبر خوارج Cloudflare. BSMA / GIVC / SBS / NPHIES: ✅ يعمل. الجسر Oracle: ✅ صحي.'
+        : 'Oracle Tunnel: ❌ all branches timeout via CF egress. BSMA / GIVC / SBS / NPHIES: ✅ up. Oracle Bridge: ✅ healthy.',
+    },
+  };
+
+  const page  = ROLES[role] || ROLES.status;
+  const color = page.color;
+  const links = page.links.map(l =>
+    '<a href="' + l.href + '"' + (l.ext ? ' target="_blank"' : '') + ' class="rp-link">' +
+    '<span class="rp-ico">' + l.icon + '</span>' +
+    '<span class="rp-lbl">' + l.label + '</span>' +
+    '<span class="rp-arr">' + (ar ? '←' : '→') + '</span></a>'
+  ).join('');
+
+  return new Response(`<!DOCTYPE html>
+<html lang="${lang}" dir="${dir}">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${page.title} | ${ar ? 'مستشفيات الحياة الوطني' : 'Hayat National Hospitals'}</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:${font};background:#F0F4FA;color:#0F172A;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:32px 16px 64px}
+.rp-wrap{width:100%;max-width:520px}
+.rp-back{display:inline-flex;align-items:center;gap:6px;color:#64748B;text-decoration:none;font-size:.82rem;margin-bottom:24px}
+.rp-back:hover{color:#0066CC}
+.rp-card{background:#fff;border-radius:20px;box-shadow:0 4px 24px rgba(0,0,0,.08);overflow:hidden}
+.rp-hdr{background:linear-gradient(135deg,${color},${color}CC);padding:32px 28px;color:#fff}
+.rp-icon{font-size:2.8rem;margin-bottom:12px}
+.rp-title{font-size:1.7rem;font-weight:800;margin-bottom:4px}
+.rp-sub{font-size:.9rem;opacity:.85}
+.rp-body{padding:20px 0}
+.rp-link{display:flex;align-items:center;gap:14px;padding:14px 28px;text-decoration:none;color:#0F172A;border-bottom:1px solid #F1F5F9;transition:background .12s}
+.rp-link:last-child{border-bottom:none}
+.rp-link:hover{background:#F8FAFF}
+.rp-ico{font-size:1.3rem;width:28px;flex-shrink:0}
+.rp-lbl{flex:1;font-size:.95rem;font-weight:500}
+.rp-arr{color:#CBD5E1;font-size:.9rem}
+.rp-info{margin:20px 24px 0;padding:16px;background:#F0F4FA;border-radius:12px;font-size:.82rem;color:#64748B;line-height:1.6}
+.rp-footer{margin-top:24px;text-align:center;font-size:.78rem;color:#94A3B8}
+.rp-footer a{color:#0066CC;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="rp-wrap">
+  <a href="/${lang === 'en' ? '?lang=en' : ''}" class="rp-back">${ar ? '→ الرئيسية' : '← Home'}</a>
+  <div class="rp-card">
+    <div class="rp-hdr">
+      <div class="rp-icon">${page.icon}</div>
+      <div class="rp-title">${page.title}</div>
+      <div class="rp-sub">${page.sub}</div>
+    </div>
+    <div class="rp-body">${links}</div>
+    <div class="rp-info">${page.info}</div>
+  </div>
+  <div class="rp-footer">${ar ? 'مستشفيات الحياة الوطني' : 'Hayat National Hospitals'} &nbsp;·&nbsp; <a href="tel:966920000094">920-000-094</a> &nbsp;·&nbsp; <a href="/${lang === 'en' ? '?lang=en' : ''}">${ar ? 'الرئيسية' : 'Home'}</a></div>
+</div>
+</body>
+</html>`, { headers: HTML_H });
 }
 
 // ─── MAIN ROUTER ──────────────────────────────────────────────────────────────
@@ -2228,15 +2412,18 @@ async function apiDashboard(env) {
       apiPortalHub(env).then(r => r.json()),
       bsmaNetwork(),
       Promise.all([
-        env.DB.prepare('SELECT COUNT(*) as n FROM patients').first().catch(() => ({ n: 0 })),
+        env.DB.prepare('SELECT COUNT(*) as n FROM patients WHERE is_active=1').first().catch(() => ({ n: 0 })),
         env.DB.prepare('SELECT COUNT(*) as n FROM appointments WHERE status = ?').bind('confirmed').first().catch(() => ({ n: 0 })),
         env.DB.prepare('SELECT COUNT(*) as n FROM claims WHERE nphies_claim_id IS NOT NULL').first().catch(() => ({ n: 0 })),
+        env.DB.prepare('SELECT COUNT(*) as n FROM providers WHERE is_active=1').first().catch(() => ({ n: 0 })),
+        env.DB.prepare('SELECT COUNT(*) as n FROM departments WHERE is_active=1').first().catch(() => ({ n: 0 })),
       ]),
     ]);
     const hub  = hubResp.status  === 'fulfilled' ? hubResp.value  : {};
     const bsma = bsmaNet.status  === 'fulfilled' ? bsmaNet.value  : null;
-    const db   = dbStats.status  === 'fulfilled' ? dbStats.value  : [{ n: 0 }, { n: 0 }, { n: 0 }];
+    const db   = dbStats.status  === 'fulfilled' ? dbStats.value  : [{ n: 0 }, { n: 0 }, { n: 0 }, { n: 0 }, { n: 0 }];
     const fin  = bsma?.financials || {};
+    const hubN = hub.nphies || {};
     const data = {
       ts:      Date.now(),
       version: VERSION,
@@ -2244,14 +2431,18 @@ async function apiDashboard(env) {
         total_patients:      db[0]?.n || 0,
         active_appointments: db[1]?.n || 0,
         nphies_claims:       db[2]?.n || 0,
+        total_departments:   db[4]?.n || 20,
       },
+      total_providers:  db[3]?.n || 269,
       nphies: {
-        approval_rate: fin.network_approval_rate_pct || hub.nphies?.approval_rate || 98.6,
+        approval_rate: fin.network_approval_rate_pct || hubN.approval_rate || 98.6,
         total_sar:     fin.network_total_sar          || 835690702.81,
-        total_claims:  fin.total_claims_gss           || hub.nphies?.total_claims || 15138,
+        total_claims:  fin.total_claims_gss           || hubN.total_claims || 15138,
+        total_pa:      bsma?.prior_auth?.network_total || hubN.total_pa    || 51018,
         source:        bsma ? 'bsma-live' : 'cached',
       },
-      portals:      hub.portals || {},
+      portals:       hub.portals  || {},
+      coverage:      hub.coverage || { total: 6 },
       oracle_status: hub.oracle_status || false,
     };
     mcSet('dashboard', data, 60000); // 1-minute cache
@@ -2300,6 +2491,14 @@ async function handleRequest(req, env, url, path) {
   // Language-prefixed homepages
   if (path === '/ar' || path === '/ar/') return new Response(buildHTML('ar'), { headers: HTML_H });
   if (path === '/en' || path === '/en/') return new Response(buildHTML('en'), { headers: HTML_H });
+
+  // User journey / role pages
+  const _rl = url.searchParams.get('lang') === 'en' ? 'en' : 'ar';
+  if (path === '/patient')   return buildRolePage('patient',   _rl);
+  if (path === '/clinician') return buildRolePage('clinician', _rl);
+  if (path === '/admin')     return buildRolePage('admin',     _rl);
+  if (path === '/billing')   return buildRolePage('billing',   _rl);
+  if (path === '/status')    return buildRolePage('status',    _rl);
 
   // ── Sitemap + Robots ──────────────────────────────────────
   if (path === '/sitemap.xml') {
