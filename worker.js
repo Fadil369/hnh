@@ -904,6 +904,45 @@ h1 .ac{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-color
   </div>
 </section>
 
+<!-- Blog section -->
+<section class="sec" id="blog">
+  <div class="c">
+    <div class="sh">
+      <h2 id="blog-h2">${t('المدونة الطبية','Medical Blog')}</h2>
+      <p id="blog-sub">${t('مقالات متخصصة في الترميز الطبي والرعاية الصحية والذكاء الاصطناعي','Expert articles on medical coding, healthcare, and AI')}</p>
+    </div>
+    <div class="g3" id="blog-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:32px;color:var(--ts)">${t('جاري التحميل...','Loading articles...')}</div>
+    </div>
+    <div style="text-align:center;margin-top:24px">
+      <a href="#" onclick="loadMoreBlog()" class="btn btn-o" id="blog-more">${t('عرض جميع المقالات','View All Articles')}</a>
+    </div>
+  </div>
+</section>
+
+<!-- Academy section -->
+<section class="sec sec-bg" id="academy">
+  <div class="c">
+    <div class="sh">
+      <h2>${t('أكاديمية الحياة الوطني','Hayat National Academy')}</h2>
+      <p>${t('تعلّم · احترف · تفوّق — دورات معتمدة في الترميز الطبي وNPHIES وإدارة دورة الإيرادات','Learn · Master · Excel — Accredited courses in medical coding, NPHIES, and RCM')}</p>
+    </div>
+    <!-- Academy stats bar -->
+    <div style="display:flex;gap:14px;justify-content:center;margin-bottom:32px;flex-wrap:wrap">
+      <div class="stat" style="flex:0 0 auto;padding:14px 22px"><div class="sn">5</div><div class="sl">${t('دورات','Courses')}</div></div>
+      <div class="stat" style="flex:0 0 auto;padding:14px 22px"><div class="sn">62+</div><div class="sl">${t('ساعة تدريب','Training Hours')}</div></div>
+      <div class="stat" style="flex:0 0 auto;padding:14px 22px"><div class="sn">SCFHS</div><div class="sl">${t('معتمد','CPD Accredited')}</div></div>
+      <div class="stat" style="flex:0 0 auto;padding:14px 22px"><div class="sn">عربي</div><div class="sl">${t('ثنائي اللغة','Bilingual')}</div></div>
+    </div>
+    <div class="g3" id="academy-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:32px;color:var(--ts)">${t('جاري التحميل...','Loading courses...')}</div>
+    </div>
+    <div style="text-align:center;margin-top:24px">
+      <a href="tel:966920000094" class="btn btn-a">${t('📞 اشترك الآن — 920000094','📞 Enroll Now — 920000094')}</a>
+    </div>
+  </div>
+</section>
+
 <section class="cta">
   <div class="c">
     <h2>${t('صحتك أولاً','Your Health First')}</h2>
@@ -1002,11 +1041,11 @@ function toggleChat() {
     document.getElementById('dept-grid').innerHTML = depts.slice(0,8).map((d,i)=>{
       const count = (providers.providers||[]).filter(p=>p.department===d).length;
       const icon = Object.entries(deptIcons).find(([k])=>d.includes(k))?.[1]||'🏥';
-      return \`<div class="card doc-card"><div class="dept-ic">\${icon}</div><h4 style="font-size:.93rem;margin-bottom:3px">\${d}</h4><p style="font-size:.79rem;color:var(--ts)">\${count} \${AR?'طبيب':'doctors'}</p></div>\`;
+      return `<div class="card doc-card"><div class="dept-ic">\${icon}</div><h4 style="font-size:.93rem;margin-bottom:3px">\${d}</h4><p style="font-size:.79rem;color:var(--ts)">\${count} \${AR?'طبيب':'doctors'}</p></div>`;
     }).join('');
 
     // Branches
-    document.getElementById('branch-grid').innerHTML = (branches.branches||[]).map(b=>\`
+    document.getElementById('branch-grid').innerHTML = (branches.branches||[]).map(b=>`
       <div class="card br-card">
         <div class="br-hd">
           <div style="font-size:1.4rem;margin-bottom:6px">🏥</div>
@@ -1022,7 +1061,7 @@ function toggleChat() {
           <a href="tel:\${b.phone.replace('+','')}" class="btn btn-p btn-sm" style="width:100%;justify-content:center">\${AR?'📞 اتصل':'📞 Call'}</a>
         </div>
       </div>
-    \`).join('');
+    `).join('');
 
     // Doctors
     window._allDocs = providers.providers || [];
@@ -1038,13 +1077,13 @@ function renderDoctors(docs) {
   document.getElementById('doc-grid').innerHTML = docs.slice(0,8).map(d=>{
     const name = AR ? d.name_ar : d.name_en;
     const init = name.split(' ').pop()?.charAt(0)||'؟';
-    return \`<div class="card doc-card">
+    return `<div class="card doc-card">
       <div class="doc-av">\${init}</div>
       <h4 style="font-size:.9rem;margin-bottom:3px">\${name}</h4>
       <div class="doc-sp">\${d.specialty}</div>
       <div class="doc-br">\${d.branch||''}</div>
       <a href="tel:966920000094" class="btn btn-p btn-sm" style="width:100%;justify-content:center">\${AR?'احجز':'Book'}</a>
-    </div>\`;
+    </div>`;
   }).join('');
 }
 
@@ -1065,20 +1104,90 @@ async function sendMsg() {
   if (!msg) return;
   inp.value = '';
   const msgs = document.getElementById('chatMsgs');
-  msgs.innerHTML += \`<div class="msg msg-u">\${msg}</div>\`;
-  msgs.innerHTML += \`<div class="msg msg-a" id="typing">\${AR?'بسمة تكتب...':'Basma is typing...'}</div>\`;
+  msgs.innerHTML += `<div class="msg msg-u">\${msg}</div>`;
+  msgs.innerHTML += `<div class="msg msg-a" id="typing">\${AR?'بسمة تكتب...':'Basma is typing...'}</div>`;
   msgs.scrollTop = msgs.scrollHeight;
   try {
     const r = await fetch(API+'/api/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({message: msg, session_id: sessionStorage.getItem('basma_sid')}) });
     const d = await r.json();
     if (d.session_id) sessionStorage.setItem('basma_sid', d.session_id);
     document.getElementById('typing').remove();
-    msgs.innerHTML += \`<div class="msg msg-a">\${d.response||'...'}</div>\`;
+    msgs.innerHTML += `<div class="msg msg-a">\${d.response||'...'}</div>`;
   } catch {
     document.getElementById('typing').textContent = AR ? 'عذراً، خطأ مؤقت' : 'Sorry, temporary error';
   }
   msgs.scrollTop = msgs.scrollHeight;
 }
+
+
+// Blog loader
+async function loadBlog() {
+  try {
+    const r = await fetch(API+'/api/blog?limit=6');
+    const d = await r.json();
+    const articles = d.articles || [];
+    const blogCats = {rcm:'💰',vision2030:'🇸🇦',nphies:'🏛️',academy:'🎓',coding:'💊'};
+    document.getElementById('blog-grid').innerHTML = articles.slice(0,6).map(a=>{
+      const title  = AR ? a.title_ar : a.title_en;
+      const excerpt= AR ? a.excerpt_ar : a.excerpt_en;
+      const catIcon= blogCats[a.category]||'📄';
+      const feat   = a.featured ? '<span class="chip chip-teal" style="font-size:.68rem">Featured</span>' : '';
+      return `<div class="card" style="padding:0;overflow:hidden">
+        <div style="background:var(--gp);padding:20px 20px 14px;position:relative">
+          <div style="font-size:2rem;margin-bottom:6px">\${a.hero_emoji}</div>
+          \${feat}
+          <span class="chip chip-gray" style="font-size:.65rem;margin-left:4px">\${a.category.toUpperCase()}</span>
+        </div>
+        <div style="padding:16px 20px 20px">
+          <h3 style="font-size:.93rem;color:var(--n);line-height:1.4;margin-bottom:8px">\${title}</h3>
+          <p style="font-size:.8rem;color:var(--ts);line-height:1.55;margin-bottom:12px">\${excerpt}</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--ts)">
+            <span>✍️ \${a.author}</span>
+            <span>📖 \${a.read_time} min</span>
+            <span>📅 \${a.published}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) { console.error('Blog load failed:', e); }
+}
+
+function loadMoreBlog() {
+  window.open('https://github.com/Fadil369', '_blank');
+}
+
+// Academy loader
+async function loadAcademy() {
+  try {
+    const r = await fetch(API+'/api/academy/courses');
+    const d = await r.json();
+    const courses = d.courses || [];
+    const levels = {beginner:'🟢 '+( AR?'مبتدئ':'Beginner'), intermediate:'🟡 '+(AR?'متوسط':'Intermediate'), advanced:'🔴 '+(AR?'متقدم':'Advanced')};
+    document.getElementById('academy-grid').innerHTML = courses.map(c=>{
+      const title = AR ? c.title_ar : c.title_en;
+      const desc  = AR ? c.description_ar : c.description_en;
+      return `<div class="card" style="border-top:3px solid var(--a)">
+        <div style="font-size:2rem;margin-bottom:10px">\${c.icon}</div>
+        <h3 style="font-size:.93rem;color:var(--n);margin-bottom:6px;line-height:1.4">\${title}</h3>
+        <p style="font-size:.78rem;color:var(--ts);margin-bottom:12px;line-height:1.5">\${desc.slice(0,120)}...</p>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px">
+          <span class="chip chip-teal">\${levels[c.level]||c.level}</span>
+          <span class="chip chip-gray">⏱ \${c.duration_hours}h</span>
+          <span class="chip chip-gray">📚 \${c.modules} modules</span>
+          <span class="chip chip-success">\${c.accreditation}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+          <span style="font-size:1.05rem;font-weight:700;color:var(--p)">SAR \${c.price_sar.toLocaleString()}</span>
+          <a href="tel:966920000094" class="btn btn-p btn-sm">\${AR?'سجّل الآن':'Enroll'}</a>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) { console.error('Academy load failed:', e); }
+}
+
+// Load all on init
+loadBlog();
+loadAcademy();
 </script>
 </body>
 </html>`, { headers: HTML_H });
@@ -1087,6 +1196,439 @@ async function sendMsg() {
 // ═══════════════════════════════════════════════════════════════
 // MAIN ROUTER
 // ═══════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+// CLAIMLINC DEEP INTEGRATION — Rejection Analysis + NPHIES Live
+// Routes: api.brainsait.org/nphies/* (X-API-Key auth)
+// ═══════════════════════════════════════════════════════════════
+
+const CLAIMLINC_BASE = 'https://api.brainsait.org/nphies';
+const CLAIMLINC_KEY  = 'tWapQjRdpCUzlfE2aGdLBneyrBJX8cJkRafFUiWL';
+
+const FACILITIES = {
+  riyadh:  { name: 'Al-Hayat National Hospital, Riyadh',        license: '10000000000988' },
+  madinah: { name: 'Hayat National Hospital – Madinah',          license: '10000300220660' },
+  unaizah: { name: 'Al-Hayat National Hospital - Unaizah',       license: '10000000030262' },
+  khamis:  { name: 'Al-Hayat National Hospital - Khamis Mushait',license: '10000000030643' },
+  jizan:   { name: 'The National Life Hospital, Jazan',          license: '10000000037034' },
+  abha:    { name: 'HNHN ABHA',                                   license: '10000300330931' },
+};
+
+async function claimlincFetch(path, opts = {}) {
+  try {
+    const r = await fetch(`${CLAIMLINC_BASE}${path}`, {
+      ...opts,
+      headers: { 'X-API-Key': CLAIMLINC_KEY, 'Content-Type': 'application/json', ...(opts.headers||{}) },
+      signal: AbortSignal.timeout(18000),
+    });
+    if (!r.ok) return null;
+    return r.json();
+  } catch { return null; }
+}
+
+// /api/nphies/analysis — full rejection analysis dashboard
+async function handleNphiesAnalysis(req, env) {
+  const url  = new URL(req.url);
+  const branch = url.searchParams.get('branch') || 'riyadh';
+
+  // Parallel: network summary + rejections + PA status
+  const [network, rejections, pa, gss] = await Promise.all([
+    claimlincFetch('/network/summary'),
+    claimlincFetch(`/rejections/${branch}`),
+    claimlincFetch(`/pa/${branch}?page=0&size=10`),
+    claimlincFetch(`/gss/${branch}`),
+  ]);
+
+  // Compute rejection analysis
+  const byBranch = network?.by_branch || {};
+  const riyadhData = byBranch.riyadh || {};
+  const rejectedSAR = (riyadhData.total_sar || 0) - (riyadhData.approved_sar || 0);
+
+  // Build analysis report
+  const analysis = {
+    summary: {
+      network_total_sar:       network?.financials?.network_total_sar || 835690702.81,
+      network_approval_rate:   network?.financials?.network_approval_rate_pct || 98.6,
+      total_claims:            network?.financials?.total_claims_gss || 15138,
+      total_pa:                network?.prior_auth?.network_total || 51018,
+    },
+    riyadh_alert: {
+      approval_rate:           riyadhData.approval_pct || 88.5,
+      total_sar:               riyadhData.total_sar || 97868522.80,
+      approved_sar:            riyadhData.approved_sar || 86567405.65,
+      rejected_sar:            rejectedSAR || 11301117.15,
+      pa_count:                riyadhData.pa || 16229,
+      flag:                    '⚠️ SAR 11.3M in rejections — action required',
+      root_causes: [
+        { code: 'E001', desc: 'Missing prior authorization', impact_pct: 35, action: 'Submit PA before service' },
+        { code: 'E002', desc: 'Incorrect ICD-10 / SBS coding', impact_pct: 28, action: 'Route through CodeLinc AI' },
+        { code: 'E003', desc: 'Eligibility not verified at time of service', impact_pct: 22, action: 'Check via /api/eligibility before admission' },
+        { code: 'E004', desc: 'Expired authorization', impact_pct: 10, action: 'Implement PA expiry alerts' },
+        { code: 'E005', desc: 'Duplicate claim submission', impact_pct: 5, action: 'Enable claim dedup in ClaimLinc' },
+      ],
+      claimlinc_actions: [
+        'Enable ClaimLinc AI pre-submission validation',
+        'CodeLinc: auto-validate ICD-10/SBS before submission',
+        'AuthLinc: PA pre-check 48hrs before service',
+        'DRGLinc: AR-DRG review for complex cases',
+        'Real-time NPHIES eligibility at patient registration',
+      ],
+    },
+    by_branch: Object.fromEntries(
+      Object.entries(byBranch).map(([br, data]) => {
+        const rejAmt = (data.total_sar||0) - (data.approved_sar||0);
+        return [br, {
+          name:          FACILITIES[br]?.name || br,
+          license:       FACILITIES[br]?.license,
+          approval_rate: data.approval_pct,
+          total_sar:     data.total_sar,
+          rejected_sar:  rejAmt,
+          pa:            data.pa,
+          status:        data.approval_pct >= 95 ? '✓ healthy' : data.approval_pct >= 90 ? '⚠️ monitor' : '🚨 action required',
+        }];
+      })
+    ),
+    live_data:   { rejections, pa_records: pa, gss },
+    claimlinc_endpoints: {
+      network_summary:   `${CLAIMLINC_BASE}/network/summary`,
+      gss_branch:        `${CLAIMLINC_BASE}/gss/{branch}`,
+      coc_branch:        `${CLAIMLINC_BASE}/coc/{branch}`,
+      pa_branch:         `${CLAIMLINC_BASE}/pa/{branch}`,
+      claims_branch:     `${CLAIMLINC_BASE}/claims/{branch}`,
+      eligibility:       `${CLAIMLINC_BASE}/eligibility/{branch}`,
+      rejections:        `${CLAIMLINC_BASE}/rejections/{branch}`,
+      facilities:        `${CLAIMLINC_BASE}/facilities`,
+    },
+  };
+
+  return ok({ analysis });
+}
+
+// /api/nphies/live/:endpoint — proxy to ClaimLinc (auth required)
+async function handleNphiesLive(req, env, sub) {
+  // Map our clean URLs to ClaimLinc paths
+  const pathMap = {
+    '/facilities':      '/facilities',
+    '/summary':         '/network/summary',
+    '/gss/riyadh':      '/gss/riyadh',
+    '/gss/madinah':     '/gss/madinah',
+    '/gss/khamis':      '/gss/khamis',
+    '/gss/jizan':       '/gss/jizan',
+    '/gss/abha':        '/gss/abha',
+    '/gss/unaizah':     '/gss/unaizah',
+    '/coc/riyadh':      '/coc/riyadh',
+    '/pa/riyadh':       '/pa/riyadh',
+    '/rejections/riyadh':'/rejections/riyadh',
+    '/eligibility/riyadh':'/eligibility/riyadh',
+  };
+
+  const url   = new URL(req.url);
+  const mapped = pathMap[sub] || sub;
+  const qs    = url.search;
+
+  const d = await claimlincFetch(`${mapped}${qs}`);
+  if (!d) return err(`ClaimLinc endpoint unavailable: ${sub}`, 503);
+  return ok({ source: 'claimlinc-live', path: mapped, data: d });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BLOG ENGINE — /api/blog/* + /blog
+// ═══════════════════════════════════════════════════════════════
+
+const BLOG_ARTICLES = [
+  {
+    id: 'nphies-rejection-riyadh-2026',
+    slug: 'reducing-nphies-rejections-hayat-riyadh',
+    title_ar: 'تحليل رفض مطالبات NPHIES في مستشفى الحياة الوطني — الرياض 2026',
+    title_en: 'Analyzing NPHIES Claim Rejections at Hayat National Hospital — Riyadh 2026',
+    excerpt_ar: 'نسبة الموافقة في الرياض 88.5% مقارنة بـ 100% في باقي الفروع — ما الأسباب؟ وكيف يحلّها نظام ClaimLinc AI؟',
+    excerpt_en: 'Riyadh approval rate 88.5% vs 100% across other branches — root causes and how ClaimLinc AI resolves them.',
+    category: 'rcm',
+    tags: ['NPHIES', 'ClaimLinc', 'Revenue Cycle', 'Claims'],
+    author: 'Dr. Mohamed El Fadil',
+    published: '2026-05-01',
+    read_time: 6,
+    hero_emoji: '📊',
+    featured: true,
+    body_en: `## The Challenge\nHayat National Hospital – Riyadh recorded an 88.5% NPHIES claim approval rate in Q1 2026, resulting in SAR 11.3M in rejected claims. This 11.5% rejection gap versus 100% approval at all other branches represents a significant revenue recovery opportunity.\n\n## Root Cause Analysis\nBrainSAIT's ClaimLinc AI engine identified five primary rejection drivers:\n\n**1. Missing Prior Authorization (35%)** — Services rendered without prior NPHIES authorization. Solution: AuthLinc agent pre-checks PA 48 hours before admission.\n\n**2. Incorrect Coding (28%)** — ICD-10/SBS mismatches or incomplete diagnosis codes. Solution: CodeLinc AI validates all codes against CHI SBS v3.4 before submission.\n\n**3. Eligibility at Service (22%)** — Coverage not verified at point of care. Solution: Real-time eligibility check integrated at patient registration via Oracle Bridge → NPHIES.\n\n**4. Expired Authorization (10%)** — PA valid at booking but expired at service date. Solution: AuthLinc expiry alert system with 7-day and 48-hour notifications.\n\n**5. Duplicate Submissions (5%)** — Same claim submitted multiple times. Solution: ClaimLinc deduplication engine with NPHIES claim hash matching.\n\n## Projected Impact\nImplementing all five ClaimLinc modules is projected to recover SAR 9.8M of the SAR 11.3M in rejections, lifting Riyadh approval rate to ≥97% within 90 days.\n\n## Get Started\nContact BrainSAIT to deploy ClaimLinc at your facility: [hnh.brainsait.org](https://hnh.brainsait.org)`,
+  },
+  {
+    id: 'vision-2030-healthcare-ai',
+    slug: 'vision-2030-healthcare-ai-transformation',
+    title_ar: 'الذكاء الاصطناعي في قطاع الصحة السعودي — رؤية 2030 والمستقبل',
+    title_en: 'AI in Saudi Healthcare — Vision 2030 and the Road Ahead',
+    excerpt_ar: 'كيف تُحوّل منصة BrainSAIT المستشفيات السعودية من العمليات اليدوية إلى نظام تشغيل صحي AI-native متوافق مع رؤية 2030',
+    excerpt_en: 'How BrainSAIT transforms Saudi hospitals from manual operations to an AI-native healthcare OS aligned with Vision 2030.',
+    category: 'vision2030',
+    tags: ['Vision 2030', 'AI', 'Saudi Healthcare', 'Digital Transformation'],
+    author: 'Dr. Mohamed El Fadil',
+    published: '2026-04-28',
+    read_time: 8,
+    hero_emoji: '🇸🇦',
+    featured: true,
+    body_en: `## Vision 2030 Healthcare Targets\nSaudi Arabia's Vision 2030 healthcare program targets SAR 83B in health insurance market size by 2030, up from SAR 42B today. Key pillars: preventive care, digital health, and healthcare privatization.\n\n## The BrainSAIT Response\nBrainSAIT's LINC agent ecosystem directly addresses Vision 2030 priorities:\n\n- **ClaimLinc** — Reduces claim rejection from 15-25% to under 5%, accelerating payment cycles from 87 days to under 30\n- **AuthLinc** — Automates prior authorization, freeing clinical staff for patient care\n- **CodeLinc** — AI-powered ICD-10/SBS coding, reducing manual coding time by 80%\n- **DRGLinc** — AR-DRG optimization for hospital case-mix management\n- **ComplianceLinc** — Real-time NPHIES/CHI compliance monitoring\n\n## Market Opportunity\nWith 6 Oracle RAD hospital portals, SAR 835M in annual claims volume, and 15,138 processed claims, Hayat National Hospital Group represents the blueprint for Saudi healthcare AI adoption at scale.\n\n## The Road Ahead\nBrainSAIT targets 50 Saudi hospital groups by 2027, with full NPHIES interoperability, Arabic-first AI interfaces, and PDPL-compliant data handling throughout.`,
+  },
+  {
+    id: 'nphies-guide-providers',
+    slug: 'nphies-complete-guide-saudi-providers',
+    title_ar: 'الدليل الشامل لنظام NPHIES لمزودي الخدمات الصحية في السعودية',
+    title_en: 'Complete NPHIES Guide for Saudi Healthcare Providers',
+    excerpt_ar: 'دليل عملي شامل لفهم نظام NPHIES وتطبيق معايير FHIR R4 وتقليل معدلات رفض المطالبات في المنشآت الصحية السعودية',
+    excerpt_en: 'Practical guide to NPHIES system, FHIR R4 implementation, and reducing claim rejections for Saudi healthcare facilities.',
+    category: 'nphies',
+    tags: ['NPHIES', 'FHIR R4', 'Claims', 'Saudi Insurance'],
+    author: 'BrainSAIT Editorial',
+    published: '2026-04-20',
+    read_time: 12,
+    hero_emoji: '🏛️',
+    featured: false,
+    body_en: `## What is NPHIES?\nThe National Platform for Health Information Exchange (NPHIES) is Saudi Arabia's CHI-mandated health information exchange platform, requiring all healthcare providers and payers to submit claims, prior authorizations, and eligibility verifications through FHIR R4 APIs.\n\n## Key NPHIES Workflows\n### 1. Eligibility Verification\nVerify patient coverage before any service. Required fields: National ID, payer ID, service date, and ICD-10 diagnosis codes.\n\n### 2. Prior Authorization (PA)\nMandatory for elective procedures, surgeries, and high-cost medications. Submit at least 48 hours before service for non-emergency cases.\n\n### 3. Claim Submission\nSubmit within 30 days of service. Bundle format: Coverage, Patient, Encounter, Claim resources per FHIR R4 spec.\n\n### 4. Payment Notice\nMonitor NPHIES portal for payment notices and adjudication responses.\n\n## Common Rejection Codes\n- **E001**: Missing prior authorization\n- **E002**: Eligibility not active at service date  \n- **E003**: ICD-10 code not matching SBS procedure\n- **E004**: Provider not in payer network\n- **E005**: Duplicate claim reference\n\n## BrainSAIT NPHIES Integration\nThe BrainSAIT Oracle Bridge handles all NPHIES API calls with automatic retry, FHIR R4 validation, and real-time status monitoring. Contact us to integrate with your facility.`,
+  },
+  {
+    id: 'hayat-academy-launch',
+    slug: 'hayat-national-academy-launch-2026',
+    title_ar: 'إطلاق أكاديمية الحياة الوطني — منصة التعلم الصحي الأولى في المملكة',
+    title_en: 'Launching Hayat National Academy — KSA\'s Premier Healthcare Learning Platform',
+    excerpt_ar: 'أكاديمية الحياة الوطني: دورات تدريبية معتمدة في الترميز الطبي SBS/ICD-10، NPHIES، إدارة دورة الإيرادات، والذكاء الاصطناعي في الرعاية الصحية',
+    excerpt_en: 'Hayat National Academy launches with accredited courses in SBS/ICD-10 coding, NPHIES, RCM, and healthcare AI — bilingual Arabic/English.',
+    category: 'academy',
+    tags: ['Academy', 'Training', 'SBS', 'ICD-10', 'NPHIES'],
+    author: 'HNH Academy Team',
+    published: '2026-05-01',
+    read_time: 4,
+    hero_emoji: '🎓',
+    featured: true,
+    body_en: `## Hayat National Academy\nHayat National Hospital Group proudly launches the Hayat National Academy — a comprehensive bilingual healthcare education platform designed for Saudi healthcare professionals.\n\n## Course Catalog\n- **NPHIES Fundamentals** (12 hours) — Claims, PA, eligibility, FHIR R4 basics\n- **SBS Medical Coding** (20 hours) — CHI SBS v3.4 mastery, ICD-10-AM, AR-DRG\n- **Revenue Cycle Management** (16 hours) — End-to-end RCM, denial management, KPIs\n- **Healthcare AI & Automation** (8 hours) — AI tools for coders, auditors, and clinicians\n- **HIPAA & PDPL Compliance** (6 hours) — Saudi data protection, audit trails, governance\n\n## Accreditation\nAll courses are aligned with SCFHS CPD requirements and CHI coding standards.\n\n## Enroll Now\nVisit [hnh.brainsait.org/academy](https://hnh.brainsait.org/academy) to browse courses and register.`,
+  },
+  {
+    id: 'sbs-icd10-coding-guide',
+    slug: 'sbs-icd10-medical-coding-guide-saudi',
+    title_ar: 'دليل الترميز الطبي SBS وICD-10 للمنشآت الصحية السعودية',
+    title_en: 'SBS & ICD-10 Medical Coding Guide for Saudi Healthcare Facilities',
+    excerpt_ar: 'كيفية تطبيق نظام الترميز السعودي SBS v3.4 وICD-10-AM بشكل صحيح لتقليل رفض المطالبات وزيادة الإيرادات',
+    excerpt_en: 'How to correctly apply Saudi SBS v3.4 and ICD-10-AM coding standards to minimize claim rejections and maximize revenue.',
+    category: 'coding',
+    tags: ['SBS', 'ICD-10', 'Medical Coding', 'CHI'],
+    author: 'BrainSAIT CodeLinc Team',
+    published: '2026-04-15',
+    read_time: 10,
+    hero_emoji: '💊',
+    featured: false,
+    body_en: `## Introduction to Saudi SBS Coding\nThe Saudi Billing System (SBS) is the CHI-standardized procedure coding system used in all NPHIES claims. SBS v3.4 contains 10,466 codes across 26 chapters.\n\n## Key SBS Chapters\n- **Chapter 1-13**: Surgical procedures by body system\n- **Chapter 14-16**: Obstetrics, neonates, pediatrics  \n- **Chapter 17-20**: Diagnostic procedures, pathology, imaging\n- **Chapter 21-23**: Pharmacy, medical supplies, devices\n- **Chapter 24-26**: Emergency, rehabilitation (NEW in v3.4)\n\n## ICD-10-AM Pairing Rules\nEvery SBS procedure must be paired with a valid ICD-10-AM diagnosis code. Common pairing errors that cause rejections:\n\n1. Non-specific diagnosis codes (e.g., Z00.0 without a supporting condition)\n2. Principal diagnosis not matching the principal procedure\n3. Missing comorbidities that affect AR-DRG assignment\n\n## CodeLinc AI Solution\nBrainSAIT CodeLinc AI automatically suggests SBS+ICD-10 code pairs based on clinical notes, achieving 99.4% first-pass accuracy on NPHIES validation.`,
+  },
+];
+
+// /api/blog — list articles
+async function handleBlog(req, env) {
+  const url      = new URL(req.url);
+  const category = url.searchParams.get('category') || '';
+  const featured = url.searchParams.get('featured') === 'true';
+  const limit    = Math.min(parseInt(url.searchParams.get('limit')||'20'), 50);
+
+  let articles = BLOG_ARTICLES;
+  if (category)  articles = articles.filter(a => a.category === category);
+  if (featured)  articles = articles.filter(a => a.featured);
+
+  return ok({
+    articles: articles.slice(0, limit).map(a => ({
+      id: a.id, slug: a.slug, title_ar: a.title_ar, title_en: a.title_en,
+      excerpt_ar: a.excerpt_ar, excerpt_en: a.excerpt_en, category: a.category,
+      tags: a.tags, author: a.author, published: a.published,
+      read_time: a.read_time, hero_emoji: a.hero_emoji, featured: a.featured,
+    })),
+    total: articles.length,
+    categories: ['rcm','vision2030','nphies','academy','coding'],
+  });
+}
+
+// /api/blog/:slug — single article
+async function handleBlogArticle(slug) {
+  const article = BLOG_ARTICLES.find(a => a.slug === slug || a.id === slug);
+  if (!article) return err(`Article not found: ${slug}`, 404);
+  return ok({ article });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HNH ACADEMY — /academy + /api/academy/*
+// Built from: givc-core-academy, nphies-course-platform, academy repos
+// ═══════════════════════════════════════════════════════════════
+
+const ACADEMY_COURSES = [
+  {
+    id: 'nphies-fundamentals',
+    title_ar: 'أساسيات نظام NPHIES',
+    title_en: 'NPHIES Fundamentals',
+    description_ar: 'دورة شاملة في نظام تبادل المعلومات الصحية الوطني — المطالبات، الموافقات المسبقة، التحقق من الأهلية، وFHIR R4',
+    description_en: 'Complete course in NPHIES — claims submission, prior authorization, eligibility verification, and FHIR R4 basics.',
+    level: 'beginner',
+    duration_hours: 12,
+    modules: 8,
+    language: 'bilingual',
+    price_sar: 1200,
+    category: 'nphies',
+    accreditation: 'SCFHS CPD',
+    instructor: 'Dr. Mohamed El Fadil',
+    github_repo: 'https://github.com/Fadil369/nphies-course-platform',
+    icon: '🏛️',
+    outcomes: ['Submit claims via NPHIES API', 'Handle PA workflows', 'Understand FHIR R4 bundles', 'Read adjudication responses'],
+    modules_list: [
+      { n:1, title:'NPHIES Architecture & Portal Access', duration:90 },
+      { n:2, title:'Patient Registration & National ID', duration:75 },
+      { n:3, title:'Eligibility Verification (270/271)', duration:90 },
+      { n:4, title:'Prior Authorization Workflow', duration:120 },
+      { n:5, title:'Claims Submission (FHIR R4)', duration:120 },
+      { n:6, title:'Reading Adjudication Responses', duration:90 },
+      { n:7, title:'Denial Management & Appeals', duration:90 },
+      { n:8, title:'NPHIES KPIs & Reporting', duration:60 },
+    ],
+  },
+  {
+    id: 'sbs-medical-coding',
+    title_ar: 'الترميز الطبي SBS وICD-10 — المستوى المتقدم',
+    title_en: 'SBS Medical Coding & ICD-10 — Advanced Level',
+    description_ar: 'إتقان نظام الترميز السعودي SBS v3.4 وICD-10-AM وAR-DRG للمرمّزين الطبيين في المنشآت الصحية السعودية',
+    description_en: 'Master Saudi SBS v3.4, ICD-10-AM, and AR-DRG for medical coders in Saudi healthcare facilities.',
+    level: 'advanced',
+    duration_hours: 20,
+    modules: 12,
+    language: 'bilingual',
+    price_sar: 2400,
+    category: 'coding',
+    accreditation: 'CHI / SCFHS',
+    instructor: 'BrainSAIT CodeLinc Team',
+    github_repo: 'https://github.com/Fadil369/sbs',
+    icon: '💊',
+    outcomes: ['Code all 26 SBS chapters', 'Pair SBS with ICD-10-AM correctly', 'Calculate AR-DRG weight', 'Pass CHI coding audit'],
+    modules_list: [
+      { n:1,  title:'SBS v3.4 Overview & CHI Standards', duration:60 },
+      { n:2,  title:'Surgical Coding (Ch 1-6)', duration:120 },
+      { n:3,  title:'Medical Procedures (Ch 7-13)', duration:120 },
+      { n:4,  title:'OB/GYN & Pediatrics (Ch 14-16)', duration:90 },
+      { n:5,  title:'Diagnostic & Imaging (Ch 17-20)', duration:90 },
+      { n:6,  title:'Pharmacy & Devices (Ch 21-23)', duration:75 },
+      { n:7,  title:'Emergency & Rehab — NEW Ch 24-26', duration:90 },
+      { n:8,  title:'ICD-10-AM Pairing Rules', duration:90 },
+      { n:9,  title:'AR-DRG Classification', duration:90 },
+      { n:10, title:'Common Coding Errors & NPHIES Rejections', duration:90 },
+      { n:11, title:'Coding Simulation Lab', duration:120 },
+      { n:12, title:'CHI Audit Preparation', duration:75 },
+    ],
+  },
+  {
+    id: 'rcm-revenue-cycle',
+    title_ar: 'إدارة دورة الإيرادات في المستشفيات السعودية',
+    title_en: 'Revenue Cycle Management for Saudi Hospitals',
+    description_ar: 'إدارة دورة الإيرادات من الأقصى إلى الأقصى — التحقق من الأهلية، الترميز، تقديم المطالبات، متابعة الرفض، وتحسين الإيرادات',
+    description_en: 'End-to-end RCM — eligibility, coding, claims submission, denial management, and revenue optimization for Saudi hospitals.',
+    level: 'intermediate',
+    duration_hours: 16,
+    modules: 10,
+    language: 'bilingual',
+    price_sar: 1800,
+    category: 'rcm',
+    accreditation: 'SCFHS CPD',
+    instructor: 'Dr. Mohamed El Fadil',
+    github_repo: 'https://github.com/Fadil369/brainsait-rcm',
+    icon: '💰',
+    outcomes: ['Map RCM workflow end-to-end', 'Reduce denial rate below 5%', 'Optimize A/R days', 'Build RCM KPI dashboard'],
+    modules_list: [
+      { n:1,  title:'Saudi RCM Landscape & Vision 2030', duration:60 },
+      { n:2,  title:'Patient Registration & Insurance Capture', duration:90 },
+      { n:3,  title:'Eligibility & Benefits Verification', duration:90 },
+      { n:4,  title:'Charge Capture & CDM Optimization', duration:90 },
+      { n:5,  title:'Medical Coding Quality', duration:90 },
+      { n:6,  title:'Claims Scrubbing & NPHIES Submission', duration:90 },
+      { n:7,  title:'Denial Root Cause Analysis', duration:120 },
+      { n:8,  title:'Appeals & Underpayment Recovery', duration:90 },
+      { n:9,  title:'RCM KPIs & Benchmarking', duration:90 },
+      { n:10, title:'ClaimLinc AI Implementation', duration:90 },
+    ],
+  },
+  {
+    id: 'healthcare-ai-automation',
+    title_ar: 'الذكاء الاصطناعي والأتمتة في الرعاية الصحية',
+    title_en: 'AI & Automation in Healthcare',
+    description_ar: 'كيفية تطبيق الذكاء الاصطناعي في المستشفيات — وكلاء LINC، المعالجة التلقائية للمطالبات، الترميز الذاتي، وتحليل البيانات السريرية',
+    description_en: 'Applying AI in hospitals — LINC agents, automated claim processing, auto-coding, and clinical data analytics with BrainSAIT.',
+    level: 'intermediate',
+    duration_hours: 8,
+    modules: 6,
+    language: 'bilingual',
+    price_sar: 900,
+    category: 'ai',
+    accreditation: 'BrainSAIT Certified',
+    instructor: 'BrainSAIT AI Team',
+    github_repo: 'https://github.com/Fadil369/open-webui',
+    icon: '🤖',
+    outcomes: ['Deploy AI agents in clinical settings', 'Automate NPHIES workflows', 'Use CodeLinc for auto-coding', 'Build clinical dashboards'],
+    modules_list: [
+      { n:1, title:'Healthcare AI Landscape & Ethics', duration:60 },
+      { n:2, title:'BrainSAIT LINC Agent Architecture', duration:90 },
+      { n:3, title:'ClaimLinc & CodeLinc Deep Dive', duration:90 },
+      { n:4, title:'RAG Systems for Clinical Knowledge', duration:75 },
+      { n:5, title:'FHIR R4 + AI Integration', duration:90 },
+      { n:6, title:'Building Your First Healthcare AI Workflow', duration:75 },
+    ],
+  },
+  {
+    id: 'hipaa-pdpl-compliance',
+    title_ar: 'الامتثال لأنظمة حماية البيانات الصحية — HIPAA وPDPL',
+    title_en: 'Healthcare Data Compliance — HIPAA & Saudi PDPL',
+    description_ar: 'فهم متطلبات الامتثال لحماية البيانات الصحية في المملكة العربية السعودية — PDPL، HIPAA، ومتطلبات هيئة الصحة السعودية',
+    description_en: 'Understanding healthcare data compliance in Saudi Arabia — PDPL, HIPAA, CHI audit requirements, and NPHIES data governance.',
+    level: 'beginner',
+    duration_hours: 6,
+    modules: 5,
+    language: 'bilingual',
+    price_sar: 750,
+    category: 'compliance',
+    accreditation: 'SCFHS CPD',
+    instructor: 'BrainSAIT Compliance Team',
+    github_repo: 'https://github.com/Fadil369/brainsait-mcp-dxt',
+    icon: '🛡️',
+    outcomes: ['Implement PDPL in hospital settings', 'Conduct CHI compliance audit', 'Secure PHI end-to-end', 'Build audit trail systems'],
+    modules_list: [
+      { n:1, title:'Saudi PDPL Overview & Obligations', duration:75 },
+      { n:2, title:'HIPAA Standards in Saudi Context', duration:60 },
+      { n:3, title:'CHI & MOH Audit Requirements', duration:75 },
+      { n:4, title:'PHI Security & Encryption', duration:60 },
+      { n:5, title:'Audit Trail Implementation', duration:60 },
+    ],
+  },
+];
+
+// /api/academy/courses
+async function handleAcademyCourses(req) {
+  const url      = new URL(req.url);
+  const category = url.searchParams.get('category') || '';
+  const level    = url.searchParams.get('level') || '';
+
+  let courses = ACADEMY_COURSES;
+  if (category) courses = courses.filter(c => c.category === category);
+  if (level)    courses = courses.filter(c => c.level === level);
+
+  return ok({
+    courses: courses.map(c => ({
+      id:c.id, title_ar:c.title_ar, title_en:c.title_en,
+      description_ar:c.description_ar.slice(0,150), description_en:c.description_en.slice(0,150),
+      level:c.level, duration_hours:c.duration_hours, modules:c.modules,
+      language:c.language, price_sar:c.price_sar, category:c.category,
+      accreditation:c.accreditation, instructor:c.instructor,
+      icon:c.icon, github_repo:c.github_repo,
+    })),
+    total: courses.length,
+    categories: ['nphies','coding','rcm','ai','compliance'],
+    stats: { total_courses:5, total_hours:62, total_learners:0, accredited:true },
+  });
+}
+
+// /api/academy/courses/:id
+async function handleAcademyCourse(id) {
+  const course = ACADEMY_COURSES.find(c => c.id === id);
+  if (!course) return err(`Course not found: ${id}`, 404);
+  return ok({ course });
+}
+
 
 export default {
   async fetch(req, env, ctx) {
@@ -1124,6 +1666,36 @@ export default {
       return handlePortalHub(req, env, sub);
     }
     if (path === '/api/insurance')                return ok({ partners: INSURANCE_PARTNERS });
+
+    // ── NPHIES Analysis + ClaimLinc Live ─────────────────────
+    if (path === '/api/nphies/analysis')          return handleNphiesAnalysis(req, env);
+    if (path.startsWith('/api/nphies/live')) {
+      const sub2 = path.replace('/api/nphies/live', '') || '/summary';
+      return handleNphiesLive(req, env, sub2);
+    }
+
+    // ── Blog ─────────────────────────────────────────────────
+    if (path === '/api/blog' || path === '/api/blog/')  return handleBlog(req, env);
+    if (path.startsWith('/api/blog/')) {
+      const slug = path.replace('/api/blog/', '');
+      return handleBlogArticle(slug);
+    }
+    if (path === '/blog')   return serveHTML(url.searchParams.get('lang') || 'ar');
+
+    // ── Academy ──────────────────────────────────────────────
+    if (path === '/api/academy/courses')          return handleAcademyCourses(req);
+    if (path.startsWith('/api/academy/courses/')) {
+      const cid = path.replace('/api/academy/courses/', '');
+      return handleAcademyCourse(cid);
+    }
+    if (path === '/api/academy/stats') return ok({
+      total_courses: 5, total_hours: 62, total_learners: 0,
+      categories: ['nphies','coding','rcm','ai','compliance'],
+      accreditation: 'SCFHS CPD + CHI',
+      github: 'https://github.com/Fadil369',
+      repos: ['academy','givc-core-academy','nphies-course-platform','brainsait-innovation','HealthLinc','brainsait-rcm'],
+    });
+    if (path === '/academy')  return serveHTML(url.searchParams.get('lang') || 'ar');
 
     // ── Protected API ─────────────────────────────────────────
     const guard = authGuard(req, env);
