@@ -1041,27 +1041,34 @@ function toggleChat() {
     document.getElementById('dept-grid').innerHTML = depts.slice(0,8).map((d,i)=>{
       const count = (providers.providers||[]).filter(p=>p.department===d).length;
       const icon = Object.entries(deptIcons).find(([k])=>d.includes(k))?.[1]||'🏥';
-      return `<div class="card doc-card"><div class="dept-ic">\${icon}</div><h4 style="font-size:.93rem;margin-bottom:3px">\${d}</h4><p style="font-size:.79rem;color:var(--ts)">\${count} \${AR?'طبيب':'doctors'}</p></div>`;
+      return '<div class="card doc-card"><div class="dept-ic">'+icon+'</div><h4 style="font-size:.93rem;margin-bottom:3px">'+d+'</h4><p style="font-size:.79rem;color:var(--ts)">'+count+' '+(AR?'طبيب':'doctors')+'</p></div>';
     }).join('');
 
     // Branches
-    document.getElementById('branch-grid').innerHTML = (branches.branches||[]).map(b=>`
-      <div class="card br-card">
-        <div class="br-hd">
-          <div style="font-size:1.4rem;margin-bottom:6px">🏥</div>
-          <h3 style="color:#fff;font-size:1rem;margin-bottom:3px">\${AR?b.name_ar:b.name_en}</h3>
-          <span style="color:rgba(255,255,255,.75);font-size:.84rem">\${AR?b.city_ar:b.city_en}</span>
-        </div>
-        <div class="br-bd">
-          <p style="font-size:.82rem;color:var(--ts);margin-bottom:10px">\${AR?b.address_ar:b.address_en}</p>
-          <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-            <span style="font-size:.76rem;padding:3px 8px;background:var(--bg);border-radius:var(--rf);color:var(--ts)">\${b.beds} \${AR?'سرير':'beds'}</span>
-            <span style="font-size:.76rem;padding:3px 8px;background:rgba(16,185,129,.1);border-radius:var(--rf);color:var(--s)">\${AR?'نشط':'Active'}</span>
-          </div>
-          <a href="tel:\${b.phone.replace('+','')}" class="btn btn-p btn-sm" style="width:100%;justify-content:center">\${AR?'📞 اتصل':'📞 Call'}</a>
-        </div>
-      </div>
-    `).join('');
+    document.getElementById('branch-grid').innerHTML = (branches.branches||[]).map(b=>{
+      var nm = AR?b.name_ar:b.name_en;
+      var ct = AR?b.city_ar:b.city_en;
+      var ad = AR?b.address_ar:b.address_en;
+      var ph = (b.phone||'').replace('+','');
+      var bd = b.beds + (AR?' سرير':' beds');
+      var st = AR?'نشط':'Active';
+      var cl = AR?'📞 اتصل':'📞 Call';
+      return '<div class="card br-card">' +
+        '<div class="br-hd">' +
+          '<div style="font-size:1.4rem;margin-bottom:6px">🏥</div>' +
+          '<h3 style="color:#fff;font-size:1rem;margin-bottom:3px">'+nm+'</h3>' +
+          '<span style="color:rgba(255,255,255,.75);font-size:.84rem">'+ct+'</span>' +
+        '</div>' +
+        '<div class="br-bd">' +
+          '<p style="font-size:.82rem;color:var(--ts);margin-bottom:10px">'+ad+'</p>' +
+          '<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">' +
+            '<span style="font-size:.76rem;padding:3px 8px;background:var(--bg);border-radius:var(--rf);color:var(--ts)">'+bd+'</span>' +
+            '<span style="font-size:.76rem;padding:3px 8px;background:rgba(16,185,129,.1);border-radius:var(--rf);color:var(--s)">'+st+'</span>' +
+          '</div>' +
+          '<a href="tel:'+ph+'" class="btn btn-p btn-sm" style="width:100%;justify-content:center">'+cl+'</a>' +
+        '</div>' +
+      '</div>';
+    }).join('');
 
     // Doctors
     window._allDocs = providers.providers || [];
@@ -1077,13 +1084,16 @@ function renderDoctors(docs) {
   document.getElementById('doc-grid').innerHTML = docs.slice(0,8).map(d=>{
     const name = AR ? d.name_ar : d.name_en;
     const init = name.split(' ').pop()?.charAt(0)||'؟';
-    return `<div class="card doc-card">
-      <div class="doc-av">\${init}</div>
-      <h4 style="font-size:.9rem;margin-bottom:3px">\${name}</h4>
-      <div class="doc-sp">\${d.specialty}</div>
-      <div class="doc-br">\${d.branch||''}</div>
-      <a href="tel:966920000094" class="btn btn-p btn-sm" style="width:100%;justify-content:center">\${AR?'احجز':'Book'}</a>
-    </div>`;
+    var sp = d.specialty||'';
+    var br = d.branch||'';
+    var bk = AR?'احجز':'Book';
+    return '<div class="card doc-card">' +
+      '<div class="doc-av">'+init+'</div>' +
+      '<h4 style="font-size:.9rem;margin-bottom:3px">'+name+'</h4>' +
+      '<div class="doc-sp">'+sp+'</div>' +
+      '<div class="doc-br">'+br+'</div>' +
+      '<a href="tel:966920000094" class="btn btn-p btn-sm" style="width:100%;justify-content:center">'+bk+'</a>' +
+    '</div>';
   }).join('');
 }
 
@@ -1104,15 +1114,15 @@ async function sendMsg() {
   if (!msg) return;
   inp.value = '';
   const msgs = document.getElementById('chatMsgs');
-  msgs.innerHTML += `<div class="msg msg-u">\${msg}</div>`;
-  msgs.innerHTML += `<div class="msg msg-a" id="typing">\${AR?'بسمة تكتب...':'Basma is typing...'}</div>`;
+  msgs.innerHTML += '<div class="msg msg-u">' + msg + '</div>';
+  msgs.innerHTML += '<div class="msg msg-a" id="typing">' + (AR?'بسمة تكتب...':'Basma is typing...') + '</div>';
   msgs.scrollTop = msgs.scrollHeight;
   try {
     const r = await fetch(API+'/api/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({message: msg, session_id: sessionStorage.getItem('basma_sid')}) });
     const d = await r.json();
     if (d.session_id) sessionStorage.setItem('basma_sid', d.session_id);
     document.getElementById('typing').remove();
-    msgs.innerHTML += `<div class="msg msg-a">\${d.response||'...'}</div>`;
+    msgs.innerHTML += '<div class="msg msg-a">' + (d.response||'...') + '</div>';
   } catch {
     document.getElementById('typing').textContent = AR ? 'عذراً، خطأ مؤقت' : 'Sorry, temporary error';
   }
@@ -1132,22 +1142,22 @@ async function loadBlog() {
       const excerpt= AR ? a.excerpt_ar : a.excerpt_en;
       const catIcon= blogCats[a.category]||'📄';
       const feat   = a.featured ? '<span class="chip chip-teal" style="font-size:.68rem">Featured</span>' : '';
-      return `<div class="card" style="padding:0;overflow:hidden">
-        <div style="background:var(--gp);padding:20px 20px 14px;position:relative">
-          <div style="font-size:2rem;margin-bottom:6px">\${a.hero_emoji}</div>
-          \${feat}
-          <span class="chip chip-gray" style="font-size:.65rem;margin-left:4px">\${a.category.toUpperCase()}</span>
-        </div>
-        <div style="padding:16px 20px 20px">
-          <h3 style="font-size:.93rem;color:var(--n);line-height:1.4;margin-bottom:8px">\${title}</h3>
-          <p style="font-size:.8rem;color:var(--ts);line-height:1.55;margin-bottom:12px">\${excerpt}</p>
-          <div style="display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--ts)">
-            <span>✍️ \${a.author}</span>
-            <span>📖 \${a.read_time} min</span>
-            <span>📅 \${a.published}</span>
-          </div>
-        </div>
-      </div>`;
+      return '<div class="card" style="padding:0;overflow:hidden">' +
+        '<div style="background:var(--gp);padding:20px 20px 14px;position:relative">' +
+          '<div style="font-size:2rem;margin-bottom:6px">' + a.hero_emoji + '</div>' +
+          feat +
+          '<span class="chip chip-gray" style="font-size:.65rem;margin-left:4px">' + a.category.toUpperCase() + '</span>' +
+        '</div>' +
+        '<div style="padding:16px 20px 20px">' +
+          '<h3 style="font-size:.93rem;color:var(--n);line-height:1.4;margin-bottom:8px">' + title + '</h3>' +
+          '<p style="font-size:.8rem;color:var(--ts);line-height:1.55;margin-bottom:12px">' + excerpt + '</p>' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--ts)">' +
+            '<span>✍️ ' + a.author + '</span>' +
+            '<span>📖 ' + a.read_time + ' min</span>' +
+            '<span>📅 ' + a.published + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
     }).join('');
   } catch(e) { console.error('Blog load failed:', e); }
 }
@@ -1166,21 +1176,24 @@ async function loadAcademy() {
     document.getElementById('academy-grid').innerHTML = courses.map(c=>{
       const title = AR ? c.title_ar : c.title_en;
       const desc  = AR ? c.description_ar : c.description_en;
-      return `<div class="card" style="border-top:3px solid var(--a)">
-        <div style="font-size:2rem;margin-bottom:10px">\${c.icon}</div>
-        <h3 style="font-size:.93rem;color:var(--n);margin-bottom:6px;line-height:1.4">\${title}</h3>
-        <p style="font-size:.78rem;color:var(--ts);margin-bottom:12px;line-height:1.5">\${desc.slice(0,120)}...</p>
-        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px">
-          <span class="chip chip-teal">\${levels[c.level]||c.level}</span>
-          <span class="chip chip-gray">⏱ \${c.duration_hours}h</span>
-          <span class="chip chip-gray">📚 \${c.modules} modules</span>
-          <span class="chip chip-success">\${c.accreditation}</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
-          <span style="font-size:1.05rem;font-weight:700;color:var(--p)">SAR \${c.price_sar.toLocaleString()}</span>
-          <a href="tel:966920000094" class="btn btn-p btn-sm">\${AR?'سجّل الآن':'Enroll'}</a>
-        </div>
-      </div>`;
+      var lvl = levels[c.level]||c.level;
+      var pr = c.price_sar.toLocaleString();
+      var enr = AR?'سجّل الآن':'Enroll';
+      return '<div class="card" style="border-top:3px solid var(--a)">' +
+        '<div style="font-size:2rem;margin-bottom:10px">' + c.icon + '</div>' +
+        '<h3 style="font-size:.93rem;color:var(--n);margin-bottom:6px;line-height:1.4">' + title + '</h3>' +
+        '<p style="font-size:.78rem;color:var(--ts);margin-bottom:12px;line-height:1.5">' + desc.slice(0,120) + '...</p>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px">' +
+          '<span class="chip chip-teal">' + lvl + '</span>' +
+          '<span class="chip chip-gray">⏱ ' + c.duration_hours + 'h</span>' +
+          '<span class="chip chip-gray">📚 ' + c.modules + ' modules</span>' +
+          '<span class="chip chip-success">' + c.accreditation + '</span>' +
+        '</div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">' +
+          '<span style="font-size:1.05rem;font-weight:700;color:var(--p)">SAR ' + pr + '</span>' +
+          '<a href="tel:966920000094" class="btn btn-p btn-sm">' + enr + '</a>' +
+        '</div>' +
+      '</div>';
     }).join('');
   } catch(e) { console.error('Academy load failed:', e); }
 }
@@ -1657,6 +1670,11 @@ export default {
     if (path.startsWith('/api/eligibility'))      return handleEligibility(req, env);
     if (path.startsWith('/api/chat'))             return handleChat(req, env);
     if (path.startsWith('/api/drugs'))            return handleDrugs(req, env);
+    if (path === '/api/nphies/analysis')          return handleNphiesAnalysis(req, env);
+    if (path.startsWith('/api/nphies/live')) {
+      const subL = path.replace('/api/nphies/live', '') || '/summary';
+      return handleNphiesLive(req, env, subL);
+    }
     if (path.startsWith('/api/nphies')) {
       const sub = path.replace('/api/nphies', '') || '';
       return handleNphies(req, env, sub);
@@ -1668,11 +1686,6 @@ export default {
     if (path === '/api/insurance')                return ok({ partners: INSURANCE_PARTNERS });
 
     // ── NPHIES Analysis + ClaimLinc Live ─────────────────────
-    if (path === '/api/nphies/analysis')          return handleNphiesAnalysis(req, env);
-    if (path.startsWith('/api/nphies/live')) {
-      const sub2 = path.replace('/api/nphies/live', '') || '/summary';
-      return handleNphiesLive(req, env, sub2);
-    }
 
     // ── Blog ─────────────────────────────────────────────────
     if (path === '/api/blog' || path === '/api/blog/')  return handleBlog(req, env);
