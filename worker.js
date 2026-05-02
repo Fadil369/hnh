@@ -8,7 +8,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '7.8.1';
+const VERSION        = '7.8.2';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -577,12 +577,15 @@ async function apiChat(req, env) {
 
 async function apiNphies(req, env, sub) {
   if (sub === '' || sub === '/status') {
-    const net = await clFetch('/network/summary', env);
+    // clFetch (ClaimLinc) is blocked by CF egress IP rules; fall back to bsmaNetwork which IS reachable
+    const clNet = await clFetch('/network/summary', env);
+    const net   = clNet || await bsmaNetwork();
+    const src   = clNet ? 'claimlinc' : 'bsma-fallback';
     const [claims, pa] = await Promise.all([
       env.DB.prepare('SELECT COUNT(*) as n FROM claims WHERE nphies_claim_id IS NOT NULL').first().catch(() => ({ n: 0 })),
       env.DB.prepare('SELECT COUNT(*) as n FROM prior_authorizations').first().catch(() => ({ n: 0 })),
     ]);
-    return ok({ facility: FACILITY_LIC, network: net, local: { claims: claims?.n, pa: pa?.n } });
+    return ok({ facility: FACILITY_LIC, source: src, network: net, local: { claims: claims?.n, pa: pa?.n } });
   }
   if (sub === '/analysis') {
     const net = await bsmaNetwork();
