@@ -361,20 +361,47 @@ async function apiChat(req, env) {
     ragCtx = docs.map(r => '[' + (r.category || 'clinical') + '] ' + r.title + ': ' + (r.content || '').slice(0, 300)).join('\n\n');
   } catch {}
 
-  // AI response via Workers AI
+  // AI engine: DeepSeek (primary) → CF AI (fallback)
+  const sysPrompt = (isAr
+    ? 'أنت بسمة، المساعدة الذكية لمستشفيات الحياة الوطني. تتحدثين العربية والإنجليزية. '
+    : 'You are Basma, the AI assistant for Hayat National Hospitals. ') +
+    (ragCtx ? (isAr ? 'استخدمي هذا السياق:\n\n' : 'Use this context:\n\n') + ragCtx + '\n\n' : '') +
+    (isAr ? 'كوني دافئة ومهنية وموجزة. لا تشخّصي أمراضاً. للتواصل: ' : 'Be warm, professional, concise. No diagnosis. Contact: ') + PHONE;
+
   let reply = '';
-  if (env.AI && ragCtx) {
+
+  // ── 1. DeepSeek (primary) ─────────────────────────────────
+  try {
+    const dsKey = env.DEEPSEEK_API_KEY || 'sk-c228b2bf0a0444379218a045f00becac';
+    const dsRes = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + dsKey },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        max_tokens: 400,
+        temperature: 0.6,
+        messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: msg }],
+      }),
+      signal: AbortSignal.timeout(15000),
+    });
+    if (dsRes.ok) {
+      const dsData = await dsRes.json();
+      reply = dsData.choices?.[0]?.message?.content?.trim() || '';
+    }
+  } catch {}
+
+  // ── 2. CF Workers AI LLaMA (fallback) ────────────────────
+  if (!reply && env.AI) {
     try {
       const ai = await env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', {
-        messages: [
-          { role: 'system', content: 'أنت بسمة، المساعدة الذكية لمستشفيات الحياة الوطني. تتحدثين العربية والإنجليزية. استخدمي هذا السياق:\n\n' + ragCtx + '\n\nكوني دافئة ومهنية وموجزة. لا تشخّصي أمراضاً. للتواصل: ' + PHONE },
-          { role: 'user', content: msg },
-        ],
+        messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: msg }],
         max_tokens: 400,
       });
       reply = ai.response || '';
     } catch {}
   }
+
+  // ── 3. Static fallback ────────────────────────────────────
   if (!reply) {
     reply = isAr
       ? 'أهلاً! أنا بسمة، مساعدتك في مستشفيات الحياة الوطني.' + (ragCtx ? ' وجدت معلومات ذات صلة. ' : ' ') + 'كيف أساعدك؟ 📞 ' + PHONE
