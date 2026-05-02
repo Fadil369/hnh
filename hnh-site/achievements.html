@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الإنجازات | مستشفيات الحياة الوطني</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html" data-i18n="nav.home">الرئيسية</a><span>/</span><span data-i18n="nav.achievements">الإنجازات</span></div>
+      <h1 data-i18n="nav.achievements">الإنجازات الطبية والأخبار</h1>
+      <p id="achPageSub">أحدث الإنجازات والأخبار من مستشفيات الحياة الوطني</p>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="container">
+      <div class="tabs" id="achTabs">
+        <button class="tab-btn active" onclick="switchAchTab(this,'medical')">الإنجازات الطبية</button>
+        <button class="tab-btn" onclick="switchAchTab(this,'news')">الأخبار</button>
+        <button class="tab-btn" onclick="switchAchTab(this,'events')">الفعاليات</button>
+      </div>
+
+      <div id="achTab-medical" class="tab-content active">
+        <div class="grid-2" id="medicalAchievements"></div>
+      </div>
+      <div id="achTab-news" class="tab-content">
+        <div class="grid-2" id="newsAchievements"></div>
+      </div>
+      <div id="achTab-events" class="tab-content">
+        <div class="grid-2" id="eventsAchievements"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AWARDS -->
+  <section class="section bg-light">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <h2 id="awardsTitle">الاعتمادات والجوائز</h2>
+      </div>
+      <div class="grid-3">
+        <div class="value-card animate-on-scroll delay-1">
+          <div class="value-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <h4>أفضل 100 قائد</h4>
+          <p>اختيار الدكتورة فوزية الجار الله ضمن أفضل 100 قائد في الرعاية الصحية في الشرق الأوسط</p>
+        </div>
+        <div class="value-card animate-on-scroll delay-2">
+          <div class="value-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+          <h4>مؤتمر صحة العرب 2023</h4>
+          <p>مشاركة متميزة في مؤتمر صحة العرب 2023 في الإمارات العربية المتحدة</p>
+        </div>
+        <div class="value-card animate-on-scroll delay-3">
+          <div class="value-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6z"/></svg></div>
+          <h4>جائزة أفضل مقدم خدمة</h4>
+          <p>جائزة أفضل مقدم خدمة في معاملات التأمين على منصة نافس</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2 data-i18n="cta.title">صحتك أولاً</h2>
+      <p data-i18n="cta.subtitle">احجز موعدك الآن واحصل على أفضل رعاية طبية</p>
+      <div class="cta-buttons">
+        <a href="contact.html" class="btn btn-accent btn-lg" data-i18n="cta.bookBtn">احجز موعد</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/common.js"></script>
+  <script>
+    const medicalAch = [
+      {dateAr:'20 نوفمبر 2024',dateEn:'November 20, 2024',titleAr:'إزالة حصوة كبيرة من القناة اللعابية بالليزر',titleEn:'Removal of Large Salivary Duct Stone via Laser',
+       descAr:'إنجاز طبي جديد في مستشفى الحياة الوطني جازان بإزالة حصوة كبيرة من القناة اللعابية باستخدام تقنية الليزر، بقيادة د. محمد بكري استشاري جراحة الوجه والفكين.',descEn:'New medical achievement at Hayat National Hospital Jazan — removal of a large salivary duct stone via laser, led by Dr. Mohamed Bakry, facial surgery consultant.'},
+      {dateAr:'16 أكتوبر 2024',dateEn:'October 16, 2024',titleAr:'أول استخدام لتقنية الشفط الديناميكي في القطاع الخاص',titleEn:'First Dynamic Suction Technology in Private Sector',
+       descAr:'استخدام تقنية الشفط الديناميكي لأول مرة في القطاع الخاص بمستشفى الحياة الوطني الرياض لعلاج مريض عمره 88 عاماً يعاني من تمديدات طويلة من الجلطات الدموية في الأطراف.',descEn:'First use of dynamic suction technology in private sector at Hayat National Hospital Riyadh for an 88-year-old patient with extended blood clots.'},
+      {dateAr:'أكتوبر 2024',dateEn:'October 2024',titleAr:'جراحة أدماغية بالمنظار ناجحة',titleEn:'Successful Endoscopic Brain Surgery',
+       descAr:'إجراء عملية جراحة أدماغية بالمنظار لتجويف البطين بالمستشفى بنجاح، في إنجاز يُضاف لسجل المستشفى في جراحة المخ والأعصاب.',descEn:'Successful endoscopic brain ventricle surgery performed, adding to the hospital\'s neurosurgery achievements.'},
+      {dateAr:'2024',dateEn:'2024',titleAr:'شراكة مع GE Healthcare',titleEn:'GE Healthcare Partnership',
+       descAr:'توقيع شراكة استراتيجية مع GE Healthcare لتجهيز مستشفيات المجموعة بأحدث تقنيات التصوير التشخيصي المتقدمة.',descEn:'Strategic partnership with GE Healthcare to equip group hospitals with the latest advanced diagnostic imaging techniques.'}
+    ];
+
+    const newsAch = [
+      {dateAr:'19 نوفمبر 2024',dateEn:'November 19, 2024',titleAr:'تحديث التميّز: حقبة جديدة في تجربة المريض',titleEn:'Upgrading Excellence: A New Era in Patient Experience',
+       descAr:'إطلاق مبادرات جديدة لتحسين تجربة المريض في جميع فروع مستشفيات الحياة الوطني.',descEn:'Launching new initiatives to improve patient experience across all Hayat National Hospital branches.'},
+      {dateAr:'14 أكتوبر 2024',dateEn:'October 14, 2024',titleAr:'مذكرة تفاهم مع جامعة الملك خالد',titleEn:'MOU with King Khalid University',
+       descAr:'توقيع مذكرة تفاهم بين كلية الطب بجامعة الملك خالد ومستشفيات الحياة الوطني لتعزيز التعاون الاستراتيجيدعم رؤية المملكة 2030.',descEn:'MOU signed between King Khalid University Faculty of Medicine and Hayat National Hospitals for strategic cooperation supporting Vision 2030.'},
+      {dateAr:'14 أكتوبر 2024',dateEn:'October 14, 2024',titleAr:'المشاركة في يوم التمريض',titleEn:'Nursing Day Participation',
+       descAr:'مشاركة مستشفيات الحياة الوطني في تفعيل يوم التمريض لتحسين جودة الخدمات الطبية في القطاع الصحي.',descEn:'Hayat National Hospitals participation in Nursing Day to improve quality of medical services.'},
+      {dateAr:'20 نوفمبر 2024',dateEn:'November 20, 2024',titleAr:'شراكة استراتيجية مع GE Healthcare',titleEn:'Strategic Partnership with GE Healthcare',
+       descAr:'توقيع شراكة استراتيجية في منتدى الصحة العالمي 2024 لتجهيز المستشفيات بأحدث تقنيات التصوير التشخيصي.',descEn:'Strategic partnership signed at World Health Forum 2024 to equip hospitals with advanced diagnostic imaging.'}
+    ];
+
+    const eventsAch = [
+      {dateAr:'20 نوفمبر 2024',dateEn:'November 20, 2024',titleAr:'اليوم العالمي لسرطان الثدي 2024',titleEn:'World Breast Cancer Prevention Day 2024',
+       descAr:'مستشفى الحياة الوطني يشارك في اليوم العالمي للتوعية بسرطان الثدي مع فحوصات مجانية وحملات توعوية مكثفة.',descEn:'Hayat National Hospital participates in World Breast Cancer Awareness Day with free screenings and awareness campaigns.'},
+      {dateAr:'20 نوفمبر 2024',dateEn:'November 20, 2024',titleAr:'اليوم العالمي للسكري 2024',titleEn:'World Diabetes Day 2024',
+       descAr:'مستشفى الحياة الوطني جازان في مقدمة التثقيف الصحي بمناسبة اليوم العالمي للسكري، مع نصائح طبية مجانية.',descEn:'Hayat National Hospital Jazan at the forefront of health education on World Diabetes Day with free medical advice.'},
+      {dateAr:'22 سبتمبر 2024',dateEn:'September 22, 2024',titleAr:'رعاية بطولة السهمين',titleEn:'Sponsoring Arrows Championship',
+       descAr:'مستشفى الحياة الوطني خميس مشيط يرعى بطولة السهمين الغربية والجنوبية، في إطار المسؤولية المجتمعية.',descEn:'Hayat National Hospital Khamis Mushayt sponsors the Western and Southern Arrows championship as part of social responsibility.'},
+      {dateAr:'2024',dateEn:'2024',titleAr:'زيارات توعوية ميدانية',titleEn:'Field Awareness Visits',
+       descAr:'سلسلة من الزيارات الميدانية للمؤسسات والشركات لنشر الوعي الصحي وتثقيف المجتمع حول المشكلات والأمراض الشائعة.',descEn:'Series of field visits to institutions and companies to spread health awareness and educate the community.'}
+    ];
+
+    function renderAchItems(items, containerId) {
+      const container = document.getElementById(containerId);
+      const l = HNH.currentLang();
+      container.innerHTML = items.map((item, i) => `
+        <div class="achievement-card animate-on-scroll delay-${(i%2)+1}">
+          <div class="ach-date">${l==='ar'?item.dateAr:item.dateEn}</div>
+          <h4>${l==='ar'?item.titleAr:item.titleEn}</h4>
+          <p>${l==='ar'?item.descAr:item.descEn}</p>
+        </div>
+      `).join('');
+    }
+
+    renderAchItems(medicalAch, 'medicalAchievements');
+    renderAchItems(newsAch, 'newsAchievements');
+    renderAchItems(eventsAch, 'eventsAchievements');
+
+    function switchAchTab(btn, tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('achTab-' + tab).classList.add('active');
+      setTimeout(() => {
+        document.querySelectorAll('.animate-on-scroll:not(.animated)').forEach(el => {
+          new IntersectionObserver((entries) => {
+            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('animated'); });
+          }, {threshold:0.1}).observe(el);
+        });
+      }, 50);
+    }
+
+    function updateAchContent() {
+      const l = HNH.currentLang();
+      document.getElementById('achPageSub').textContent = l==='ar'?'أحدث الإنجازات والأخبار من مستشفيات الحياة الوطني':'Latest achievements and news from Hayat National Hospitals';
+      document.getElementById('awardsTitle').textContent = l==='ar'?'الاعتمادات والجوائز':'Accreditations & Awards';
+      renderAchItems(medicalAch, 'medicalAchievements');
+      renderAchItems(newsAch, 'newsAchievements');
+      renderAchItems(eventsAch, 'eventsAchievements');
+    }
+    const origToggle7 = HNH.toggleLanguage;
+    HNH.toggleLanguage = function() { origToggle7(); setTimeout(updateAchContent, 50); };
+  </script>
+</body>
+</html>

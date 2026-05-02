@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>التوظيف | مستشفيات الحياة الوطني</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html" data-i18n="nav.home">الرئيسية</a><span>/</span><span data-i18n="nav.careers">التوظيف</span></div>
+      <h1 data-i18n="nav.careers">التوظيف</h1>
+      <p id="careersPageSub">استكشف الفرص الوظيفية في مجموعة مستشفيات الحياة الوطني</p>
+    </div>
+  </section>
+
+  <!-- WHY JOIN US -->
+  <section class="section bg-white">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image animate-left" style="background:var(--gradient-primary);">
+          <svg viewBox="0 0 200 200" style="width:100px;height:100px;"><circle cx="100" cy="70" r="30" fill="rgba(255,255,255,0.15)"/><path d="M100 110c-40 0-60 15-60 30v20h120v-20c0-15-20-30-60-30z" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="70" r="20" fill="rgba(255,255,255,0.08)"/><circle cx="140" cy="70" r="20" fill="rgba(255,255,255,0.08)"/></svg>
+        </div>
+        <div class="about-content animate-right">
+          <h2 id="whyJoinTitle">لماذا تצטרף إلينا؟</h2>
+          <div class="gold-line"></div>
+          <p id="whyJoinDesc"> مجموعة مستشفيات الحياة الوطني هي واحدة من أكبر مجموعات الرعاية الصحية في المملكة العربية السعودية. نحن نبحث دائمًا عن مواهب استثنائية للانضمام إلى فريقنا. نقدم بيئة عمل محفزة، وفرص نمو مهني، وتدريب مستمر.</p>
+          <p id="whyJoinDesc2">شعارنا: "موهبتك في مستشفياتنا" — نؤمن بأن الموظف هو أساس النجاح.</p>
+          <div class="about-features">
+            <div class="about-feature"><span class="check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span><span id="jf1">بيئة عمل محفزة</span></div>
+            <div class="about-feature"><span class="check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span><span id="jf2">فرص نمو مهني</span></div>
+            <div class="about-feature"><span class="check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span><span id="jf3">تدريب مستمر</span></div>
+            <div class="about-feature"><span class="check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span><span id="jf4">مزايا تنافسية</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOBS BY BRANCH -->
+  <section class="section bg-light">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <h2 id="jobsTitle">الفرص الوظيفية حسب الفرع</h2>
+        <p id="jobsSub">اختر الفرع المناسب لك</p>
+      </div>
+
+      <div class="tabs" id="careerTabs">
+        <button class="tab-btn active" onclick="switchCareerTab(this,'all')">الكل</button>
+        <button class="tab-btn" onclick="switchCareerTab(this,'riyadh')">الرياض</button>
+        <button class="tab-btn" onclick="switchCareerTab(this,'madinah')">المدينة</button>
+        <button class="tab-btn" onclick="switchCareerTab(this,'jazan')">جازان</button>
+        <button class="tab-btn" onclick="switchCareerTab(this,'khamis')">خميس مشيط</button>
+        <button class="tab-btn" onclick="switchCareerTab(this,'unayzah')">عنيزة</button>
+        <button class="tab-btn" onclick="switchCareerTab(this,'abha')">أبها</button>
+      </div>
+
+      <div class="grid-3" id="careersGrid"></div>
+    </div>
+  </section>
+
+  <!-- APPLY FORM -->
+  <section class="section bg-white">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <h2 id="applyTitle">قدم طلبك الآن</h2>
+        <p id="applySub">أرسل سيرتك الذاتية وسنتواصل معك</p>
+      </div>
+      <div style="max-width:700px;margin:0 auto;">
+        <form class="appointment-form" onsubmit="handleCareerSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>الاسم الكامل</label>
+              <input type="text" required>
+            </div>
+            <div class="form-group">
+              <label>البريد الإلكتروني</label>
+              <input type="email" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>رقم الجوال</label>
+              <input type="tel" required>
+            </div>
+            <div class="form-group">
+              <label>الفرع المطلوب</label>
+              <select required>
+                <option value="">اختر الفرع</option>
+                <option>الرياض</option>
+                <option>المدينة المنورة</option>
+                <option>جازان</option>
+                <option>خميس مشيط</option>
+                <option>عنيزة</option>
+                <option>أبها</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>القسم / التخصص</label>
+            <select>
+              <option value="">اختر القسم</option>
+              <option>الطب</option>
+              <option>التمريض</option>
+              <option>الإدارة</option>
+              <option>الصيدلة</option>
+              <option>المختبر</option>
+              <option>الأشعة</option>
+              <option>العلاج الطبيعي</option>
+              <option>أخرى</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>رسالة تعريفية</label>
+            <textarea rows="4" placeholder="أخبرنا عن خبراتك ومؤهلاتك..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" style="width:100%;" id="applyBtn">إرسال الطلب</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/common.js"></script>
+  <script>
+    const careersData = [
+      {titleAr:'طبيب استشاري — القلب',titleEn:'Consultant Cardiologist',branch:'riyadh',branchAr:'الرياض',branchEn:'Riyadh',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'القلب',deptEn:'Cardiology'},
+      {titleAr:'أخصائي تمريض',titleEn:'Nursing Specialist',branch:'madinah',branchAr:'المدينة',branchEn:'Madinah',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'التمريض',deptEn:'Nursing'},
+      {titleAr:'طبيب عام',titleEn:'General Practitioner',branch:'jazan',branchAr:'جازان',branchEn:'Jazan',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'الطب العام',deptEn:'General Medicine'},
+      {titleAr:'أخصائي أشعة',titleEn:'Radiology Specialist',branch:'khamis',branchAr:'خميس مشيط',branchEn:'Khamis',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'الأشعة',deptEn:'Radiology'},
+      {titleAr:'صيدلي',titleEn:'Pharmacist',branch:'unayzah',branchAr:'عنيزة',branchEn:'Unayzah',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'الصيدلية',deptEn:'Pharmacy'},
+      {titleAr:'أخصائي مختبر',titleEn:'Lab Specialist',branch:'riyadh',branchAr:'الرياض',branchEn:'Riyadh',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'المختبر',deptEn:'Laboratory'},
+      {titleAr:'مدير إداري',titleEn:'Administrative Manager',branch:'madinah',branchAr:'المدينة',branchEn:'Madinah',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'الإدارة',deptEn:'Administration'},
+      {titleAr:'أخصائي علاج طبيعي',titleEn:'Physical Therapist',branch:'jazan',branchAr:'جازان',branchEn:'Jazan',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'العلاج الطبيعي',deptEn:'Physical Therapy'},
+      {titleAr:'فني عمليات',titleEn:'Surgical Technician',branch:'khamis',branchAr:'خميس مشيط',branchEn:'Khamis',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'العمليات',deptEn:'Operations'},
+      {titleAr:'طبيب أطفال',titleEn:'Pediatrician',branch:'riyadh',branchAr:'الرياض',branchEn:'Riyadh',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'الأطفال',deptEn:'Pediatrics'},
+      {titleAr:'أخصائي جلدية',titleEn:'Dermatology Specialist',branch:'unayzah',branchAr:'عنيزة',branchEn:'Unayzah',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'الجلدية',deptEn:'Dermatology'},
+      {titleAr:'مهندس طب حيوي',titleEn:'Biomedical Engineer',branch:'abha',branchAr:'أبها',branchEn:'Abha',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'الهندسة',deptEn:'Engineering'},
+      {titleAr:'أخصائي تغذية',titleEn:'Nutritionist',branch:'riyadh',branchAr:'الرياض',branchEn:'Riyadh',typeAr:'دوام جزئي',typeEn:'Part Time',deptAr:'التغذية',deptEn:'Nutrition'},
+      {titleAr:'منسق مواعيد',titleEn:'Appointment Coordinator',branch:'madinah',branchAr:'المدينة',branchEn:'Madinah',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'الاستقبال',deptEn:'Reception'},
+      {titleAr:'طبيب أسنان',titleEn:'Dentist',branch:'jazan',branchAr:'جازان',branchEn:'Jazan',typeAr:'دوام كامل',typeEn:'Full Time',deptAr:'الأسنان',deptEn:'Dentistry'}
+    ];
+
+    let currentCareerBranch = 'all';
+
+    function renderCareers() {
+      const grid = document.getElementById('careersGrid');
+      const l = HNH.currentLang();
+      const filtered = currentCareerBranch === 'all' ? careersData : careersData.filter(c => c.branch === currentCareerBranch);
+      grid.innerHTML = filtered.map((c, i) => `
+        <div class="career-card animate-on-scroll delay-${(i%3)+1}">
+          <div class="career-branch">${l==='ar'?c.branchAr:c.branchEn}</div>
+          <h4>${l==='ar'?c.titleAr:c.titleEn}</h4>
+          <p>${l==='ar'?c.deptAr:c.deptEn}</p>
+          <div class="career-tags">
+            <span class="tag">${l==='ar'?c.typeAr:c.typeEn}</span>
+            <span class="tag">${l==='ar'?c.deptAr:c.deptEn}</span>
+          </div>
+          <a href="contact.html" class="btn btn-primary btn-sm" style="margin-top:16px;">${l==='ar'?'قدم الآن':'Apply Now'}</a>
+        </div>
+      `).join('');
+      setTimeout(() => {
+        document.querySelectorAll('.animate-on-scroll:not(.animated)').forEach(el => {
+          new IntersectionObserver((entries) => {
+            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('animated'); });
+          }, {threshold:0.1}).observe(el);
+        });
+      }, 50);
+    }
+
+    function switchCareerTab(btn, branch) {
+      currentCareerBranch = branch;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderCareers();
+    }
+
+    function handleCareerSubmit(e) {
+      e.preventDefault();
+      const l = HNH.currentLang();
+      HNH.showToast(l==='ar'?'تم إرسال طلبك بنجاح! سنتواصل معك قريباً.':'Your application has been sent successfully! We will contact you soon.', 'success');
+      e.target.reset();
+    }
+
+    renderCareers();
+
+    function updateCareersContent() {
+      const l = HNH.currentLang();
+      document.getElementById('careersPageSub').textContent = l==='ar'?'استكشف الفرص الوظيفية في مجموعة مستشفيات الحياة الوطني':'Explore career opportunities at Hayat National Hospitals Group';
+      document.getElementById('whyJoinTitle').textContent = l==='ar'?'لماذا تצטרף إلينا؟':'Why Join Us?';
+      document.getElementById('whyJoinDesc').textContent = l==='ar'?'مجموعة مستشفيات الحياة الوطني هي واحدة من أكبر مجموعات الرعاية الصحية في المملكة العربية السعودية. نحن نبحث دائمًا عن مواهب استثنائية للانضمام إلى فريقنا.':'Hayat National Hospitals Group is one of the largest healthcare groups in Saudi Arabia. We are always looking for exceptional talent to join our team.';
+      document.getElementById('whyJoinDesc2').textContent = l==='ar'?'شعارنا: "موهبتك في مستشفياتنا" — نؤمن بأن الموظف هو أساس النجاح.':'Our motto: "Your Talent in Our Hospitals" — we believe employees are the foundation of success.';
+      document.getElementById('jf1').textContent = l==='ar'?'بيئة عمل محفزة':'Motivating Work Environment';
+      document.getElementById('jf2').textContent = l==='ar'?'فرص نمو مهني':'Career Growth Opportunities';
+      document.getElementById('jf3').textContent = l==='ar'?'تدريب مستمر':'Continuous Training';
+      document.getElementById('jf4').textContent = l==='ar'?'مزايا تنافسية':'Competitive Benefits';
+      document.getElementById('jobsTitle').textContent = l==='ar'?'الفرص الوظيفية حسب الفرع':'Job Opportunities by Branch';
+      document.getElementById('jobsSub').textContent = l==='ar'?'اختر الفرع المناسب لك':'Choose the branch that suits you';
+      document.getElementById('applyTitle').textContent = l==='ar'?'قدم طلبك الآن':'Apply Now';
+      document.getElementById('applySub').textContent = l==='ar'?'أرسل سيرتك الذاتية وسنتواصل معك':'Send your CV and we will contact you';
+      document.getElementById('applyBtn').textContent = l==='ar'?'إرسال الطلب':'Submit Application';
+      renderCareers();
+    }
+    const origToggle10 = HNH.toggleLanguage;
+    HNH.toggleLanguage = function() { origToggle10(); setTimeout(updateCareersContent, 50); };
+  </script>
+</body>
+</html>

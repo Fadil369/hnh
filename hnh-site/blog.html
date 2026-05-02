@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>المدونة | مستشفيات الحياة الوطني</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html" data-i18n="nav.home">الرئيسية</a><span>/</span><span data-i18n="nav.blog">المدونة</span></div>
+      <h1 data-i18n="nav.blog">المدونة الطبية</h1>
+      <p id="blogPageSub">مقالات ومعلومات طبية موثوقة من خبراء مستشفيات الحياة الوطني</p>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="container">
+      <div class="filter-bar animate-on-scroll">
+        <input type="text" id="blogSearch" placeholder="ابحث في المقالات..." oninput="filterBlog()">
+        <button class="filter-chip active" onclick="filterBlogCat(this,'all')">الكل</button>
+        <button class="filter-chip" onclick="filterBlogCat(this,'surgery')">جراحة</button>
+        <button class="filter-chip" onclick="filterBlogCat(this,'health')">صحة عامة</button>
+        <button class="filter-chip" onclick="filterBlogCat(this,'nutrition')">تغذية</button>
+        <button class="filter-chip" onclick="filterBlogCat(this,'news')">أخبار</button>
+      </div>
+      <div class="grid-3" id="blogGrid"></div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2 data-i18n="cta.title">صحتك أولاً</h2>
+      <p data-i18n="cta.subtitle">احجز موعدك الآن واحصل على أفضل رعاية طبية</p>
+      <div class="cta-buttons">
+        <a href="contact.html" class="btn btn-accent btn-lg" data-i18n="cta.bookBtn">احجز موعد</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/common.js"></script>
+  <script>
+    const blogPosts = [
+      {cat:'surgery',dateAr:'15 نوفمبر 2024',dateEn:'November 15, 2024',
+       titleAr:'عملية تكميم المعدة: الأعراض وال Ursache والعلاج',titleEn:'Gastric Sleeve Surgery: Causes, Symptoms & Treatment',
+       descAr:'تعرف على عملية تكميم المعدة من حيث الأسباب التي تدعو للقيام بها، والأعراض الجانبية المحتملة، وطرق العلاج المتاحة في مستشفيات الحياة الوطني.',descEn:'Learn about gastric sleeve surgery including reasons, potential side effects, and available treatment methods at Hayat National Hospitals.',
+       excerptAr:'تُعد عملية تكميم المعدة من أكثر العمليات شيوعاً لعلاج السمنة المفرطة، حيث يتم إزالة جزء كبير من المعدة لتقليل كمية الطعام المتناول.',excerptEn:'Gastric sleeve surgery is one of the most common procedures for treating morbid obesity, removing a large portion of the stomach.'},
+      {cat:'surgery',dateAr:'10 نوفمبر 2024',dateEn:'November 10, 2024',
+       titleAr:'عملية تكبير وشد الثدي: كل ما تحتاج معرفته',titleEn:'Breast Augmentation & Lift: Everything You Need to Know',
+       descAr:'دليل شامل حول عمليات تكبير وشد الثدي، بما في ذلك التقنيات المستخدمة وفترة التعافي والنتائج المتوقعة.',descEn:'A comprehensive guide about breast augmentation and lift procedures, including techniques used, recovery period, and expected results.',
+       excerptAr:'عمليات التجميل أصبحت أكثر أماناً وتطوراً مع التقدم التكنولوجي، وتقدم نتائج طبيعية ومُرضية للمرضى.',excerptEn:'Cosmetic procedures have become safer and more advanced with technological progress, offering natural and satisfying results.'},
+      {cat:'surgery',dateAr:'5 نوفمبر 2024',dateEn:'November 5, 2024',
+       titleAr:'عملية إزالة الغدة النكفية بالليزر',titleEn:'Parotid Gland Removal Surgery',
+       descAr:'تعرف على تقنيات إزالة الغدة النكفية الحديثة باستخدام الليزر، ومميزات هذه التقنية مقارنة بالطرق التقليدية.',descEn:'Learn about modern parotid gland removal techniques using laser, and advantages compared to traditional methods.',
+       excerptAr:'تقنية الليزر في جراحة الغدة النكفية توفر دقة أكبر و وقت تعافي أقصر مقارنة بالجراحة التقليدية.',excerptEn:'Laser technology in parotid gland surgery offers greater precision and shorter recovery compared to traditional surgery.'},
+      {cat:'health',dateAr:'20 نوفمبر 2024',dateEn:'November 20, 2024',
+       titleAr:'اليوم العالمي لסרטן الثدي 2024',titleEn:'World Breast Cancer Prevention Day 2024',
+       descAr:'شاركت مستشفيات الحياة الوطني في فعاليات اليوم العالمي للتوعية بسرطان الثدي، مع فحوصات مجانية وحملات توعوية.',descEn:'Hayat National Hospitals participated in World Breast Cancer Awareness Day events, with free screenings and awareness campaigns.',
+       excerptAr:'الكشف المبكر عن سرطان الثدي يزيد من فرص الشفاء بنسبة تتجاوز 90%، لذلك ننصح بالفحوصات الدورية.',excerptEn:'Early detection of breast cancer increases cure rates to over 90%, so we recommend regular screenings.'},
+      {cat:'health',dateAr:'20 نوفمبر 2024',dateEn:'November 20, 2024',
+       titleAr:'اليوم العالمي للسكري 2024',titleEn:'World Diabetes Day 2024',
+       descAr:'مستشفى الحياة الوطني جازان في طليعة التثقيف الصحي بمناسبة اليوم العالمي للسكري، مع نصائح للوقاية والتعامل مع المرض.',descEn:'Hayat National Hospital Jazan leads health education on World Diabetes Day, with tips for prevention and managing the disease.',
+       excerptAr:'السكري من أكثر الأمراض المزمنة انتشاراً في المملكة، والتوعية به تساعد في الوقاية والكشف المبكر.',excerptEn:'Diabetes is one of the most common chronic diseases in the Kingdom, and awareness helps with prevention and early detection.'},
+      {cat:'health',dateAr:'22 أكتوبر 2024',dateEn:'October 22, 2024',
+       titleAr:'نصائح للحفاظ على صحة القلب',titleEn:'Tips for Heart Health',
+       descAr:'نصائح طبية من أخصائيي القلب في مستشفيات الحياة الوطني للحفاظ على صحة قلبك وتجنب أمراض القلب والأوعية الدموية.',descEn:'Medical tips from cardiologists at Hayat National Hospitals for maintaining heart health and preventing cardiovascular diseases.',
+       excerptAr:'النشاط البدني المنتظم، والتغذية المتوازنة، وتجنب التدخين هي أهم العوامل للحفاظ على صحة القلب.',excerptEn:'Regular physical activity, balanced nutrition, and avoiding smoking are the most important factors for heart health.'},
+      {cat:'nutrition',dateAr:'18 أكتوبر 2024',dateEn:'October 18, 2024',
+       titleAr:'التغذية السليمة لمرضى السكري',titleEn:'Proper Nutrition for Diabetes Patients',
+       descAr:'دليل تغذوي شامل لمرضى السكري من أخصائيي التغذية العلاجية في مستشفيات الحياة الوطني.',descEn:'A comprehensive nutritional guide for diabetes patients from therapeutic nutrition specialists at Hayat National Hospitals.',
+       excerptAr:'التغذية المتوازنة هي حجر الزاوية في إدارة السكري، ويمكن أن تحسن من مستوى السكر في الدم بشكل كبير.',excerptEn:'Balanced nutrition is the cornerstone of diabetes management and can significantly improve blood sugar levels.'},
+      {cat:'news',dateAr:'19 نوفمبر 2024',dateEn:'November 19, 2024',
+       titleAr:'تحديث التميّز: حقبة جديدة في تجربة المريض',titleEn:'Upgrading Excellence: A New Era in Patient Experience',
+       descAr:'أعلنت مستشفيات الحياة الوطني عن إطلاق مبادرات جديدة لتحسين تجربة المريض في جميع الفروع.',descEn:'Hayat National Hospitals announced new initiatives to improve patient experience across all branches.',
+       excerptAr:'تشمل المبادرات الجديدة نظام حجز إلكتروني محسّن، وتطبيق جوال محدّث، وبرامج تدريبية للكوادر الطبية.',excerptEn:'New initiatives include an improved online booking system, updated mobile app, and training programs for medical staff.'},
+      {cat:'news',dateAr:'14 أكتوبر 2024',dateEn:'October 14, 2024',
+       titleAr:'توقيع مذكرة تفاهم مع جامعة الملك خالد',titleEn:'MOU Signed with King Khalid University',
+       descAr:'وقعت مستشفيات الحياة الوطني مذكرة تفاهم مع كلية الطب بجامعة الملك خالد لتعزيز التعاون الاستراتيجي.',descEn:'Hayat National Hospitals signed an MOU with King Khalid University Faculty of Medicine for strategic cooperation.',
+       excerptAr:'تهدف المذكرة إلى دعم رؤية المملكة 2030 من خلال تطوير البرامج التعليمية والبحثية في المجال الطبي.',excerptEn:'The MOU aims to support Saudi Vision 2030 by developing educational and research programs in the medical field.'},
+      {cat:'news',dateAr:'16 أكتوبر 2024',dateEn:'October 16, 2024',
+       titleAr:'أول استخدام لتقنية الشفط الديناميكي في القطاع الخاص',titleEn:'First Use of Dynamic Suction in Private Sector',
+       descAr:'حققت مستشفيات الحياة الوطني بالرياض إنجازاً طبياً باستخدام تقنية الشفط الديناميكي لعلاج مريض عمره 88 عاماً.',descEn:'Hayat National Hospital Riyadh achieved a medical milestone using dynamic suction technology for an 88-year-old patient.',
+       excerptAr:'تم إزالة تمديدات طويلة من الجلطات الدموية في الأطراف باستخدام هذه التقنية المتقدمة لأول مرة في القطاع الخاص.',descEn:'Extended blood clots in extremities were removed using this advanced technology for the first time in the private sector.'},
+      {cat:'health',dateAr:'1 أكتوبر 2024',dateEn:'October 1, 2024',
+       titleAr:'جراحة أصابع اليد بالمنظار',titleEn:'Endoscopic Hand Surgery',
+       descAr:'تعرف على تقنيات جراحة أصابع اليد بالمنظار الحديثة ومميزاتها في علاج إصابات اليد المتكررة.',descEn:'Learn about modern endoscopic hand surgery techniques and their advantages in treating repetitive hand injuries.',
+       excerptAr:'جراحة اليد بالمنظار توفر نتائج ممتازة مع وقت تعافي أقصر وندوب أقل مقارنة بالجراحة المفتوحة.',descEn:'Endoscopic hand surgery offers excellent results with shorter recovery and less scarring compared to open surgery.'},
+      {cat:'news',dateAr:'20 نوفمبر 2024',dateEn:'November 20, 2024',
+       titleAr:'شراكة استراتيجية مع GE Healthcare',titleEn:'Strategic Partnership with GE Healthcare',
+       descAr:'وقعت مستشفيات الحياة الوطني شراكة استراتيجية مع GE Healthcare لتجهيز المستشفيات بأحدث تقنيات التصوير التشخيصي.',descEn:'Hayat National Hospitals signed a strategic partnership with GE Healthcare to equip hospitals with advanced diagnostic imaging.',
+       excerptAr:'تم توقيع الشراكة في منتدى الصحة العالمي 2024، وستوفر أحدث أجهزة التصوير الطبي لجميع الفروع.',excerptEn:'The partnership was signed at the World Health Forum 2024, providing the latest medical imaging equipment to all branches.'}
+    ];
+
+    let currentBlogCat = 'all';
+
+    function renderBlog() {
+      const grid = document.getElementById('blogGrid');
+      const search = document.getElementById('blogSearch').value.toLowerCase();
+      const l = HNH.currentLang();
+      const filtered = blogPosts.filter(p => {
+        const matchCat = currentBlogCat === 'all' || p.cat === currentBlogCat;
+        const title = l==='ar'?p.titleAr:p.titleEn;
+        const matchSearch = !search || title.toLowerCase().includes(search);
+        return matchCat && matchSearch;
+      });
+      const catIcons = {surgery:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="none" stroke="white" stroke-width="2"/><path d="M12 8v8M8 12h8" stroke="white" stroke-width="2"/></svg>',
+        health:'<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="white"/></svg>',
+        nutrition:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="white" stroke-width="2"/><path d="M12 6v6l4 2" fill="none" stroke="white" stroke-width="2"/></svg>',
+        news:'<svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="white"/></svg>'};
+
+      grid.innerHTML = filtered.map((p, i) => `
+        <div class="blog-card animate-on-scroll delay-${(i%3)+1}">
+          <div class="blog-img">${catIcons[p.cat]||''}</div>
+          <div class="blog-body">
+            <div class="blog-date"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/></svg>${l==='ar'?p.dateAr:p.dateEn}</div>
+            <h3>${l==='ar'?p.titleAr:p.titleEn}</h3>
+            <p>${l==='ar'?p.excerptAr:p.excerptEn}</p>
+            <a href="#" class="read-more">${l==='ar'?'اقرأ المزيد':'Read More'} →</a>
+          </div>
+        </div>
+      `).join('');
+      setTimeout(() => {
+        document.querySelectorAll('.animate-on-scroll:not(.animated)').forEach(el => {
+          new IntersectionObserver((entries) => {
+            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('animated'); });
+          }, {threshold:0.1}).observe(el);
+        });
+      }, 50);
+    }
+
+    function filterBlogCat(btn, cat) {
+      currentBlogCat = cat;
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderBlog();
+    }
+    function filterBlog() { renderBlog(); }
+
+    renderBlog();
+
+    function updateBlogContent() {
+      const l = HNH.currentLang();
+      document.getElementById('blogPageSub').textContent = l==='ar'?'مقالات ومعلومات طبية موثوقة من خبراء مستشفيات الحياة الوطني':'Trusted medical articles and information from Hayat National Hospitals experts';
+      document.getElementById('blogSearch').placeholder = l==='ar'?'ابحث في المقالات...':'Search articles...';
+      renderBlog();
+    }
+    const origToggle6 = HNH.toggleLanguage;
+    HNH.toggleLanguage = function() { origToggle6(); setTimeout(updateBlogContent, 50); };
+  </script>
+</body>
+</html>

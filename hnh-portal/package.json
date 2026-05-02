@@ -1,0 +1,14 @@
+{
+  "name": "hnh-portal",
+  "version": "1.0.0",
+  "description": "Hayat National Hospital Portal — BrainSAIT Healthcare OS",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "migrate": "wrangler d1 migrations apply hnh-gharnata --remote"
+  },
+  "dependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

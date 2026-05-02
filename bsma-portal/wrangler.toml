@@ -1,0 +1,14 @@
+name = "bsma-portal"
+main = "src/worker.js"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+routes = [
+  { pattern = "bsma.elfadil.com/*", zone_name = "elfadil.com" }
+]
+
+# Environment variables
+[vars]
+BASMA_API_BACKEND = "https://mellissa.brainsait.org"
+HNH_BACKEND = "https://hnh.brainsait.org"
+ENVIRONMENT = "production"

@@ -1,0 +1,11 @@
+name = "hayathospitals"
+compatibility_date = "2024-01-01"
+
+[env.production]
+routes = [
+  { pattern = "hayathospitals.com", zone_id = "117f23e28c474f87e9984bc4b6753a1b" },
+  { pattern = "www.hayathospitals.com", zone_id = "117f23e28c474f87e9984bc4b6753a1b" }
+]
+
+[site]
+bucket = "./"

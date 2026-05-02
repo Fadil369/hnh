@@ -1,0 +1,504 @@
+{
+  "version": 1,
+  "updatedAt": "2026-05-02T15:16:19.274Z",
+  "entries": {
+    "memory:memory/2026-04-28.md:18:36": {
+      "key": "memory:memory/2026-04-28.md:18:36",
+      "path": "memory/2026-04-28.md",
+      "startLine": 18,
+      "endLine": 36,
+      "source": "memory",
+      "snippet": "- **Fix:** Found real hub source in `hub/` (Vite React app), built with `--base=/training/`, copied output into `training/` ### Course Content Enhancement - Hub source in `hub/` — React app with `CatalogView`, `CourseDetailView`, hash routing, i18n (EN/AR), filter by source/category - Enhanced descriptions: Collective Brainpower, NPHIES-AI Mastery, FHIR R4 Implementation - Added new course: **Healthcare AI Launchpad** (2-week bootcamp) - Added chip badges: Leadership, Live, Hands-on - 20 total courses in dataset - Learning paths: AI Microdegree, BrainSAIT Certificate, Healthcare Data Scientist, RCM Acceleration ### Technical Details - Repo: `fadil369/brainsait-org` (primary), `Fadil2369/Br",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.364869874715805,
+      "maxScore": 0.364869874715805,
+      "firstRecalledAt": "2026-04-29T03:45:17.938Z",
+      "lastRecalledAt": "2026-04-29T03:45:17.938Z",
+      "queryHashes": [
+        "78accd836591"
+      ],
+      "recallDays": [
+        "2026-04-29"
+      ],
+      "conceptTags": [
+        "en/ar",
+        "source/category",
+        "nphies-ai",
+        "2-week",
+        "hands-on",
+        "fadil369/brainsait-org",
+        "fadil2369/br",
+        "fix"
+      ]
+    },
+    "memory:memory/2026-04-25.md:1:6": {
+      "key": "memory:memory/2026-04-25.md:1:6",
+      "path": "memory/2026-04-25.md",
+      "startLine": 1,
+      "endLine": 6,
+      "source": "memory",
+      "snippet": "## 2026-04-25 - Audited and updated routing for `brainsait-org` Training Hub. - Moved standalone e-courses and PDF assets to repository root to bypass Next.js build errors. - Updated Cloudflare `_redirects` to change 301s to 200 pass-throughs to fix redirect loops. - Deployment succeeded but user reported a blank page, suggesting a client-side routing/Next.js hydration crash. Investigation required.",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.35823218524456024,
+      "maxScore": 0.35823218524456024,
+      "firstRecalledAt": "2026-04-29T03:45:17.938Z",
+      "lastRecalledAt": "2026-04-29T03:45:17.938Z",
+      "queryHashes": [
+        "78accd836591"
+      ],
+      "recallDays": [
+        "2026-04-29"
+      ],
+      "conceptTags": [
+        "brainsait-org",
+        "e-courses",
+        "next.js",
+        "pass-throughs",
+        "client-side",
+        "routing/next.js",
+        "audited",
+        "updated"
+      ]
+    },
+    "memory:memory/2026-04-28.md:1:23": {
+      "key": "memory:memory/2026-04-28.md:1:23",
+      "path": "memory/2026-04-28.md",
+      "startLine": 1,
+      "endLine": 23,
+      "source": "memory",
+      "snippet": "# 2026-04-28 — BrainSAIT Training Hub Overhaul ## Summary Full debugging and rebuilding of the BrainSAIT.org training navigation. Started with the Training header link returning 404/blank page, ended with a fully working unified training hub (React SPA in `hub/`) and enriched course content. ## Key Events ### Navigation/Routing Fixes - Homepage Training link originally pointed to `/training/` which got intercepted by Next.js client-side router → rendered blank - Cloudflare Worker `brainsait-app-router` was returning hard 404s for `/training/*` — added pass-through to Pages project - `_redirects` had infinite redirect loops due to splat patterns matching themselves - Final routing: `/train",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3565090149641037,
+      "maxScore": 0.3565090149641037,
+      "firstRecalledAt": "2026-04-29T03:45:17.938Z",
+      "lastRecalledAt": "2026-04-29T03:45:17.938Z",
+      "queryHashes": [
+        "78accd836591"
+      ],
+      "recallDays": [
+        "2026-04-29"
+      ],
+      "conceptTags": [
+        "router",
+        "brainsait.org",
+        "404/blank",
+        "navigation/routing",
+        "next.js",
+        "client-side",
+        "brainsait-app-router",
+        "pass-through"
+      ]
+    },
+    "memory:memory/2026-04-30.md:67:79": {
+      "key": "memory:memory/2026-04-30.md:67:79",
+      "path": "memory/2026-04-30.md",
+      "startLine": 67,
+      "endLine": 79,
+      "source": "memory",
+      "snippet": "- ElevenLabs TTS + AI in sequence can exceed CF Worker 30s limit — keep AI tokens ≤250 & TTS text ≤400 chars for voice chat - Edge caching was serving stale HTML — must set `no-cache, no-store, must-revalidate` on HTML responses - Route pattern needs `/*` wildcard suffix to match subpaths (`mellissa.brainsait.org/*` not `mellissa.brainsait.org`) - When using sandbox SSH to remote machines, `scp` works but long-running SSH gets SIGKILL; Pi server verified passwordless ## Pi Server - **Host:** raspberrypi.taile21830.ts.net / 100.126.118.25 - **User:** fadil369 - **Password:** 12345678 - **SSH key:** Installed for passwordless access - **Spec:** 64-bit, 4GB RAM, 196GB free - **Config:** Tailsc",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3711306571960449,
+      "maxScore": 0.3711306571960449,
+      "firstRecalledAt": "2026-04-30T17:10:14.063Z",
+      "lastRecalledAt": "2026-04-30T17:10:14.063Z",
+      "queryHashes": [
+        "e30e0103511a"
+      ],
+      "recallDays": [
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "no-cache",
+        "no-store",
+        "must-revalidate",
+        "mellissa.brainsait.org",
+        "long-running",
+        "raspberrypi.taile21830.ts.net",
+        "100.126.118.25",
+        "64-bit"
+      ]
+    },
+    "memory:memory/2026-04-30.md:801:827": {
+      "key": "memory:memory/2026-04-30.md:801:827",
+      "path": "memory/2026-04-30.md",
+      "startLine": 801,
+      "endLine": 827,
+      "source": "memory",
+      "snippet": "| Worker | URL | Status | |--------|-----|--------| | mellissa-api | https://mellissa.brainsait.org/ | ✅ v7.0 | | hnh-portal | https://hnh-portal.brainsait-fadil.workers.dev/ | ✅ v1.0.0 | | hayathospitals (Pages) | https://hayathospitals.pages.dev/ | ✅ Deployed | ## Basma Voice Agent — ElevenLabs UI Integration (30 Apr 21:34 AR) ### Overview Integrated the official [ElevenLabs UI](https://github.com/elevenlabs/ui) into the HNH ecosystem. Cloned repo at /tmp/ui/. Extracted real component source: - **Orb** (`orb.tsx`): Three.js animated sphere with GLSL shaders, 7 oval petals, perlin noise texture, 4 agent states (idle/listening/thinking/talking) - **Voice Chat blocks** (voice-chat-01/02/03):",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4576125681400299,
+      "maxScore": 0.4576125681400299,
+      "firstRecalledAt": "2026-04-30T19:00:33.596Z",
+      "lastRecalledAt": "2026-04-30T19:00:33.596Z",
+      "queryHashes": [
+        "a49809a24583"
+      ],
+      "recallDays": [
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "mellissa-api",
+        "mellissa.brainsait.org",
+        "v7.0",
+        "hnh-portal",
+        "v1.0.0",
+        "hayathospitals.pages.dev",
+        "github.com/elevenlabs/ui",
+        "tmp/ui"
+      ]
+    },
+    "memory:memory/2026-04-30.md:858:875": {
+      "key": "memory:memory/2026-04-30.md:858:875",
+      "path": "memory/2026-04-30.md",
+      "startLine": 858,
+      "endLine": 875,
+      "source": "memory",
+      "snippet": "- `js/basma-agent.js` (10.9KB) — Complete voice agent state machine: Web Speech API mic input, ElevenLabs TTS via worker proxy, auto language detection, text+voice hybrid - `index.html` updated with `<script>` tags for both files + CSS link + premium Basma chat panel HTML (orb toggle, glassmorphism panel, waveform canvas, message area, mic/send buttons, suggestions) - `js/common.js` updated — Basma initialization in DOMContentLoaded, new `Basma` namespace, old chat .chat-toggle hidden when Basma enabled, keyboard shortcut 'B' to toggle, smooth integration ### Added Voice Routes to hnh-portal Worker - `src/routes/voice.js` (9KB) — Three voice endpoints: - `POST /api/voice/speak` — ElevenLa",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.43711564540863035,
+      "maxScore": 0.43711564540863035,
+      "firstRecalledAt": "2026-04-30T19:00:33.596Z",
+      "lastRecalledAt": "2026-04-30T19:00:33.596Z",
+      "queryHashes": [
+        "a49809a24583"
+      ],
+      "recallDays": [
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "js/basma-agent.js",
+        "10.9kb",
+        "index.html",
+        "mic/send",
+        "js/common.js",
+        "chat-toggle",
+        "hnh-portal",
+        "src/routes/voice.js"
+      ]
+    },
+    "memory:memory/2026-04-30.md:239:253": {
+      "key": "memory:memory/2026-04-30.md:239:253",
+      "path": "memory/2026-04-30.md",
+      "startLine": 239,
+      "endLine": 253,
+      "source": "memory",
+      "snippet": "- **v6.1.0:** Massive AI enhancement — \"BasmaGuist\" persona with full hotel knowledge memorized in system prompt (6 rooms, prices, amenities, dining, policies, nearby attractions, Saudi cultural nuance). Fallback intent detection system with 10 Arabic/English patterns. Session history bumped from 4 to 8 messages. Token limit increased 512→800, temperature 0.75. - **v6.2.0:** Full voice agent integration with ElevenLabs: - **Voice endpoints:** `/api/voice/speak` (TTS), `/api/voice/chat` (AI+TTS combined), `/api/voice/voices` (listing) - **Arabic voices:** Salma (Gulf, young/calm), Amira (poised), Hanan (commanding), Latifa (welcoming), Noura (soft/polished), Anas (male, Modern Standard),",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.41895829141139984,
+      "maxScore": 0.41895829141139984,
+      "firstRecalledAt": "2026-04-30T19:00:33.596Z",
+      "lastRecalledAt": "2026-04-30T19:00:33.596Z",
+      "queryHashes": [
+        "a49809a24583"
+      ],
+      "recallDays": [
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "v6.1.0",
+        "arabic/english",
+        "0.75",
+        "v6.2.0",
+        "api/voice/speak",
+        "api/voice/chat",
+        "api/voice/voices",
+        "young/calm"
+      ]
+    },
+    "memory:memory/2026-04-30.md:110:124": {
+      "key": "memory:memory/2026-04-30.md:110:124",
+      "path": "memory/2026-04-30.md",
+      "startLine": 110,
+      "endLine": 124,
+      "source": "memory",
+      "snippet": "- **v6.1.0:** Massive AI enhancement — \"BasmaGuist\" persona with full hotel knowledge memorized in system prompt (6 rooms, prices, amenities, dining, policies, nearby attractions, Saudi cultural nuance). Fallback intent detection system with 10 Arabic/English patterns. Session history bumped from 4 to 8 messages. Token limit increased 512→800, temperature 0.75. - **v6.2.0:** Full voice agent integration with ElevenLabs: - **Voice endpoints:** `/api/voice/speak` (TTS), `/api/voice/chat` (AI+TTS combined), `/api/voice/voices` (listing) - **Arabic voices:** Salma (Gulf, young/calm), Amira (poised), Hanan (commanding), Latifa (welcoming), Noura (soft/polished), Anas (male, Modern Standard),",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.41895829141139984,
+      "maxScore": 0.41895829141139984,
+      "firstRecalledAt": "2026-04-30T19:00:33.596Z",
+      "lastRecalledAt": "2026-04-30T19:00:33.596Z",
+      "queryHashes": [
+        "a49809a24583"
+      ],
+      "recallDays": [
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "v6.1.0",
+        "arabic/english",
+        "0.75",
+        "v6.2.0",
+        "api/voice/speak",
+        "api/voice/chat",
+        "api/voice/voices",
+        "young/calm"
+      ]
+    },
+    "memory:memory/2026-04-30.md:821:850": {
+      "key": "memory:memory/2026-04-30.md:821:850",
+      "path": "memory/2026-04-30.md",
+      "startLine": 821,
+      "endLine": 850,
+      "source": "memory",
+      "snippet": "📁 /Users/fadil369/.openclaw/workspace/hnh-site/ **js/basma-orb.js** (18.9KB) — Full WebGL port (no React/Three.js): - Exact GLSL fragment shader from orb.tsx (flow distortion, oval rings, perlin noise, color ramp) - Exact state machine formulas: listening→0.55+sin(t*3.2)*0.35, talking→0.65+sin(t*4.8)*0.22 - Canvas2D fallback, dark mode detection **js/basma-agent.js** (10.9KB) — Voice orchestrator: - State machine: disconnected→connecting→connected→listening→thinking→talking→error - sendText() → /api/chat, startListening() → Web Speech API ar-SA, speak() → /api/voice/speak - AnalyserNode mic volume, event system (onStateChange, onTranscript, onReply) **css/basma-agent.css** (14KB) — Glass",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4182025372982025,
+      "maxScore": 0.4182025372982025,
+      "firstRecalledAt": "2026-04-30T19:00:33.596Z",
+      "lastRecalledAt": "2026-04-30T19:00:33.596Z",
+      "queryHashes": [
+        "a49809a24583"
+      ],
+      "recallDays": [
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "users/fadil369",
+        "openclaw/workspace/hnh-site",
+        "js/basma-orb.js",
+        "18.9kb",
+        "react/three.js",
+        "orb.tsx",
+        "0.55",
+        "3.2"
+      ]
+    },
+    "memory:memory/2026-04-30.md:284:302": {
+      "key": "memory:memory/2026-04-30.md:284:302",
+      "path": "memory/2026-04-30.md",
+      "startLine": 284,
+      "endLine": 302,
+      "source": "memory",
+      "snippet": "- **Spec:** 64-bit, 4GB RAM, 196GB free - **Config:** Tailscale direct connection ## v7.0 — Voice-First Premium UI Redesign (Later in Day) - Deployed major UI overhaul with BasmaGuist as centerpiece of entire experience - **Golden animated orb** with 3 pulsing rings (CSS keyframes, z-index layers, scale animations) — the primary interactive element - **Live listening waveform:** 5 animated bars pulsing when mic is active, with visual effect overlay on orb - **Floating pill nav bar:** Glassmorphism blur effect, 60px border-radius, fixed bottom, only 5 compact items - **Voice Showcase section:** 4 feature cards (Smart Booking, Your Personal Concierge, Speak Naturally, Intelligent 24/7) with R",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.37210750281810756,
+      "maxScore": 0.37210750281810756,
+      "firstRecalledAt": "2026-04-30T19:00:33.596Z",
+      "lastRecalledAt": "2026-04-30T19:00:33.596Z",
+      "queryHashes": [
+        "a49809a24583"
+      ],
+      "recallDays": [
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "64-bit",
+        "v7.0",
+        "voice-first",
+        "z-index",
+        "border-radius",
+        "24/7",
+        "spec",
+        "bit"
+      ]
+    },
+    "memory:memory/2026-04-30.md:589:612": {
+      "key": "memory:memory/2026-04-30.md:589:612",
+      "path": "memory/2026-04-30.md",
+      "startLine": 589,
+      "endLine": 612,
+      "source": "memory",
+      "snippet": "- Dr. Mohammed requested upgrade of hnh.elfadil.com to: merge content from hayathospitals.com (7 branches), integrate NPHIES API, integrate Oracle Health FHIR - **Proposed 4-phase roadmap:** 1. **New portal at hnh.brainsait.org** — new CF Worker (`hnh-portal`) merging all 7 branch content 2. **NPHIES full integration** — 270/271 eligibility, 278 pre-auth, 837 claims, 835 payments 3. **Oracle Health FHIR connector** — ADT (Admission/Discharge/Transfer), lab/radiology, clinical data sharing 4. **BasmaGuist Tıbbi** — medical voice assistant for patient inquiries, appointment booking, lab results via voice - Need to explore `hnh.elfadil.com` source code structure (Pi server, Next.js app)",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.102052593231201,
+      "maxScore": 0.40039492845535274,
+      "firstRecalledAt": "2026-05-02T14:41:15.890Z",
+      "lastRecalledAt": "2026-05-02T15:16:19.274Z",
+      "queryHashes": [
+        "cffa19fce7ea",
+        "0cd9ec7a7057",
+        "fb10b43abc22"
+      ],
+      "recallDays": [
+        "2026-05-02"
+      ],
+      "conceptTags": [
+        "hnh.elfadil.com",
+        "hayathospitals.com",
+        "4-phase",
+        "hnh.brainsait.org",
+        "hnh-portal",
+        "270/271",
+        "pre-auth",
+        "admission/discharge/transfer"
+      ]
+    },
+    "memory:memory/2026-04-30.md:606:632": {
+      "key": "memory:memory/2026-04-30.md:606:632",
+      "path": "memory/2026-04-30.md",
+      "startLine": 606,
+      "endLine": 632,
+      "source": "memory",
+      "snippet": "Built a brand new Cloudflare Worker `hnh-portal` from scratch — a bilingual (AR/EN) SPA + REST API for **Hayat National Hospital** at `hnh.brainsait.org/*`. Handles 7 hospital branches, patient management, appointments, NPHIES claims, FHIR R4, insurance eligibility, AI medical chat, and dashboards. ### Project Location 📁 `/Users/fadil369/.openclaw/workspace/hnh-portal/` ### D1 Database: `hnh-gharnata` (UUID: d6960732-d5d0-4271-84e9-ba988c9c32dc) Pre-existing database with a **real hospital schema** (not our dummy migration). Key tables: - `patients` — Real patient data already populated (full_name_ar, full_name_en, first_name_ar, first_name_en, phone, national_id, insurance_company) - `pr",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3914345890283584,
+      "maxScore": 0.3914345890283584,
+      "firstRecalledAt": "2026-05-02T14:41:15.890Z",
+      "lastRecalledAt": "2026-05-02T14:41:15.890Z",
+      "queryHashes": [
+        "cffa19fce7ea"
+      ],
+      "recallDays": [
+        "2026-05-02"
+      ],
+      "conceptTags": [
+        "hnh-portal",
+        "ar/en",
+        "hnh.brainsait.org",
+        "users/fadil369",
+        "openclaw/workspace/hnh-portal",
+        "hnh-gharnata",
+        "pre-existing",
+        "full-name-ar"
+      ]
+    },
+    "memory:memory/2026-04-30.md:330:354": {
+      "key": "memory:memory/2026-04-30.md:330:354",
+      "path": "memory/2026-04-30.md",
+      "startLine": 330,
+      "endLine": 354,
+      "source": "memory",
+      "snippet": "3. **Oracle Health FHIR connector** — ADT (Admission/Discharge/Transfer), lab/radiology, clinical data sharing 4. **BasmaGuist Tıbbi** — medical voice assistant for patient inquiries, appointment booking, lab results via voice - Need to explore `hnh.elfadil.com` source code structure (Pi server, Next.js app) — SSH blocked by policy ## OAuth Token Note - Token `As7RPJFcWP962E9N8VEd05DZX0Gd514wTC84shgImbI...` is expired (2026-04-30T11:39) — new one needs to be generated for any CF API operations - Contact email for Cloudflare account: likely `dr.mohammed@brainsait.org` --- ## HNH Portal Worker — Built & Deployed (Evening Session) ### Overview Built a brand new Cloudflare Worker `hnh-po",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3785477370023727,
+      "maxScore": 0.3785477370023727,
+      "firstRecalledAt": "2026-05-02T14:41:15.890Z",
+      "lastRecalledAt": "2026-05-02T14:41:15.890Z",
+      "queryHashes": [
+        "cffa19fce7ea"
+      ],
+      "recallDays": [
+        "2026-05-02"
+      ],
+      "conceptTags": [
+        "admission/discharge/transfer",
+        "lab/radiology",
+        "hnh.elfadil.com",
+        "next.js",
+        "2026-04-30t11",
+        "dr.mohammed",
+        "brainsait.org",
+        "hnh-po"
+      ]
+    },
+    "memory:memory/2026-04-30.md:766:787": {
+      "key": "memory:memory/2026-04-30.md:766:787",
+      "path": "memory/2026-04-30.md",
+      "startLine": 766,
+      "endLine": 787,
+      "source": "memory",
+      "snippet": "- **hnh.elfadil.com** — Next.js 14+ portal on Cloudflare Pages, BrainSAIT Healthcare OS - **hayathospitals.com** — WordPress/Elementor, WAF blocks crawlers (403), 7 branches, lots of bloat - Full 28KB extraction from Wayback Machine saved to `docs/hayah-extraction.md` ## HNH Portal Worker — Built & Deployed (Major Evening Session) 📁 `/Users/fadil369/.openclaw/workspace/hnh-portal/` - New CF Worker `hnh-portal` — bilingual AR/EN SPA + REST API for Hayat National Hospital - **D1:** `hnh-gharnata` (UUID: d6960732-d5d0-4271-84e9-ba988c9c32dc) — pre-existing with real patient data - **182 real doctors seeded** from hayathospitals.com extraction (Khamis 73, Riyadh 47, Unayzah 23, Madinah 20, Jaz",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3748246669769287,
+      "maxScore": 0.3748246669769287,
+      "firstRecalledAt": "2026-05-02T14:41:15.890Z",
+      "lastRecalledAt": "2026-05-02T14:41:15.890Z",
+      "queryHashes": [
+        "cffa19fce7ea"
+      ],
+      "recallDays": [
+        "2026-05-02"
+      ],
+      "conceptTags": [
+        "hnh.elfadil.com",
+        "next.js",
+        "hayathospitals.com",
+        "wordpress/elementor",
+        "docs/hayah-extraction.md",
+        "users/fadil369",
+        "openclaw/workspace/hnh-portal",
+        "hnh-portal"
+      ]
+    },
+    "memory:memory/2026-04-30.md:435:460": {
+      "key": "memory:memory/2026-04-30.md:435:460",
+      "path": "memory/2026-04-30.md",
+      "startLine": 435,
+      "endLine": 460,
+      "source": "memory",
+      "snippet": "### All Endpoints Tested & Working ✅ Verified all 16+ API endpoints + bilingual SPA at `https://hnh-portal.brainsait-fadil.workers.dev/`. ### Key Fixes During Development - **Error 1101 (Worker threw exception):** `servePage()` returned a plain string, not a `Response` object. Fixed by wrapping in `new Response(html, {...})`. - **Route handler param mismatch:** For routes with no URL captures (`^/api/claims$`), `params = []` so `...params` adds nothing, shifting arguments. Fixed handlers to accept `url` as optional by using `new URL(req.url)` internally when `url` is undefined. - **D1 schema mismatch:** Pre-existing `claims` and `patients` tables have different columns than our migration. F",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.36849925518035886,
+      "maxScore": 0.36849925518035886,
+      "firstRecalledAt": "2026-05-02T14:41:15.890Z",
+      "lastRecalledAt": "2026-05-02T14:41:15.890Z",
+      "queryHashes": [
+        "cffa19fce7ea"
+      ],
+      "recallDays": [
+        "2026-05-02"
+      ],
+      "conceptTags": [
+        "api/claims",
+        "req.url",
+        "pre-existing",
+        "all",
+        "endpoints",
+        "tested",
+        "working",
+        "verified"
+      ]
+    },
+    "memory:memory/2026-04-30.md:687:715": {
+      "key": "memory:memory/2026-04-30.md:687:715",
+      "path": "memory/2026-04-30.md",
+      "startLine": 687,
+      "endLine": 715,
+      "source": "memory",
+      "snippet": "- **Corporate info:** 700+ doctors, 500 clinics, 3,500+ employees, 1,200+ beds, 40,000+ surgeries/year - **AI system prompt** enriched with all real data — doctors, branches, offers, departments, NPHIES integration ### Key Fix: Providers Returning 0 - Root cause: `/api/providers` route handler was NOT async, called `getProviders()` without `env` - `getProviders()` without `env` called `getProvidersFromDB(undefined)` → returned null → fell back to static array of 12 placeholder doctors → client showed 0 - Fix: Made route handler `async`, call `getProviders(env)` with proper env, and D1 `stmt.all()` returns data from the 182 seeded providers ### Worker Configuration - **Name:** `hnh-portal`",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3523609727621078,
+      "maxScore": 0.3523609727621078,
+      "firstRecalledAt": "2026-05-02T15:16:19.274Z",
+      "lastRecalledAt": "2026-05-02T15:16:19.274Z",
+      "queryHashes": [
+        "fb10b43abc22"
+      ],
+      "recallDays": [
+        "2026-05-02"
+      ],
+      "conceptTags": [
+        "surgeries/year",
+        "api/providers",
+        "stmt.all",
+        "hnh-portal",
+        "corporate",
+        "info",
+        "doctors",
+        "clinics"
+      ]
+    }
+  }
+}

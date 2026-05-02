@@ -1,0 +1,31 @@
+{
+  "name": "hnh-unified",
+  "main": "src/index.js",
+  "compatibility_date": "2026-04-30",
+  "account_id": "d7b99530559ab4f2545e9bdc72a7ab9b",
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hnh-gharnata",
+      "database_id": "d6960732-d5d0-4271-84e9-ba988c9c32dc"
+    },
+    {
+      "binding": "HIS_DB",
+      "database_name": "brainsait-healthcare-d1",
+      "database_id": "0def24ea-658c-446a-bb05-61856eb5f3de"
+    }
+  ],
+
+  "vars": {
+    "SITE_URL": "https://hnh.brainsait.org",
+    "CONTACT_EMAIL": "info@hnh.brainsait.org",
+    "NPHIES_BASE_URL": "https://api.nphies.sa/v1",
+    "NPHIES_ENVIRONMENT": "sandbox",
+    "BRAINSAIT_OS_VERSION": "1.2.0"
+  },
+
+  "routes": [
+    { "pattern": "hnh.brainsait.org/*", "zone_id": "117f23e28c474f87e9984bc4b6753a1b" }
+  ]
+}

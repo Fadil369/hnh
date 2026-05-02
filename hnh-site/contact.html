@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اتصل بنا | مستشفيات الحياة الوطني</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html" data-i18n="nav.home">الرئيسية</a><span>/</span><span data-i18n="nav.contact">اتصل بنا</span></div>
+      <h1 data-i18n="contact.title">اتصل بنا</h1>
+      <p data-i18n="contact.subtitle">نحن هنا لمساعدتك في أي وقت</p>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="container">
+      <div class="contact-grid">
+        <!-- FORM -->
+        <div class="animate-left">
+          <h3 id="contactFormTitle" style="margin-bottom:24px;">أرسل لنا رسالة</h3>
+          <form id="contactForm" onsubmit="handleContactSubmit(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label data-i18n="contact.name">الاسم الكامل</label>
+                <input type="text" required>
+              </div>
+              <div class="form-group">
+                <label data-i18n="contact.email">البريد الإلكتروني</label>
+                <input type="email" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label data-i18n="contact.phone">رقم الجوال</label>
+                <input type="tel">
+              </div>
+              <div class="form-group">
+                <label>الفرع</label>
+                <select>
+                  <option value="">اختر الفرع</option>
+                  <option>الرياض</option>
+                  <option>المدينة المنورة</option>
+                  <option>جازان</option>
+                  <option>خميس مشيط</option>
+                  <option>عنيزة</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label data-i18n="contact.subject">الموضوع</label>
+              <select>
+                <option value="">اختر الموضوع</option>
+                <option>استفسار عام</option>
+                <option>حجز موعد</option>
+                <option>شكوى</option>
+                <option>اقتراح</option>
+                <option>الشكاوى والمقترحات</option>
+                <option>تقييم الزيارة</option>
+                <option>التوظيف</option>
+                <option>أخرى</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label data-i18n="contact.message">رسالتك</label>
+              <textarea rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg" style="width:100%;" data-i18n="contact.submit">إرسال الرسالة</button>
+          </form>
+        </div>
+
+        <!-- INFO -->
+        <div class="animate-right">
+          <h3 id="contactInfoTitle" style="margin-bottom:24px;">معلومات التواصل</h3>
+          <div class="contact-info-card">
+            <div class="icon-box"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
+            <div><h4>الهاتف</h4><p><a href="tel:966920000094" style="color:var(--primary);font-weight:600;">966920000094+</a></p></div>
+          </div>
+          <div class="contact-info-card">
+            <div class="icon-box" style="background:var(--gradient-accent);"><svg viewBox="0 0 24 24" style="fill:var(--navy);"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+            <div><h4>البريد الإلكتروني</h4><p><a href="mailto:info@hayathospitals.com" style="color:var(--primary);">info@hayathospitals.com</a></p></div>
+          </div>
+          <div class="contact-info-card">
+            <div class="icon-box"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+            <div><h4>المقر الرئيسي</h4><p>المملكة العربية السعودية</p><p style="font-size:0.9rem;color:var(--text-light);">طريق الرياض الدائري الشرقي — حي الربوة</p></div>
+          </div>
+          <div class="contact-info-card">
+            <div class="icon-box" style="background:var(--gradient-accent);"><svg viewBox="0 0 24 24" style="fill:var(--navy);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/></svg></div>
+            <div><h4>ساعات العمل</h4><p>العيادات الخارجية: 8 صباحاً - 10 مساءً</p><p>الطوارئ: 24 ساعة / 7 أيام</p></div>
+          </div>
+
+          <!-- QUICK LINKS -->
+          <div style="margin-top:32px;">
+            <h4 style="margin-bottom:16px;" id="quickFormsTitle">نماذج سريعة</h4>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <a href="#" class="btn btn-outline btn-sm" style="justify-content:flex-start;" id="complaintBtn">📝 نموذج الشكاوى والمقترحات</a>
+              <a href="#" class="btn btn-outline btn-sm" style="justify-content:flex-start;" id="feedbackBtn">⭐ تقييم زيارتك</a>
+              <a href="#" class="btn btn-outline btn-sm" style="justify-content:flex-start;" id="insuranceBtn">🛡️ التحقق من التغطية التأمينية</a>
+              <a href="#" class="btn btn-outline btn-sm" style="justify-content:flex-start;" id="installmentBtn">💳 طلب التقسيط</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLAINT SECTION -->
+  <section class="section bg-light">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <h2 id="complaintTitle">سياسة الشكاوى والمقترحات</h2>
+      </div>
+      <div class="grid-2">
+        <div class="animate-left">
+          <h3 id="complaintGoalTitle">الهدف</h3>
+          <p style="color:var(--text-light);line-height:1.8;" id="complaintGoal">تعزيز ثقافة المؤسسة والنزاهة والالتزام بالمبادئ الأخلاقية. زيادة ثقة أصحاب المصلحة في رفع قضايا ذات أهمية حقيقية دون خوف من ردود الفعل. التحقيق الجاد ومعاقبة سوء السلوك.</p>
+        </div>
+        <div class="animate-right">
+          <h3 id="complaintScopeTitle">النطاق</h3>
+          <p style="color:var(--text-light);line-height:1.8;" id="complaintScope">يشمل جميع الموظفين والاستشاريين الخارجيين، particularly those who may become aware of any form of misconduct. We encourage reporting without fear of retaliation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2 data-i18n="cta.title">صحتك أولاً</h2>
+      <p data-i18n="cta.subtitle">احجز موعدك الآن واحصل على أفضل رعاية طبية</p>
+      <div class="cta-buttons">
+        <a href="tel:966920000094" class="btn btn-accent btn-lg" data-i18n="cta.callBtn">اتصل بنا</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/common.js"></script>
+  <script>
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      const l = HNH.currentLang();
+      HNH.showToast(l==='ar'?'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.':'Your message has been sent successfully! We will contact you soon.', 'success');
+      e.target.reset();
+    }
+
+    function updateContactContent() {
+      const l = HNH.currentLang();
+      document.getElementById('contactFormTitle').textContent = l==='ar'?'أرسل لنا رسالة':'Send Us a Message';
+      document.getElementById('contactInfoTitle').textContent = l==='ar'?'معلومات التواصل':'Contact Information';
+      document.getElementById('quickFormsTitle').textContent = l==='ar'?'نماذج سريعة':'Quick Forms';
+      document.getElementById('complaintBtn').textContent = l==='ar'?'📝 نموذج الشكاوى والمقترحات':'📝 Complaints & Suggestions Form';
+      document.getElementById('feedbackBtn').textContent = l==='ar'?'⭐ تقييم زيارتك':'⭐ Review Your Visit';
+      document.getElementById('insuranceBtn').textContent = l==='ar'?'🛡️ التحقق من التغطية التأمينية':'🛡️ Check Insurance Coverage';
+      document.getElementById('installmentBtn').textContent = l==='ar'?'💳 طلب التقسيط':'💳 Installment Request';
+      document.getElementById('complaintTitle').textContent = l==='ar'?'سياسة الشكاوى والمقترحات':'Complaints & Suggestions Policy';
+      document.getElementById('complaintGoalTitle').textContent = l==='ar'?'الهدف':'Goal';
+      document.getElementById('complaintGoal').textContent = l==='ar'?'تعزيز ثقافة المؤسسة والنزاهة والالتزام بالمبادئ الأخلاقية. زيادة ثقة أصحاب المصلحة في رفع قضايا ذات أهمية حقيقية دون خوف من ردود الفعل.':'Promote institutional culture, integrity, and adherence to ethical principles. Increase confidence in raising issues of real importance without fear.';
+      document.getElementById('complaintScopeTitle').textContent = l==='ar'?'النطاق':'Scope';
+      document.getElementById('complaintScope').textContent = l==='ar'?'يشمل جميع الموظفين والاستشاريين الخارجيين، وخاصة أولئك الذين قد يعلمون بأي شكل من أشكال سوء السلوك. نشجع الإبلاغ دون خوف من ردود الفعل.':'Includes all employees and external consultants, particularly those who may become aware of any form of misconduct. We encourage reporting without fear of retaliation.';
+    }
+    const origToggle9 = HNH.toggleLanguage;
+    HNH.toggleLanguage = function() { origToggle9(); setTimeout(updateContactContent, 50); };
+  </script>
+</body>
+</html>

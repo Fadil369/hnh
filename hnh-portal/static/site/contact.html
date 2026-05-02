@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اتصل بنا | مستشفى الحياة الوطني</title>
+<meta name="description" content="تواصل معنا أو احجز موعدك الآن في مستشفيات الحياة الوطني. | Contact Hayat National Hospitals or book your appointment online.">
+<meta name="keywords" content="احجز موعد, book appointment, اتصل بنا, contact, مستشفى الحياة الوطني, Hayat">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0066CC">
+<link rel="canonical" href="https://hnh.brainsait.org/contact.html">
+<link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/contact.html">
+<link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/contact.html">
+<link rel="alternate" hreflang="x-default" href="https://hnh.brainsait.org/contact.html">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="مستشفيات الحياة الوطني | Hayat National Hospitals">
+<meta property="og:title" content="اتصل بنا | مستشفيات الحياة الوطني">
+<meta property="og:description" content="تواصل معنا أو احجز موعدك الآن في مستشفيات الحياة الوطني.">
+<meta property="og:url" content="https://hnh.brainsait.org/contact.html">
+<meta property="og:image" content="https://hnh.brainsait.org/og-image.jpg">
+<meta property="og:locale" content="ar_SA">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="اتصل بنا | مستشفيات الحياة الوطني">
+<meta name="twitter:description" content="تواصل معنا أو احجز موعدك الآن في مستشفيات الحياة الوطني.">
+<meta name="twitter:image" content="https://hnh.brainsait.org/og-image.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<header class="header"><div class="container header-inner"><a href="index.html" class="logo"><div class="logo-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="logo-text">الحياة الوطني<small>BrainSAIT Healthcare OS</small></div></a><nav class="nav" id="mainNav">
+      <a href="index.html" data-i18n="nav.home">الرئيسية</a>
+      <a href="about.html" data-i18n="nav.about">عن المجموعة</a>
+      <a href="departments.html" data-i18n="nav.departments">الأقسام الطبية</a>
+      <a href="doctors.html" data-i18n="nav.doctors">أطباؤنا</a>
+      <a href="branches.html" data-i18n="nav.branches">فروعنا</a>
+      <a href="packages.html" data-i18n="nav.packages">باقات الرعاية</a>
+      <a href="blog.html" data-i18n="nav.blog">المدونة الصحية</a>
+      <a href="contact.html" data-i18n="nav.contact">اتصل بنا</a>
+      <button class="lang-btn" onclick="HNH.setLang(HNH.currentLang()==='ar'?'en':'ar')">EN/عربي</button>
+      <a href="contact.html" class="nav-cta" data-i18n="nav.book">احجز موعد</a>
+    </nav><button class="mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button></div></header>
+
+<section class="page-hero" id="main-content"><div class="container"><div class="breadcrumb"><a href="index.html">الرئيسية</a><span>/</span><span>اتصل بنا</span></div><h1>اتصل بنا</h1><p>نحن هنا لمساعدتك في أي وقت</p></div></section>
+
+<section class="section bg-white"><div class="container">
+  <div class="contact-grid">
+    <div class="animate-left">
+      <h3 style="margin-bottom:24px;">حجز موعد</h3>
+      <form id="appointmentForm" onsubmit="bookAppointment(event)">
+        <div class="form-row">
+          <div class="form-group"><label>الاسم الكامل</label><input type="text" id="aptName" required></div>
+          <div class="form-group"><label>رقم الجوال</label><input type="tel" id="aptPhone" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="aptEmail"></div>
+          <div class="form-group"><label>رقم الهوية/الإقامة</label><input type="text" id="aptNationalId"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>الفرع</label><select id="aptBranch" required><option value="">اختر الفرع</option></select></div>
+          <div class="form-group"><label>التخصص</label><select id="aptSpec" required><option value="">اختر التخصص</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>تاريخ الموعد</label><input type="date" id="aptDate" required></div>
+          <div class="form-group"><label>وقت الموعد</label><select id="aptTime" required>
+            <option value="">اختر الوقت</option>
+            <option value="08:00">08:00 ص</option><option value="09:00">09:00 ص</option><option value="10:00">10:00 ص</option>
+            <option value="11:00">11:00 ص</option><option value="12:00">12:00 م</option><option value="13:00">01:00 م</option>
+            <option value="14:00">02:00 م</option><option value="15:00">03:00 م</option><option value="16:00">04:00 م</option>
+            <option value="17:00">05:00 م</option><option value="18:00">06:00 م</option><option value="19:00">07:00 م</option>
+            <option value="20:00">08:00 م</option><option value="21:00">09:00 م</option>
+          </select></div>
+        </div>
+        <div class="form-group"><label>ملاحظات</label><textarea id="aptNotes" rows="3" placeholder="أي ملاحظات إضافية..."></textarea></div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;" id="aptSubmitBtn">تأكيد الحجز</button>
+      </form>
+    </div>
+    <div class="animate-right">
+      <h3 style="margin-bottom:24px;">معلومات التواصل</h3>
+      <div class="contact-info-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div><div><h4>الهاتف</h4><p><a href="tel:966920000094" style="color:var(--primary);font-weight:600;">+966920000094</a></p></div></div>
+      <div class="contact-info-card"><div class="icon-box" style="background:var(--gradient-accent);"><svg viewBox="0 0 24 24" style="fill:var(--navy);"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><div><h4>البريد الإلكتروني</h4><p><a href="mailto:info@hayathospitals.com" style="color:var(--primary);">info@hayathospitals.com</a></p></div></div>
+      <div class="contact-info-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div><div><h4>المقر الرئيسي</h4><p>المملكة العربية السعودية</p><p style="font-size:0.9rem;color:var(--text-light);">طريق الرياض الدائري الشرحي — حي الربوة</p></div></div>
+      <div class="contact-info-card"><div class="icon-box" style="background:var(--gradient-accent);"><svg viewBox="0 0 24 24" style="fill:var(--navy);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/></svg></div><div><h4>ساعات العمل</h4><p>العيادات الخارجية: 8 صباحاً - 10 مساءً</p><p>الطوارئ: 24 ساعة / 7 أيام</p></div></div>
+
+      <div style="margin-top:24px;padding:20px;background:var(--bg-light);border-radius:var(--radius-md);">
+        <h4 style="margin-bottom:12px;">النظام المتصل</h4>
+        <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:8px;">هذا النموذج متصل مباشرة بـ BrainSAIT Healthcare OS</p>
+        <span class="api-status live">● hnh.brainsait.org/api</span>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section class="cta-section"><div class="container"><h2>صحتك أولاً</h2><p>اتصل بنا الآن</p><div class="cta-buttons"><a href="tel:966920000094" class="btn btn-accent btn-lg">اتصل بنا</a></div></div></section>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4 data-i18n="footer.name">مستشفيات الحياة الوطني</h4>
+        <p style="margin-bottom:16px;" data-i18n="footer.desc">نظام BrainSAIT Healthcare OS المتصل بقاعدة البيانات الحية</p>
+        <span class="api-status live">API Connected</span>
+      </div>
+      <div>
+        <h4 data-i18n="footer.quickLinks">روابط سريعة</h4>
+        <a href="about.html" data-i18n="nav.about">عن المجموعة</a>
+        <a href="departments.html" data-i18n="nav.departments">الأقسام الطبية</a>
+        <a href="doctors.html" data-i18n="nav.doctors">أطباؤنا</a>
+        <a href="branches.html" data-i18n="nav.branches">فروعنا</a>
+        <a href="packages.html" data-i18n="nav.packages">باقات الرعاية</a>
+        <a href="blog.html" data-i18n="nav.blog">المدونة الصحية</a>
+        <a href="faq.html" data-i18n="nav.faq">الأسئلة الشائعة</a>
+      </div>
+      <div>
+        <h4 data-i18n="footer.services">خدماتنا</h4>
+        <a href="contact.html" data-i18n="nav.book">حجز موعد</a>
+        <a href="departments.html">العيادات الخارجية</a>
+        <a href="departments.html">الطوارئ</a>
+        <a href="departments.html">الجراحات</a>
+        <a href="packages.html" data-i18n="nav.packages">باقات الرعاية</a>
+      </div>
+      <div>
+        <h4 data-i18n="footer.contact">تواصل معنا</h4>
+        <a href="tel:966920000094">+966920000094</a>
+        <a href="mailto:info@hayathospitals.com">info@hayathospitals.com</a>
+        <p style="margin-top:8px;font-size:0.85rem;">الرياض، المملكة العربية السعودية</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 مستشفيات الحياة الوطني — BrainSAIT Healthcare OS</p>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/966920000094" class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492l4.624-1.47A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75c-2.115 0-4.142-.665-5.847-1.884l-.42-.279-2.746.874.874-2.746-.279-.42A9.713 9.713 0 012.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75z"/></svg>
+</a>
+<button class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+  <svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+</button>
+<script src="js/common.js"></script>
+<script>
+// Populate branch and specialty dropdowns from live API
+(async () => {
+  try {
+    const [{ branches }, { providers }] = await Promise.all([HNH.getBranches(), HNH.getProviders()]);
+    const l = HNH.currentLang();
+    const branchSel = document.getElementById('aptBranch');
+    branches.forEach(b => {
+      const o = document.createElement('option');
+      o.value = b.id || b.name_en;
+      o.textContent = l==='ar' ? b.name_ar : b.name_en;
+      branchSel.appendChild(o);
+    });
+    const specs = [...new Set(providers.map(p => p.specialty).filter(Boolean))].sort();
+    const specSel = document.getElementById('aptSpec');
+    specs.forEach(s => {
+      const o = document.createElement('option');
+      o.value = s;
+      o.textContent = s;
+      specSel.appendChild(o);
+    });
+  } catch(e) { console.error('Failed to load form data:', e); }
+})();
+
+async function bookAppointment(e) {
+  e.preventDefault();
+  const btn = document.getElementById('aptSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'جاري الحجز...';
+
+  try {
+    // First register patient if needed
+    const patientData = {
+      first_name_ar: document.getElementById('aptName').value.split(' ')[0],
+      last_name_ar: document.getElementById('aptName').value.split(' ').slice(1).join(' '),
+      first_name_en: document.getElementById('aptName').value.split(' ')[0],
+      last_name_en: document.getElementById('aptName').value.split(' ').slice(1).join(' '),
+      phone: document.getElementById('aptPhone').value,
+      email: document.getElementById('aptEmail').value,
+      national_id: document.getElementById('aptNationalId').value || null,
+    };
+
+    // Create appointment
+    const aptData = {
+      patient_name: document.getElementById('aptName').value,
+      phone: document.getElementById('aptPhone').value,
+      branch: document.getElementById('aptBranch').value,
+      specialty: document.getElementById('aptSpec').value,
+      date: document.getElementById('aptDate').value,
+      time: document.getElementById('aptTime').value,
+      notes: document.getElementById('aptNotes').value,
+    };
+
+    const result = await HNH.createAppointment(aptData);
+    HNH.showToast(HNH.currentLang() === 'ar' ? 'تم حجز موعدك بنجاح!' : 'Appointment booked successfully!', 'success');
+    document.getElementById('appointmentForm').reset();
+  } catch(err) {
+    HNH.showToast(err.message || 'حدث خطأ، يرجى المحاولة مرة أخرى', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'تأكيد الحجز';
+  }
+}
+</script>
+</body>
+</html>

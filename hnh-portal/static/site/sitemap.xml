@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://hnh.brainsait.org/</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/about.html</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/about.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/about.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/departments.html</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/departments.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/departments.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/doctors.html</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/doctors.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/doctors.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/branches.html</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/branches.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/branches.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/contact.html</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/contact.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/packages.html</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/packages.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/packages.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/blog.html</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/blog.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/blog.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/academy.html</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/academy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/academy.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/course-infection-control.html</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/course-infection-control.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/course-infection-control.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/course-nphies.html</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/course-nphies.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/course-nphies.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/course-medical-coding.html</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/course-medical-coding.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/course-medical-coding.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/course-rcm.html</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/course-rcm.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/course-rcm.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/course-ai-healthcare.html</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/course-ai-healthcare.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/course-ai-healthcare.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/course-pdpl.html</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/course-pdpl.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/course-pdpl.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/course-clinical-documentation.html</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/course-clinical-documentation.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/course-clinical-documentation.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/course-pharmacy.html</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/course-pharmacy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/course-pharmacy.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/course-cbahi-quality.html</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/course-cbahi-quality.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/course-cbahi-quality.html"/>
+  </url>
+  <url>
+    <loc>https://hnh.brainsait.org/faq.html</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://hnh.brainsait.org/faq.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hnh.brainsait.org/faq.html"/>
+  </url>
+</urlset>

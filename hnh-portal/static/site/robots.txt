@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hnh.brainsait.org/sitemap.xml

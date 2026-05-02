@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>العروض | مستشفيات الحياة الوطني</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html" data-i18n="nav.home">الرئيسية</a><span>/</span><span data-i18n="nav.offers">العروض</span></div>
+      <h1 data-i18n="nav.offers">العروض الطبية</h1>
+      <p id="offersPageSub">أحدث العروض والخصومات على الخدمات الطبية في جميع فروعنا</p>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="container">
+      <div class="filter-bar animate-on-scroll">
+        <select id="offerBranchFilter" onchange="filterOffers()">
+          <option value="">جميع الفروع</option>
+          <option value="riyadh">الرياض</option>
+          <option value="madinah">المدينة المنورة</option>
+          <option value="jazan">جازان</option>
+          <option value="khamis">خميس مشيط</option>
+          <option value="unayzah">عنيزة</option>
+        </select>
+        <button class="filter-chip active" onclick="filterOfferCat(this,'all')">الكل</button>
+        <button class="filter-chip" onclick="filterOfferCat(this,'derma')">الجلدية</button>
+        <button class="filter-chip" onclick="filterOfferCat(this,'obgyn')">النساء والولادة</button>
+        <button class="filter-chip" onclick="filterOfferCat(this,'ent')">الأنف والأذن</button>
+        <button class="filter-chip" onclick="filterOfferCat(this,'dental')">الأسنان</button>
+      </div>
+      <div class="grid-3" id="offersGrid"></div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2 data-i18n="cta.title">صحتك أولاً</h2>
+      <p data-i18n="cta.subtitle">احجز موعدك الآن واحصل على أفضل رعاية طبية</p>
+      <div class="cta-buttons">
+        <a href="contact.html" class="btn btn-accent btn-lg" data-i18n="cta.bookBtn">احجز موعد</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/common.js"></script>
+  <script>
+    const offersData = [
+      {cat:'derma',branch:'riyadh',branchAr:'الرياض',branchEn:'Riyadh',badgeAr:'خصم 30%',badgeEn:'30% OFF',
+       titleAr:'عرض شامل للعناية بالبشرة',titleEn:'Complete Skin Care Package',
+       descAr:'تشخيص مجاني + خصم 30% على جميع علاجات البشرة والتجميل بالليزر في فرع الرياض.',descEn:'Free consultation + 30% off all skin care and laser cosmetic treatments at Riyadh branch.'},
+      {cat:'derma',branch:'madinah',branchAr:'المدينة',branchEn:'Madinah',badgeAr:'خصم 25%',badgeEn:'25% OFF',
+       titleAr:'عرض حقن التجميل',titleEn:'Cosmetic Injections Offer',
+       descAr:'خصم 25% على حقن الفيلر والبوتوكس والبلازما في فرع المدينة المنورة.',descEn:'25% off filler, botox, and plasma injections at Madinah branch.'},
+      {cat:'obgyn',branch:'riyadh',branchAr:'الرياض',branchEn:'Riyadh',badgeAr:'فحص مجاني',badgeEn:'FREE CHECKUP',
+       titleAr:'عرض متابعة الحمل',titleEn:'Pregnancy Follow-up Package',
+       descAr:'باقة شاملة لمتابعة الحمل تشمل الفحوصات الدورية والموجات فوق الصوتية بسعر مخفض.',descEn:'Comprehensive pregnancy follow-up package including periodic checkups and ultrasound at a discounted price.'},
+      {cat:'obgyn',branch:'jazan',branchAr:'جازان',branchEn:'Jazan',badgeAr:'خصم 20%',badgeEn:'20% OFF',
+       titleAr:'عرض الفحص الشامل للمرأة',titleEn:'Women\'s Comprehensive Checkup',
+       descAr:'فحص صحي شامل للمرأة يشمل فحوصات الثدي وعنق الرحم مع خصم 20%.',descEn:'Comprehensive women\'s health checkup including breast and cervical screening with 20% off.'},
+      {cat:'ent',branch:'khamis',branchAr:'خميس مشيط',branchEn:'Khamis',badgeAr:'خصم 15%',badgeEn:'15% OFF',
+       titleAr:'عرض عمليات الأنف والأذن',titleEn:'ENT Surgery Offer',
+       descAr:'خصم 15% على عمليات اللوزتين والجيوب الأنفية وتركيبات السمع في فرع خميس مشيط.',descEn:'15% off tonsil, sinus, and hearing implant surgeries at Khamis Mushayt branch.'},
+      {cat:'dental',branch:'unayzah',branchAr:'عنيزة',branchEn:'Unayzah',badgeAr:'فحص مجاني',badgeEn:'FREE CHECKUP',
+       titleAr:'عرض الأسنان الشامل',titleEn:'Complete Dental Package',
+       descAr:'فحص أسنان مجاني + خصم 20% على التركيبات وتبييض الأسنان في فرع عنيزة.',descEn:'Free dental checkup + 20% off implants and teeth whitening at Unayzah branch.'},
+      {cat:'derma',branch:'jazan',branchAr:'جازان',branchEn:'Jazan',badgeAr:'خصم 40%',badgeEn:'40% OFF',
+       titleAr:'عرض العناية بالشعر',titleEn:'Hair Care Package',
+       descAr:'خصم 40% على علاجات تساقط الشعر وعلاجات البشرة المتقدمة في فرع جازان.',descEn:'40% off hair loss treatments and advanced skin care at Jazan branch.'},
+      {cat:'obgyn',branch:'khamis',branchAr:'خميس مشيط',branchEn:'Khamis',badgeAr:'عرض خاص',badgeEn:'SPECIAL',
+       titleAr:'عرض الولادة الطبيعية',titleEn:'Natural Delivery Package',
+       descAr:'باقة ولادة طبيعية شاملة بسعر مخفض تشمل الإقامة والرعاية الكاملة.',descEn:'Comprehensive natural delivery package at a discounted price including stay and full care.'},
+      {cat:'dental',branch:'riyadh',branchAr:'الرياض',branchEn:'Riyadh',badgeAr:'خصم 35%',badgeEn:'35% OFF',
+       titleAr:'عرض تقويم الأسنان',titleEn:'Orthodontics Offer',
+       descAr:'خصم 35% على تقويم الأسنان المعدني والشفاف في فرع الرياض.',descEn:'35% off metal and clear braces at Riyadh branch.'}
+    ];
+
+    let currentOfferCat = 'all';
+
+    function renderOffers() {
+      const grid = document.getElementById('offersGrid');
+      const branchFilter = document.getElementById('offerBranchFilter').value;
+      const l = HNH.currentLang();
+      const filtered = offersData.filter(o => {
+        const matchCat = currentOfferCat === 'all' || o.cat === currentOfferCat;
+        const matchBranch = !branchFilter || o.branch === branchFilter;
+        return matchCat && matchBranch;
+      });
+      const catIcons = {
+        derma:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="white" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="white" opacity="0.3"/></svg>',
+        obgyn:'<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="white"/></svg>',
+        ent:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="white" stroke-width="2"/><path d="M8 12h8M12 8v8" stroke="white" stroke-width="2"/></svg>',
+        dental:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="white" stroke-width="2"/><path d="M8 12h8M12 8v8" stroke="white" stroke-width="2"/></svg>'
+      };
+      grid.innerHTML = filtered.map((o, i) => `
+        <div class="offer-card animate-on-scroll delay-${(i%3)+1}">
+          <div class="offer-badge">${l==='ar'?o.badgeAr:o.badgeEn}</div>
+          <div class="offer-img">${catIcons[o.cat]||''}</div>
+          <div class="offer-body">
+            <div class="offer-branch">${l==='ar'?o.branchAr:o.branchEn}</div>
+            <h4>${l==='ar'?o.titleAr:o.titleEn}</h4>
+            <p>${l==='ar'?o.descAr:o.descEn}</p>
+            <a href="contact.html" class="btn btn-primary btn-sm" style="margin-top:16px;">${l==='ar'?'احجز الآن':'Book Now'}</a>
+          </div>
+        </div>
+      `).join('');
+      setTimeout(() => {
+        document.querySelectorAll('.animate-on-scroll:not(.animated)').forEach(el => {
+          new IntersectionObserver((entries) => {
+            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('animated'); });
+          }, {threshold:0.1}).observe(el);
+        });
+      }, 50);
+    }
+
+    function filterOfferCat(btn, cat) {
+      currentOfferCat = cat;
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderOffers();
+    }
+    function filterOffers() { renderOffers(); }
+
+    renderOffers();
+
+    function updateOffersContent() {
+      const l = HNH.currentLang();
+      document.getElementById('offersPageSub').textContent = l==='ar'?'أحدث العروض والخصومات على الخدمات الطبية في جميع فروعنا':'Latest offers and discounts on medical services across all branches';
+      renderOffers();
+    }
+    const origToggle11 = HNH.toggleLanguage;
+    HNH.toggleLanguage = function() { origToggle11(); setTimeout(updateOffersContent, 50); };
+  </script>
+</body>
+</html>

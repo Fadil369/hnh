@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فروعنا | مستشفيات الحياة الوطني</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body>
+
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html" data-i18n="nav.home">الرئيسية</a><span>/</span><span data-i18n="nav.branches">فروعنا</span></div>
+      <h1 data-i18n="branches.title">فروعنا</h1>
+      <p id="branchesPageSub">خمسة فروع في مختلف مناطق المملكة العربية السعودية لخدمتكم</p>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="container">
+      <div class="grid-2" id="branchesDetailGrid"></div>
+    </div>
+  </section>
+
+  <!-- UPCOMING BRANCHES -->
+  <section class="section bg-light">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <h2 id="upcomingTitle">فروع قادمة</h2>
+        <p id="upcomingSub">نواصل التوسع لخدمتكم في المزيد من المناطق</p>
+      </div>
+      <div class="grid-2">
+        <div class="card branch-card animate-on-scroll delay-1" style="opacity:0.7;">
+          <div class="branch-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent-light));"><svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:var(--navy);"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+          <h3 id="abhaTitle">مستشفى الحياة الوطني — أبها</h3>
+          <div class="branch-info">
+            <span id="abhaStatus" style="color:var(--accent);font-weight:600;">🚧 قيد الإنشاء</span>
+            <span id="abhaRegion">منطقة عسير</span>
+          </div>
+        </div>
+        <div class="card branch-card animate-on-scroll delay-2" style="opacity:0.7;">
+          <div class="branch-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent-light));"><svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:var(--navy);"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+          <h3 id="newBranchTitle">مستشفى جديد — قيد الإعلان</h3>
+          <div class="branch-info">
+            <span id="newBranchStatus" style="color:var(--accent);font-weight:600;">🚧 قيد الإنشاء</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2 data-i18n="cta.title">صحتك أولاً</h2>
+      <p data-i18n="cta.subtitle">احجز موعدك الآن واحصل على أفضل رعاية طبية</p>
+      <div class="cta-buttons">
+        <a href="contact.html" class="btn btn-accent btn-lg" data-i18n="cta.bookBtn">احجز موعد</a>
+        <a href="tel:966920000094" class="btn btn-white btn-lg" data-i18n="cta.callBtn">اتصل بنا</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/common.js"></script>
+  <script>
+    const branchesData = [
+      {nameAr:'مستشفى الحياة الوطني — المدينة المنورة',nameEn:'Hayat National Hospital – Madinah',
+       addrAr:'طريق فرع الحجاز، المدينة المنورة 42316',addrEn:'Al-Hijra Branch Road, Madinah 42316',
+       phone:'966920000094',url:'madinah.hayathospitals.com',regionAr:'منطقة المدينة المنورة',regionEn:'Madinah Region',
+       descAr:'يقدم المستشفى خدمات طبية متكاملة لسكان وزوار المدينة المنورة، ويشمل أقساماً متعددة مثل القلب والجراحة والأطفال والنساء والولادة.',descEn:'Provides integrated medical services for residents and visitors of Madinah, including multiple departments such as cardiology, surgery, pediatrics, and OB/GYN.',
+       featuresAr:['أكثر من 200 سرير','50+ طبيب','قسم طوارئ 24/7','عناية مركزة'],featuresEn:['200+ beds','50+ doctors','24/7 Emergency','ICU']},
+      {nameAr:'مستشفى الحياة الوطني — الرياض',nameEn:'Hayat National Hospital – Riyadh',
+       addrAr:'طريق الرياض الدائري الشرقي — حي الربوة',addrEn:'Eastern Ring Branch Road – Al-Rabwa District',
+       phone:'966920000094',url:'riyadh.hayathospitals.com',regionAr:'منطقة الرياض',regionEn:'Riyadh Region',
+       descAr:'الفرع الرئيسي في العاصمة الرياض، يضم أحدث التقنيات الطبية وأكبر فريق من الاستشاريين والأطباء المتخصصين.',descEn:'The main branch in the capital Riyadh, featuring the latest medical technology and the largest team of consultants and specialists.',
+       featuresAr:['300+ سرير','100+ طبيب','جراحة المخ والأعصاب','قسطرة قلبية'],featuresEn:['300+ beds','100+ doctors','Neurosurgery','Cardiac Catheterization']},
+      {nameAr:'مستشفى الحياة الوطني — جازان',nameEn:'Hayat National Hospital – Jazan',
+       addrAr:'جازان — طريق الكورنيش — الشاطئ',addrEn:'Jazan – Corniche Road – Al Shati',
+       phone:'966920000094',url:'jazan.hayathospitals.com',regionAr:'منطقة جازان',regionEn:'Jazan Region',
+       descAr:'يخدم سكان منطقة جازان بخدمات طبية شاملة، وقد حقق إنجازات طبية بارزة مثل إزالة حصوات الغدة اللعابية بالليزر.',descEn:'Serves the Jazan region with comprehensive medical services, achieving notable medical milestones.',
+       featuresAr:['200+ سرير','40+ طبيب','طب الأسنان','علاج طبيعي'],featuresEn:['200+ beds','40+ doctors','Dentistry','Physical Therapy']},
+      {nameAr:'مستشفى الحياة الوطني — خميس مشيط',nameEn:'Hayat National Hospital – Khamis Mushayt',
+       addrAr:'خميس مشيط — طريق الأمير سلطان — أم سرار',addrEn:'Khamis Mushayt – Prince Sultan Road – Umm Sarar',
+       phone:'966920000094',url:'khamis.hayathospitals.com',regionAr:'منطقة عسير',regionEn:'Asir Region',
+       descAr:'يخدم منطقة عسير وخميس مشيط، ويرعى الفعاليات الرياضية والمجتمعية كبطولة السهمين.',descEn:'Serves the Asir region and Khamis Mushayt, sponsoring sports and community events.',
+       featuresAr:['250+ سرير','60+ طبيب','جراحة العظام','طب الأطفال'],featuresEn:['250+ beds','60+ doctors','Orthopedics','Pediatrics']},
+      {nameAr:'مستشفى الحياة الوطني — عنيزة',nameEn:'Al Hayat National Hospital – Unayzah',
+       addrAr:'القصيم — عنيزة — طريق المدينة',addrEn:'Al-Qassim – Unayzah – Medina Road',
+       phone:'966920000094',url:'unaizah.hayathospitals.com',regionAr:'منطقة القصيم',regionEn:'Qassim Region',
+       descAr:'يخدم سكان منطقة القصيم وعنيزة بخدمات طبية متميزة ومتنوعة.',descEn:'Serves the Qassim region and Unayzah with distinguished and diverse medical services.',
+       featuresAr:['200+ سرير','45+ طبيب','النساء والولادة','الباطنية'],featuresEn:['200+ beds','45+ doctors','OB/GYN','Internal Medicine']}
+    ];
+
+    function renderBranches() {
+      const grid = document.getElementById('branchesDetailGrid');
+      const l = HNH.currentLang();
+      grid.innerHTML = branchesData.map((b, i) => `
+        <div class="card branch-card animate-on-scroll delay-${(i%2)+1}" style="padding:0;overflow:hidden;">
+          <div style="background:var(--gradient-primary);padding:32px;color:white;position:relative;">
+            <div class="branch-icon" style="background:rgba(255,255,255,0.2);margin-bottom:12px;"><svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:white;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+            <h3 style="color:white;margin-bottom:4px;">${l==='ar'?b.nameAr:b.nameEn}</h3>
+            <span style="color:rgba(255,255,255,0.7);font-size:0.9rem;">${l==='ar'?b.regionAr:b.regionEn}</span>
+          </div>
+          <div style="padding:24px;">
+            <p style="color:var(--text-light);margin-bottom:20px;line-height:1.7;">${l==='ar'?b.descAr:b.descEn}</p>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+              <a href="#" style="display:flex;align-items:center;gap:8px;color:var(--text-light);"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--primary);flex-shrink:0;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${l==='ar'?b.addrAr:b.addrEn}</a>
+              <a href="tel:${b.phone}" style="display:flex;align-items:center;gap:8px;color:var(--text-light);"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--primary);flex-shrink:0;"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>${b.phone}+</a>
+              <a href="https://${b.url}" target="_blank" style="display:flex;align-items:center;gap:8px;color:var(--text-light);"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--primary);flex-shrink:0;"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>${b.url}</a>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              ${(l==='ar'?b.featuresAr:b.featuresEn).map(f => `<span style="padding:6px 14px;background:var(--off-white);border-radius:var(--radius-full);font-size:0.8rem;color:var(--dark-gray);">${f}</span>`).join('')}
+            </div>
+            <div style="margin-top:20px;">
+              <a href="contact.html" class="btn btn-primary btn-sm">${l==='ar'?'احجز موعد':'Book Appointment'}</a>
+              <a href="https://${b.url}" target="_blank" class="btn btn-outline btn-sm" style="margin-${l==='ar'?'left':'right'}:8px;">${l==='ar'?'الموقع الإلكتروني':'Website'}</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      setTimeout(() => {
+        document.querySelectorAll('.animate-on-scroll:not(.animated)').forEach(el => {
+          new IntersectionObserver((entries) => {
+            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('animated'); });
+          }, {threshold:0.1}).observe(el);
+        });
+      }, 50);
+    }
+
+    renderBranches();
+
+    function updateBranchesContent() {
+      const l = HNH.currentLang();
+      document.getElementById('branchesPageSub').textContent = l==='ar'?'خمسة فروع في مختلف مناطق المملكة العربية السعودية لخدمتكم':'Five branches across the Kingdom of Saudi Arabia to serve you';
+      document.getElementById('upcomingTitle').textContent = l==='ar'?'فروع قادمة':'Upcoming Branches';
+      document.getElementById('upcomingSub').textContent = l==='ar'?'نواصل التوسع لخدمتكم في المزيد من المناطق':'We continue expanding to serve you in more regions';
+      document.getElementById('abhaTitle').textContent = l==='ar'?'مستشفى الحياة الوطني — أبها':'Hayat National Hospital – Abha';
+      document.getElementById('abhaStatus').textContent = l==='ar'?'🚧 قيد الإنشاء':'🚧 Under Construction';
+      document.getElementById('abhaRegion').textContent = l==='ar'?'منطقة عسير':'Asir Region';
+      document.getElementById('newBranchTitle').textContent = l==='ar'?'مستشفى جديد — قيد الإعلان':'New Hospital – Coming Soon';
+      document.getElementById('newBranchStatus').textContent = l==='ar'?'🚧 قيد الإنشاء':'🚧 Under Construction';
+      renderBranches();
+    }
+    const origToggle5 = HNH.toggleLanguage;
+    HNH.toggleLanguage = function() { origToggle5(); setTimeout(updateBranchesContent, 50); };
+  </script>
+</body>
+</html>
