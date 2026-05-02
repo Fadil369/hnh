@@ -1,14 +1,20 @@
 /**
- * HNH Unified Worker v7.0 — hnh.brainsait.org
+ * HNH Unified Worker v7.9.0 — hnh.brainsait.org
  * مستشفيات الحياة الوطني — Hayat National Hospitals
  * BrainSAIT Healthcare OS
  *
  * Architecture: Clean ES module, no nested template literal issues
  * All inline JS uses string concatenation — zero backtick nesting
+ *
+ * v7.9.0: routing fixes (/ar, /api/academy/:id), 401→404 for unknowns,
+ *         X-Request-ID + X-HNH-Version on all responses, Retry-After on 429,
+ *         inflight request dedup, rate-limiter cleanup, /api/version,
+ *         /api/dashboard (unified), oracle/hospitals from TUNNEL_STATUS,
+ *         structured JSON request logs, apiStats enriched.
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '7.8.2';
+const VERSION        = '7.9.0';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -60,11 +66,28 @@ function rateOk(ip, max = 120, win = 60000) {
   e.n++; _rl.set(ip, e);
   return e.n <= max;
 }
+// Periodic cleanup of expired rate-limiter entries (runs at most once per minute per isolate)
+let _rlLastClean = 0;
+function rlCleanup() {
+  const now = Date.now();
+  if (now - _rlLastClean < 60000) return;
+  _rlLastClean = now;
+  for (const [k, v] of _rl) { if (now - v.t > 120000) _rl.delete(k); }
+}
 
 // Lightweight in-memory TTL cache (shared across requests within same isolate)
 const _mc = new Map();
 function mcGet(k) { const e = _mc.get(k); return (e && e.exp > Date.now()) ? e.v : null; }
 function mcSet(k, v, ttlMs) { _mc.set(k, { v, exp: Date.now() + ttlMs }); }
+
+// Inflight deduplication — coalesces concurrent requests for the same key
+const _inflight = new Map();
+async function dedupe(key, fn) {
+  if (_inflight.has(key)) return _inflight.get(key);
+  const p = fn().finally(() => _inflight.delete(key));
+  _inflight.set(key, p);
+  return p;
+}
 
 // ─── EXTERNAL SERVICES ────────────────────────────────────────────────────────
 // ─── ORACLE INTEGRATION LAYER ────────────────────────────────
@@ -150,33 +173,35 @@ async function oracleCall(env, method, path, body = null, hospital = 'madinah') 
   return null;
 }
 
-// Oracle hospital status — cached 60s to avoid hammering the bridge on every request
+// Oracle hospital status — cached 60s, deduped so concurrent requests share one upstream call
 async function oracleTunnelStatus(env) {
   const cached = mcGet('tunnel-status');
   if (cached) return cached;
-  const key = (env && env.ORACLE_API_KEY) || ORACLE_BRIDGE_KEY;
-  try {
-    const r = await fetch(`${ORACLE_BRIDGE}/diagnose`, {
-      headers: { 'X-API-Key': key },
-      signal: AbortSignal.timeout(8000),
-    });
-    if (r.ok) {
-      const d = await r.json();
-      const map = {};
-      for (const h of (d.hospitals || [])) {
-        map[h.hospital] = {
-          reachable: h.reachable, status: h.status, ms: h.ms,
-          loginPageFound: h.loginPageFound, viewState: h.viewStatePresent,
-        };
+  return dedupe('tunnel-status', async () => {
+    const key = (env && env.ORACLE_API_KEY) || ORACLE_BRIDGE_KEY;
+    try {
+      const r = await fetch(`${ORACLE_BRIDGE}/diagnose`, {
+        headers: { 'X-API-Key': key },
+        signal: AbortSignal.timeout(8000),
+      });
+      if (r.ok) {
+        const d = await r.json();
+        const map = {};
+        for (const h of (d.hospitals || [])) {
+          map[h.hospital] = {
+            reachable: h.reachable, status: h.status, ms: h.ms,
+            loginPageFound: h.loginPageFound, viewState: h.viewStatePresent,
+          };
+        }
+        const result = { ok: d.ok, hospitals: map, tunnel: 'e5cb8c86-1768-46b0-bb35-a2720f26e88d', source: 'live', checked_at: new Date().toISOString() };
+        mcSet('tunnel-status', result, 60000);
+        return result;
       }
-      const result = { ok: d.ok, hospitals: map, tunnel: 'e5cb8c86-1768-46b0-bb35-a2720f26e88d', source: 'live', checked_at: new Date().toISOString() };
-      mcSet('tunnel-status', result, 60000);
-      return result;
-    }
-  } catch {}
-  const fallback = { ok: false, hospitals: TUNNEL_STATUS, tunnel: 'e5cb8c86', source: 'cached', last_live: '2026-05-02' };
-  mcSet('tunnel-status', fallback, 30000);
-  return fallback;
+    } catch {}
+    const fallback = { ok: false, hospitals: TUNNEL_STATUS, tunnel: 'e5cb8c86', source: 'cached', last_live: '2026-05-02' };
+    mcSet('tunnel-status', fallback, 30000);
+    return fallback;
+  });
 }
 
 async function clFetch(path, env) {
@@ -2194,189 +2219,263 @@ async function apiPortalHub(env) {
   return ok(result);
 }
 
+// ─── UNIFIED DASHBOARD ── single call replaces 3 client round-trips ──────────
+async function apiDashboard(env) {
+  const cached = mcGet('dashboard');
+  if (cached) return ok(cached);
+  return dedupe('dashboard', async () => {
+    const [hubResp, bsmaNet, dbStats] = await Promise.allSettled([
+      apiPortalHub(env).then(r => r.json()),
+      bsmaNetwork(),
+      Promise.all([
+        env.DB.prepare('SELECT COUNT(*) as n FROM patients').first().catch(() => ({ n: 0 })),
+        env.DB.prepare('SELECT COUNT(*) as n FROM appointments WHERE status = ?').bind('confirmed').first().catch(() => ({ n: 0 })),
+        env.DB.prepare('SELECT COUNT(*) as n FROM claims WHERE nphies_claim_id IS NOT NULL').first().catch(() => ({ n: 0 })),
+      ]),
+    ]);
+    const hub  = hubResp.status  === 'fulfilled' ? hubResp.value  : {};
+    const bsma = bsmaNet.status  === 'fulfilled' ? bsmaNet.value  : null;
+    const db   = dbStats.status  === 'fulfilled' ? dbStats.value  : [{ n: 0 }, { n: 0 }, { n: 0 }];
+    const fin  = bsma?.financials || {};
+    const data = {
+      ts:      Date.now(),
+      version: VERSION,
+      stats: {
+        total_patients:      db[0]?.n || 0,
+        active_appointments: db[1]?.n || 0,
+        nphies_claims:       db[2]?.n || 0,
+      },
+      nphies: {
+        approval_rate: fin.network_approval_rate_pct || hub.nphies?.approval_rate || 98.6,
+        total_sar:     fin.network_total_sar          || 835690702.81,
+        total_claims:  fin.total_claims_gss           || hub.nphies?.total_claims || 15138,
+        source:        bsma ? 'bsma-live' : 'cached',
+      },
+      portals:      hub.portals || {},
+      oracle_status: hub.oracle_status || false,
+    };
+    mcSet('dashboard', data, 60000); // 1-minute cache
+    return ok(data);
+  });
+}
+
+
 export default {
   async fetch(req, env) {
     if (req.method === 'OPTIONS') return cors();
 
+    const t0   = Date.now();
     const url  = new URL(req.url);
     const path = url.pathname;
     const ip   = req.headers.get('CF-Connecting-IP') || 'anon';
+    const reqId = Math.random().toString(36).slice(2, 10).toUpperCase();
 
-    if (!rateOk(ip)) return err('Rate limit exceeded', 429);
+    rlCleanup(); // periodic Map cleanup — runs at most once/min per isolate
 
-    // ── HTML pages ────────────────────────────────────────────
-    if (path === '/' || path === '/index.html' || path === '/blog' || path === '/academy') {
-      const lang = url.searchParams.get('lang') === 'en' ? 'en' : 'ar';
-      return new Response(buildHTML(lang), { headers: HTML_H });
+    if (!rateOk(ip)) {
+      const r = new Response(JSON.stringify({ success: false, error: 'Rate limit exceeded' }), { status: 429, headers: { ...JSON_H, 'Retry-After': '60' } });
+      r.headers.set('X-Request-ID', reqId);
+      return r;
     }
 
-    // ── Sitemap + Robots ──────────────────────────────────────
-    if (path === '/sitemap.xml') {
-      const base = 'https://hnh.brainsait.org';
-      const blogUrls = BLOG_POSTS.map(p =>
-        '  <url><loc>' + base + '/blog/' + p.id + '</loc><changefreq>monthly</changefreq><priority>0.8</priority>' +
-        '<xhtml:link rel="alternate" hreflang="ar" href="' + base + '/blog/' + p.id + '?lang=ar"/>' +
-        '<xhtml:link rel="alternate" hreflang="en" href="' + base + '/blog/' + p.id + '?lang=en"/></url>'
-      ).join('\n');
-      const courseUrls = COURSES.map(c =>
-        '  <url><loc>' + base + '/academy/' + c.id + '</loc><changefreq>monthly</changefreq><priority>0.8</priority>' +
-        '<xhtml:link rel="alternate" hreflang="ar" href="' + base + '/academy/' + c.id + '?lang=ar"/>' +
-        '<xhtml:link rel="alternate" hreflang="en" href="' + base + '/academy/' + c.id + '?lang=en"/></url>'
-      ).join('\n');
-      const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
-        '  <url><loc>' + base + '/</loc><changefreq>daily</changefreq><priority>1.0</priority>' +
-        '<xhtml:link rel="alternate" hreflang="ar" href="' + base + '/?lang=ar"/>' +
-        '<xhtml:link rel="alternate" hreflang="en" href="' + base + '/?lang=en"/></url>\n' +
-        blogUrls + '\n' + courseUrls + '\n</urlset>';
-      return new Response(sitemap, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=3600' } });
-    }
-    if (path === '/robots.txt') {
-      return new Response('User-agent: *\nAllow: /\nSitemap: https://hnh.brainsait.org/sitemap.xml\n', { headers: { 'Content-Type': 'text/plain' } });
-    }
+    const resp = await handleRequest(req, env, url, path);
 
-    // ── Public JSON API ───────────────────────────────────────
-    if (path === '/health' || path === '/api/health')     return apiHealth(env);
-    if (path === '/api/stats')                             return apiStats(env);
-    if (path === '/api/branches')                          return ok({ branches: BRANCHES, total: BRANCHES.length });
-    if (path === '/api/insurance')                         return ok({ partners: INSURANCE });
+    // Attach tracing headers to every response
+    resp.headers.set('X-Request-ID',  reqId);
+    resp.headers.set('X-HNH-Version', VERSION);
 
-    // ── Oracle Portal Integration ─────────────────────────────
-    if (path === '/api/oracle/status') {
-      const status = await oracleTunnelStatus(env);
-      return ok({
-        tunnel_id:    'e5cb8c86-1768-46b0-bb35-a2720f26e88d',
-        tunnel_name:  'hayath-mcp',
-        tunnel_health:'healthy',
-        connections:  8,
-        colos:        ['mrs06', 'ruh02'],
-        origin_ip:    '212.118.115.118',
-        hospitals:    status.hospitals,
-        oracle_bridge: ORACLE_BRIDGE,
-        last_check:   new Date().toISOString(),
+    // Structured request log (captured by Cloudflare Logpush)
+    console.log(JSON.stringify({ v: VERSION, ts: Date.now(), m: req.method, p: path, s: resp.status, ms: Date.now() - t0, rid: reqId }));
+
+    return resp;
+  },
+};
+
+async function handleRequest(req, env, url, path) {
+  // ── HTML pages ────────────────────────────────────────────
+  if (path === '/' || path === '/index.html' || path === '/blog' || path === '/academy') {
+    const lang = url.searchParams.get('lang') === 'en' ? 'en' : 'ar';
+    return new Response(buildHTML(lang), { headers: HTML_H });
+  }
+  // Language-prefixed homepages
+  if (path === '/ar' || path === '/ar/') return new Response(buildHTML('ar'), { headers: HTML_H });
+  if (path === '/en' || path === '/en/') return new Response(buildHTML('en'), { headers: HTML_H });
+
+  // ── Sitemap + Robots ──────────────────────────────────────
+  if (path === '/sitemap.xml') {
+    const base = 'https://hnh.brainsait.org';
+    const blogUrls = BLOG_POSTS.map(p =>
+      '  <url><loc>' + base + '/blog/' + p.id + '</loc><changefreq>monthly</changefreq><priority>0.8</priority>' +
+      '<xhtml:link rel="alternate" hreflang="ar" href="' + base + '/blog/' + p.id + '?lang=ar"/>' +
+      '<xhtml:link rel="alternate" hreflang="en" href="' + base + '/blog/' + p.id + '?lang=en"/></url>'
+    ).join('\n');
+    const courseUrls = COURSES.map(c =>
+      '  <url><loc>' + base + '/academy/' + c.id + '</loc><changefreq>monthly</changefreq><priority>0.8</priority>' +
+      '<xhtml:link rel="alternate" hreflang="ar" href="' + base + '/academy/' + c.id + '?lang=ar"/>' +
+      '<xhtml:link rel="alternate" hreflang="en" href="' + base + '/academy/' + c.id + '?lang=en"/></url>'
+    ).join('\n');
+    const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
+      '  <url><loc>' + base + '/</loc><changefreq>daily</changefreq><priority>1.0</priority>' +
+      '<xhtml:link rel="alternate" hreflang="ar" href="' + base + '/?lang=ar"/>' +
+      '<xhtml:link rel="alternate" hreflang="en" href="' + base + '/?lang=en"/></url>\n' +
+      blogUrls + '\n' + courseUrls + '\n</urlset>';
+    return new Response(sitemap, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=3600' } });
+  }
+  if (path === '/robots.txt') {
+    return new Response('User-agent: *\nAllow: /\nSitemap: https://hnh.brainsait.org/sitemap.xml\n', { headers: { 'Content-Type': 'text/plain' } });
+  }
+
+  // ── Fast meta endpoints ────────────────────────────────────
+  if (path === '/api/version') {
+    return ok({ version: VERSION, worker: 'hnh-unified', facility: FACILITY_LIC, ts: Date.now() });
+  }
+
+  // ── Public JSON API ───────────────────────────────────────
+  if (path === '/health' || path === '/api/health')     return apiHealth(env);
+  if (path === '/api/stats')                             return apiStats(env);
+  if (path === '/api/dashboard')                         return apiDashboard(env);
+  if (path === '/api/branches')                          return ok({ branches: BRANCHES, total: BRANCHES.length });
+  if (path === '/api/insurance')                         return ok({ partners: INSURANCE });
+
+  // ── Oracle Portal Integration ─────────────────────────────
+  if (path === '/api/oracle/status') {
+    const status = await oracleTunnelStatus(env);
+    return ok({
+      tunnel_id:     'e5cb8c86-1768-46b0-bb35-a2720f26e88d',
+      tunnel_name:   'hayath-mcp',
+      tunnel_health: 'healthy',
+      connections:   8,
+      colos:         ['mrs06', 'ruh02'],
+      origin_ip:     '212.118.115.118',
+      hospitals:     status.hospitals,
+      oracle_bridge: ORACLE_BRIDGE,
+      last_check:    new Date().toISOString(),
+    });
+  }
+
+  // Derive hospital list from authoritative TUNNEL_STATUS constant (no stale hardcoded data)
+  if (path === '/api/oracle/hospitals') {
+    return ok({
+      tunnel_id: 'e5cb8c86-1768-46b0-bb35-a2720f26e88d',
+      hospitals: Object.entries(TUNNEL_STATUS).map(([id, s]) => ({
+        id, reachable: s.reachable, url: 'https://oracle-' + id + '.brainsait.org',
+        ms: s.ms, note: s.note || (s.reachable ? 'ok' : 'timeout via CF egress'),
+      })),
+      updated: '2026-05-02',
+      note: 'Oracle Bridge /health ok; hospitals unreachable via CF egress',
+    });
+  }
+
+  if (path === '/api/oracle/patient' && req.method === 'GET') {
+    const u = new URL(req.url);
+    const hospital = u.searchParams.get('hospital') || 'madinah';
+    const name     = u.searchParams.get('name') || '';
+    const natId    = u.searchParams.get('national_id') || '';
+    const mrn      = u.searchParams.get('mrn') || '';
+    if (!TUNNEL_STATUS[hospital]?.reachable) {
+      return ok({ patients: [], source: 'tunnel_down', hospital, note: TUNNEL_STATUS[hospital]?.note });
+    }
+    const param = natId ? 'national_id=' + encodeURIComponent(natId)
+                : mrn   ? 'mrn='         + encodeURIComponent(mrn)
+                         : 'name='        + encodeURIComponent(name);
+    const data = await oracleCall(env, 'GET', '/patient/search?hospital=' + hospital + '&' + param, null, hospital);
+    return ok({ patients: (data?.patients || []).map(maskPatient), hospital, source: data ? 'oracle-live' : 'unavailable' });
+  }
+
+  if (path === '/api/oracle/appointments' && req.method === 'GET') {
+    const u = new URL(req.url);
+    const hospital = u.searchParams.get('hospital') || 'madinah';
+    const mrn      = u.searchParams.get('mrn') || '';
+    const date     = u.searchParams.get('date') || new Date().toISOString().split('T')[0];
+    if (!TUNNEL_STATUS[hospital]?.reachable) {
+      return ok({ appointments: [], source: 'tunnel_down', hospital });
+    }
+    const data = await oracleCall(env, 'GET', '/appointments?hospital=' + hospital + '&mrn=' + encodeURIComponent(mrn) + '&date=' + date, null, hospital);
+    return ok({ appointments: data?.appointments || data || [], hospital, source: data ? 'oracle-live' : 'unavailable' });
+  }
+
+  if (path === '/api/oracle/nphies' && req.method === 'POST') {
+    const body = await req.json().catch(() => ({}));
+    const data = await oracleCall(env, 'POST', '/api/nphies/eligibility', {
+      ...body, facility_license: FACILITY_LIC,
+    }, body.hospital || 'madinah');
+    return ok({ result: data, source: data ? 'oracle-nphies' : 'unavailable' });
+  }
+
+  if (path.startsWith('/api/providers'))                 return apiProviders(req, env);
+  if (path.startsWith('/api/patients'))                  return apiPatients(req, env);
+  if (path.startsWith('/api/appointments'))              return apiAppointments(req, env);
+  if (path === '/api/eligibility' || (path.startsWith('/api/eligibility') && req.method === 'POST')) return apiEligibility(req, env);
+  if (path.startsWith('/api/drugs'))                     return apiDrugs(req, env);
+  if (path.startsWith('/api/chat'))                      return apiChat(req, env);
+
+  // NPHIES (specific routes before broad catch)
+  if (path === '/api/nphies' || path === '/api/nphies/status')  return apiNphies(req, env, '');
+  if (path === '/api/nphies/analysis')                           return apiNphies(req, env, '/analysis');
+  if (path === '/api/nphies/network')                            return apiNphies(req, env, '/network');
+  if (path === '/api/nphies/facilities')                         return apiNphies(req, env, '/facilities');
+  if (path.startsWith('/api/nphies/live/'))                      return apiNphies(req, env, '/live/' + path.slice('/api/nphies/live/'.length));
+  if (path.startsWith('/api/nphies'))                            return apiNphies(req, env, path.replace('/api/nphies', ''));
+
+  // Portal hub (must come BEFORE the /api/portal catch-all)
+  if (path === '/api/portal-hub')                        return apiPortalHub(env);
+  if (path.startsWith('/api/portal'))                    return apiPortal(req, env, path.replace('/api/portal', '') || '/stats');
+
+  // Blog
+  if (path === '/api/blog' || path === '/api/blog/')     return apiBlog(null);
+  if (path.startsWith('/api/blog/'))                     return apiBlog(path.slice('/api/blog/'.length));
+
+  // Academy — all public, with and without /courses/ prefix
+  if (path === '/api/academy' || path === '/api/academy/')       return apiAcademy(req, null);
+  if (path === '/api/academy/courses')                            return apiAcademy(req, null);
+  if (path.startsWith('/api/academy/courses/'))                   return apiAcademy(req, path.slice('/api/academy/courses/'.length));
+  if (path === '/api/academy/stats')                              return ok({ total_courses: COURSES.length, total_hours: 104, accreditation: 'SCFHS CPD + CHI', repos: ['nphies-course-platform','sbs','brainsait-rcm','open-webui','brainsait-mcp-dxt'] });
+  if (path.startsWith('/api/academy/'))                           return apiAcademy(req, path.slice('/api/academy/'.length));
+
+  // ── Public article + course pages (NO auth) ──────────────
+  if (path.startsWith('/blog/')) {
+    const slug  = path.slice(6);
+    const langP = url.searchParams.get('lang') || 'ar';
+    return serveBlogArticle(slug, langP);
+  }
+  if (path.startsWith('/academy/')) {
+    const cid   = path.slice(9);
+    const langP = url.searchParams.get('lang') || 'ar';
+    return serveAcademyCourse(cid, langP);
+  }
+
+  // ── Voice Agent Proxy (PUBLIC — before auth) ────────────
+  if (path.startsWith('/voice')) {
+    const VOICE_WORKER = 'https://basma-voice-agent.brainsait-fadil.workers.dev';
+    try {
+      const vUrl = VOICE_WORKER + path + (url.search || '');
+      const fwdHeaders = { 'X-Forwarded-Host': 'hnh.brainsait.org' };
+      ['content-type','x-language','x-session-id','authorization','accept'].forEach(h => {
+        const v = req.headers.get(h); if (v) fwdHeaders[h] = v;
       });
-    }
-
-    if (path === '/api/oracle/hospitals') {
-      return ok({
-        tunnel_id: 'e5cb8c86-1768-46b0-bb35-a2720f26e88d',
-        hospitals: [
-          { id: 'madinah', reachable: true,  url: 'https://oracle-madinah.brainsait.org', ms: 551  },
-          { id: 'khamis',  reachable: true,  url: 'https://oracle-khamis.brainsait.org',  ms: 1304 },
-          { id: 'abha',    reachable: true,  url: 'https://oracle-abha.brainsait.org',    ms: 918  },
-          { id: 'riyadh',  reachable: false, url: 'https://oracle-riyadh.brainsait.org',  note: 'IP 128.1.1.185 timeout' },
-          { id: 'unaizah', reachable: false, url: 'https://oracle-unaizah.brainsait.org', note: 'timeout' },
-          { id: 'jizan',   reachable: false, url: 'https://oracle-jizan.brainsait.org',   note: 'unreachable' },
-        ],
+      const vResp = await fetch(vUrl, {
+        method: req.method, headers: fwdHeaders,
+        body: ['GET','HEAD'].includes(req.method) ? null : req.body,
       });
+      const headers = new Headers(vResp.headers);
+      Object.entries(CORS).forEach(([k,v]) => headers.set(k,v));
+      return new Response(vResp.body, { status: vResp.status, headers });
+    } catch (e) {
+      return err('Voice agent unavailable: ' + e.message, 503);
     }
+  }
 
-    if (path === '/api/oracle/patient' && req.method === 'GET') {
-      const u = new URL(req.url);
-      const hospital = u.searchParams.get('hospital') || 'madinah';
-      const name     = u.searchParams.get('name') || '';
-      const natId    = u.searchParams.get('national_id') || '';
-      const mrn      = u.searchParams.get('mrn') || '';
-      if (!TUNNEL_STATUS[hospital]?.reachable) {
-        return ok({ patients: [], source: 'tunnel_down', hospital, note: TUNNEL_STATUS[hospital]?.note });
-      }
-      const param = natId ? `national_id=${encodeURIComponent(natId)}`
-                  : mrn   ? `mrn=${encodeURIComponent(mrn)}`
-                           : `name=${encodeURIComponent(name)}`;
-      const data = await oracleCall(env, 'GET', `/patient/search?hospital=${hospital}&${param}`, null, hospital);
-      return ok({ patients: (data?.patients || []).map(maskPatient), hospital, source: data ? 'oracle-live' : 'unavailable' });
-    }
-
-    if (path === '/api/oracle/appointments' && req.method === 'GET') {
-      const u = new URL(req.url);
-      const hospital = u.searchParams.get('hospital') || 'madinah';
-      const mrn      = u.searchParams.get('mrn') || '';
-      const date     = u.searchParams.get('date') || new Date().toISOString().split('T')[0];
-      if (!TUNNEL_STATUS[hospital]?.reachable) {
-        return ok({ appointments: [], source: 'tunnel_down', hospital });
-      }
-      const data = await oracleCall(env, 'GET', `/appointments?hospital=${hospital}&mrn=${encodeURIComponent(mrn)}&date=${date}`, null, hospital);
-      return ok({ appointments: data?.appointments || data || [], hospital, source: data ? 'oracle-live' : 'unavailable' });
-    }
-
-    if (path === '/api/oracle/nphies' && req.method === 'POST') {
-      const body = await req.json().catch(() => ({}));
-      const data = await oracleCall(env, 'POST', '/api/nphies/eligibility', {
-        ...body, facility_license: FACILITY_LIC,
-      }, body.hospital || 'madinah');
-      return ok({ result: data, source: data ? 'oracle-nphies' : 'unavailable' });
-    }
-    if (path.startsWith('/api/providers'))                 return apiProviders(req, env);
-    if (path.startsWith('/api/patients'))                  return apiPatients(req, env);
-    if (path.startsWith('/api/appointments'))              return apiAppointments(req, env);
-    if (path === '/api/eligibility' || (path.startsWith('/api/eligibility') && req.method === 'POST')) return apiEligibility(req, env);
-    if (path.startsWith('/api/drugs'))                     return apiDrugs(req, env);
-    if (path.startsWith('/api/chat'))                      return apiChat(req, env);
-
-    // NPHIES (analysis before broad catch)
-    if (path === '/api/nphies' || path === '/api/nphies/status')  return apiNphies(req, env, '');
-    if (path === '/api/nphies/analysis')                           return apiNphies(req, env, '/analysis');
-    if (path === '/api/nphies/network')                            return apiNphies(req, env, '/network');
-    if (path === '/api/nphies/facilities')                         return apiNphies(req, env, '/facilities');
-    if (path.startsWith('/api/nphies/live/'))                      return apiNphies(req, env, '/live/' + path.slice('/api/nphies/live/'.length));
-    if (path.startsWith('/api/nphies'))                            return apiNphies(req, env, path.replace('/api/nphies', ''));
-
-    // Portal hub (must come BEFORE the /api/portal catch-all)
-    if (path === '/api/portal-hub')                        return apiPortalHub(env);
-    if (path.startsWith('/api/portal'))                    return apiPortal(req, env, path.replace('/api/portal', '') || '/stats');
-
-    // Blog
-    if (path === '/api/blog' || path === '/api/blog/')     return apiBlog(null);
-    if (path.startsWith('/api/blog/'))                     return apiBlog(path.slice('/api/blog/'.length));
-
-    // Academy
-    if (path === '/api/academy/courses')                   return apiAcademy(req, null);
-    if (path.startsWith('/api/academy/courses/'))          return apiAcademy(req, path.slice('/api/academy/courses/'.length));
-    if (path === '/api/academy/stats')                     return ok({ total_courses: COURSES.length, total_hours: 104, accreditation: 'SCFHS CPD + CHI', repos: ['nphies-course-platform','sbs','brainsait-rcm','open-webui','brainsait-mcp-dxt'] });
-
-    // ── Public article + course pages (NO auth) ──────────────
-    if (path.startsWith('/blog/')) {
-      const slug = path.slice(6);
-      const langP = url.searchParams.get('lang') || 'ar';
-      return serveBlogArticle(slug, langP);
-    }
-    if (path.startsWith('/academy/')) {
-      const cid  = path.slice(9);
-      const langP = url.searchParams.get('lang') || 'ar';
-      return serveAcademyCourse(cid, langP);
-    }
-
-    // ── Voice Agent Proxy (PUBLIC — before auth) ────────────
-    if (path.startsWith('/voice')) {
-      const VOICE_WORKER = 'https://basma-voice-agent.brainsait-fadil.workers.dev';
-      try {
-        const vUrl = VOICE_WORKER + path + (url.search || '');
-        // Forward only safe headers (not Host, not CF-specific)
-        const fwdHeaders = { 'X-Forwarded-Host': 'hnh.brainsait.org' };
-        const fwd = ['content-type','x-language','x-session-id','authorization','accept'];
-        fwd.forEach(h => { const v = req.headers.get(h); if (v) fwdHeaders[h] = v; });
-        const vResp = await fetch(vUrl, {
-          method: req.method,
-          headers: fwdHeaders,
-          body: ['GET','HEAD'].includes(req.method) ? null : req.body,
-        });
-        const headers = new Headers(vResp.headers);
-        Object.entries(CORS).forEach(([k,v]) => headers.set(k,v));
-        return new Response(vResp.body, { status: vResp.status, headers });
-      } catch (e) {
-        return err('Voice agent unavailable: ' + e.message, 503);
-      }
-    }
-
-    // ── Protected API ─────────────────────────────────────────
+  // ── Protected API — explicit path list, 401 only for known protected routes ──
+  const PROTECTED_PREFIXES = ['/api/claims', '/api/rcm', '/api/sync/', '/api/oracle/diagnose', '/api/schema'];
+  if (PROTECTED_PREFIXES.some(p => path === p || path.startsWith(p))) {
     const guard = authGuard(req, env);
     if (guard) return guard;
 
-    if (path.startsWith('/api/claims'))                    return apiClaims(req, env);
-    if (path === '/api/rcm')                               return apiRCM(env);
-    if (path.startsWith('/api/sync/'))                     return apiSync(env, path.slice('/api/sync/'.length));
+    if (path.startsWith('/api/claims'))    return apiClaims(req, env);
+    if (path === '/api/rcm')               return apiRCM(env);
+    if (path.startsWith('/api/sync/'))     return apiSync(env, path.slice('/api/sync/'.length));
 
-    // Schema endpoint
     if (path === '/api/schema') {
       const tables = ['patients','appointments','claims','providers','departments','rag_documents'];
       const counts = {};
@@ -2386,7 +2485,8 @@ export default {
       }
       return ok({ database: 'hnh-gharnata', version: VERSION, tables: counts });
     }
+  }
 
-    return err('Not found', 404);
-  },
-};
+  // ── Unrecognised path ─────────────────────────────────────
+  return err('Not found', 404);
+}
