@@ -1392,6 +1392,25 @@ export default {
       return ok({ database: 'hnh-gharnata', version: VERSION, tables: counts });
     }
 
+    // ── Voice Agent Proxy → basma-voice-agent ──────────────
+    if (path.startsWith('/voice')) {
+      const VOICE_WORKER = 'https://basma-voice-agent.brainsait-fadil.workers.dev';
+      try {
+        const vUrl = VOICE_WORKER + path + (url.search || '');
+        const vResp = await fetch(new Request(vUrl, {
+          method: req.method,
+          headers: req.headers,
+          body: ['GET','HEAD'].includes(req.method) ? null : req.body,
+        }));
+        const resHeaders = { ...CORS };
+        const ct = vResp.headers.get('Content-Type');
+        if (ct) resHeaders['Content-Type'] = ct;
+        return new Response(vResp.body, { status: vResp.status, headers: resHeaders });
+      } catch (e) {
+        return err('Voice agent unavailable', 503);
+      }
+    }
+
     return err('Not found', 404);
   },
 };
