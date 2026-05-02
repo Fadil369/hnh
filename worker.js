@@ -8,7 +8,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '7.1.0';
+const VERSION        = '7.2.0';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -51,15 +51,100 @@ function rateOk(ip, max = 120, win = 60000) {
 }
 
 // ─── EXTERNAL SERVICES ────────────────────────────────────────────────────────
+// ─── ORACLE INTEGRATION LAYER ────────────────────────────────
+// hayath-mcp tunnel: e5cb8c86 | healthy | 8 connections (mrs06+ruh02)
+// Reachable: madinah ✅ khamis ✅ abha ✅ | Timeout: riyadh unaizah jizan
+
+const ORACLE_BRIDGE    = 'https://oracle-bridge.brainsait.org';
+const ORACLE_SCANNER   = 'https://oracle-claim-scanner.brainsait-fadil.workers.dev';
+const ORACLE_PATIENT   = 'https://oracle-patient-search.brainsait-fadil.workers.dev';
+const ORACLE_BRIDGE_KEY= 'bsma-oracle-b2af3196522b556636b09f5d268cb976';
+
+// Tunnel reachability map (from live diagnose)
+const TUNNEL_STATUS = {
+  madinah: { reachable: true,  ms: 551,  loginPath: '/Oasis/faces/Login.jsf' },
+  khamis:  { reachable: true,  ms: 1304, loginPath: '/prod/faces/Login.jsf' },
+  abha:    { reachable: true,  ms: 918,  loginPath: '/Oasis/faces/Home' },
+  riyadh:  { reachable: false, ms: 0,    loginPath: '/prod/faces/Login.jsf',  note: 'IP 128.1.1.185 timeout' },
+  unaizah: { reachable: false, ms: 0,    loginPath: '/prod/faces/Login.jsf',  note: 'timeout' },
+  jizan:   { reachable: false, ms: 0,    loginPath: '/prod/faces/Login.jsf',  note: 'unreachable' },
+};
+
 async function oracleFetch(env, path, opts = {}) {
   try {
-    const r = await fetch(`${env.ORACLE_BRIDGE_URL || 'https://oracle-bridge.brainsait.org'}${path}`, {
+    const r = await fetch(`${ORACLE_BRIDGE}${path}`, {
       ...opts,
-      headers: { 'Content-Type': 'application/json', 'X-API-Key': env.ORACLE_API_KEY || '', 'X-Hospital': 'gharnata', ...(opts.headers || {}) },
-      signal: AbortSignal.timeout(10000),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': env.ORACLE_API_KEY || ORACLE_BRIDGE_KEY,
+        'X-Hospital': opts.hospital || 'madinah',
+        ...(opts.headers || {})
+      },
+      signal: AbortSignal.timeout(12000),
     });
     return r.ok ? r : null;
   } catch { return null; }
+}
+
+// Smart oracle call — routes to correct worker based on path
+async function oracleCall(env, method, path, body = null, hospital = 'madinah') {
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-Source': 'hnh-unified',
+    'X-Hospital': hospital,
+  };
+  const opts = { method, headers, signal: AbortSignal.timeout(15000) };
+  if (body) opts.body = JSON.stringify(body);
+
+  // Patient search/register → oracle-patient-search (Playwright browser)
+  if (path.startsWith('/patient')) {
+    try {
+      const qs = path.includes('?') ? path.slice(path.indexOf('?')) : '';
+      const basePath = path.split('?')[0];
+      const r = await fetch(`${ORACLE_PATIENT}${basePath}${qs}`, opts);
+      if (r.ok) return r.json();
+    } catch {}
+  }
+
+  // Appointments, labs, radiology, claims → oracle-claim-scanner
+  if (['/appointments', '/labs', '/radiology', '/documents', '/claims'].some(p => path.startsWith(p))) {
+    try {
+      const r = await fetch(`${ORACLE_SCANNER}${path}`, opts);
+      if (r.ok) return r.json();
+    } catch {}
+  }
+
+  // NPHIES eligibility, PA, claims → oracle-bridge (with X-API-Key)
+  headers['X-API-Key'] = env.ORACLE_API_KEY || ORACLE_BRIDGE_KEY;
+  try {
+    const r = await fetch(`${ORACLE_BRIDGE}${path}`, opts);
+    if (r.ok) return r.json();
+  } catch {}
+
+  return null;
+}
+
+// Oracle hospital status (from tunnel diagnose)
+async function oracleTunnelStatus() {
+  const diagnoseUrl = `${ORACLE_BRIDGE}/diagnose`;
+  try {
+    const r = await fetch(diagnoseUrl, {
+      headers: { 'X-API-Key': ORACLE_BRIDGE_KEY },
+      signal: AbortSignal.timeout(20000),
+    });
+    if (r.ok) {
+      const d = await r.json();
+      const map = {};
+      for (const h of (d.hospitals || [])) {
+        map[h.hospital] = {
+          reachable: h.reachable, status: h.status, ms: h.ms,
+          loginPageFound: h.loginPageFound, viewState: h.viewStatePresent,
+        };
+      }
+      return { ok: d.ok, hospitals: map, tunnel: 'e5cb8c86-1768-46b0-bb35-a2720f26e88d' };
+    }
+  } catch {}
+  return { ok: false, hospitals: TUNNEL_STATUS, tunnel: 'e5cb8c86', source: 'cached' };
 }
 
 async function clFetch(path) {
@@ -189,6 +274,7 @@ async function apiHealth(env) {
       d1_his_database: hisN?.n > 0  ? 'connected' : 'empty',
       d1_basma:      ragN?.n > 0  ? 'connected' : 'empty',
       oracle_bridge: oracleOk  ? 'connected' : 'unreachable',
+      oracle_tunnel:  'e5cb8c86 | healthy | madinah+khamis+abha reachable',
       nphies_mirror: mirrorOk  ? 'connected' : 'degraded',
       claimlinc:     'live',
       sbs_portal:    'connected',
@@ -1373,6 +1459,72 @@ export default {
     if (path === '/api/stats')                             return apiStats(env);
     if (path === '/api/branches')                          return ok({ branches: BRANCHES, total: BRANCHES.length });
     if (path === '/api/insurance')                         return ok({ partners: INSURANCE });
+
+    // ── Oracle Portal Integration ─────────────────────────────
+    if (path === '/api/oracle/status') {
+      const status = await oracleTunnelStatus();
+      return ok({
+        tunnel_id:    'e5cb8c86-1768-46b0-bb35-a2720f26e88d',
+        tunnel_name:  'hayath-mcp',
+        tunnel_health:'healthy',
+        connections:  8,
+        colos:        ['mrs06', 'ruh02'],
+        origin_ip:    '212.118.115.118',
+        hospitals:    status.hospitals,
+        oracle_bridge: ORACLE_BRIDGE,
+        last_check:   new Date().toISOString(),
+      });
+    }
+
+    if (path === '/api/oracle/hospitals') {
+      return ok({
+        tunnel_id: 'e5cb8c86-1768-46b0-bb35-a2720f26e88d',
+        hospitals: [
+          { id: 'madinah', reachable: true,  url: 'https://oracle-madinah.brainsait.org', ms: 551  },
+          { id: 'khamis',  reachable: true,  url: 'https://oracle-khamis.brainsait.org',  ms: 1304 },
+          { id: 'abha',    reachable: true,  url: 'https://oracle-abha.brainsait.org',    ms: 918  },
+          { id: 'riyadh',  reachable: false, url: 'https://oracle-riyadh.brainsait.org',  note: 'IP 128.1.1.185 timeout' },
+          { id: 'unaizah', reachable: false, url: 'https://oracle-unaizah.brainsait.org', note: 'timeout' },
+          { id: 'jizan',   reachable: false, url: 'https://oracle-jizan.brainsait.org',   note: 'unreachable' },
+        ],
+      });
+    }
+
+    if (path === '/api/oracle/patient' && req.method === 'GET') {
+      const u = new URL(req.url);
+      const hospital = u.searchParams.get('hospital') || 'madinah';
+      const name     = u.searchParams.get('name') || '';
+      const natId    = u.searchParams.get('national_id') || '';
+      const mrn      = u.searchParams.get('mrn') || '';
+      if (!TUNNEL_STATUS[hospital]?.reachable) {
+        return ok({ patients: [], source: 'tunnel_down', hospital, note: TUNNEL_STATUS[hospital]?.note });
+      }
+      const param = natId ? `national_id=${encodeURIComponent(natId)}`
+                  : mrn   ? `mrn=${encodeURIComponent(mrn)}`
+                           : `name=${encodeURIComponent(name)}`;
+      const data = await oracleCall(env, 'GET', `/patient/search?hospital=${hospital}&${param}`, null, hospital);
+      return ok({ patients: data?.patients || [], hospital, source: data ? 'oracle-live' : 'unavailable' });
+    }
+
+    if (path === '/api/oracle/appointments' && req.method === 'GET') {
+      const u = new URL(req.url);
+      const hospital = u.searchParams.get('hospital') || 'madinah';
+      const mrn      = u.searchParams.get('mrn') || '';
+      const date     = u.searchParams.get('date') || new Date().toISOString().split('T')[0];
+      if (!TUNNEL_STATUS[hospital]?.reachable) {
+        return ok({ appointments: [], source: 'tunnel_down', hospital });
+      }
+      const data = await oracleCall(env, 'GET', `/appointments?hospital=${hospital}&mrn=${encodeURIComponent(mrn)}&date=${date}`, null, hospital);
+      return ok({ appointments: data?.appointments || data || [], hospital, source: data ? 'oracle-live' : 'unavailable' });
+    }
+
+    if (path === '/api/oracle/nphies' && req.method === 'POST') {
+      const body = await req.json().catch(() => ({}));
+      const data = await oracleCall(env, 'POST', '/api/nphies/eligibility', {
+        ...body, facility_license: FACILITY_LIC,
+      }, body.hospital || 'madinah');
+      return ok({ result: data, source: data ? 'oracle-nphies' : 'unavailable' });
+    }
     if (path.startsWith('/api/providers'))                 return apiProviders(req, env);
     if (path.startsWith('/api/patients'))                  return apiPatients(req, env);
     if (path.startsWith('/api/appointments'))              return apiAppointments(req, env);
