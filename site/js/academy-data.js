@@ -101,7 +101,7 @@ window.HNH_ACADEMY_DATA = {
     }
   },
   courses: {
-    'nphies-fundamentals': {
+    'nphies': {
       ar: {
         title: 'أساسيات نظام NPHIES',
         shortDescription: 'المطالبات، الموافقة المسبقة، الأهلية، FHIR R4 — إتقان تشغيلي كامل لمزودي الرعاية الصحية السعوديين.',
@@ -183,7 +183,7 @@ window.HNH_ACADEMY_DATA = {
         ]
       }
     },
-    'sbs-medical-coding': {
+    'medical-coding': {
       ar: {
         title: 'الترميز الطبي SBS وICD-10-AM — متقدم',
         shortDescription: 'جميع فصول SBS الـ26، تطابق ICD-10-AM، حساب AR-DRG، التحضير لتدقيق CHI.',
@@ -273,7 +273,7 @@ window.HNH_ACADEMY_DATA = {
         ]
       }
     },
-    'rcm-revenue-cycle': {
+    'rcm': {
       ar: {
         title: 'إدارة دورة الإيرادات للمستشفيات السعودية',
         shortDescription: 'دورة إيرادات كاملة: من الأهلية للتحصيل، إدارة الرفض، لوحات مؤشرات الأداء.',
@@ -359,7 +359,7 @@ window.HNH_ACADEMY_DATA = {
         ]
       }
     },
-    'ai-automation-healthcare': {
+    'ai-healthcare': {
       ar: {
         title: 'الذكاء الاصطناعي والأتمتة في الرعاية الصحية',
         shortDescription: 'وكلاء LINC، سير عمل NPHIES الآلي، CodeLinc، قواعد المعرفة السريرية RAG.',
@@ -437,7 +437,7 @@ window.HNH_ACADEMY_DATA = {
         ]
       }
     },
-    'pdpl-compliance': {
+    'pdpl': {
       ar: {
         title: 'نظام PDPL السعودي وامتثال بيانات الرعاية الصحية',
         shortDescription: 'أمن بيانات المريض، متطلبات تدقيق CHI، لوائح NDMO، حوكمة البيانات للرعاية الصحية السعودية.',
@@ -462,8 +462,7 @@ window.HNH_ACADEMY_DATA = {
           { title: 'إدارة موافقة المريض وحقوق البيانات', points: ['الموافقة', 'الحقوق', 'سياسات الخصوصية'] },
           { title: 'تقليل البيانات وسياسات الاحتفاظ', points: ['تقليل البيانات', 'الاحتفاظ', 'التخلص الآمن'] },
           { title: 'أمن بيانات الرعاية الصحية', points: ['التشفير', 'التحكم بالوصول', 'التدقيق'] },
-          { title: 'الاستعداد لتدقيق NDMO', points: ['متطلبات NDMO', 'التوثيق', 'محاكاة التدقيق'] },
-          { title: 'الامتثال لـ CHI وحوكمة البيانات', points: ['CHI', 'الحوكمة', 'التقارير'] }
+          { title: 'الاستعداد لتدقيق NDMO', points: ['متطلبات NDMO', 'التوثيق', 'محاكاة التدقيق'] }
         ],
         materialsTitle: 'المواد التعليمية المقدمة',
         materials: ['دليل PDPL', 'قوالب تقييم المخاطر', 'نماذج سياسات الخصوصية', 'قائمة تدقيق NDMO'],
@@ -500,8 +499,7 @@ window.HNH_ACADEMY_DATA = {
           { title: 'Patient Consent Management & Data Rights', points: ['Consent', 'Rights', 'Privacy policies'] },
           { title: 'Data Minimization & Retention Policies', points: ['Data minimization', 'Retention', 'Secure disposal'] },
           { title: 'Healthcare Data Security', points: ['Encryption', 'Access control', 'Audit'] },
-          { title: 'NDMO Audit Preparation', points: ['NDMO requirements', 'Documentation', 'Audit simulation'] },
-          { title: 'CHI Compliance & Data Governance', points: ['CHI', 'Governance', 'Reporting'] }
+          { title: 'NDMO Audit Preparation', points: ['NDMO requirements', 'Documentation', 'Audit simulation'] }
         ],
         materialsTitle: 'Included Materials',
         materials: ['PDPL guide', 'Risk assessment templates', 'Privacy policy templates', 'NDMO audit checklist'],
@@ -518,15 +516,15 @@ window.HNH_ACADEMY_DATA = {
 
     'clinical-documentation': {
       ar: {
-        title: 'التوثيق السريري والسجلات الطبية',
-        shortDescription: 'توثيق سريري احترافي، معايير السجلات الطبية، التوثيق الإلكتروني، والامتثال للمعايير.',
-        duration: '8 ساعة',
+        title: 'التوثيق السريري المتميز',
+        shortDescription: 'أفضل ممارسات التوثيق السريري الذي يدعم الترميز الدقيق والامتثال لـ NPHIES ونجاح تدقيق CHI.',
+        duration: '10 ساعة',
         level: 'متوسط',
         levelClass: 'intermediate',
         audience: 'أطباء، فرق التوثيق الطبي، مديرو الجودة',
         mode: 'عن بعد',
         certificate: 'SCFHS CPD',
-        price: 'SAR 850',
+        price: 'SAR 1,100',
         overview: 'برنامج متكامل لتحسين جودة التوثيق السريري والسجلات الطبية وفق أفضل الممارسات ومتطلبات الاعتماد.',
         outcomesTitle: 'مخرجات التعلم',
         outcomes: [
@@ -537,11 +535,13 @@ window.HNH_ACADEMY_DATA = {
         ],
         curriculumTitle: 'المحتوى التدريبي الكامل',
         modules: [
-          { title: 'أسس التوثيق السريري', points: ['أسس التوثيق', 'أهمية التوثيق', 'المعايير'] },
-          { title: 'معايير السجلات الطبية', points: ['معايير السجلات', 'التصنيف', 'الترميز'] },
-          { title: 'التوثيق الإلكتروني (EHR)', points: ['EHR', 'الأنظمة السريرية', 'التكامل'] },
-          { title: 'جودة البيانات والتدقيق', points: ['جودة البيانات', 'التدقيق', 'تحسين الجودة'] },
-          { title: 'الامتثال للمعايير والاعتماد', points: ['متطلبات الاعتماد', 'التوثيق', 'التقارير'] }
+          { title: 'مبادئ التوثيق السريري للفوترة', points: ['وضوح التشخيص', 'الدقة السريرية', 'قابلية الترميز'] },
+          { title: 'توثيق الطوارئ: ESI والشكوى الرئيسية والقرار السريري', points: ['تقييم ESI', 'الشكوى الرئيسية', 'قرار الطبيب'] },
+          { title: 'فحص المرضى الداخليين، الملاحظات اليومية، ملخص الخروج', points: ['خطط العلاج', 'المتابعة اليومية', 'ملخص الخروج'] },
+          { title: 'التوثيق المتوافق مع NPHIES', points: ['متطلبات المطالبة', 'الربط مع الترميز', 'سلامة البيانات'] },
+          { title: 'التوثيق السريري والدقة الترميزية', points: ['تقليل الرفض', 'تحسين أول تمرير', 'فجوات التوثيق'] },
+          { title: 'التحضير لتدقيق CHI', points: ['عناصر التدقيق', 'الأخطاء المتكررة', 'خطة التحسين'] },
+          { title: 'ورشة تطبيقية لحالات واقعية', points: ['حالات ED', 'حالات تنويم', 'مراجعة جماعية'] }
         ],
         materialsTitle: 'المواد التعليمية المقدمة',
         materials: ['أدلة التوثيق السريري', 'نماذج السجلات الطبية', 'قوائم تدقيق الجودة'],
@@ -555,15 +555,15 @@ window.HNH_ACADEMY_DATA = {
         ]
       },
       en: {
-        title: 'Clinical Documentation & Medical Records',
-        shortDescription: 'Professional clinical documentation, medical records standards, electronic documentation, and compliance.',
-        duration: '8 hours',
+        title: 'Advanced Clinical Documentation Excellence',
+        shortDescription: 'Best practices for documentation that supports accurate coding, NPHIES compliance, and CHI audit success.',
+        duration: '10 hours',
         level: 'Intermediate',
         levelClass: 'intermediate',
         audience: 'Physicians, medical documentation teams, quality managers',
         mode: 'Remote',
         certificate: 'SCFHS CPD',
-        price: 'SAR 850',
+        price: 'SAR 1,100',
         overview: 'A comprehensive program to improve clinical documentation quality and medical records according to best practices and accreditation requirements.',
         outcomesTitle: 'Learning Outcomes',
         outcomes: [
@@ -574,11 +574,13 @@ window.HNH_ACADEMY_DATA = {
         ],
         curriculumTitle: 'Full Course Curriculum',
         modules: [
-          { title: 'Clinical Documentation Fundamentals', points: ['Documentation basics', 'Importance', 'Standards'] },
-          { title: 'Medical Records Standards', points: ['Records standards', 'Classification', 'Coding'] },
-          { title: 'Electronic Documentation (EHR)', points: ['EHR', 'Clinical systems', 'Integration'] },
-          { title: 'Data Quality & Audit', points: ['Data quality', 'Audit', 'Quality improvement'] },
-          { title: 'Standards Compliance & Accreditation', points: ['Accreditation requirements', 'Documentation', 'Reporting'] }
+          { title: 'Documentation Principles for Reimbursement', points: ['Diagnosis clarity', 'Clinical precision', 'Codability'] },
+          { title: 'Emergency Documentation: ESI and Clinical Decisions', points: ['ESI scoring', 'Chief complaint', 'Clinical judgment'] },
+          { title: 'Inpatient Notes and Discharge Summaries', points: ['Daily notes', 'Care plans', 'Discharge quality'] },
+          { title: 'NPHIES-Compliant Documentation', points: ['Claim requirements', 'Coding linkage', 'Data integrity'] },
+          { title: 'Documentation and Coding Accuracy', points: ['Denial prevention', 'First-pass success', 'Gap detection'] },
+          { title: 'CHI Audit Readiness', points: ['Audit elements', 'Frequent findings', 'Remediation plans'] },
+          { title: 'Applied Case Workshop', points: ['ED cases', 'Inpatient cases', 'Peer review'] }
         ],
         materialsTitle: 'Included Materials',
         materials: ['Clinical documentation guides', 'Medical records templates', 'Quality audit checklists'],
@@ -593,17 +595,17 @@ window.HNH_ACADEMY_DATA = {
       }
     },
 
-    'pharmacy-management': {
+    'pharmacy': {
       ar: {
-        title: 'إدارة الصيدلية وسلامة الدواء',
-        shortDescription: 'إدارة الصيدلية المستشفية، سلامة الدواء، صرف الدواء الآمن، والتواعل الدوائي.',
-        duration: '10 ساعة',
+        title: 'إدارة صيدلية المستشفى والدستور الدوائي',
+        shortDescription: 'إدارة الدستور الدوائي، ضبط المخدرات، ترميز الأدوية في NPHIES، PA للأدوية عالية التكلفة، ومؤشرات أداء الصيدلية.',
+        duration: '12 ساعة',
         level: 'متوسط',
         levelClass: 'intermediate',
         audience: 'صيادلة، فنيو الصيدلية، مديرو الرعاية الصحية',
         mode: 'عن بعد',
         certificate: 'SCFHS CPD',
-        price: 'SAR 950',
+        price: 'SAR 1,300',
         overview: 'برنامج شامل لإدارة الصيدلية المستشفية وضمان سلامة الدواء وفق أفضل الممارسات الدوائية.',
         outcomesTitle: 'مخرجات التعلم',
         outcomes: [
@@ -614,11 +616,14 @@ window.HNH_ACADEMY_DATA = {
         ],
         curriculumTitle: 'المحتوى التدريبي الكامل',
         modules: [
-          { title: 'أسس إدارة الصيدلية', points: ['إدارة الصيدلية', 'الهيكل التنظيمي', 'اللوائح'] },
-          { title: 'سلامة الدواء والتفاعلات', points: ['سلامة الدواء', 'التفاعلات الدوائية', 'التبليغ'] },
-          { title: 'صرف الدواء الآمن', points: ['صرف الدواء', 'الجرعات', 'التوثيق'] },
-          { title: 'إدارة سلسلة التوريد الدوائي', points: ['سلسلة التوريد', 'المخزون', 'الشراء'] },
-          { title: 'التواعل الدوائي واليقظة الدوائية', points: ['التواعل الدوائي', 'اليقظة الدوائية', 'التقارير'] }
+          { title: 'تصميم الدستور الدوائي ولجنة الأدوية', points: ['بناء الدستور', 'حوكمة اللجنة', 'مراجعة دورية'] },
+          { title: 'ترميز الأدوية في NPHIES والتعويض', points: ['ترميز الصرف', 'مطابقة التغطية', 'متطلبات التعويض'] },
+          { title: 'الموافقة المسبقة للأدوية عالية التكلفة', points: ['PA دوائي', 'مبررات سريرية', 'التتبع والاستئناف'] },
+          { title: 'إدارة المخزون وسلسلة الإمداد', points: ['مستويات المخزون', 'الطلب الذكي', 'تقليل الهدر'] },
+          { title: 'ضبط الأدوية المخدرة والخاضعة للرقابة', points: ['سجلات رقابية', 'إجراءات الصرف', 'التدقيق'] },
+          { title: 'سلامة الدواء واليقظة الدوائية', points: ['التفاعلات الدوائية', 'الإبلاغ عن الآثار', 'إدارة المخاطر'] },
+          { title: 'أتمتة سير عمل الصيدلية', points: ['تكامل HIS', 'تنبيهات ذكية', 'مؤشرات فورية'] },
+          { title: 'مؤشرات أداء الصيدلية', points: ['دقة الصرف', 'زمن الإنجاز', 'معدلات الأخطاء'] }
         ],
         materialsTitle: 'المواد التعليمية المقدمة',
         materials: ['أدلة إدارة الصيدلية', 'نماذج صرف الدواء', 'قوائم تدقيق سلامة الدواء'],
@@ -632,15 +637,15 @@ window.HNH_ACADEMY_DATA = {
         ]
       },
       en: {
-        title: 'Pharmacy Management & Drug Safety',
-        shortDescription: 'Hospital pharmacy management, drug safety, safe medication dispensing, and pharmacovigilance.',
-        duration: '10 hours',
+        title: 'Hospital Pharmacy & Formulary Management',
+        shortDescription: 'Formulary design, controlled drugs governance, NPHIES medication coding, high-cost drug PA, and pharmacy KPIs.',
+        duration: '12 hours',
         level: 'Intermediate',
         levelClass: 'intermediate',
         audience: 'Pharmacists, pharmacy technicians, healthcare managers',
         mode: 'Remote',
         certificate: 'SCFHS CPD',
-        price: 'SAR 950',
+        price: 'SAR 1,300',
         overview: 'A comprehensive program for hospital pharmacy management and drug safety assurance according to best pharmaceutical practices.',
         outcomesTitle: 'Learning Outcomes',
         outcomes: [
@@ -651,11 +656,14 @@ window.HNH_ACADEMY_DATA = {
         ],
         curriculumTitle: 'Full Course Curriculum',
         modules: [
-          { title: 'Pharmacy Management Fundamentals', points: ['Pharmacy management', 'Organizational structure', 'Regulations'] },
-          { title: 'Drug Safety & Interactions', points: ['Drug safety', 'Drug interactions', 'Reporting'] },
-          { title: 'Safe Medication Dispensing', points: ['Dispensing', 'Dosages', 'Documentation'] },
-          { title: 'Pharmaceutical Supply Chain Management', points: ['Supply chain', 'Inventory', 'Procurement'] },
-          { title: 'Pharmacovigilance & Drug Surveillance', points: ['Pharmacovigilance', 'Drug surveillance', 'Reporting'] }
+          { title: 'Formulary Design and P&T Committee', points: ['Formulary governance', 'Committee workflow', 'Periodic updates'] },
+          { title: 'Medication Coding in NPHIES', points: ['Medication coding', 'Coverage mapping', 'Reimbursement rules'] },
+          { title: 'High-Cost Drug Prior Authorization', points: ['PA workflow', 'Clinical justification', 'Appeals'] },
+          { title: 'Inventory and Supply Optimization', points: ['Stock levels', 'Demand planning', 'Waste reduction'] },
+          { title: 'Controlled Drug Governance', points: ['Controlled logs', 'Dispensing controls', 'Audit readiness'] },
+          { title: 'Medication Safety and Pharmacovigilance', points: ['Interaction checks', 'Adverse event reports', 'Risk controls'] },
+          { title: 'Pharmacy Workflow Automation', points: ['HIS integration', 'Smart alerts', 'Automation points'] },
+          { title: 'Pharmacy KPI Management', points: ['Dispensing accuracy', 'Turnaround time', 'Error rate'] }
         ],
         materialsTitle: 'Included Materials',
         materials: ['Pharmacy management guides', 'Dispensing templates', 'Drug safety checklists'],
@@ -670,17 +678,17 @@ window.HNH_ACADEMY_DATA = {
       }
     },
 
-    'quality-cbahi': {
+    'cbahi-quality': {
       ar: {
-        title: 'إدارة الجودة ومعايير CBAHI',
-        shortDescription: 'إدارة الجودة الصحية، معايير CBAHI، الاعتماد المركزي، وتحسين الأداء.',
-        duration: '12 ساعة',
+        title: 'جودة الرعاية الصحية والتحضير لاعتماد CBAHI/JCI',
+        shortDescription: 'أنظمة إدارة الجودة، معايير سلامة المريض، التحضير لمسح CBAHI، والتحسين المستمر للجودة في المستشفيات السعودية.',
+        duration: '18 ساعة',
         level: 'متقدم',
         levelClass: 'advanced',
         audience: 'مديرو الجودة، فرق الاعتماد، القادة الصحيين',
         mode: 'عن بعد',
-        certificate: 'SCFHS CPD',
-        price: 'SAR 1,200',
+        certificate: 'CHI/SCFHS',
+        price: 'SAR 2,100',
         overview: 'برنامج متقدم لإدارة الجودة الصحية والاستعداد للاعتماد وفق معايير CBAHI الوطنية.',
         outcomesTitle: 'مخرجات التعلم',
         outcomes: [
@@ -691,12 +699,16 @@ window.HNH_ACADEMY_DATA = {
         ],
         curriculumTitle: 'المحتوى التدريبي الكامل',
         modules: [
-          { title: 'مفاهيم الجودة الصحية', points: ['مفاهيم الجودة', 'أنماط الجودة', 'مؤشرات الأداء'] },
-          { title: 'معايير CBAHI الوطنية', points: ['CBAHI', 'متطلبات المعايير', 'التوثيق'] },
-          { title: 'عمليات الاعتماد المركزي', points: ['الاعتماد', 'التقييم الذاتي', 'الزيارات الميدانية'] },
-          { title: 'تحسين الأداء وقياس المؤشرات', points: ['تحسين الأداء', 'مؤشرات الأداء', 'التقارير'] },
-          { title: 'التدقيقات الداخلية وخطط التحسين', points: ['التدقيقات الداخلية', 'خطط التحسين', 'متابعة التنفيذ'] },
-          { title: 'ثقافة الجودة وسلامة المرضى', points: ['ثقافة الجودة', 'سلامة المرضى', 'إدارة المخاطر'] }
+          { title: 'إطار جودة الرعاية الصحية: CBAHI مقابل JCI', points: ['الفروقات الرئيسية', 'مناطق التقاطع', 'اختيار الإطار'] },
+          { title: 'أهداف سلامة المريض والأحداث غير المقبولة', points: ['أهداف السلامة', 'Never Events', 'تصميم الضوابط'] },
+          { title: 'المؤشرات السريرية وقياس النتائج', points: ['اختيار المؤشرات', 'طرق القياس', 'قراءة النتائج'] },
+          { title: 'حوكمة الجودة على مستوى المنشأة', points: ['اللجان', 'المسؤوليات', 'دورة القرار'] },
+          { title: 'تصميم سياسات وإجراءات الجودة', points: ['كتابة السياسات', 'توحيد النماذج', 'تتبع الالتزام'] },
+          { title: 'الاستعداد للمسوحات الخارجية', points: ['خطة المسح', 'المراجعة المسبقة', 'إدارة الزيارات'] },
+          { title: 'التحسين المستمر (QI) ومشاريع PDSA', points: ['منهجية PDSA', 'اختيار المشروع', 'قياس الأثر'] },
+          { title: 'إدارة المخاطر والسلامة السريرية', points: ['سجل المخاطر', 'RCA', 'إجراءات وقائية'] },
+          { title: 'المراجعة الداخلية والتدقيق', points: ['خطط التدقيق', 'أدوات التحقق', 'إغلاق الملاحظات'] },
+          { title: 'مشروع تخرج: جاهزية اعتماد', points: ['تقييم فجوات', 'خطة 90 يوما', 'عرض تنفيذي'] }
         ],
         materialsTitle: 'المواد التعليمية المقدمة',
         materials: ['أدلة معايير CBAHI', 'نماذج التقييم الذاتي', 'قوائم تدقيق الجودة'],
@@ -710,15 +722,15 @@ window.HNH_ACADEMY_DATA = {
         ]
       },
       en: {
-        title: 'Quality Management & CBAHI Standards',
-        shortDescription: 'Healthcare quality management, CBAHI standards, central accreditation, and performance improvement.',
-        duration: '12 hours',
+        title: 'Healthcare Quality and CBAHI/JCI Readiness',
+        shortDescription: 'Quality systems, patient safety standards, CBAHI survey readiness, and continuous quality improvement.',
+        duration: '18 hours',
         level: 'Advanced',
         levelClass: 'advanced',
         audience: 'Quality managers, accreditation teams, healthcare leaders',
         mode: 'Remote',
-        certificate: 'SCFHS CPD',
-        price: 'SAR 1,200',
+        certificate: 'CHI/SCFHS',
+        price: 'SAR 2,100',
         overview: 'An advanced program for healthcare quality management and accreditation preparation according to national CBAHI standards.',
         outcomesTitle: 'Learning Outcomes',
         outcomes: [
@@ -729,12 +741,16 @@ window.HNH_ACADEMY_DATA = {
         ],
         curriculumTitle: 'Full Course Curriculum',
         modules: [
-          { title: 'Healthcare Quality Concepts', points: ['Quality concepts', 'Quality models', 'Performance indicators'] },
-          { title: 'National CBAHI Standards', points: ['CBAHI', 'Standards requirements', 'Documentation'] },
-          { title: 'Central Accreditation Processes', points: ['Accreditation', 'Self-assessment', 'Site visits'] },
-          { title: 'Performance Improvement & Indicators', points: ['Performance improvement', 'KPIs', 'Reporting'] },
-          { title: 'Internal Audits & Improvement Plans', points: ['Internal audits', 'Improvement plans', 'Follow-up'] },
-          { title: 'Quality Culture & Patient Safety', points: ['Quality culture', 'Patient safety', 'Risk management'] }
+          { title: 'Quality Frameworks: CBAHI vs JCI', points: ['Key differences', 'Shared requirements', 'Use cases'] },
+          { title: 'Patient Safety Goals and Never Events', points: ['Safety goals', 'Never events', 'Control design'] },
+          { title: 'Clinical Indicators and Outcome Measurement', points: ['Indicator design', 'Measurement methods', 'Result interpretation'] },
+          { title: 'Facility-Level Quality Governance', points: ['Committees', 'Roles', 'Decision loops'] },
+          { title: 'Quality Policies and SOP Design', points: ['Policy writing', 'SOP standardization', 'Compliance tracking'] },
+          { title: 'External Survey Readiness', points: ['Survey planning', 'Pre-survey review', 'Survey operations'] },
+          { title: 'Continuous Improvement with PDSA', points: ['PDSA cycle', 'Project selection', 'Impact tracking'] },
+          { title: 'Risk and Clinical Safety Management', points: ['Risk register', 'RCA workflow', 'Preventive actions'] },
+          { title: 'Internal Review and Audit', points: ['Audit plan', 'Verification tools', 'Closure process'] },
+          { title: 'Capstone: Accreditation Readiness Plan', points: ['Gap assessment', '90-day roadmap', 'Executive presentation'] }
         ],
         materialsTitle: 'Included Materials',
         materials: ['CBAHI standards guides', 'Self-assessment templates', 'Quality audit checklists'],
@@ -751,15 +767,15 @@ window.HNH_ACADEMY_DATA = {
 
     'infection-control': {
       ar: {
-        title: 'مكافحة العدوى والوقاية',
-        shortDescription: 'مكافحة العدوى في المنشآت الصحية، الوقاية ومكافحة العدوى، التعقيم والتطهير، وإدارة المخاطر الحيوية.',
+        title: 'أساسيات مكافحة العدوى والوقاية منها',
+        shortDescription: 'معايير مكافحة العدوى من WHO ووزارة الصحة السعودية، الوقاية من العدوى المكتسبة، بروتوكولات PPE، وإدارة الفاشيات.',
         duration: '8 ساعة',
-        level: 'متوسط',
-        levelClass: 'intermediate',
+        level: 'مبتدئ',
+        levelClass: 'beginner',
         audience: 'فرق مكافحة العدوى، التمريض، الأطباء، فرق النظافة',
         mode: 'عن بعد',
         certificate: 'SCFHS CPD',
-        price: 'SAR 850',
+        price: 'SAR 800',
         overview: 'برنامج شامل لمكافحة العدوى في المنشآت الصحية وفق أفضل الممارسات الوطنية والدولية.',
         outcomesTitle: 'مخرجات التعلم',
         outcomes: [
@@ -770,11 +786,12 @@ window.HNH_ACADEMY_DATA = {
         ],
         curriculumTitle: 'المحتوى التدريبي الكامل',
         modules: [
-          { title: 'أسس مكافحة العدوى', points: ['أسس مكافحة العدوى', 'سلسلة العدوى', 'الوقاية'] },
-          { title: 'التعقيم والتطهير', points: ['التعقيم', 'التطهير', 'المعدات'] },
-          { title: 'إدارة حالات العدوى', points: ['حالات العدوى', 'التبليغ', 'التحري'] },
-          { title: 'احتياطات العزل والحجر', points: ['احتياطات العزل', 'الحجر', 'معدات الوقاية'] },
-          { title: 'المراقبة والتقارير', points: ['المراقبة', 'التقارير', 'تحليل البيانات'] }
+          { title: 'أساسيات مكافحة العدوى ومعايير وزارة الصحة السعودية', points: ['سلسلة العدوى', 'المعايير الوطنية', 'أدوار الفرق'] },
+          { title: 'الاحتياطات القياسية والقائمة على طريق الانتقال', points: ['احتياطات قياسية', 'احتياطات انتقال', 'تطبيق عملي'] },
+          { title: 'بروتوكولات نظافة اليدين ومعدات الوقاية الشخصية', points: ['نظافة اليدين', 'اختيار PPE', 'الالتزام'] },
+          { title: 'التعقيم والتطهير وإدارة البيئة', points: ['التعقيم', 'التطهير', 'سلامة البيئة'] },
+          { title: 'ترصد العدوى المكتسبة والإبلاغ', points: ['مؤشرات HAI', 'الإبلاغ', 'تحليل الاتجاهات'] },
+          { title: 'الاستجابة لتفشي العدوى', points: ['خطة الاستجابة', 'الاحتواء', 'التقييم اللاحق'] }
         ],
         materialsTitle: 'المواد التعليمية المقدمة',
         materials: ['أدلة مكافحة العدوى', 'برامج التعقيم', 'نماذج التبليغ'],
@@ -788,15 +805,15 @@ window.HNH_ACADEMY_DATA = {
         ]
       },
       en: {
-        title: 'Infection Control & Prevention',
-        shortDescription: 'Infection control in healthcare facilities, prevention and control, sterilization and disinfection, and biological risk management.',
+        title: 'Infection Prevention and Control Fundamentals',
+        shortDescription: 'WHO and Saudi MoH infection control standards, HAI prevention, PPE protocols, and outbreak response.',
         duration: '8 hours',
-        level: 'Intermediate',
-        levelClass: 'intermediate',
+        level: 'Beginner',
+        levelClass: 'beginner',
         audience: 'Infection control teams, nursing, physicians, cleaning teams',
         mode: 'Remote',
         certificate: 'SCFHS CPD',
-        price: 'SAR 850',
+        price: 'SAR 800',
         overview: 'A comprehensive program for infection control in healthcare facilities according to best national and international practices.',
         outcomesTitle: 'Learning Outcomes',
         outcomes: [
@@ -807,11 +824,12 @@ window.HNH_ACADEMY_DATA = {
         ],
         curriculumTitle: 'Full Course Curriculum',
         modules: [
-          { title: 'Infection Control Fundamentals', points: ['Infection control basics', 'Chain of infection', 'Prevention'] },
-          { title: 'Sterilization & Disinfection', points: ['Sterilization', 'Disinfection', 'Equipment'] },
-          { title: 'Infection Case Management', points: ['Infection cases', 'Reporting', 'Investigation'] },
-          { title: 'Isolation & Quarantine Precautions', points: ['Isolation precautions', 'Quarantine', 'PPE'] },
-          { title: 'Surveillance & Reporting', points: ['Surveillance', 'Reporting', 'Data analysis'] }
+          { title: 'Infection Control Basics and MoH Standards', points: ['Chain of infection', 'National standards', 'Team roles'] },
+          { title: 'Standard and Transmission-Based Precautions', points: ['Standard precautions', 'Transmission routes', 'Applied controls'] },
+          { title: 'Hand Hygiene and PPE Protocols', points: ['Hand hygiene', 'PPE selection', 'Compliance'] },
+          { title: 'Sterilization and Environmental Management', points: ['Sterilization', 'Disinfection', 'Environmental safety'] },
+          { title: 'HAI Surveillance and Reporting', points: ['HAI indicators', 'Reporting workflows', 'Trend analysis'] },
+          { title: 'Outbreak Response Readiness', points: ['Response plans', 'Containment actions', 'Post-event review'] }
         ],
         materialsTitle: 'Included Materials',
         materials: ['Infection control guides', 'Sterilization programs', 'Reporting templates'],
