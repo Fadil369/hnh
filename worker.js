@@ -14,7 +14,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '8.0.0';
+const VERSION        = '8.1.0';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -91,22 +91,26 @@ async function dedupe(key, fn) {
 
 // ─── EXTERNAL SERVICES ────────────────────────────────────────────────────────
 // ─── ORACLE INTEGRATION LAYER ────────────────────────────────
-// hayath-mcp tunnel: e5cb8c86 | healthy | 8 connections (mrs06+ruh02)
-// Reachable: madinah ✅ khamis ✅ abha ✅ | Timeout: riyadh unaizah jizan
+// hayath-mcp tunnel: e5cb8c86 | HEALTHY | 8 connections (mrs06+ruh02)
+// Clients: 212.118.115.118 + 82.167.8.215 | Opened: 2026-04-27 → 2026-04-30
+// Reachable: RUH ✅ (128.1.1.185 public IP, 425ms, login found)
+// Offline:   MED(172.25.11.26) UNA(10.0.100.105) KHM(172.30.0.77) JZN(172.17.4.84:502) ABH(172.19.1.1) — private IPs, cloudflared not running on-site
 
 const ORACLE_BRIDGE    = 'https://oracle-bridge.brainsait.org';
 const ORACLE_SCANNER   = 'https://oracle-claim-scanner.brainsait-fadil.workers.dev';
 const ORACLE_PATIENT   = 'https://oracle-patient-search.brainsait-fadil.workers.dev';
 const ORACLE_BRIDGE_KEY= 'bsma-oracle-b2af3196522b556636b09f5d268cb976';
 
-// Tunnel reachability map — last live check: 2026-05-02 (all hospitals timing out via CF egress)
+// Tunnel reachability — verified 2026-05-03 via /diagnose
+// Riyadh routes to public IP 128.1.1.185 → reachable
+// All others route to private IPs → cloudflared not running at those sites
 const TUNNEL_STATUS = {
-  riyadh:  { reachable: false, ms: 10000, loginPath: '/prod/faces/Login.jsf',  note: 'timeout 2026-05-02' },
-  madinah: { reachable: false, ms: 10000, loginPath: '/Oasis/faces/Login.jsf', note: 'timeout 2026-05-02' },
-  unaizah: { reachable: false, ms: 10000, loginPath: '/prod/faces/Login.jsf',  note: 'timeout 2026-05-02' },
-  khamis:  { reachable: false, ms: 10000, loginPath: '/prod/faces/Login.jsf',  note: 'timeout 2026-05-02' },
-  jizan:   { reachable: false, ms: 3101,  loginPath: '/prod/faces/Login.jsf',  note: 'login page not found 2026-05-02' },
-  abha:    { reachable: false, ms: 10001, loginPath: '/Oasis/faces/Home',      note: 'timeout 2026-05-02' },
+  riyadh:  { reachable: true,  ms: 425,   loginPath: '/prod/faces/Login.jsf',  note: 'live — 128.1.1.185 public IP, login found, viewState ok' },
+  madinah: { reachable: false, ms: 10000, loginPath: '/Oasis/faces/Login.jsf', note: 'timeout — 172.25.11.26 private IP, cloudflared not running on-site' },
+  unaizah: { reachable: false, ms: 10000, loginPath: '/prod/faces/Login.jsf',  note: 'timeout — 10.0.100.105 private IP, cloudflared not running on-site' },
+  khamis:  { reachable: false, ms: 10000, loginPath: '/prod/faces/Login.jsf',  note: 'timeout — 172.30.0.77 private IP, cloudflared not running on-site' },
+  jizan:   { reachable: false, ms: 3101,  loginPath: '/prod/faces/Login.jsf',  note: '502 — 172.17.4.84 private IP, Oracle server unreachable' },
+  abha:    { reachable: false, ms: 10000, loginPath: '/Oasis/faces/Home',       note: 'timeout — 172.19.1.1 private IP, cloudflared not running on-site' },
 };
 
 async function oracleFetch(env, path, opts = {}) {
@@ -118,7 +122,7 @@ async function oracleFetch(env, path, opts = {}) {
         'X-API-Key':     env.ORACLE_API_KEY || ORACLE_BRIDGE_KEY,
         'X-Oracle-User': env.ORACLE_USER     || 'U29200',
         'X-Oracle-Pass': env.ORACLE_PASSWORD || 'U29201',
-        'X-Hospital':    opts.hospital || 'madinah',
+        'X-Hospital':    opts.hospital || 'riyadh',
         ...(opts.headers || {})
       },
       signal: AbortSignal.timeout(12000),
@@ -128,15 +132,21 @@ async function oracleFetch(env, path, opts = {}) {
 }
 
 // Smart oracle call — routes to correct worker based on path
-async function oracleCall(env, method, path, body = null, hospital = 'madinah') {
-  // Build Basic auth from env creds (U29200:U29201)
+// Riyadh is the only hospital reachable from the tunnel (public IP 128.1.1.185)
+// Claim-scanner: has sessions+credentials for all hospitals but only riyadh login works
+async function oracleCall(env, method, path, body = null, hospital = 'riyadh') {
+  // Validate hospital — default to riyadh (only working portal)
+  const validHospitals = ['riyadh', 'madinah', 'unaizah', 'khamis', 'jizan', 'abha'];
+  const safeHospital = validHospitals.includes(hospital) ? hospital : 'riyadh';
+  const reachable = TUNNEL_STATUS[safeHospital]?.reachable;
+
   const oUser = env.ORACLE_USER     || 'U29200';
   const oPass = env.ORACLE_PASSWORD || 'U29201';
   const oAuth = 'Basic ' + btoa(oUser + ':' + oPass);
   const headers = {
     'Content-Type': 'application/json',
     'X-Source':      'hnh-unified',
-    'X-Hospital':    hospital,
+    'X-Hospital':    safeHospital,
     'X-Oracle-User': oUser,
     'X-Oracle-Pass': oPass,
     'Authorization': oAuth,
@@ -144,8 +154,7 @@ async function oracleCall(env, method, path, body = null, hospital = 'madinah') 
   const opts = { method, headers, signal: AbortSignal.timeout(15000) };
   if (body) opts.body = JSON.stringify(body);
 
-  // Patient search/register → oracle-patient-search (Playwright browser)
-  // Use a short 5s timeout — falls back to oracle-bridge if worker is unresponsive
+  // Patient search → oracle-patient-search (Playwright), fallback to claim-scanner
   if (path.startsWith('/patient')) {
     try {
       const qs = path.includes('?') ? path.slice(path.indexOf('?')) : '';
@@ -153,9 +162,14 @@ async function oracleCall(env, method, path, body = null, hospital = 'madinah') 
       const r = await fetch(`${ORACLE_PATIENT}${basePath}${qs}`, { ...opts, signal: AbortSignal.timeout(5000) });
       if (r.ok) return r.json();
     } catch {}
+    // Fallback: claim-scanner knows hospital sessions (KV-backed)
+    try {
+      const r = await fetch(`${ORACLE_SCANNER}${path}`, { ...opts, signal: AbortSignal.timeout(8000) });
+      if (r.ok) return r.json();
+    } catch {}
   }
 
-  // Appointments, labs, radiology, claims → oracle-claim-scanner
+  // Appointments, labs, radiology → oracle-claim-scanner (Playwright, KV session)
   if (['/appointments', '/labs', '/radiology', '/documents', '/claims'].some(p => path.startsWith(p))) {
     try {
       const r = await fetch(`${ORACLE_SCANNER}${path}`, opts);
@@ -163,45 +177,163 @@ async function oracleCall(env, method, path, body = null, hospital = 'madinah') 
     } catch {}
   }
 
-  // NPHIES eligibility, PA, claims → oracle-bridge (with X-API-Key)
-  headers['X-API-Key'] = env.ORACLE_API_KEY || ORACLE_BRIDGE_KEY;
-  try {
-    const r = await fetch(`${ORACLE_BRIDGE}${path}`, opts);
-    if (r.ok) return r.json();
-  } catch {}
+  // NPHIES eligibility, PA → oracle-bridge (only exposes /health + /diagnose; returns 404 for other paths)
+  // Route through only if hospital is reachable
+  if (reachable) {
+    headers['X-API-Key'] = env.ORACLE_API_KEY || ORACLE_BRIDGE_KEY;
+    try {
+      const r = await fetch(`${ORACLE_BRIDGE}${path}`, opts);
+      if (r.ok) return r.json();
+    } catch {}
+  }
 
   return null;
 }
 
-// Oracle hospital status — cached 60s, deduped so concurrent requests share one upstream call
+// Oracle hospital status — live from bridge /diagnose + claim-scanner /status
+// Cached 60s, deduped so concurrent requests share one upstream call
 async function oracleTunnelStatus(env) {
   const cached = mcGet('tunnel-status');
   if (cached) return cached;
   return dedupe('tunnel-status', async () => {
     const key = (env && env.ORACLE_API_KEY) || ORACLE_BRIDGE_KEY;
-    try {
-      const r = await fetch(`${ORACLE_BRIDGE}/diagnose`, {
+    const [diagRes, scanRes] = await Promise.allSettled([
+      fetch(`${ORACLE_BRIDGE}/diagnose`, {
         headers: { 'X-API-Key': key },
-        signal: AbortSignal.timeout(8000),
-      });
-      if (r.ok) {
-        const d = await r.json();
-        const map = {};
-        for (const h of (d.hospitals || [])) {
-          map[h.hospital] = {
-            reachable: h.reachable, status: h.status, ms: h.ms,
-            loginPageFound: h.loginPageFound, viewState: h.viewStatePresent,
-          };
-        }
-        const result = { ok: d.ok, hospitals: map, tunnel: 'e5cb8c86-1768-46b0-bb35-a2720f26e88d', source: 'live', checked_at: new Date().toISOString() };
-        mcSet('tunnel-status', result, 60000);
-        return result;
+        signal: AbortSignal.timeout(12000),
+      }),
+      fetch(`${ORACLE_SCANNER}/status`, {
+        signal: AbortSignal.timeout(5000),
+      }),
+    ]);
+
+    let hospitalMap = { ...TUNNEL_STATUS };
+    let bridgeOk = false;
+
+    if (diagRes.status === 'fulfilled' && diagRes.value.ok) {
+      const d = await diagRes.value.json();
+      bridgeOk = true;
+      for (const h of (d.hospitals || [])) {
+        hospitalMap[h.hospital] = {
+          reachable:      h.reachable,
+          status:         h.status,
+          ms:             h.ms,
+          loginPageFound: h.loginPageFound,
+          viewState:      h.viewStatePresent,
+          error:          h.error || null,
+          note:           h.reachable ? 'live — login page found' : (h.error || 'unreachable'),
+        };
       }
-    } catch {}
-    const fallback = { ok: false, hospitals: TUNNEL_STATUS, tunnel: 'e5cb8c86', source: 'cached', last_live: '2026-05-02' };
-    mcSet('tunnel-status', fallback, 30000);
-    return fallback;
+    }
+
+    // Merge session state from claim-scanner
+    let scannerOk = false;
+    let sessions = {};
+    if (scanRes.status === 'fulfilled' && scanRes.value.ok) {
+      const s = await scanRes.value.json();
+      scannerOk = s.status === 'ok';
+      for (const [id, info] of Object.entries(s.hospitals || {})) {
+        sessions[id] = { session: info.session, cookies: info.sessionCookies, baseUrl: info.baseUrl };
+        if (hospitalMap[id]) hospitalMap[id].session = info.session;
+      }
+    }
+
+    const result = {
+      ok:          bridgeOk,
+      hospitals:   hospitalMap,
+      sessions,
+      scanner_ok:  scannerOk,
+      tunnel:      'e5cb8c86-1768-46b0-bb35-a2720f26e88d',
+      tunnel_name: 'hayath-mcp',
+      connections: 8,
+      colos:       ['mrs06', 'ruh02'],
+      origin_ips:  ['212.118.115.118', '82.167.8.215'],
+      source:      bridgeOk ? 'live' : 'cached',
+      checked_at:  new Date().toISOString(),
+    };
+    mcSet('tunnel-status', result, 60000);
+    return result;
   });
+}
+
+// Public live status — combines bridge /health + /diagnose + claim-scanner /health
+// Returns per-hospital reachability, scanner state, tunnel metadata; cache 60s
+async function apiOracleLiveStatus(env) {
+  const cached = mcGet('oracle-live-status');
+  if (cached) return ok(cached);
+
+  const key = (env && env.ORACLE_API_KEY) || ORACLE_BRIDGE_KEY;
+  const [healthRes, diagRes, scanHealthRes, scanStatusRes] = await Promise.allSettled([
+    fetch(`${ORACLE_BRIDGE}/health`,   { headers: { 'X-API-Key': key }, signal: AbortSignal.timeout(5000) }),
+    fetch(`${ORACLE_BRIDGE}/diagnose`, { headers: { 'X-API-Key': key }, signal: AbortSignal.timeout(12000) }),
+    fetch(`${ORACLE_SCANNER}/health`,  { signal: AbortSignal.timeout(5000) }),
+    fetch(`${ORACLE_SCANNER}/status`,  { signal: AbortSignal.timeout(5000) }),
+  ]);
+
+  const bridgeHealth = healthRes.status === 'fulfilled' && healthRes.value.ok
+    ? await healthRes.value.json().catch(() => null)
+    : null;
+
+  const diag = diagRes.status === 'fulfilled' && diagRes.value.ok
+    ? await diagRes.value.json().catch(() => null)
+    : null;
+
+  const scanHealth = scanHealthRes.status === 'fulfilled' && scanHealthRes.value.ok
+    ? await scanHealthRes.value.json().catch(() => null)
+    : null;
+
+  const scanStatus = scanStatusRes.status === 'fulfilled' && scanStatusRes.value.ok
+    ? await scanStatusRes.value.json().catch(() => null)
+    : null;
+
+  // Build per-hospital status — prefer live /diagnose data, fallback to TUNNEL_STATUS constants
+  const hospitals = {};
+  for (const [id, fallback] of Object.entries(TUNNEL_STATUS)) {
+    const live = diag?.hospitals?.find?.(h => h.hospital === id)
+              || (diag && diag[id]);
+    const session = scanStatus?.hospitals?.[id];
+    hospitals[id] = {
+      reachable:    live ? live.reachable    : fallback.reachable,
+      ms:           live ? live.ms           : fallback.ms,
+      login:        live ? live.loginPageFound : fallback.reachable,
+      viewState:    live ? (live.viewStatePresent || false) : fallback.reachable,
+      error:        live?.error || null,
+      session:      session?.session || 'none',
+      url:          'https://oracle-' + id + '.brainsait.org',
+      note:         fallback.note,
+    };
+  }
+
+  const reachableCount = Object.values(hospitals).filter(h => h.reachable).length;
+  const result = {
+    ok:             !!bridgeHealth?.ok,
+    bridge_version: bridgeHealth?.version || 'unknown',
+    bridge_url:     ORACLE_BRIDGE,
+    scanner_ok:     scanHealth?.status === 'ok',
+    scanner_url:    ORACLE_SCANNER,
+    tunnel: {
+      id:          'e5cb8c86-1768-46b0-bb35-a2720f26e88d',
+      name:        'hayath-mcp',
+      healthy:     true,
+      connections: 8,
+      colos:       ['mrs06', 'ruh02'],
+      origin_ips:  ['212.118.115.118', '82.167.8.215'],
+    },
+    hospitals,
+    summary: {
+      total:     Object.keys(hospitals).length,
+      reachable: reachableCount,
+      offline:   Object.keys(hospitals).length - reachableCount,
+      note:      reachableCount > 0
+        ? reachableCount + ' hospital(s) reachable via tunnel'
+        : 'All hospitals offline — private IPs need on-site cloudflared client',
+    },
+    source:     diag ? 'live' : 'cached-fallback',
+    checked_at: new Date().toISOString(),
+  };
+
+  mcSet('oracle-live-status', result, 60000);
+  return ok(result);
 }
 
 async function clFetch(path, env) {
@@ -374,7 +506,7 @@ async function apiHealth(env) {
       d1_his_database: hisN?.n > 0  ? 'connected' : 'empty',
       d1_basma:        ragN?.n > 0  ? 'connected' : 'empty',
       oracle_bridge:   oracleOk  ? 'connected' : 'unreachable',
-      oracle_tunnel:   'e5cb8c86 | all hospitals timeout (CF egress) | diagnose cached',
+      oracle_tunnel:   'e5cb8c86 | RUH reachable (128.1.1.185) | MED/UNA/KHM/JZN/ABH offline (private IPs)',
       nphies_mirror:   mirrorOk  ? 'connected' : 'degraded',
       nphies_claimlinc: claimlinOk ? 'connected' : 'degraded',
       claimlinc:       claimlinOk ? 'live'      : 'degraded',
@@ -1394,14 +1526,17 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
           <li>🧪 ${ar ? 'نتائج المختبر والأشعة' : 'Lab & radiology results'}</li>
         </ul>
         <div class="pc-stats oracle-tunnel" id="oracle-tunnel-stats">
-          <div class="pcs"><div class="pcs-n dot-ok">MED ✓</div><div class="pcs-l">Madinah</div></div>
-          <div class="pcs"><div class="pcs-n dot-ok">KHM ✓</div><div class="pcs-l">Khamis</div></div>
-          <div class="pcs"><div class="pcs-n dot-ok">ABH ✓</div><div class="pcs-l">Abha</div></div>
+          <div class="pcs"><div class="pcs-n dot-ok">RUH ✅</div><div class="pcs-l">Riyadh</div></div>
+          <div class="pcs"><div class="pcs-n dot-err">MED ❌</div><div class="pcs-l">Madinah</div></div>
+          <div class="pcs"><div class="pcs-n dot-err">KHM ❌</div><div class="pcs-l">Khamis</div></div>
+          <div class="pcs"><div class="pcs-n dot-err">ABH ❌</div><div class="pcs-l">Abha</div></div>
+          <div class="pcs"><div class="pcs-n dot-err">JZN ❌</div><div class="pcs-l">Jizan</div></div>
+          <div class="pcs"><div class="pcs-n dot-err">UNA ❌</div><div class="pcs-l">Unaizah</div></div>
         </div>
       </div>
       <div class="pc-footer">
-        <a href="https://oracle-riyadh.elfadil.com" target="_blank" class="btn btn-portal oracle-btn">${ar ? '🔷 Oracle الرياض' : '🔷 Oracle Riyadh'}</a>
-        <a href="https://oracle-madinah.elfadil.com" target="_blank" class="btn btn-secondary-sm">المدينة</a>
+        <a href="https://oracle-riyadh.brainsait.org" target="_blank" class="btn btn-portal oracle-btn">${ar ? '🔷 Oracle الرياض' : '🔷 Oracle Riyadh'}</a>
+        <a href="/api/oracle/live-status" target="_blank" class="btn btn-secondary-sm">${ar ? 'حالة المستشفيات' : 'Hospital Status'}</a>
       </div>
     </div>
 
@@ -1717,19 +1852,21 @@ function goPortal(key) {
 
       // Oracle badge in integration strip
       var oTag = document.getElementById('oracle-tag');
-      if (oTag) oTag.innerHTML = d.oracle_status
+      if (oTag) oTag.innerHTML = d.oracle_status && d.oracle_status.reachable_count > 0
         ? '🔷 Oracle <span class="pulse">●</span>'
         : '🔷 Oracle ⚠';
 
       // Oracle portal card status
       var oCard = document.getElementById('oracle-status');
       if (oCard) {
-        if (d.oracle_status) {
+        var anyReachable = d.oracle_status && (d.oracle_status.reachable_count > 0 || d.oracle_status === true);
+        if (anyReachable) {
           oCard.style.background = 'rgba(74,222,128,.15)';
           oCard.style.color = '#10B981';
-          oCard.querySelector('.dot-live').style.background = '#4ADE80';
           oCard.innerHTML = '<span class="dot-live" style="background:#4ADE80"></span>' + (AR ? 'مباشر' : 'Live');
         }
+        // stays degraded (red) if no hospitals reachable — already rendered server-side
+      }
         // stays degraded (red) if oracle_status === false — already rendered server-side
       }
 
@@ -1755,6 +1892,38 @@ function goPortal(key) {
     .then(function(d) {
       var el = document.getElementById('givc-queue');
       if (el) el.textContent = (d.queue || []).length;
+    })
+    .catch(function() {});
+})();
+
+// Oracle live hospital status — updates #oracle-tunnel-stats with per-hospital badges
+(function loadOracleStatus() {
+  fetch(API + '/api/oracle/live-status')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var el = document.getElementById('oracle-tunnel-stats');
+      if (!el || !d.hospitals) return;
+      var LABEL = { riyadh: 'Riyadh', madinah: 'Madinah', unaizah: 'Unaizah', khamis: 'Khamis', jizan: 'Jizan', abha: 'Abha' };
+      var CODE  = { riyadh: 'RUH', madinah: 'MED', unaizah: 'UNA', khamis: 'KHM', jizan: 'JZN', abha: 'ABH' };
+      var html = '';
+      Object.keys(d.hospitals).forEach(function(id) {
+        var h = d.hospitals[id];
+        var ok = h.reachable;
+        html += '<div class="pcs">'
+          + '<div class="pcs-n ' + (ok ? 'dot-ok' : 'dot-err') + '">'
+          + (CODE[id] || id.toUpperCase()) + ' ' + (ok ? '✅' : '❌')
+          + '</div>'
+          + '<div class="pcs-l">' + (LABEL[id] || id) + '</div>'
+          + '</div>';
+      });
+      if (html) el.innerHTML = html;
+
+      // Update integration strip oracle tag
+      var oTag = document.getElementById('oracle-tag');
+      if (oTag) {
+        var anyOk = d.summary && d.summary.reachable > 0;
+        oTag.innerHTML = anyOk ? '🔷 Oracle <span class="pulse">●</span>' : '🔷 Oracle ⚠';
+      }
     })
     .catch(function() {});
 })();
@@ -2395,7 +2564,9 @@ async function apiPortalHub(env) {
       total:    sbs?.total || 6,
       records:  sbs?.coverage || [],
     },
-    oracle_status: oracle?.ok || false,
+    oracle_status: oracle
+      ? { ok: oracle.ok, reachable_count: Object.values(oracle.hospitals || {}).filter(h => h.reachable).length, hospitals: oracle.hospitals, source: oracle.source }
+      : { ok: false, reachable_count: 0, hospitals: TUNNEL_STATUS, source: 'static-fallback' },
     givc_summary: givc || null,
   };
 
@@ -2443,7 +2614,7 @@ async function apiDashboard(env) {
       },
       portals:       hub.portals  || {},
       coverage:      hub.coverage || { total: 6 },
-      oracle_status: hub.oracle_status || false,
+      oracle_status: hub.oracle_status || { ok: false, reachable_count: 0 },
     };
     mcSet('dashboard', data, 60000); // 1-minute cache
     return ok(data);
@@ -2538,6 +2709,10 @@ async function handleRequest(req, env, url, path) {
   if (path === '/api/insurance')                         return ok({ partners: INSURANCE });
 
   // ── Oracle Portal Integration ─────────────────────────────
+  if (path === '/api/oracle/live-status') {
+    return apiOracleLiveStatus(env);
+  }
+
   if (path === '/api/oracle/status') {
     const status = await oracleTunnelStatus(env);
     return ok({
@@ -2559,16 +2734,16 @@ async function handleRequest(req, env, url, path) {
       tunnel_id: 'e5cb8c86-1768-46b0-bb35-a2720f26e88d',
       hospitals: Object.entries(TUNNEL_STATUS).map(([id, s]) => ({
         id, reachable: s.reachable, url: 'https://oracle-' + id + '.brainsait.org',
-        ms: s.ms, note: s.note || (s.reachable ? 'ok' : 'timeout via CF egress'),
+        ms: s.ms, note: s.note,
       })),
-      updated: '2026-05-02',
-      note: 'Oracle Bridge /health ok; hospitals unreachable via CF egress',
+      updated: '2026-05-03',
+      note: 'RUH reachable (public IP). MED/UNA/KHM/JZN/ABH offline (private IPs, on-site cloudflared not running)',
     });
   }
 
   if (path === '/api/oracle/patient' && req.method === 'GET') {
     const u = new URL(req.url);
-    const hospital = u.searchParams.get('hospital') || 'madinah';
+    const hospital = u.searchParams.get('hospital') || 'riyadh';
     const name     = u.searchParams.get('name') || '';
     const natId    = u.searchParams.get('national_id') || '';
     const mrn      = u.searchParams.get('mrn') || '';
@@ -2584,7 +2759,7 @@ async function handleRequest(req, env, url, path) {
 
   if (path === '/api/oracle/appointments' && req.method === 'GET') {
     const u = new URL(req.url);
-    const hospital = u.searchParams.get('hospital') || 'madinah';
+    const hospital = u.searchParams.get('hospital') || 'riyadh';
     const mrn      = u.searchParams.get('mrn') || '';
     const date     = u.searchParams.get('date') || new Date().toISOString().split('T')[0];
     if (!TUNNEL_STATUS[hospital]?.reachable) {
@@ -2598,7 +2773,7 @@ async function handleRequest(req, env, url, path) {
     const body = await req.json().catch(() => ({}));
     const data = await oracleCall(env, 'POST', '/api/nphies/eligibility', {
       ...body, facility_license: FACILITY_LIC,
-    }, body.hospital || 'madinah');
+    }, body.hospital || 'riyadh');
     return ok({ result: data, source: data ? 'oracle-nphies' : 'unavailable' });
   }
 
