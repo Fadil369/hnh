@@ -764,20 +764,24 @@ function buildHTML(lang) {
   const academyHtml = COURSES.map(c => {
     const title = ar ? c.title_ar : c.title_en;
     const desc  = ar ? c.desc_ar  : c.desc_en;
-    const lvlMap = { beginner: '🟢 ' + T.level_b, intermediate: '🟡 ' + T.level_i, advanced: '🔴 ' + T.level_a };
+    const href  = '/academy/' + c.id + '?lang=' + lang;
+    const lvlMap = { beginner: '\uD83D\uDFE2 ' + T.level_b, intermediate: '\uD83D\uDFE1 ' + T.level_i, advanced: '\uD83D\uDD34 ' + T.level_a };
     return '<div class="course-card"><div class="course-icon">' + c.icon + '</div>' +
-      '<h3 class="course-title">' + title + '</h3>' +
+      '<h3 class="course-title"><a href="' + href + '" style="color:inherit;text-decoration:none">' + title + '</a></h3>' +
       '<p class="course-desc">' + desc + '</p>' +
       '<div class="course-meta">' +
         '<span class="chip-lvl">' + (lvlMap[c.level] || c.level) + '</span>' +
-        '<span class="chip-gray">⏱ ' + c.hours + T.hours + '</span>' +
-        '<span class="chip-gray">📚 ' + c.modules + ' ' + T.modules_lbl + '</span>' +
+        '<span class="chip-gray">&#9201; ' + c.hours + T.hours + '</span>' +
+        '<span class="chip-gray">&#128218; ' + (c.modules||8) + ' ' + T.modules_lbl + '</span>' +
         '<span class="chip-accred">' + c.accred + '</span>' +
       '</div>' +
       '<div class="course-footer">' +
         '<span class="course-price">SAR ' + c.price.toLocaleString() + '</span>' +
-        '<a href="tel:966920000094" class="btn-enroll">' + T.enroll + '</a>' +
-      '<span style="display:inline-flex;align-items:center;gap:4px;color:#0066CC;font-size:.78rem;font-weight:600;margin-top:10px">' + (ar?'اقرأ المقال ←':'Read Article →') + '</span></div></a>';
+        '<div style="display:flex;gap:6px;align-items:center">' +
+          '<a href="' + href + '" style="padding:6px 11px;border-radius:16px;font-size:.74rem;font-weight:600;background:rgba(0,102,204,.08);color:#0066CC;border:1px solid rgba(0,102,204,.2);text-decoration:none">' + (ar ? 'عرض' : 'View') + '</a>' +
+          '<a href="tel:966920000094" class="btn-enroll">' + T.enroll + '</a>' +
+        '</div>' +
+      '</div></div>';
   }).join('');
 
   return `<!DOCTYPE html>
