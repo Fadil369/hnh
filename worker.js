@@ -79,6 +79,20 @@ function generateNonce() {
   return btoa(String.fromCharCode(...arr)).replace(/[+/=]/g, c => ({'+':"_",'/':"-",'=':""})[c]);
 }
 
+function escapeHTML(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[ch]);
+}
+
+function escapeAttr(value) {
+  return escapeHTML(value).replace(/`/g, '&#96;');
+}
+
+function isExternalHref(href) {
+  return /^https?:\/\//i.test(String(href || ''));
+}
+
 // PHI audit log — fire-and-forget, non-blocking
 function auditLog(env, req, resource) {
   try {
@@ -1565,6 +1579,32 @@ async function apiSync(env, type) {
 }
 
 async function apiPortal(req, env, sub) {
+  if (sub === '' || sub === '/' || sub === '/status') {
+    const roles = Object.entries(ROLE_PORTALS).map(([key, meta]) => ({
+      key,
+      label_en: meta.label_en,
+      label_ar: meta.label_ar,
+      public: !['admin', 'rcm'].includes(key),
+      href: '/' + key,
+    }));
+    const [health, nphies] = await Promise.all([
+      apiHealth(env).then(r => r.json()).catch(() => ({})),
+      apiNphies(req, env, '').then(r => r.json()).catch(() => ({})),
+    ]);
+    return ok({
+      hub: 'role-based',
+      version: VERSION,
+      roles,
+      live: {
+        oracle_bridge: health.integrations?.oracle_bridge || 'unknown',
+        nphies: nphies.status || nphies.source || 'available',
+        public_assistant: true,
+        uptime: '99.9%',
+      },
+      updated_at: Date.now(),
+      protected_roles: ['admin', 'rcm'],
+    });
+  }
   if (sub === '/network') {
     const d = await bsmaNetwork();
     return ok({ source: 'bsma-live', network: d });
@@ -1608,13 +1648,13 @@ async function apiAcademy(req, id) {
 // ─── ROLE PORTALS ────────────────────────────────────────────────────────────
 
 const ROLE_PORTALS = {
-  patient:   { icon:'🙂', color:'#1976D2', gradient:'linear-gradient(135deg,#1976D2,#42A5F5)' },
-  provider:  { icon:'🩺', color:'#2E7D32', gradient:'linear-gradient(135deg,#2E7D32,#66BB6A)' },
-  payer:     { icon:'🏛️', color:'#6A1B9A', gradient:'linear-gradient(135deg,#6A1B9A,#AB47BC)' },
-  student:   { icon:'🎓', color:'#E65100', gradient:'linear-gradient(135deg,#E65100,#FF9800)' },
-  admin:     { icon:'⚙️', color:'#37474F', gradient:'linear-gradient(135deg,#37474F,#78909C)' },
-  reception: { icon:'💁', color:'#00838F', gradient:'linear-gradient(135deg,#00838F,#26C6DA)' },
-  rcm:       { icon:'💰', color:'#C62828', gradient:'linear-gradient(135deg,#C62828,#EF5350)' },
+  patient:   { icon:'🙂', color:'#1976D2', gradient:'linear-gradient(135deg,#1976D2,#42A5F5)', label_en:'Patient', label_ar:'المريض' },
+  provider:  { icon:'🩺', color:'#2E7D32', gradient:'linear-gradient(135deg,#2E7D32,#66BB6A)', label_en:'Provider', label_ar:'المزود' },
+  payer:     { icon:'🏛️', color:'#6A1B9A', gradient:'linear-gradient(135deg,#6A1B9A,#AB47BC)', label_en:'Payer', label_ar:'التأمين' },
+  student:   { icon:'🎓', color:'#E65100', gradient:'linear-gradient(135deg,#E65100,#FF9800)', label_en:'Student', label_ar:'الطالب' },
+  admin:     { icon:'⚙️', color:'#37474F', gradient:'linear-gradient(135deg,#37474F,#78909C)', label_en:'Admin', label_ar:'الإدارة' },
+  reception: { icon:'💁', color:'#00838F', gradient:'linear-gradient(135deg,#00838F,#26C6DA)', label_en:'Reception', label_ar:'الاستقبال' },
+  rcm:       { icon:'💰', color:'#C62828', gradient:'linear-gradient(135deg,#C62828,#EF5350)', label_en:'RCM', label_ar:'دورة الإيرادات' },
 };
 
 function buildRoleHTML(role, lang, env, nonce) {
@@ -1660,8 +1700,8 @@ function buildRoleHTML(role, lang, env, nonce) {
       ],
       stats: [
         { n:'51,018', l_ar:'PA مُوافَق', l_en:'PA Approved' },
-        { n:'98.6%', l_ar:'معدل الموافقة', l_en:'Approval Rate' },
-        { n:'15,138', l_ar:'مطالبة', l_en:'Claims' },
+        { n:'98.6%', l_ar:'معدل الموافقة', l_en:'Approval Rate', field:'approval' },
+        { n:'15,138', l_ar:'مطالبة', l_en:'Claims', field:'claims' },
         { n:'286', l_ar:'وثيقة سريرية', l_en:'Clinical Docs' },
       ],
       info_ar: 'للوصول الكامل لـ Oracle HIS: استخدم بيانات اعتماد المستشفى. لمشكلات NPHIES: تواصل مع فريق ClaimLinc على 920000094.',
@@ -1680,8 +1720,8 @@ function buildRoleHTML(role, lang, env, nonce) {
         { icon:'✅', title_ar:'التحقق من الأهلية', title_en:'Eligibility Verification', desc_ar:'تحقق من أهلية مريض محدد باستخدام هوية NPHIES', desc_en:'Verify a specific patient eligibility using NPHIES identity', action_ar:'تحقق', action_en:'Verify', endpoint:'/api/eligibility', method:'POST' },
       ],
       stats: [
-        { n:'SAR 835M', l_ar:'إجمالي الشبكة', l_en:'Network Total' },
-        { n:'98.6%', l_ar:'معدل الموافقة', l_en:'Approval Rate' },
+        { n:'SAR 835M', l_ar:'إجمالي الشبكة', l_en:'Network Total', field:'sar' },
+        { n:'98.6%', l_ar:'معدل الموافقة', l_en:'Approval Rate', field:'approval' },
         { n:'51,018', l_ar:'موافقة مسبقة', l_en:'Prior Auths' },
         { n:'10', l_ar:'شركاء التأمين', l_en:'Insurers' },
       ],
@@ -1725,7 +1765,7 @@ function buildRoleHTML(role, lang, env, nonce) {
         { n:'3', l_ar:'قواعد D1', l_en:'D1 Databases' },
         { n:'286', l_ar:'وثيقة RAG', l_en:'RAG Documents' },
         { n:'v'+VERSION, l_ar:'إصدار النظام', l_en:'System Version' },
-        { n:'99.9%', l_ar:'وقت التشغيل', l_en:'Uptime' },
+        { n:'99.9%', l_ar:'وقت التشغيل', l_en:'Uptime', field:'uptime' },
       ],
       info_ar: 'للوصول الإداري الكامل: يتطلب مفتاح API. أضف X-API-Key في الترويسات للوصول للنقاط المحمية.',
       info_en: 'For full admin access: API key required. Add X-API-Key header to access protected endpoints.',
@@ -1764,7 +1804,7 @@ function buildRoleHTML(role, lang, env, nonce) {
         { icon:'💰', title_ar:'ملخص الشبكة المالي', title_en:'Network Financial Summary', desc_ar:'SAR 835.7M شبكة الحياة الوطني — بيانات NPHIES الحية', desc_en:'SAR 835.7M Hayat National network — live NPHIES data', action_ar:'عرض', action_en:'View', link:'/api/nphies/network' },
       ],
       stats: [
-        { n:'SAR 835M', l_ar:'إجمالي الشبكة', l_en:'Network Total' },
+        { n:'SAR 835M', l_ar:'إجمالي الشبكة', l_en:'Network Total', field:'sar' },
         { n:'88.5%', l_ar:'الرياض ⚠️', l_en:'Riyadh ⚠️' },
         { n:'SAR 11.3M', l_ar:'في خطر', l_en:'At Risk' },
         { n:'90 Days', l_ar:'خطة الاسترداد', l_en:'Recovery Plan' },
@@ -1782,46 +1822,46 @@ function buildRoleHTML(role, lang, env, nonce) {
   const qActions = ar ? rd.quick_actions_ar : rd.quick_actions_en;
 
   const quickActionsHtml = qActions.map(a =>
-    '<button class="qa-btn" type="button">' + a + '</button>'
+    '<button class="qa-btn" type="button">' + escapeHTML(a) + '</button>'
   ).join('');
 
-  const statsHtml = rd.stats.map(s =>
-    '<div class="rp-stat"><div class="rp-stat-n">' + s.n + '</div><div class="rp-stat-l">' + (ar ? s.l_ar : s.l_en) + '</div></div>'
-  ).join('');
+  const statsHtml = rd.stats.map(s => {
+    const fieldAttr = s.field ? ' data-field="' + escapeAttr(s.field) + '"' : '';
+    return '<div class="rp-stat"><div class="rp-stat-n"' + fieldAttr + '>' + escapeHTML(s.n) + '</div><div class="rp-stat-l">' + escapeHTML(ar ? s.l_ar : s.l_en) + '</div></div>';
+  }).join('');
 
   const toolsHtml = rd.tools.map(t => {
     const ttitle = ar ? t.title_ar : t.title_en;
     const tdesc  = ar ? t.desc_ar  : t.desc_en;
     const tact   = ar ? t.action_ar : t.action_en;
-    const href   = t.link ? 'href="' + t.link + '"' : 'href="#"';
+    const hrefValue = t.link || '#';
+    const href   = 'href="' + escapeAttr(hrefValue) + '"';
+    const externalAttrs = isExternalHref(hrefValue) ? ' target="_blank" rel="noopener noreferrer"' : '';
     return '<div class="rp-tool-card">' +
-      '<div class="rp-tool-icon">' + t.icon + '</div>' +
+      '<div class="rp-tool-icon">' + escapeHTML(t.icon) + '</div>' +
       '<div class="rp-tool-body">' +
-        '<h3 class="rp-tool-title">' + ttitle + '</h3>' +
-        '<p class="rp-tool-desc">' + tdesc + '</p>' +
+        '<h3 class="rp-tool-title">' + escapeHTML(ttitle) + '</h3>' +
+        '<p class="rp-tool-desc">' + escapeHTML(tdesc) + '</p>' +
       '</div>' +
-      '<a ' + href + (t.link && t.link.startsWith('http') ? ' target="_blank"' : '') + ' class="rp-tool-btn">' + tact + ' →</a>' +
+      '<a ' + href + externalAttrs + ' class="rp-tool-btn">' + escapeHTML(tact) + ' →</a>' +
     '</div>';
   }).join('');
 
-  const quickLinksHtml = rd.quick_links.map(([href, label]) =>
-    '<a href="' + href + '" class="rp-qlink"' + (href.startsWith('http') ? ' target="_blank"' : '') + '>' + label + '</a>'
-  ).join('');
+  const quickLinksHtml = rd.quick_links.map(([href, label]) => {
+    const externalAttrs = isExternalHref(href) ? ' target="_blank" rel="noopener noreferrer"' : '';
+    return '<a href="' + escapeAttr(href) + '" class="rp-qlink"' + externalAttrs + '>' + escapeHTML(label) + '</a>';
+  }).join('');
 
   const roleNavHtml = Object.entries(ROLE_PORTALS).map(([r, rp]) => {
-    const rLabels = {
-      patient:{ar:'المريض',en:'Patient'}, provider:{ar:'المزود',en:'Provider'}, payer:{ar:'التأمين',en:'Payer'},
-      student:{ar:'الطالب',en:'Student'}, admin:{ar:'الإدارة',en:'Admin'}, reception:{ar:'الاستقبال',en:'Reception'}, rcm:{ar:'دورة الإيرادات',en:'RCM'}
-    };
-    const lbl = ar ? rLabels[r].ar : rLabels[r].en;
-    return '<a href="/' + r + '?lang=' + lang + '" class="role-nav-btn role-nav-' + r + (r === role ? ' active' : '') + '">' + rp.icon + ' ' + lbl + '</a>';
+    const lbl = ar ? rp.label_ar : rp.label_en;
+    return '<a href="/' + escapeAttr(r) + '?lang=' + escapeAttr(lang) + '" class="role-nav-btn role-nav-' + escapeAttr(r) + (r === role ? ' active' : '') + '">' + escapeHTML(rp.icon) + ' ' + escapeHTML(lbl) + '</a>';
   }).join('');
 
   return '<!DOCTYPE html>' +
-  '<html lang="' + lang + '" dir="' + (ar?'rtl':'ltr') + '">' +
+  '<html lang="' + escapeAttr(lang) + '" dir="' + (ar?'rtl':'ltr') + '">' +
   '<head>' +
   '<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
-  '<title>' + title + ' | ' + (ar ? ORG_NAME_AR : ORG_NAME_EN) + '</title>' +
+  '<title>' + escapeHTML(title) + ' | ' + escapeHTML(ar ? ORG_NAME_AR : ORG_NAME_EN) + '</title>' +
   '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">' +
   '<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E' + encodeURIComponent(rp.icon) + '%3C/text%3E%3C/svg%3E">' +
   '<style nonce="' + N + '">' +
@@ -1899,13 +1939,13 @@ function buildRoleHTML(role, lang, env, nonce) {
   '<div class="rp-header">' +
     '<div class="rp-top-bar">' +
       '<button class="rp-back" id="role-back-btn" type="button">← ' + (ar?'رجوع':'Back') + '</button>' +
-      '<span class="rp-version">' + (ar?ORG_NAME_AR:ORG_NAME_EN) + ' v' + VERSION + '</span>' +
-      '<a href="/' + role + '?lang=' + (ar ? 'en' : 'ar') + '" class="rp-lang">' + (ar ? 'English' : 'عربي') + '</a>' +
+      '<span class="rp-version">' + escapeHTML(ar?ORG_NAME_AR:ORG_NAME_EN) + ' v' + escapeHTML(VERSION) + '</span>' +
+      '<a href="/' + escapeAttr(role) + '?lang=' + (ar ? 'en' : 'ar') + '" class="rp-lang">' + (ar ? 'English' : 'عربي') + '</a>' +
     '</div>' +
     '<div class="rp-hero">' +
-      '<div class="rp-icon">' + rp.icon + '</div>' +
-      '<div class="rp-title">' + title + '</div>' +
-      '<div class="rp-subtitle">' + subtitle + '</div>' +
+      '<div class="rp-icon">' + escapeHTML(rp.icon) + '</div>' +
+      '<div class="rp-title">' + escapeHTML(title) + '</div>' +
+      '<div class="rp-subtitle">' + escapeHTML(subtitle) + '</div>' +
       '<div class="rp-stats">' + statsHtml + '</div>' +
     '</div>' +
   '</div>' +
@@ -1930,36 +1970,26 @@ function buildRoleHTML(role, lang, env, nonce) {
     /* Quick Links */
     '<div class="rp-qlinks">' + quickLinksHtml + '</div>' +
     /* Info box */
-    '<div class="rp-info"><strong>' + (ar?'💡 ملاحظة مهمة:':'💡 Important Note:') + '</strong> ' + info + '</div>' +
+    '<div class="rp-info"><strong>' + (ar?'💡 ملاحظة مهمة:':'💡 Important Note:') + '</strong> ' + escapeHTML(info) + '</div>' +
   '</div>' +
   /* Footer */
   '<div class="rp-footer">' +
-    '© 2026 ' + (ar?ORG_NAME_AR:ORG_NAME_EN) + ' · BrainSAIT Healthcare OS v' + VERSION + '<br>' +
-    '<a href="/?lang=' + lang + '">' + (ar?'الرئيسية':'Home') + '</a>' +
-    Object.keys(ROLE_PORTALS).map(r => '<a href="/' + r + '?lang=' + lang + '">' + ROLE_PORTALS[r].icon + '</a>').join('') +
+    '© 2026 ' + escapeHTML(ar?ORG_NAME_AR:ORG_NAME_EN) + ' · BrainSAIT Healthcare OS v' + escapeHTML(VERSION) + '<br>' +
+    '<a href="/?lang=' + escapeAttr(lang) + '">' + (ar?'الرئيسية':'Home') + '</a>' +
+    Object.keys(ROLE_PORTALS).map(r => '<a href="/' + escapeAttr(r) + '?lang=' + escapeAttr(lang) + '">' + escapeHTML(ROLE_PORTALS[r].icon) + '</a>').join('') +
     '<a href="tel:966920000094">📞 920000094</a>' +
   '</div>' +
   /* Eligibility check JS */
   '<script nonce="' + N + '">' +
   /* Live data for role portals */
   '(function(){' +
-    'var role="' + role + '";' +
-    'if(role==="rcm"||role==="admin"||role==="payer"){' +
-      'fetch("/api/nphies/status").then(function(r){return r.json();}).then(function(d){' +
-        'if(!d.network) return;' +
-        'var f=d.network.financials||{};' +
-        'var el=document.querySelector(".rp-stat-n[data-field=\"approval\"]");' +
-        'if(el) el.textContent=(f.network_approval_rate_pct||98.6).toFixed(1)+"%";' +
-        'var sarEl=document.querySelector(".rp-stat-n[data-field=\"sar\"]");' +
-        'if(sarEl) sarEl.textContent="SAR "+(f.network_total_sar/1e6).toFixed(1)+"M";' +
-      '}).catch(function(){});' +
-    '}' +
-    'if(role==="reception"||role==="provider"){' +
-      'fetch("/api/appointments/today").then(function(r){return r.json();}).then(function(d){' +
-        'var el=document.querySelector(".rp-stat-n[data-field=\"appts\"]");' +
-        'if(el) el.textContent=d.total||0;' +
-      '}).catch(function(){});' +
-    '}' +
+    'var role="' + escapeAttr(role) + '";' +
+    'fetch("/api/portal/status").then(function(r){return r.json();}).then(function(d){' +
+      'if(!d.success||!d.live) return;' +
+      'var uptime=document.querySelector(".rp-stat-n[data-field=\"uptime\"]");' +
+      'if(uptime&&d.live.uptime) uptime.textContent=d.live.uptime;' +
+      'document.documentElement.setAttribute("data-live-portal",role);' +
+    '}).catch(function(){});' +
   '})();' +
   '</' + 'script>' +
   '<script nonce="' + N + '">' +
@@ -1989,6 +2019,15 @@ function buildRoleHTML(role, lang, env, nonce) {
   'document.getElementById("eid-inp") && document.getElementById("eid-inp").addEventListener("keydown",function(e){if(e.key==="Enter")checkEligibility();});' +
   '</script>' +
   '</body></html>';
+}
+
+function roleResponse(role, lang, env) {
+  const nonce = generateNonce();
+  const safeLang = lang === 'en' ? 'en' : 'ar';
+  const csp = SEC['Content-Security-Policy'].replace(/NONCE_PLACEHOLDER/g, nonce);
+  return new Response(buildRoleHTML(role, safeLang, env, nonce), {
+    headers: { ...HTML_H, 'Content-Security-Policy': csp },
+  });
 }
 
 // ─── HTML PORTAL ──────────────────────────────────────────────────────────────
@@ -2106,7 +2145,7 @@ function buildHTML(lang, nonce) {
         '<h2 class="blog-feat-title">' + title + '</h2>' +
         '<p class="blog-feat-excerpt">' + excerpt + '</p>' +
         '<div class="blog-meta blog-meta-spaced"><span>✍️ ' + featuredPost.author + '</span><span>📖 ' + featuredPost.read_min + ' ' + T.min + '</span><span>📅 ' + featuredPost.date + '</span></div>' +
-        '<a href="/api/blog/' + featuredPost.slug + '" target="_blank" class="btn btn-o read-link-inline">' + (ar ? 'اقرأ المقال' : 'Read Article') + ' →</a>' +
+        '<a href="/api/blog/' + featuredPost.slug + '" target="_blank" rel="noopener noreferrer" class="btn btn-o read-link-inline">' + (ar ? 'اقرأ المقال' : 'Read Article') + ' →</a>' +
       '</div>' +
     '</div>';
   })() : '';
@@ -2123,7 +2162,7 @@ function buildHTML(lang, nonce) {
         '<h3 class="blog-title">' + title + '</h3>' +
         '<p class="blog-excerpt">' + excerpt + '</p>' +
         '<div class="blog-meta"><span>✍️ ' + p.author + '</span><span>📖 ' + p.read_min + ' ' + T.min + '</span><span>📅 ' + p.date + '</span></div>' +
-        '<a href="/api/blog/' + p.slug + '" target="_blank" class="read-link">' + (ar ? 'اقرأ المقال ←' : 'Read Article →') + '</a>' +
+        '<a href="/api/blog/' + p.slug + '" target="_blank" rel="noopener noreferrer" class="read-link">' + (ar ? 'اقرأ المقال ←' : 'Read Article →') + '</a>' +
       '</div></div>';
   }).join('');
 
@@ -2610,10 +2649,10 @@ html{scroll-behavior:smooth}
     <div class="nav-dropdown">
       <span class="nav-drop-btn">${ar ? 'المنصات' : 'Portals'} ▾</span>
       <div class="nav-drop-content">
-        <a href="https://bsma.elfadil.com" target="_blank">🙂 BSMA ${ar ? 'بوابة المريض' : 'Patient'}</a>
-        <a href="https://givc.elfadil.com" target="_blank">🩺 GIVC ${ar ? 'بوابة المزود' : 'Provider'}</a>
-        <a href="https://sbs.elfadil.com" target="_blank">💰 SBS ${ar ? 'الفوترة' : 'Billing'}</a>
-        <a href="https://oracle-bridge.brainsait.org/hospitals" target="_blank">🔷 Oracle Bridge</a>
+        <a href="https://bsma.elfadil.com" target="_blank" rel="noopener noreferrer">🙂 BSMA ${ar ? 'بوابة المريض' : 'Patient'}</a>
+        <a href="https://givc.elfadil.com" target="_blank" rel="noopener noreferrer">🩺 GIVC ${ar ? 'بوابة المزود' : 'Provider'}</a>
+        <a href="https://sbs.elfadil.com" target="_blank" rel="noopener noreferrer">💰 SBS ${ar ? 'الفوترة' : 'Billing'}</a>
+        <a href="https://oracle-bridge.brainsait.org/hospitals" target="_blank" rel="noopener noreferrer">🔷 Oracle Bridge</a>
       </div>
     </div>
     <button class="nl" id="lang-btn">${ar ? 'EN' : 'عربي'}</button>
@@ -2791,7 +2830,7 @@ html{scroll-behavior:smooth}
   </div>
   <div class="g4" id="doc-grid"><div class="loading-cell">${T.loading}</div></div>
   <div class="section-center mt-24">
-    <a href="https://bsma.elfadil.com" target="_blank" class="btn btn-o">${T.view_all}</a>
+    <a href="https://bsma.elfadil.com" target="_blank" rel="noopener noreferrer" class="btn btn-o">${T.view_all}</a>
   </div>
 </div>
 </section>
@@ -2962,7 +3001,7 @@ html{scroll-behavior:smooth}
   </div>
   <div class="doctors-featured-grid">${featuredDoctorsHtml}</div>
   <div class="section-center mt-28">
-    <a href="https://bsma.elfadil.com" target="_blank" class="btn btn-p">${ar ? '👨‍⚕️ استعرض جميع الأطباء' : '👨‍⚕️ View All Doctors'}</a>
+    <a href="https://bsma.elfadil.com" target="_blank" rel="noopener noreferrer" class="btn btn-p">${ar ? '👨‍⚕️ استعرض جميع الأطباء' : '👨‍⚕️ View All Doctors'}</a>
   </div>
 </div>
 </section>
@@ -3003,8 +3042,8 @@ html{scroll-behavior:smooth}
   <p>${T.p_cta}</p>
   <div class="cta-btns">
     <a href="tel:966${PHONE}" class="btn btn-a">📞 ${PHONE}</a>
-    <a href="https://bsma.elfadil.com" target="_blank" class="btn btn-white">${T.patient}</a>
-    <a href="https://wa.me/966${PHONE}" target="_blank" class="btn btn-wa">💬 WhatsApp</a>
+    <a href="https://bsma.elfadil.com" target="_blank" rel="noopener noreferrer" class="btn btn-white">${T.patient}</a>
+    <a href="https://wa.me/966${PHONE}" target="_blank" rel="noopener noreferrer" class="btn btn-wa">💬 WhatsApp</a>
   </div>
 </div>
 </section>
@@ -3021,11 +3060,11 @@ html{scroll-behavior:smooth}
     </div>
     <div>
       <h4>${ar ? 'المنصات' : 'Portals'}</h4>
-      <a href="https://bsma.elfadil.com" target="_blank">🙂 BSMA</a>
-      <a href="https://givc.elfadil.com" target="_blank">🩺 GIVC</a>
-      <a href="https://sbs.elfadil.com" target="_blank">💰 SBS</a>
-      <a href="https://portal.nphies.sa" target="_blank">🏛️ NPHIES</a>
-      <a href="https://oracle-bridge.brainsait.org/health" target="_blank">🔷 Oracle Bridge</a>
+      <a href="https://bsma.elfadil.com" target="_blank" rel="noopener noreferrer">🙂 BSMA</a>
+      <a href="https://givc.elfadil.com" target="_blank" rel="noopener noreferrer">🩺 GIVC</a>
+      <a href="https://sbs.elfadil.com" target="_blank" rel="noopener noreferrer">💰 SBS</a>
+      <a href="https://portal.nphies.sa" target="_blank" rel="noopener noreferrer">🏛️ NPHIES</a>
+      <a href="https://oracle-bridge.brainsait.org/health" target="_blank" rel="noopener noreferrer">🔷 Oracle Bridge</a>
     </div>
     <div>
       <h4>${ar ? 'الأكاديمية' : 'Academy'}</h4>
@@ -3038,7 +3077,7 @@ html{scroll-behavior:smooth}
       <h4>${ar ? 'تواصل معنا' : 'Contact'}</h4>
       <a href="tel:966${PHONE}">📞 +966 ${PHONE}</a>
       <a href="mailto:info@hayathospitals.com">✉️ info@hayathospitals.com</a>
-      <a href="https://wa.me/966${PHONE}" target="_blank">💬 WhatsApp</a>
+      <a href="https://wa.me/966${PHONE}" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
       <p class="footer-locations">${ar ? 'الرياض · جازان · خميس مشيط · المدينة · عنيزة · أبها' : 'Riyadh · Jazan · Khamis · Madinah · Unayzah · Abha'}</p>
     </div>
   </div>
@@ -3046,9 +3085,9 @@ html{scroll-behavior:smooth}
   <div class="ftr-bottom-row">
     <div>© 2026 ${ORG_NAME_EN} — BrainSAIT Healthcare OS v${VERSION}</div>
     <div class="ftr-social">
-      <a href="https://twitter.com/brainsait" target="_blank" title="Twitter">𝕏</a>
-      <a href="https://linkedin.com/company/brainsait" target="_blank" title="LinkedIn">in</a>
-      <a href="https://wa.me/966${PHONE}" target="_blank" title="WhatsApp">💬</a>
+      <a href="https://twitter.com/brainsait" target="_blank" rel="noopener noreferrer" title="Twitter">𝕏</a>
+      <a href="https://linkedin.com/company/brainsait" target="_blank" rel="noopener noreferrer" title="LinkedIn">in</a>
+      <a href="https://wa.me/966${PHONE}" target="_blank" rel="noopener noreferrer" title="WhatsApp">💬</a>
     </div>
     <div class="footer-system">License: ${FACILITY_LIC} | Org: 624 | NPHIES v3</div>
   </div>
@@ -3070,7 +3109,7 @@ html{scroll-behavior:smooth}
     <button class="chat-send" id="chat-send">${T.send}</button>
   </div>
 </div>
-<a href="https://wa.me/966${PHONE}" class="wa-btn" target="_blank" rel="noopener" title="WhatsApp">💬</a>
+<a href="https://wa.me/966${PHONE}" class="wa-btn" target="_blank" rel="noopener noreferrer" title="WhatsApp">💬</a>
 
 <script nonce="${N}">
 // ── CONFIG ───────────────────────────────────────────────────
@@ -3481,33 +3520,31 @@ const _inner = {
       const acceptsAr = (req.headers.get('Accept-Language') || '').includes('ar');
       const lang = langParam || (acceptsAr ? 'ar' : 'en');
       if (roleParam && ROLE_PORTALS[roleParam]) {
-        const rn = generateNonce();
-      const rcsp = SEC['Content-Security-Policy'].replace(/NONCE_PLACEHOLDER/g, rn);
-      return new Response(buildRoleHTML(roleParam, lang, env, rn), { headers: { ...HTML_H, 'Content-Security-Policy': rcsp } });
+        return roleResponse(roleParam, lang, env);
       }
       const n = generateNonce();
       const csp = SEC['Content-Security-Policy'].replace(/NONCE_PLACEHOLDER/g, n);
       return new Response(buildHTML(lang, n), { headers: { ...HTML_H, 'Content-Security-Policy': csp } });
     }
     // Role portal direct paths
-    if (path === '/patient') { const rn_patient=generateNonce(); return new Response(buildRoleHTML('patient', url.searchParams.get('lang')||'ar', env, rn_patient), { headers: {...HTML_H, 'Content-Security-Policy': SEC['Content-Security-Policy'].replace(/NONCE_PLACEHOLDER/g,rn_patient)} }); }
-    if (path === '/provider') { const rn_provider=generateNonce(); return new Response(buildRoleHTML('provider', url.searchParams.get('lang')||'ar', env, rn_provider), { headers: {...HTML_H, 'Content-Security-Policy': SEC['Content-Security-Policy'].replace(/NONCE_PLACEHOLDER/g,rn_provider)} }); }
-    if (path === '/payer') { const rn_payer=generateNonce(); return new Response(buildRoleHTML('payer', url.searchParams.get('lang')||'ar', env, rn_payer), { headers: {...HTML_H, 'Content-Security-Policy': SEC['Content-Security-Policy'].replace(/NONCE_PLACEHOLDER/g,rn_payer)} }); }
-    if (path === '/student') { const rn_student=generateNonce(); return new Response(buildRoleHTML('student', url.searchParams.get('lang')||'ar', env, rn_student), { headers: {...HTML_H, 'Content-Security-Policy': SEC['Content-Security-Policy'].replace(/NONCE_PLACEHOLDER/g,rn_student)} }); }
+    if (path === '/patient') return roleResponse('patient', url.searchParams.get('lang') || 'ar', env);
+    if (path === '/provider') return roleResponse('provider', url.searchParams.get('lang') || 'ar', env);
+    if (path === '/payer') return roleResponse('payer', url.searchParams.get('lang') || 'ar', env);
+    if (path === '/student') return roleResponse('student', url.searchParams.get('lang') || 'ar', env);
     if (path === '/admin') {
       // Admin portal: require X-API-Key (operational data)
       const ag = authGuard(req, env);
       if (ag) return ag;
       auditLog(env, req, 'admin:portal');
-      const an=generateNonce(); return new Response(buildRoleHTML('admin', url.searchParams.get('lang')||'ar', env, an), { headers: {...HTML_H, 'Content-Security-Policy': SEC['Content-Security-Policy'].replace(/NONCE_PLACEHOLDER/g,an)} });
+      return roleResponse('admin', url.searchParams.get('lang') || 'ar', env);
     }
-    if (path === '/reception')  return new Response(buildRoleHTML('reception',  url.searchParams.get('lang')||'ar', env), { headers: HTML_H });
+    if (path === '/reception') return roleResponse('reception', url.searchParams.get('lang') || 'ar', env);
     if (path === '/rcm') {
       // RCM portal: require X-API-Key (financial/claims data)
       const ag2 = authGuard(req, env);
       if (ag2) return ag2;
       auditLog(env, req, 'rcm:portal');
-      const rrcmn=generateNonce(); return new Response(buildRoleHTML('rcm', url.searchParams.get('lang')||'ar', env, rrcmn), { headers: {...HTML_H, 'Content-Security-Policy': SEC['Content-Security-Policy'].replace(/NONCE_PLACEHOLDER/g,rrcmn)} });
+      return roleResponse('rcm', url.searchParams.get('lang') || 'ar', env);
     }
 
     // ── Public JSON API ───────────────────────────────────────
@@ -3551,7 +3588,7 @@ const _inner = {
     if (path.startsWith('/api/nphies') && path !== '/api/nphies/analysis' && path !== '/api/nphies/facilities') return apiNphies(req, env, path.replace('/api/nphies', ''));
 
     // Portal hub
-    if (path.startsWith('/api/portal'))                    return apiPortal(req, env, path.replace('/api/portal', '') || '/stats');
+    if (path.startsWith('/api/portal'))                    return apiPortal(req, env, path.replace('/api/portal', ''));
 
     // Blog
     if (path === '/api/blog' || path === '/api/blog/')     return apiBlog(null);
