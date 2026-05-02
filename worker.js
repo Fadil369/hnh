@@ -1373,6 +1373,28 @@ export default {
     if (path.startsWith('/api/academy/courses/'))          return apiAcademy(req, path.slice('/api/academy/courses/'.length));
     if (path === '/api/academy/stats')                     return ok({ total_courses: 5, total_hours: 62, accreditation: 'SCFHS CPD + CHI', repos: ['nphies-course-platform','sbs','brainsait-rcm','open-webui','brainsait-mcp-dxt'] });
 
+    // ── Voice Agent Proxy (PUBLIC — before auth) ────────────
+    if (path.startsWith('/voice')) {
+      const VOICE_WORKER = 'https://basma-voice-agent.brainsait-fadil.workers.dev';
+      try {
+        const vUrl = VOICE_WORKER + path + (url.search || '');
+        // Forward only safe headers (not Host, not CF-specific)
+        const fwdHeaders = { 'X-Forwarded-Host': 'hnh.brainsait.org' };
+        const fwd = ['content-type','x-language','x-session-id','authorization','accept'];
+        fwd.forEach(h => { const v = req.headers.get(h); if (v) fwdHeaders[h] = v; });
+        const vResp = await fetch(vUrl, {
+          method: req.method,
+          headers: fwdHeaders,
+          body: ['GET','HEAD'].includes(req.method) ? null : req.body,
+        });
+        const headers = new Headers(vResp.headers);
+        Object.entries(CORS).forEach(([k,v]) => headers.set(k,v));
+        return new Response(vResp.body, { status: vResp.status, headers });
+      } catch (e) {
+        return err('Voice agent unavailable: ' + e.message, 503);
+      }
+    }
+
     // ── Protected API ─────────────────────────────────────────
     const guard = authGuard(req, env);
     if (guard) return guard;
@@ -1390,25 +1412,6 @@ export default {
         counts[t] = r?.n || 0;
       }
       return ok({ database: 'hnh-gharnata', version: VERSION, tables: counts });
-    }
-
-    // ── Voice Agent Proxy → basma-voice-agent ──────────────
-    if (path.startsWith('/voice')) {
-      const VOICE_WORKER = 'https://basma-voice-agent.brainsait-fadil.workers.dev';
-      try {
-        const vUrl = VOICE_WORKER + path + (url.search || '');
-        const vResp = await fetch(new Request(vUrl, {
-          method: req.method,
-          headers: req.headers,
-          body: ['GET','HEAD'].includes(req.method) ? null : req.body,
-        }));
-        const resHeaders = { ...CORS };
-        const ct = vResp.headers.get('Content-Type');
-        if (ct) resHeaders['Content-Type'] = ct;
-        return new Response(vResp.body, { status: vResp.status, headers: resHeaders });
-      } catch (e) {
-        return err('Voice agent unavailable', 503);
-      }
     }
 
     return err('Not found', 404);
