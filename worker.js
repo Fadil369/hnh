@@ -8,7 +8,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '7.7.0';
+const VERSION        = '7.7.2';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -33,6 +33,17 @@ const HTML_H = { ...SEC, 'Content-Type': 'text/html; charset=utf-8', 'Cache-Cont
 const ok  = d       => new Response(JSON.stringify({ success: true,  ...d }), { headers: JSON_H });
 const err = (m, s=400) => new Response(JSON.stringify({ success: false, error: m }), { status: s, headers: JSON_H });
 const cors = ()     => new Response(null, { status: 204, headers: { ...CORS } });
+
+// Strip PHI fields from patient objects returned on public (unauthenticated) endpoints
+const PHI_FIELDS = ['national_id','iqama_id','passport_id','date_of_birth','phone','email',
+  'address','emergency_contact_name','emergency_contact_phone','blood_type','allergies'];
+function maskPatient(p) {
+  if (!p || typeof p !== 'object') return p;
+  const m = { ...p };
+  for (const f of PHI_FIELDS) delete m[f];
+  if (m.mrn) m.mrn = '****' + String(m.mrn).slice(-4);
+  return m;
+}
 
 function authGuard(req, env) {
   const k = env.API_KEY || '';
@@ -391,7 +402,7 @@ async function apiPatients(req, env) {
     }
     q += ' ORDER BY created_at DESC LIMIT ' + limit;
     const r = b.length ? await env.DB.prepare(q).bind(...b).all() : await env.DB.prepare(q).all();
-    return ok({ patients: r.results || [], total: r.results?.length || 0 });
+    return ok({ patients: (r.results || []).map(maskPatient), total: r.results?.length || 0 });
   }
   if (req.method === 'POST') {
     const d = await req.json().catch(() => ({}));
@@ -2237,7 +2248,7 @@ export default {
                   : mrn   ? `mrn=${encodeURIComponent(mrn)}`
                            : `name=${encodeURIComponent(name)}`;
       const data = await oracleCall(env, 'GET', `/patient/search?hospital=${hospital}&${param}`, null, hospital);
-      return ok({ patients: data?.patients || [], hospital, source: data ? 'oracle-live' : 'unavailable' });
+      return ok({ patients: (data?.patients || []).map(maskPatient), hospital, source: data ? 'oracle-live' : 'unavailable' });
     }
 
     if (path === '/api/oracle/appointments' && req.method === 'GET') {
@@ -2274,7 +2285,8 @@ export default {
     if (path.startsWith('/api/nphies/live/'))                      return apiNphies(req, env, '/live/' + path.slice('/api/nphies/live/'.length));
     if (path.startsWith('/api/nphies'))                            return apiNphies(req, env, path.replace('/api/nphies', ''));
 
-    // Portal hub
+    // Portal hub (must come BEFORE the /api/portal catch-all)
+    if (path === '/api/portal-hub')                        return apiPortalHub(env);
     if (path.startsWith('/api/portal'))                    return apiPortal(req, env, path.replace('/api/portal', '') || '/stats');
 
     // Blog
@@ -2285,8 +2297,6 @@ export default {
     if (path === '/api/academy/courses')                   return apiAcademy(req, null);
     if (path.startsWith('/api/academy/courses/'))          return apiAcademy(req, path.slice('/api/academy/courses/'.length));
     if (path === '/api/academy/stats')                     return ok({ total_courses: COURSES.length, total_hours: 104, accreditation: 'SCFHS CPD + CHI', repos: ['nphies-course-platform','sbs','brainsait-rcm','open-webui','brainsait-mcp-dxt'] });
-
-    if (path === '/api/portal-hub')                        return apiPortalHub(env);
 
     // ── Public article + course pages (NO auth) ──────────────
     if (path.startsWith('/blog/')) {
