@@ -8,7 +8,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '7.2.0';
+const VERSION        = '7.3.0';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -76,8 +76,10 @@ async function oracleFetch(env, path, opts = {}) {
       ...opts,
       headers: {
         'Content-Type': 'application/json',
-        'X-API-Key': env.ORACLE_API_KEY || ORACLE_BRIDGE_KEY,
-        'X-Hospital': opts.hospital || 'madinah',
+        'X-API-Key':     env.ORACLE_API_KEY || ORACLE_BRIDGE_KEY,
+        'X-Oracle-User': env.ORACLE_USER     || 'U29200',
+        'X-Oracle-Pass': env.ORACLE_PASSWORD || 'U29201',
+        'X-Hospital':    opts.hospital || 'madinah',
         ...(opts.headers || {})
       },
       signal: AbortSignal.timeout(12000),
@@ -88,10 +90,17 @@ async function oracleFetch(env, path, opts = {}) {
 
 // Smart oracle call — routes to correct worker based on path
 async function oracleCall(env, method, path, body = null, hospital = 'madinah') {
+  // Build Basic auth from env creds (U29200:U29201)
+  const oUser = env.ORACLE_USER     || 'U29200';
+  const oPass = env.ORACLE_PASSWORD || 'U29201';
+  const oAuth = 'Basic ' + btoa(oUser + ':' + oPass);
   const headers = {
     'Content-Type': 'application/json',
-    'X-Source': 'hnh-unified',
-    'X-Hospital': hospital,
+    'X-Source':      'hnh-unified',
+    'X-Hospital':    hospital,
+    'X-Oracle-User': oUser,
+    'X-Oracle-Pass': oPass,
+    'Authorization': oAuth,
   };
   const opts = { method, headers, signal: AbortSignal.timeout(15000) };
   if (body) opts.body = JSON.stringify(body);
