@@ -8,7 +8,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '7.4.0';
+const VERSION        = '7.5.0';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -237,6 +237,21 @@ const BLOG_POSTS = [
     title_ar:'معمارية الجسر بين Oracle HIS وNPHIES في مستشفيات الحياة الوطني',
     excerpt_en:'How BrainSAIT Oracle Bridge worker connects 6 hospital portals to NPHIES via Cloudflare Workers — zero VPN, FHIR R4 compliant.',
     excerpt_ar:'كيف يربط عامل Oracle Bridge من BrainSAIT 6 بوابات مستشفيات بـ NPHIES عبر Cloudflare Workers — بدون VPN، متوافق مع FHIR R4.' },
+  { id:'abha-nphies-triage', slug:'abha-nphies-claim-triage-2026', category:'rcm', emoji:'📊', featured:true, read_min:8, author:'Dr. Mohamed El Fadil', date:'2026-04-05',
+    title_en:'Abha NPHIES Claim Triage — 4,914 Rejected Lines, 3 Action Tracks',
+    title_ar:'تدقيق مطالبات NPHIES في أبها — 4,914 سطر مرفوض، 3 مسارات إجراء',
+    excerpt_en:'Real-world claim triage from Hayat Abha: 2,181 resubmissions with supporting info, 2,650 contractual appeals, 83 new claims with prior linkage — and a portal limit check queue of 290.',
+    excerpt_ar:'تدقيق حقيقي لمطالبات مستشفى الحياة أبها: 2,181 إعادة تقديم، 2,650 طعن تعاقدي، 83 مطالبة جديدة — وقائمة تحقق 290 من حدود الموافقات.' },
+  { id:'compliancelinc-control-tower', slug:'compliancelinc-oracle-control-tower', category:'tech', emoji:'🏗️', featured:false, read_min:9, author:'BrainSAIT Engineering', date:'2026-03-28',
+    title_en:'ComplianceLinc — Oracle Control Tower for 6 Saudi Hospital Branches',
+    title_ar:'ComplianceLinc — برج التحكم Oracle لـ 6 فروع مستشفيات سعودية',
+    excerpt_en:'How BrainSAIT ComplianceLinc connects 6 Oracle OASIS hospital portals via Cloudflare tunnel, processing claims, PA, and NPHIES submissions with real-time audit logging.',
+    excerpt_ar:'كيف يربط ComplianceLinc 6 بوابات Oracle OASIS عبر نفق Cloudflare، لمعالجة المطالبات والموافقات المسبقة وتقديم NPHIES مع سجل تدقيق فوري.' },
+  { id:'brainsait-rcm-ai', slug:'brainsait-rcm-ai-fraud-detection', category:'rcm', emoji:'🤖', featured:false, read_min:7, author:'BrainSAIT AI Team', date:'2026-03-15',
+    title_en:'AI-Powered RCM: 5 Fraud Detection Algorithms + NPHIES Integration',
+    title_ar:'إدارة دورة الإيرادات بالذكاء الاصطناعي: 5 خوارزميات كشف الاحتيال + NPHIES',
+    excerpt_en:'BrainSAIT RCM system uses Isolation Forest ML, duplicate billing detection, upcoding alerts, and FHIR R4 validation to protect hospital revenue — with full bilingual AR/EN support.',
+    excerpt_ar:'يستخدم نظام BrainSAIT للإيرادات Isolation Forest، وكشف الفوترة المكررة، وتنبيهات الترميز المرتفع، وFHIR R4 — بدعم ثنائي اللغة.' },
 ];
 
 const COURSES = [
@@ -260,6 +275,18 @@ const COURSES = [
     title_en:'HIPAA & Saudi PDPL Compliance',  title_ar:'الامتثال لـ HIPAA والنظام السعودي PDPL',
     desc_en:'PHI security, CHI audit requirements, data governance for Saudi facilities.',
     desc_ar:'أمن بيانات المريض، متطلبات تدقيق CHI، حوكمة البيانات للمنشآت السعودية.' },
+  { id:'oracle-claims-mastery', icon:'🔷', level:'advanced', hours:10, modules:7, price:2800, accred:'BrainSAIT Certified', cat:'tech', repo:'oracle-setup',
+    title_en:'Oracle OASIS Claims Mastery — ComplianceLinc', title_ar:'إتقان مطالبات Oracle OASIS — ComplianceLinc',
+    desc_en:'Oracle HIS browser automation, session management, NPHIES bridge integration for 6 hospital branches — real Cloudflare tunnel workflow.',
+    desc_ar:'أتمتة Oracle HIS، إدارة الجلسات، تكامل NPHIES لـ 6 فروع مستشفيات — عبر نفق Cloudflare الحقيقي.' },
+  { id:'abha-claims-triage', icon:'📋', level:'intermediate', hours:6, modules:4, price:1500, accred:'CHI/SCFHS', cat:'rcm', repo:'abha-nphies-session-deliverables',
+    title_en:'NPHIES Claim Triage — Real Data Workshop (Abha 2026)', title_ar:'ورشة تدقيق مطالبات NPHIES — بيانات حقيقية أبها 2026',
+    desc_en:'Hands-on triage of 4,914 rejected lines: resubmit (2,181), appeal (2,650), new claim (83) — portal limit verification and NPHIES payload building.',
+    desc_ar:'تدريب عملي على 4,914 سطر مرفوض: إعادة تقديم (2,181)، طعن (2,650)، مطالبة جديدة (83) — وبناء payloads NPHIES.' },
+  { id:'un-innovation-healthcare', icon:'🌐', level:'intermediate', hours:8, modules:5, price:1100, accred:'BrainSAIT + UN', cat:'ai', repo:'brainsait-innovation',
+    title_en:'UN Innovation Toolkit — AI for Saudi Health Sector', title_ar:'أدوات الابتكار الأممي — الذكاء الاصطناعي للصحة السعودية',
+    desc_en:'SPACE framework, AI diagnostic profiles, 10 implementation tools, Arabic healthcare terminology — aligned with Vision 2030 health initiatives.',
+    desc_ar:'إطار SPACE، ملفات التشخيص الذكية، 10 أدوات تطبيق، مصطلحات طبية عربية — متوافق مع مبادرات رؤية 2030 الصحية.' },
 ];
 
 // ─── API HANDLERS ─────────────────────────────────────────────────────────────
@@ -647,7 +674,7 @@ async function apiAcademy(req, id) {
     let courses = COURSES;
     if (cat) courses = courses.filter(c => c.cat === cat);
     if (lvl) courses = courses.filter(c => c.level === lvl);
-    return ok({ courses, total: courses.length, stats: { total_courses: 5, total_hours: 62, accreditation: 'SCFHS CPD + CHI' } });
+    return ok({ courses, total: courses.length, stats: { total_courses: 9, total_hours: 104, accreditation: 'SCFHS CPD + CHI' } });
   }
   const c = COURSES.find(c => c.id === id);
   return c ? ok({ course: c }) : err('Course not found', 404);
@@ -1108,16 +1135,17 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
 </div>
 </section>
 
-<!-- INTEGRATION STRIP — Live status badges -->
+<!-- INTEGRATION STRIP — Live clickable status -->
 <div class="int-strip">
 <div class="c"><div class="int-inner">
-  <span class="int-tag status-tag" id="bsma-badge" onclick="goPortal('bsma')">🙂 BSMA <span class="pulse">●</span></span>
-  <span class="int-tag status-tag" id="givc-badge" onclick="goPortal('givc')">🩺 GIVC <span class="pulse">●</span></span>
-  <span class="int-tag status-tag" id="sbs-badge"  onclick="goPortal('sbs')">💰 SBS  <span class="pulse">●</span></span>
-  <span class="int-tag status-tag" id="oracle-tag">🔷 Oracle <span class="pulse" id="oracle-dot">●</span></span>
-  <span class="int-tag status-tag" id="nphies-tag">🏛️ NPHIES <span class="pulse">●</span></span>
-  <span class="int-tag" id="sar-badge">SAR <span id="sar-val">835.7M</span></span>
-  <span class="int-tag" id="rate-badge"><span id="rate-val">98.6</span>% ${ar ? 'موافقة' : 'Approval'}</span>
+  <span class="int-tag status-tag" id="bsma-badge" onclick="goPortal('bsma')" title="Patient Portal — bsma.elfadil.com">🙂 BSMA <span class="pulse">●</span></span>
+  <span class="int-tag status-tag" id="givc-badge" onclick="goPortal('givc')" title="Clinician Portal — givc.elfadil.com">🩺 GIVC <span class="pulse">●</span></span>
+  <span class="int-tag status-tag" id="sbs-badge"  onclick="goPortal('sbs')"  title="Billing Portal — sbs.elfadil.com">💰 SBS  <span class="pulse">●</span></span>
+  <span class="int-tag status-tag" id="oracle-tag" onclick="goPortal('oracle')" title="Oracle HIS Bridge">🔷 Oracle <span class="pulse" id="oracle-dot">●</span></span>
+  <span class="int-tag status-tag" id="nphies-tag" onclick="goPortal('nphies')" title="NPHIES Portal">🏛️ NPHIES <span class="pulse">●</span></span>
+  <span class="int-tag" id="sar-badge" title="Total NPHIES Network">💰 SAR <span id="sar-val">835.7M</span></span>
+  <span class="int-tag" id="rate-badge" title="Network Approval Rate"><span id="rate-val">98.6</span>% ${ar ? 'موافقة' : '✓ Approval'}</span>
+  <span class="int-tag" style="cursor:pointer" onclick="document.getElementById('portals').scrollIntoView({behavior:'smooth'})">${ar ? '🎙️ بسمة AI' : '🎙️ Basma AI'}</span>
 </div></div>
 </div>
 
@@ -1429,8 +1457,8 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
 <div class="c">
   <div class="sec-head"><h2>${T.h_academy}</h2><p>${T.p_academy}</p></div>
   <div class="academy-stats">
-    <div class="stat-card"><div class="stat-n">5</div><div class="stat-l">${ar ? 'دورات' : 'Courses'}</div></div>
-    <div class="stat-card"><div class="stat-n">62+</div><div class="stat-l">${ar ? 'ساعة' : 'Hours'}</div></div>
+    <div class="stat-card"><div class="stat-n">9</div><div class="stat-l">${ar ? 'دورات' : 'Courses'}</div></div>
+    <div class="stat-card"><div class="stat-n">104+</div><div class="stat-l">${ar ? 'ساعة' : 'Hours'}</div></div>
     <div class="stat-card"><div class="stat-n">SCFHS</div><div class="stat-l">${ar ? 'معتمد' : 'Accredited'}</div></div>
     <div class="stat-card"><div class="stat-n">AR/EN</div><div class="stat-l">${ar ? 'ثنائي اللغة' : 'Bilingual'}</div></div>
   </div>
@@ -1946,7 +1974,7 @@ export default {
     // Academy
     if (path === '/api/academy/courses')                   return apiAcademy(req, null);
     if (path.startsWith('/api/academy/courses/'))          return apiAcademy(req, path.slice('/api/academy/courses/'.length));
-    if (path === '/api/academy/stats')                     return ok({ total_courses: 5, total_hours: 62, accreditation: 'SCFHS CPD + CHI', repos: ['nphies-course-platform','sbs','brainsait-rcm','open-webui','brainsait-mcp-dxt'] });
+    if (path === '/api/academy/stats')                     return ok({ total_courses: 9, total_hours: 104, accreditation: 'SCFHS CPD + CHI', repos: ['nphies-course-platform','sbs','brainsait-rcm','open-webui','brainsait-mcp-dxt'] });
 
     if (path === '/api/portal-hub')                        return apiPortalHub(env);
 
