@@ -8,7 +8,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '7.8.0';
+const VERSION        = '7.8.1';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -323,10 +323,16 @@ const COURSES = [
 async function apiHealth(env) {
   const [dbOk, oracleOk, mirrorOk, claimlinOk] = await Promise.all([
     env.DB.prepare('SELECT 1').first().then(() => true).catch(() => false),
-    oracleFetch(env, '/health').then(r => !!r).catch(() => false),
+    fetch(`${ORACLE_BRIDGE}/health`, {
+      headers: { 'X-API-Key': env.ORACLE_API_KEY || ORACLE_BRIDGE_KEY },
+      signal: AbortSignal.timeout(8000),
+    }).then(r => r.status < 500).catch(() => false),
     fetch('https://nphies-mirror.brainsait-fadil.workers.dev/mirror/status', { signal: AbortSignal.timeout(5000) })
       .then(r => r.ok).catch(() => false),
-    clFetch('/network/summary', env).then(d => !!d).catch(() => false),
+    fetch(`${CLAIMLINC_BASE}/network/summary`, {
+      headers: { 'X-API-Key': (env && env.CLAIMLINC_KEY) || CLAIMLINC_KEY },
+      signal: AbortSignal.timeout(5000),
+    }).then(r => r.ok).catch(() => false),
   ]);
   const nphiesOk = mirrorOk || claimlinOk; // ClaimLinc is the live fallback when mirror is down
   const [hisN, ragN] = await Promise.all([
