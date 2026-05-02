@@ -8,7 +8,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '7.6.0';
+const VERSION        = '7.5.0';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -752,7 +752,7 @@ function buildHTML(lang) {
   const blogHtml = BLOG_POSTS.map(p => {
     const title   = ar ? p.title_ar : p.title_en;
     const excerpt = ar ? p.excerpt_ar : p.excerpt_en;
-    return '<a href="/blog/' + p.id + '?lang=' + lang + '" class="blog-card" style="text-decoration:none;color:inherit;display:block"><div class="blog-top"><span class="blog-emoji">' + p.emoji + '</span>' +
+    return '<div class="blog-card"><div class="blog-top"><span class="blog-emoji">' + p.emoji + '</span>' +
       (p.featured ? '<span class="chip-feat">Featured</span>' : '') +
       '<span class="cat-tag">' + p.category.toUpperCase() + '</span></div>' +
       '<div class="blog-body"><h3 class="blog-title">' + title + '</h3>' +
@@ -777,7 +777,7 @@ function buildHTML(lang) {
       '<div class="course-footer">' +
         '<span class="course-price">SAR ' + c.price.toLocaleString() + '</span>' +
         '<a href="tel:966920000094" class="btn-enroll">' + T.enroll + '</a>' +
-      '<span style="display:inline-flex;align-items:center;gap:4px;color:#0066CC;font-size:.78rem;font-weight:600;margin-top:10px">' + (ar?'اقرأ المقال ←':'Read Article →') + '</span></div></a>';
+      '</div></div>';
   }).join('');
 
   return `<!DOCTYPE html>
@@ -1820,252 +1820,6 @@ function goPortal(key) {
 }
 
 // ─── MAIN ROUTER ──────────────────────────────────────────────────────────────
-// ─── BLOG ARTICLE + ACADEMY COURSE PAGES ─────────────────────────────────────
-function serveBlogArticle(slug, lang) {
-  const ar = lang === 'ar';
-  const post = BLOG_POSTS.find(p => p.id === slug || p.slug === slug);
-  if (!post) return serveNotFound(ar, 'blog');
-  const title   = ar ? post.title_ar   : post.title_en;
-  const excerpt = ar ? post.excerpt_ar  : post.excerpt_en;
-  const catAr   = {rcm:'إدارة الإيرادات',nphies:'NPHIES',coding:'الترميز الطبي',tech:'تقنية',strategy:'استراتيجية',academy:'الأكاديمية'};
-  const catEn   = {rcm:'Revenue Cycle',nphies:'NPHIES',coding:'Medical Coding',tech:'Technology',strategy:'Strategy',academy:'Academy'};
-  const cat = ar ? (catAr[post.category]||post.category) : (catEn[post.category]||post.category);
-  const related = BLOG_POSTS.filter(p => p.id !== post.id && p.category === post.category).slice(0,2);
-
-  return new Response(`<!DOCTYPE html>
-<html lang="${lang}" dir="${ar?'rtl':'ltr'}">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${title} | ${ar?'الحياة الوطني':'Hayat National'}</title>
-<meta name="description" content="${excerpt}">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--p:#0066CC;--n:#1A2B4A;--a:#C9A84C;--s:#10B981;--bg:#F0F4FA;--sf:#fff;--b:#E2E8F0;--t:#0F172A;--ts:#64748B}
-body{font-family:${ar?"'Tajawal'":"'Inter'"},sans-serif;background:var(--bg);color:var(--t);line-height:1.7}
-.hdr{background:var(--sf);border-bottom:1px solid var(--b);padding:12px 0;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.hi{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:8px;text-decoration:none;font-weight:800;color:var(--n);font-size:.9rem}
-.logo-i{width:32px;height:32px;background:linear-gradient(135deg,var(--p),var(--n));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.95rem}
-.bk{color:var(--ts);text-decoration:none;font-size:.82rem}
-.bk:hover{color:var(--p)}
-.wrap{max-width:740px;margin:0 auto;padding:40px 20px 80px}
-.badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,102,204,.08);color:var(--p);padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:700;margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em}
-h1{font-size:clamp(1.55rem,3.5vw,2.2rem);font-weight:800;color:var(--n);line-height:1.3;margin-bottom:14px}
-.meta{display:flex;gap:14px;flex-wrap:wrap;font-size:.78rem;color:var(--ts);margin-bottom:22px}
-.lede{background:linear-gradient(135deg,rgba(0,102,204,.04),rgba(201,168,76,.04));border-inline-start:4px solid var(--p);padding:14px 18px;border-radius:0 10px 10px 0;font-size:.94rem;color:var(--n);font-style:italic;margin-bottom:30px;line-height:1.7}
-.body{font-size:.95rem;line-height:1.85;color:var(--t)}
-.body h2{font-size:1.25rem;font-weight:700;color:var(--n);margin:30px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--b)}
-.body h3{font-size:1.02rem;font-weight:700;color:var(--n);margin:22px 0 8px}
-.body p{margin-bottom:14px}
-.body ul,.body ol{margin:10px 0 14px 22px}
-.body li{margin-bottom:5px}
-.body strong{color:var(--n)}
-.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}
-.kpi{background:var(--sf);border:1px solid var(--b);border-radius:10px;padding:14px;text-align:center}
-.kpi-n{font-size:1.4rem;font-weight:800;color:var(--p);line-height:1}
-.kpi-l{font-size:.68rem;color:var(--ts);margin-top:3px}
-.related{margin-top:44px;padding-top:28px;border-top:1px solid var(--b)}
-.rel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}
-.rel-card{background:var(--sf);border:1px solid var(--b);border-radius:10px;padding:14px;text-decoration:none;display:block;transition:all .2s}
-.rel-card:hover{border-color:var(--p);transform:translateY(-2px)}
-.rel-card h4{font-size:.82rem;font-weight:700;color:var(--n);margin-bottom:4px;line-height:1.4}
-.rel-card p{font-size:.72rem;color:var(--ts)}
-.cta{background:linear-gradient(135deg,var(--n),#0066CC);border-radius:16px;padding:28px;text-align:center;margin-top:36px;color:#fff}
-.cta h3{font-size:1.1rem;margin-bottom:6px}
-.cta p{color:rgba(255,255,255,.8);font-size:.85rem;margin-bottom:18px}
-.cta-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.btn-w{background:#fff;color:var(--n);padding:9px 20px;border-radius:20px;font-weight:700;font-size:.82rem;text-decoration:none}
-.btn-t{background:rgba(255,255,255,.15);color:#fff;padding:9px 20px;border-radius:20px;font-weight:600;font-size:.82rem;text-decoration:none;border:1px solid rgba(255,255,255,.3)}
-@media(max-width:560px){.kpi-row,.rel-grid{grid-template-columns:1fr 1fr}.cta-btns{flex-direction:column}}
-</style></head>
-<body>
-<header class="hdr"><div class="hi">
-  <a href="/" class="logo"><div class="logo-i">🏥</div>${ar?'الحياة الوطني':'Hayat National'}</a>
-  <a href="/#blog" class="bk">${ar?'← المدونة':'← Blog'}</a>
-</div></header>
-<div class="wrap">
-  <div class="badge">${post.emoji} ${cat}</div>
-  <h1>${title}</h1>
-  <div class="meta">
-    <span>✍️ ${post.author}</span>
-    <span>📅 ${post.date}</span>
-    <span>⏱ ${post.read_min} ${ar?'دقائق':'min read'}</span>
-  </div>
-  <div class="lede">${excerpt}</div>
-  <div class="body">
-    ${getArticleBody(post.id, ar)}
-  </div>
-  <div class="related">
-    <h3 style="font-size:1rem;font-weight:700;color:var(--n);margin-bottom:14px">${ar?'مقالات ذات صلة':'Related Articles'}</h3>
-    <div class="rel-grid">
-      ${related.map(p => '<a href="/blog/'+p.id+'?lang='+lang+'" class="rel-card"><div style="font-size:1.3rem;margin-bottom:6px">'+p.emoji+'</div><h4>'+(ar?p.title_ar:p.title_en)+'</h4><p>'+(ar?p.excerpt_ar:p.excerpt_en).slice(0,80)+'...</p></a>').join('')}
-    </div>
-  </div>
-  <div class="cta">
-    <h3>${ar?'تحسين إيرادات مستشفاك؟':'Improve your hospital revenue?'}</h3>
-    <p>${ar?'ClaimLinc AI يقلل رفضات NPHIES بنسبة تصل إلى 87% خلال 90 يوماً':'ClaimLinc AI reduces NPHIES rejections by up to 87% in 90 days'}</p>
-    <div class="cta-btns">
-      <a href="tel:966920000094" class="btn-w">📞 ${ar?'تواصل معنا':'Contact Us'}</a>
-      <a href="/#academy" class="btn-t">🎓 ${ar?'الأكاديمية':'Academy'}</a>
-      <a href="https://bsma.elfadil.com" target="_blank" class="btn-t">🙂 BSMA</a>
-    </div>
-  </div>
-</div>
-</body></html>`,
-  { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
-}
-
-function getArticleBody(id, ar) {
-  const bodies = {
-    'nphies-riyadh-rejections': ar
-      ? '<h2>المشكلة</h2><p>سجّل مستشفى الحياة الوطني في الرياض نسبة موافقة 88.5% على مطالبات NPHIES في الربع الأول من 2026، ما أسفر عن <strong>SAR 11.3 مليون</strong> في مطالبات مرفوضة.</p><div class="kpi-row"><div class="kpi"><div class="kpi-n">88.5%</div><div class="kpi-l">نسبة موافقة الرياض</div></div><div class="kpi"><div class="kpi-n">SAR 11.3M</div><div class="kpi-l">مطالبات مرفوضة</div></div><div class="kpi"><div class="kpi-n">100%</div><div class="kpi-l">باقي الفروع</div></div></div><h2>الأسباب الجذرية</h2><h3>1. موافقة مسبقة مفقودة (35%)</h3><p>خدمات تُقدَّم دون الحصول على تصريح NPHIES المسبق. الحل: AuthLinc يفحص الموافقة 48 ساعة قبل الدخول.</p><h3>2. خطأ في الترميز (28%)</h3><p>عدم تطابق SBS/ICD-10. الحل: CodeLinc AI يتحقق من جميع الرموز قبل التقديم.</p><h3>3. أهلية غير مؤكدة (22%)</h3><p>الحل: فحص الأهلية الفوري عبر Oracle Bridge عند تسجيل المريض.</p><h2>التأثير المتوقع</h2><p>تطبيق ClaimLinc يُتوقع استرداد <strong>SAR 9.8 مليون</strong> خلال 90 يوماً، برفع نسبة الموافقة إلى ≥97%.</p>'
-      : '<h2>The Challenge</h2><p>Riyadh recorded 88.5% NPHIES approval in Q1 2026 — <strong>SAR 11.3M in rejected claims</strong> vs 100% at all other branches.</p><div class="kpi-row"><div class="kpi"><div class="kpi-n">88.5%</div><div class="kpi-l">Riyadh Approval</div></div><div class="kpi"><div class="kpi-n">SAR 11.3M</div><div class="kpi-l">Rejected Claims</div></div><div class="kpi"><div class="kpi-n">100%</div><div class="kpi-l">Other 5 Branches</div></div></div><h2>Root Causes</h2><h3>1. Missing Prior Auth (35%)</h3><p>Services rendered without NPHIES pre-auth. Fix: AuthLinc checks 48h before admission.</p><h3>2. Wrong Coding (28%)</h3><p>ICD-10/SBS mismatches. Fix: CodeLinc AI validates before submission.</p><h3>3. Eligibility Miss (22%)</h3><p>Fix: Real-time check at patient registration via Oracle Bridge.</p><h2>Impact</h2><p>Deploying ClaimLinc projects recovery of <strong>SAR 9.8M</strong> within 90 days, lifting Riyadh to ≥97%.</p>',
-    'abha-nphies-triage': ar
-      ? '<h2>نظرة عامة</h2><p>تدقيق BrainSAIT لمطالبات مستشفى الحياة أبها أبريل 2026 كشف <strong>4,914 سطر مطالبة مرفوض</strong>.</p><div class="kpi-row"><div class="kpi"><div class="kpi-n">4,914</div><div class="kpi-l">سطر مرفوض</div></div><div class="kpi"><div class="kpi-n">2,181</div><div class="kpi-l">إعادة تقديم</div></div><div class="kpi"><div class="kpi-n">290</div><div class="kpi-l">طابور التحقق</div></div></div><h2>مسارات الإجراء</h2><h3>المسار 1: إعادة التقديم (2,181)</h3><p>مطالبات تُعاد بإضافة وثائق داعمة أو تصحيح بيانات المريض.</p><h3>المسار 2: طعن تعاقدي (2,650)</h3><p>خلافات تعاقدية مع شركات التأمين تتطلب مراسلة رسمية.</p><h3>المسار 3: مطالبة جديدة (83)</h3><p>حالات تحتاج مطالبة جديدة مع الإشارة للأصلية لإثبات الاستمرارية.</p>'
-      : '<h2>Overview</h2><p>BrainSAIT triage of Hayat Abha claims (April 2026) revealed <strong>4,914 rejected lines</strong> requiring urgent action.</p><div class="kpi-row"><div class="kpi"><div class="kpi-n">4,914</div><div class="kpi-l">Rejected Lines</div></div><div class="kpi"><div class="kpi-n">2,181</div><div class="kpi-l">Resubmissions</div></div><div class="kpi"><div class="kpi-n">290</div><div class="kpi-l">Portal Queue</div></div></div><h2>Three Action Tracks</h2><h3>Track 1: Resubmit with Supporting Info (2,181)</h3><p>Claims resubmitted by adding clinical documentation or correcting patient data.</p><h3>Track 2: Contractual Appeal (2,650)</h3><p>Disputes with insurers requiring formal appeal correspondence.</p><h3>Track 3: New Claim with Prior Linkage (83)</h3><p>Cases needing a new claim referencing the original to establish clinical continuity.</p>',
-    'deepseek-healthcare-ai': ar
-      ? '<h2>لماذا DeepSeek؟</h2><p>اختار فريق BrainSAIT DeepSeek V3 محركاً رئيسياً لبسمة لأسباب عدة: دعم عربي ممتاز، سرعة استجابة أقل من 3 ثوانٍ، وتكامل مباشر مع NPHIES وOracle Bridge.</p><h2>سلسلة المحركات</h2><p>بسمة تستخدم سلسلة من 4 محركات: <strong>DeepSeek V3</strong> (الأساسي) ← Claude Sonnet 4 ← CF Workers AI LLaMA ← رد ثابت احتياطي.</p><h2>التكاملات الحية</h2><p>يستطيع المستخدم الحديث مع بسمة بالصوت وحجز موعد عبر Oracle OPD، التحقق من أهليته عبر NPHIES، ومتابعة مطالباته عبر ClaimLinc — كل ذلك في جلسة صوتية واحدة.</p>'
-      : '<h2>Why DeepSeek?</h2><p>BrainSAIT selected DeepSeek V3 as primary AI for Basma due to superior Arabic support, sub-3s response time, and direct integration with NPHIES and Oracle Bridge.</p><h2>Engine Chain</h2><p>Basma uses a 4-engine chain: <strong>DeepSeek V3</strong> (primary) → Claude Sonnet 4 → CF Workers AI LLaMA → static fallback.</p><h2>Live Integrations</h2><p>Voice users can book appointments via Oracle OPD, check eligibility via NPHIES, and track claims via ClaimLinc — all in a single voice session.</p>',
-  };
-  return bodies[id] || '<p>' + (ar ? 'المقال الكامل قريباً. تواصل معنا للمزيد من المعلومات.' : 'Full article coming soon. Contact us for more details.') + '</p>';
-}
-
-function serveAcademyCourse(cid, lang) {
-  const ar = lang === 'ar';
-  const course = COURSES.find(c => c.id === cid);
-  if (!course) return serveNotFound(ar, 'academy');
-  const title = ar ? course.title_ar : course.title_en;
-  const desc  = ar ? course.desc_ar  : course.desc_en;
-  const lvl   = {beginner: ar?'مبتدئ':'Beginner', intermediate: ar?'متوسط':'Intermediate', advanced: ar?'متقدم':'Advanced'}[course.level] || course.level;
-  const ghUrl = course.repo?.startsWith('http') ? course.repo : 'https://github.com/Fadil369/' + course.repo;
-  const related = COURSES.filter(c => c.id !== course.id && c.cat === course.cat).slice(0,2);
-
-  return new Response(`<!DOCTYPE html>
-<html lang="${lang}" dir="${ar?'rtl':'ltr'}">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${title} | ${ar?'أكاديمية الحياة الوطني':'Hayat National Academy'}</title>
-<meta name="description" content="${desc}">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--p:#0066CC;--n:#1A2B4A;--a:#C9A84C;--s:#10B981;--bg:#F0F4FA;--sf:#fff;--b:#E2E8F0;--t:#0F172A;--ts:#64748B}
-body{font-family:${ar?"'Tajawal'":"'Inter'"},sans-serif;background:var(--bg);color:var(--t)}
-.hdr{background:var(--sf);border-bottom:1px solid var(--b);padding:12px 0;position:sticky;top:0;z-index:10}
-.hi{max-width:1000px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:8px;text-decoration:none;font-weight:800;color:var(--n);font-size:.9rem}
-.logo-i{width:32px;height:32px;background:linear-gradient(135deg,var(--p),var(--n));border-radius:8px;display:flex;align-items:center;justify-content:center}
-.bk{color:var(--ts);text-decoration:none;font-size:.82rem}
-.hero{background:linear-gradient(135deg,var(--n),#0066CC);color:#fff;padding:52px 20px}
-.hi2{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 300px;gap:32px;align-items:start}
-.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
-.chip{padding:4px 11px;border-radius:20px;font-size:.7rem;font-weight:700;background:rgba(255,255,255,.15);color:#fff}
-.chip-a{background:var(--a);color:var(--n)}
-h1{font-size:clamp(1.5rem,2.8vw,2.1rem);font-weight:800;line-height:1.3;margin-bottom:14px}
-.hero-desc{color:rgba(255,255,255,.85);font-size:.92rem;line-height:1.7;margin-bottom:22px}
-.stats{display:flex;gap:20px;flex-wrap:wrap}
-.st{text-align:center}.st-n{font-size:1.3rem;font-weight:800;color:var(--a)}.st-l{font-size:.68rem;color:rgba(255,255,255,.7);margin-top:2px}
-.card-enroll{background:var(--sf);border-radius:16px;padding:24px;color:var(--t)}
-.price{font-size:1.9rem;font-weight:800;color:var(--p);margin-bottom:2px}
-.price-s{font-size:.77rem;color:var(--ts);margin-bottom:18px}
-.btn-en{display:block;background:linear-gradient(135deg,var(--p),var(--n));color:#fff;text-decoration:none;text-align:center;padding:13px;border-radius:20px;font-weight:700;font-size:.9rem;margin-bottom:10px;transition:all .2s}
-.btn-en:hover{opacity:.9}
-.btn-gh{display:block;background:var(--bg);border:1px solid var(--b);color:var(--ts);text-decoration:none;text-align:center;padding:10px;border-radius:20px;font-size:.8rem;font-weight:600;transition:all .2s}
-.btn-gh:hover{border-color:var(--p);color:var(--p)}
-.inc{margin-top:14px;padding-top:12px;border-top:1px solid var(--b)}
-.inc-i{display:flex;align-items:center;gap:7px;font-size:.78rem;color:var(--ts);padding:3px 0}
-.inc-i::before{content:"✓";color:var(--s);font-weight:700;min-width:14px}
-.main{max-width:1000px;margin:0 auto;padding:40px 20px 70px;display:grid;grid-template-columns:1fr 260px;gap:28px;align-items:start}
-.sec-h{font-size:1.1rem;font-weight:700;color:var(--n);margin-bottom:14px;padding-bottom:7px;border-bottom:2px solid var(--b)}
-.mods{display:flex;flex-direction:column;gap:6px;margin-bottom:32px}
-.mod{background:var(--sf);border:1px solid var(--b);border-radius:9px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
-.mod-n{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--n));color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}
-.mod-t{font-size:.83rem;font-weight:600;color:var(--n);margin-inline:10px;flex:1}
-.mod-d{font-size:.7rem;color:var(--ts)}
-.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.rel-c{background:var(--sf);border:1px solid var(--b);border-radius:9px;padding:13px;text-decoration:none;transition:all .2s;display:block}
-.rel-c:hover{border-color:var(--p);transform:translateY(-2px)}
-.rel-c h4{font-size:.8rem;font-weight:700;color:var(--n);margin-bottom:3px;line-height:1.4}
-.rel-c p{font-size:.71rem;color:var(--ts)}
-.side-card{background:var(--sf);border:1px solid var(--b);border-radius:14px;padding:18px;position:sticky;top:70px}
-.meta-r{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b);font-size:.8rem}
-.meta-r:last-child{border:none}
-.meta-r span:first-child{color:var(--ts)}.meta-r span:last-child{font-weight:600;color:var(--n)}
-@media(max-width:700px){.hi2,.main{grid-template-columns:1fr}.rel-grid{grid-template-columns:1fr 1fr}}
-</style></head>
-<body>
-<header class="hdr"><div class="hi">
-  <a href="/" class="logo"><div class="logo-i">🎓</div>${ar?'أكاديمية الحياة الوطني':'Hayat National Academy'}</a>
-  <a href="/#academy" class="bk">${ar?'← الأكاديمية':'← Academy'}</a>
-</div></header>
-<div class="hero"><div class="hi2">
-  <div>
-    <div class="chips">
-      <span class="chip">${course.icon} ${course.cat?.toUpperCase()}</span>
-      <span class="chip">${lvl}</span>
-      <span class="chip chip-a">${course.accred}</span>
-    </div>
-    <h1>${title}</h1>
-    <p class="hero-desc">${desc}</p>
-    <div class="stats">
-      <div class="st"><div class="st-n">${course.hours}h</div><div class="st-l">${ar?'ساعة':'Hours'}</div></div>
-      <div class="st"><div class="st-n">${course.modules||8}</div><div class="st-l">${ar?'وحدة':'Modules'}</div></div>
-      <div class="st"><div class="st-n">AR/EN</div><div class="st-l">${ar?'ثنائي اللغة':'Bilingual'}</div></div>
-    </div>
-  </div>
-  <div class="card-enroll">
-    <div class="price">SAR ${course.price?.toLocaleString()}</div>
-    <div class="price-s">${ar?'شامل الشهادة المعتمدة':'Including accredited certificate'}</div>
-    <a href="tel:966920000094" class="btn-en">📞 ${ar?'سجّل — 920000094':'Enroll — 920000094'}</a>
-    <a href="${ghUrl}" target="_blank" class="btn-gh">⚙️ ${ar?'GitHub Repository':'GitHub Repository'}</a>
-    <div class="inc">
-      <div class="inc-i">${ar?'شهادة SCFHS معتمدة':'SCFHS Accredited Certificate'}</div>
-      <div class="inc-i">${ar?'محتوى عربي/إنجليزي':'Arabic + English Content'}</div>
-      <div class="inc-i">${ar?'بيانات وحالات حقيقية':'Real data & case studies'}</div>
-      <div class="inc-i">${ar?'دعم 30 يوماً بعد الدورة':'30-day post-course support'}</div>
-    </div>
-  </div>
-</div></div>
-<div class="main">
-  <div>
-    <h2 class="sec-h">${ar?'محتوى الدورة':'Course Modules'}</h2>
-    <div class="mods">
-      ${Array.from({length: course.modules||8}, (_,i) => '<div class="mod"><div class="mod-n">'+(i+1)+'</div><div class="mod-t">'+(ar?'الوحدة '+(i+1)+' — تطبيق '+course.title_ar?.split(' ')[0]:'Module '+(i+1)+' — Applied '+course.title_en?.split(' ')[0])+'</div><div class="mod-d">'+Math.round((course.hours/(course.modules||8))*60)+' '+(ar?'دقيقة':'min')+'</div></div>').join('')}
-    </div>
-    <h2 class="sec-h" style="margin-top:10px">${ar?'دورات ذات صلة':'Related Courses'}</h2>
-    <div class="rel-grid">
-      ${related.map(c => '<a href="/academy/'+c.id+'?lang='+lang+'" class="rel-c"><div style="font-size:1.3rem;margin-bottom:6px">'+c.icon+'</div><h4>'+(ar?c.title_ar:c.title_en)+'</h4><p>SAR '+c.price+' · '+c.hours+'h</p></a>').join('')}
-    </div>
-  </div>
-  <div class="side-card">
-    <h3 style="font-size:.88rem;font-weight:700;color:var(--n);margin-bottom:12px">${ar?'تفاصيل الدورة':'Course Details'}</h3>
-    <div class="meta-r"><span>${ar?'المستوى':'Level'}</span><span>${lvl}</span></div>
-    <div class="meta-r"><span>${ar?'المدة':'Duration'}</span><span>${course.hours}h</span></div>
-    <div class="meta-r"><span>${ar?'الوحدات':'Modules'}</span><span>${course.modules||8}</span></div>
-    <div class="meta-r"><span>${ar?'اللغة':'Language'}</span><span>AR + EN</span></div>
-    <div class="meta-r"><span>${ar?'الاعتماد':'Accreditation'}</span><span>${course.accred}</span></div>
-    <div class="meta-r"><span>${ar?'السعر':'Price'}</span><span style="color:var(--p);font-weight:800">SAR ${course.price?.toLocaleString()}</span></div>
-  </div>
-</div>
-</body></html>`,
-  { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
-}
-
-function serveNotFound(ar, type) {
-  const msg = type === 'blog'
-    ? (ar ? 'المقال غير موجود' : 'Article Not Found')
-    : (ar ? 'الدورة غير موجودة' : 'Course Not Found');
-  const back = type === 'blog' ? '/#blog' : '/#academy';
-  return new Response(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>404</title>
-<style>body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#F0F4FA;margin:0}
-.b{background:#fff;border-radius:16px;padding:48px;text-align:center;max-width:420px}
-h1{color:#1A2B4A;font-size:1.6rem;margin-bottom:10px}p{color:#64748B;margin-bottom:22px}a{background:#0066CC;color:#fff;padding:10px 22px;border-radius:20px;text-decoration:none;font-weight:700}</style></head>
-<body><div class="b"><div style="font-size:2.5rem;margin-bottom:14px">🔍</div>
-<h1>${msg}</h1><p>${ar?'الرابط الذي طلبته غير صحيح.':'The link you requested does not exist.'}</p>
-<a href="${back}">${ar?'← العودة':'← Go Back'}</a></div></body></html>`,
-  { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
-}
-
-
 // ─── PORTAL HUB API — aggregates BSMA + GIVC + SBS + Oracle + NPHIES live ──
 async function apiPortalHub(env) {
   const [bsmaNet, givcData, sbsData, oracleData] = await Promise.allSettled([
@@ -2228,18 +1982,6 @@ export default {
     if (path === '/api/academy/stats')                     return ok({ total_courses: 9, total_hours: 104, accreditation: 'SCFHS CPD + CHI', repos: ['nphies-course-platform','sbs','brainsait-rcm','open-webui','brainsait-mcp-dxt'] });
 
     if (path === '/api/portal-hub')                        return apiPortalHub(env);
-
-    // ── Public article + course pages (NO auth) ──────────────
-    if (path.startsWith('/blog/')) {
-      const slug = path.slice(6);
-      const langP = url.searchParams.get('lang') || 'ar';
-      return serveBlogArticle(slug, langP);
-    }
-    if (path.startsWith('/academy/')) {
-      const cid  = path.slice(9);
-      const langP = url.searchParams.get('lang') || 'ar';
-      return serveAcademyCourse(cid, langP);
-    }
 
     // ── Voice Agent Proxy (PUBLIC — before auth) ────────────
     if (path.startsWith('/voice')) {
