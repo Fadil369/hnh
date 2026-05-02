@@ -8,7 +8,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '7.6.0';
+const VERSION        = '7.7.0';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -753,7 +753,7 @@ function buildHTML(lang) {
     const title   = ar ? p.title_ar : p.title_en;
     const excerpt = ar ? p.excerpt_ar : p.excerpt_en;
     return '<a href="/blog/' + p.id + '?lang=' + lang + '" class="blog-card" style="text-decoration:none;color:inherit;display:block"><div class="blog-top"><span class="blog-emoji">' + p.emoji + '</span>' +
-      (p.featured ? '<span class="chip-feat">Featured</span>' : '') +
+      (p.featured ? '<span class="chip-feat">' + (ar ? 'مميز' : 'Featured') + '</span>' : '') +
       '<span class="cat-tag">' + p.category.toUpperCase() + '</span></div>' +
       '<div class="blog-body"><h3 class="blog-title">' + title + '</h3>' +
       '<p class="blog-excerpt">' + excerpt + '</p>' +
@@ -1841,6 +1841,16 @@ function serveBlogArticle(slug, lang) {
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title} | ${ar?'الحياة الوطني':'Hayat National'}</title>
 <meta name="description" content="${excerpt}">
+<link rel="canonical" href="https://hnh.brainsait.org/blog/${post.id}">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${excerpt}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hnh.brainsait.org/blog/${post.id}">
+<meta property="og:site_name" content="${ar?'مستشفيات الحياة الوطني':'Hayat National Hospitals'}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="${title}">
+<meta name="twitter:description" content="${excerpt}">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"${title.replace(/"/g,"'")}","description":"${excerpt.replace(/"/g,"'")}","author":{"@type":"Person","name":"${post.author}"},"publisher":{"@type":"Organization","name":"Hayat National Hospitals","url":"https://hnh.brainsait.org"},"datePublished":"${post.date}","url":"https://hnh.brainsait.org/blog/${post.id}","inLanguage":"${lang}"}</script>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -1885,7 +1895,10 @@ h1{font-size:clamp(1.55rem,3.5vw,2.2rem);font-weight:800;color:var(--n);line-hei
 <body>
 <header class="hdr"><div class="hi">
   <a href="/" class="logo"><div class="logo-i">🏥</div>${ar?'الحياة الوطني':'Hayat National'}</a>
-  <a href="/#blog" class="bk">${ar?'← المدونة':'← Blog'}</a>
+  <div style="display:flex;align-items:center;gap:12px">
+    <a href="/#blog" class="bk">${ar?'← المدونة':'← Blog'}</a>
+    <a href="/blog/${post.id}?lang=${ar?'en':'ar'}" style="font-size:.78rem;color:var(--p);font-weight:600;text-decoration:none;padding:4px 10px;border:1px solid rgba(0,102,204,.3);border-radius:12px">${ar?'EN':'عربي'}</a>
+  </div>
 </div></header>
 <div class="wrap">
   <div class="badge">${post.emoji} ${cat}</div>
@@ -1942,13 +1955,27 @@ function serveAcademyCourse(cid, lang) {
   const desc  = ar ? course.desc_ar  : course.desc_en;
   const lvl   = {beginner: ar?'مبتدئ':'Beginner', intermediate: ar?'متوسط':'Intermediate', advanced: ar?'متقدم':'Advanced'}[course.level] || course.level;
   const ghUrl = course.repo?.startsWith('http') ? course.repo : 'https://github.com/Fadil369/' + course.repo;
-  const related = COURSES.filter(c => c.id !== course.id && c.cat === course.cat).slice(0,2);
+  let related = COURSES.filter(c => c.id !== course.id && c.cat === course.cat).slice(0,2);
+  if (related.length < 2) {
+    const more = COURSES.filter(c => c.id !== course.id && !related.find(r => r.id === c.id)).slice(0, 2 - related.length);
+    related = related.concat(more);
+  }
 
   return new Response(`<!DOCTYPE html>
 <html lang="${lang}" dir="${ar?'rtl':'ltr'}">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title} | ${ar?'أكاديمية الحياة الوطني':'Hayat National Academy'}</title>
 <meta name="description" content="${desc}">
+<link rel="canonical" href="https://hnh.brainsait.org/academy/${course.id}">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${desc}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hnh.brainsait.org/academy/${course.id}">
+<meta property="og:site_name" content="${ar?'أكاديمية الحياة الوطني':'Hayat National Academy'}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="${title}">
+<meta name="twitter:description" content="${desc}">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Course","name":"${title.replace(/"/g,"'")}","description":"${desc.replace(/"/g,"'")}","provider":{"@type":"EducationalOrganization","name":"Hayat National Academy","url":"https://hnh.brainsait.org/academy"},"url":"https://hnh.brainsait.org/academy/${course.id}","courseMode":"online","inLanguage":["ar","en"],"offers":{"@type":"Offer","price":"${course.price}","priceCurrency":"SAR"}}</script>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -1999,7 +2026,10 @@ h1{font-size:clamp(1.5rem,2.8vw,2.1rem);font-weight:800;line-height:1.3;margin-b
 <body>
 <header class="hdr"><div class="hi">
   <a href="/" class="logo"><div class="logo-i">🎓</div>${ar?'أكاديمية الحياة الوطني':'Hayat National Academy'}</a>
-  <a href="/#academy" class="bk">${ar?'← الأكاديمية':'← Academy'}</a>
+  <div style="display:flex;align-items:center;gap:12px">
+    <a href="/#academy" class="bk">${ar?'← الأكاديمية':'← Academy'}</a>
+    <a href="/academy/${course.id}?lang=${ar?'en':'ar'}" style="font-size:.78rem;color:var(--p);font-weight:600;text-decoration:none;padding:4px 10px;border:1px solid rgba(0,102,204,.3);border-radius:12px">${ar?'EN':'عربي'}</a>
+  </div>
 </div></header>
 <div class="hero"><div class="hi2">
   <div>
@@ -2129,7 +2159,7 @@ export default {
 
     // ── HTML pages ────────────────────────────────────────────
     if (path === '/' || path === '/index.html' || path === '/blog' || path === '/academy') {
-      const lang = url.searchParams.get('lang') || (req.headers.get('Accept-Language') || '').includes('ar') ? 'ar' : 'ar';
+      const lang = url.searchParams.get('lang') === 'en' ? 'en' : 'ar';
       return new Response(buildHTML(lang), { headers: HTML_H });
     }
 
