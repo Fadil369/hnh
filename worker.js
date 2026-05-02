@@ -8,7 +8,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '7.7.2';
+const VERSION        = '7.8.0';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -61,6 +61,11 @@ function rateOk(ip, max = 120, win = 60000) {
   return e.n <= max;
 }
 
+// Lightweight in-memory TTL cache (shared across requests within same isolate)
+const _mc = new Map();
+function mcGet(k) { const e = _mc.get(k); return (e && e.exp > Date.now()) ? e.v : null; }
+function mcSet(k, v, ttlMs) { _mc.set(k, { v, exp: Date.now() + ttlMs }); }
+
 // ─── EXTERNAL SERVICES ────────────────────────────────────────────────────────
 // ─── ORACLE INTEGRATION LAYER ────────────────────────────────
 // hayath-mcp tunnel: e5cb8c86 | healthy | 8 connections (mrs06+ruh02)
@@ -71,14 +76,14 @@ const ORACLE_SCANNER   = 'https://oracle-claim-scanner.brainsait-fadil.workers.d
 const ORACLE_PATIENT   = 'https://oracle-patient-search.brainsait-fadil.workers.dev';
 const ORACLE_BRIDGE_KEY= 'bsma-oracle-b2af3196522b556636b09f5d268cb976';
 
-// Tunnel reachability map (from live diagnose)
+// Tunnel reachability map — last live check: 2026-05-02 (all hospitals timing out via CF egress)
 const TUNNEL_STATUS = {
-  madinah: { reachable: true,  ms: 551,  loginPath: '/Oasis/faces/Login.jsf' },
-  khamis:  { reachable: true,  ms: 1304, loginPath: '/prod/faces/Login.jsf' },
-  abha:    { reachable: true,  ms: 918,  loginPath: '/Oasis/faces/Home' },
-  riyadh:  { reachable: false, ms: 0,    loginPath: '/prod/faces/Login.jsf',  note: 'IP 128.1.1.185 timeout' },
-  unaizah: { reachable: false, ms: 0,    loginPath: '/prod/faces/Login.jsf',  note: 'timeout' },
-  jizan:   { reachable: false, ms: 0,    loginPath: '/prod/faces/Login.jsf',  note: 'unreachable' },
+  riyadh:  { reachable: false, ms: 10000, loginPath: '/prod/faces/Login.jsf',  note: 'timeout 2026-05-02' },
+  madinah: { reachable: false, ms: 10000, loginPath: '/Oasis/faces/Login.jsf', note: 'timeout 2026-05-02' },
+  unaizah: { reachable: false, ms: 10000, loginPath: '/prod/faces/Login.jsf',  note: 'timeout 2026-05-02' },
+  khamis:  { reachable: false, ms: 10000, loginPath: '/prod/faces/Login.jsf',  note: 'timeout 2026-05-02' },
+  jizan:   { reachable: false, ms: 3101,  loginPath: '/prod/faces/Login.jsf',  note: 'login page not found 2026-05-02' },
+  abha:    { reachable: false, ms: 10001, loginPath: '/Oasis/faces/Home',      note: 'timeout 2026-05-02' },
 };
 
 async function oracleFetch(env, path, opts = {}) {
@@ -117,11 +122,12 @@ async function oracleCall(env, method, path, body = null, hospital = 'madinah') 
   if (body) opts.body = JSON.stringify(body);
 
   // Patient search/register → oracle-patient-search (Playwright browser)
+  // Use a short 5s timeout — falls back to oracle-bridge if worker is unresponsive
   if (path.startsWith('/patient')) {
     try {
       const qs = path.includes('?') ? path.slice(path.indexOf('?')) : '';
       const basePath = path.split('?')[0];
-      const r = await fetch(`${ORACLE_PATIENT}${basePath}${qs}`, opts);
+      const r = await fetch(`${ORACLE_PATIENT}${basePath}${qs}`, { ...opts, signal: AbortSignal.timeout(5000) });
       if (r.ok) return r.json();
     } catch {}
   }
@@ -144,13 +150,15 @@ async function oracleCall(env, method, path, body = null, hospital = 'madinah') 
   return null;
 }
 
-// Oracle hospital status (from tunnel diagnose)
-async function oracleTunnelStatus() {
-  const diagnoseUrl = `${ORACLE_BRIDGE}/diagnose`;
+// Oracle hospital status — cached 60s to avoid hammering the bridge on every request
+async function oracleTunnelStatus(env) {
+  const cached = mcGet('tunnel-status');
+  if (cached) return cached;
+  const key = (env && env.ORACLE_API_KEY) || ORACLE_BRIDGE_KEY;
   try {
-    const r = await fetch(diagnoseUrl, {
-      headers: { 'X-API-Key': ORACLE_BRIDGE_KEY },
-      signal: AbortSignal.timeout(20000),
+    const r = await fetch(`${ORACLE_BRIDGE}/diagnose`, {
+      headers: { 'X-API-Key': key },
+      signal: AbortSignal.timeout(8000),
     });
     if (r.ok) {
       const d = await r.json();
@@ -161,16 +169,21 @@ async function oracleTunnelStatus() {
           loginPageFound: h.loginPageFound, viewState: h.viewStatePresent,
         };
       }
-      return { ok: d.ok, hospitals: map, tunnel: 'e5cb8c86-1768-46b0-bb35-a2720f26e88d' };
+      const result = { ok: d.ok, hospitals: map, tunnel: 'e5cb8c86-1768-46b0-bb35-a2720f26e88d', source: 'live', checked_at: new Date().toISOString() };
+      mcSet('tunnel-status', result, 60000);
+      return result;
     }
   } catch {}
-  return { ok: false, hospitals: TUNNEL_STATUS, tunnel: 'e5cb8c86', source: 'cached' };
+  const fallback = { ok: false, hospitals: TUNNEL_STATUS, tunnel: 'e5cb8c86', source: 'cached', last_live: '2026-05-02' };
+  mcSet('tunnel-status', fallback, 30000);
+  return fallback;
 }
 
-async function clFetch(path) {
+async function clFetch(path, env) {
+  const key = (env && env.CLAIMLINC_KEY) || CLAIMLINC_KEY;
   try {
     const r = await fetch(`${CLAIMLINC_BASE}${path}`, {
-      headers: { 'X-API-Key': CLAIMLINC_KEY },
+      headers: { 'X-API-Key': key },
       signal: AbortSignal.timeout(15000),
     });
     return r.ok ? r.json() : null;
@@ -308,12 +321,14 @@ const COURSES = [
 // ─── API HANDLERS ─────────────────────────────────────────────────────────────
 
 async function apiHealth(env) {
-  const [dbOk, oracleOk, mirrorOk] = await Promise.all([
+  const [dbOk, oracleOk, mirrorOk, claimlinOk] = await Promise.all([
     env.DB.prepare('SELECT 1').first().then(() => true).catch(() => false),
     oracleFetch(env, '/health').then(r => !!r).catch(() => false),
     fetch('https://nphies-mirror.brainsait-fadil.workers.dev/mirror/status', { signal: AbortSignal.timeout(5000) })
       .then(r => r.ok).catch(() => false),
+    clFetch('/network/summary', env).then(d => !!d).catch(() => false),
   ]);
+  const nphiesOk = mirrorOk || claimlinOk; // ClaimLinc is the live fallback when mirror is down
   const [hisN, ragN] = await Promise.all([
     env.HIS_DB?.prepare('SELECT COUNT(*) as n FROM bsma_appointments').first().catch(() => ({ n: 0 })),
     env.BASMA_DB?.prepare('SELECT COUNT(*) as n FROM rag_documents').first().catch(() => ({ n: 0 })),
@@ -321,15 +336,18 @@ async function apiHealth(env) {
   return ok({
     version: VERSION, worker: 'hnh-unified', facility: FACILITY_LIC,
     status: dbOk ? 'healthy' : 'degraded',
+    oracle_ok:  oracleOk,
+    nphies_ok:  nphiesOk,
     integrations: {
-      d1_primary:    dbOk      ? 'connected' : 'error',
+      d1_primary:      dbOk      ? 'connected' : 'error',
       d1_his_database: hisN?.n > 0  ? 'connected' : 'empty',
-      d1_basma:      ragN?.n > 0  ? 'connected' : 'empty',
-      oracle_bridge: oracleOk  ? 'connected' : 'unreachable',
-      oracle_tunnel:  'e5cb8c86 | healthy | madinah+khamis+abha reachable',
-      nphies_mirror: mirrorOk  ? 'connected' : 'degraded',
-      claimlinc:     'live',
-      sbs_portal:    'connected',
+      d1_basma:        ragN?.n > 0  ? 'connected' : 'empty',
+      oracle_bridge:   oracleOk  ? 'connected' : 'unreachable',
+      oracle_tunnel:   'e5cb8c86 | all hospitals timeout (CF egress) | diagnose cached',
+      nphies_mirror:   mirrorOk  ? 'connected' : 'degraded',
+      nphies_claimlinc: claimlinOk ? 'connected' : 'degraded',
+      claimlinc:       claimlinOk ? 'live'      : 'degraded',
+      sbs_portal:      'connected',
     },
     data: { his_appointments: hisN?.n || 0, rag_documents: ragN?.n || 0 },
   });
@@ -351,6 +369,7 @@ async function apiStats(env) {
   return ok({ stats: {
     total_providers:    main?.providers    || 269,
     total_patients:     main?.patients     || 0,
+    total_visitors:     main?.patients     || 0,
     total_departments:  main?.departments  || 20,
     total_appointments: (main?.appointments || 0) + (his?.apts || 0),
     total_claims:       main?.claims       || 0,
@@ -552,7 +571,7 @@ async function apiChat(req, env) {
 
 async function apiNphies(req, env, sub) {
   if (sub === '' || sub === '/status') {
-    const net = await clFetch('/network/summary');
+    const net = await clFetch('/network/summary', env);
     const [claims, pa] = await Promise.all([
       env.DB.prepare('SELECT COUNT(*) as n FROM claims WHERE nphies_claim_id IS NOT NULL').first().catch(() => ({ n: 0 })),
       env.DB.prepare('SELECT COUNT(*) as n FROM prior_authorizations').first().catch(() => ({ n: 0 })),
@@ -561,7 +580,7 @@ async function apiNphies(req, env, sub) {
   }
   if (sub === '/analysis') {
     const net = await bsmaNetwork();
-    const fac = await clFetch('/facilities');
+    const fac = await clFetch('/facilities', env);
     const br = net?.by_branch || {};
     const riyRej = (br.riyadh?.total_sar || 97868522) - (br.riyadh?.approved_sar || 86567405);
     return ok({ analysis: {
@@ -581,11 +600,11 @@ async function apiNphies(req, env, sub) {
       facilities: fac?.facilities || {},
     }});
   }
-  if (sub === '/network') { const d = await clFetch('/network/summary'); return ok({ source: 'claimlinc', data: d }); }
-  if (sub === '/facilities') { const d = await clFetch('/facilities'); return ok({ source: 'claimlinc', data: d }); }
+  if (sub === '/network') { const d = await clFetch('/network/summary', env); return ok({ source: 'claimlinc', data: d }); }
+  if (sub === '/facilities') { const d = await clFetch('/facilities', env); return ok({ source: 'claimlinc', data: d }); }
   if (sub.startsWith('/live/')) {
     const mapped = sub.replace('/live', '');
-    const d = await clFetch(mapped);
+    const d = await clFetch(mapped, env);
     return d ? ok({ source: 'claimlinc-live', data: d }) : err('ClaimLinc endpoint unavailable', 503);
   }
   if (sub === '/eligibility') return apiEligibility(req, env);
@@ -2113,6 +2132,11 @@ h1{color:#1A2B4A;font-size:1.6rem;margin-bottom:10px}p{color:#64748B;margin-bott
 
 // ─── PORTAL HUB API — aggregates BSMA + GIVC + SBS + Oracle + NPHIES live ──
 async function apiPortalHub(env) {
+  // Serve from in-memory cache (2 min TTL) to avoid hammering upstream on every page load
+  const cached = mcGet('portal-hub');
+  if (cached) return ok(cached);
+
+  const oracleKey = (env && env.ORACLE_API_KEY) || ORACLE_BRIDGE_KEY;
   const [bsmaNet, givcData, sbsData, oracleData] = await Promise.allSettled([
     fetch('https://bsma.elfadil.com/basma/network',            { signal: AbortSignal.timeout(6000) }).then(r => r.ok ? r.json() : null),
     fetch('https://givc.elfadil.com/api/nphies/summary',       { signal: AbortSignal.timeout(6000) }).then(r => r.ok ? r.json() : null),
@@ -2121,7 +2145,7 @@ async function apiPortalHub(env) {
       body: '{"status":"active"}',                               signal: AbortSignal.timeout(6000),
     }).then(r => r.ok ? r.json() : null),
     fetch('https://oracle-bridge.brainsait.org/health',         {
-      headers: { 'X-API-Key': 'bsma-oracle-b2af3196522b556636b09f5d268cb976' },
+      headers: { 'X-API-Key': oracleKey },
                                                                  signal: AbortSignal.timeout(5000),
     }).then(r => r.ok ? r.json() : null),
   ]);
@@ -2133,7 +2157,7 @@ async function apiPortalHub(env) {
   const fin    = net?.financials || {};
   const br     = net?.by_branch || {};
 
-  return ok({
+  const result = {
     timestamp: new Date().toISOString(),
     portals: {
       bsma:   { url: 'https://bsma.elfadil.com',   status: net   ? 'live' : 'degraded', label_ar: 'بوابة المريض',    label_en: 'Patient Portal',   emoji: '🙂', version: '3.0.0' },
@@ -2155,7 +2179,10 @@ async function apiPortalHub(env) {
     },
     oracle_status: oracle?.ok || false,
     givc_summary: givc || null,
-  });
+  };
+
+  mcSet('portal-hub', result, 120000); // cache 2 minutes
+  return ok(result);
 }
 
 export default {
@@ -2207,7 +2234,7 @@ export default {
 
     // ── Oracle Portal Integration ─────────────────────────────
     if (path === '/api/oracle/status') {
-      const status = await oracleTunnelStatus();
+      const status = await oracleTunnelStatus(env);
       return ok({
         tunnel_id:    'e5cb8c86-1768-46b0-bb35-a2720f26e88d',
         tunnel_name:  'hayath-mcp',

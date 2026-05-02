@@ -32,9 +32,10 @@ FACILITY_LICENSE   = "10000000000988"
 HUB_VERSION        = "5.0.0"
 
 # Secrets (wrangler secret put):
-#   API_KEY          ← protects /api/claims /api/visits /api/orders /api/rcm
-#   ORACLE_API_KEY   ← Oracle Bridge authentication
-#   NPHIES_TOKEN     ← Direct NPHIES portal (optional)
+#   API_KEY            ← protects /api/claims /api/visits /api/orders /api/rcm
+#   ORACLE_API_KEY     ← Oracle Bridge authentication (fallback hardcoded in worker)
+#   CLAIMLINC_KEY      ← ClaimLinc NPHIES API key (fallback hardcoded in worker)
+#   NPHIES_TOKEN       ← Direct NPHIES portal (optional)
 #   ELEVENLABS_API_KEY ← Basma TTS (optional)
 
 # Route (already configured via CF API):

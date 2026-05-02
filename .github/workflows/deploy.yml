@@ -1,0 +1,32 @@
+name: Deploy HNH Worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'worker.js'
+      - 'wrangler.toml'
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Workers
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy via Wrangler
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: d7b99530559ab4f2545e9bdc72a7ab9b
+          command: deploy worker.js --name hnh-unified
+
+      - name: Smoke test
+        run: |
+          sleep 8
+          VERSION=$(curl -sf --max-time 15 https://hnh.brainsait.org/health | python3 -c "import sys,json; print(json.load(sys.stdin).get('version','?'))")
+          echo "Deployed version: $VERSION"
+          if [ "$VERSION" = "?" ]; then echo "Health check failed"; exit 1; fi
