@@ -8,7 +8,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '7.3.0';
+const VERSION        = '7.4.0';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -872,6 +872,65 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
 .ins-dot{width:8px;height:8px;border-radius:50%;background:var(--s);flex-shrink:0}
 .ins-cov{font-size:.72rem;color:var(--ts);font-weight:400;margin-left:4px}
 
+/* PORTAL HUB */
+.status-tag{cursor:pointer;transition:all .2s}.status-tag:hover{transform:translateY(-2px);opacity:.85}
+.pulse{color:var(--s);animation:pulseAnim 2s ease-in-out infinite;font-size:.7em}
+@keyframes pulseAnim{0%,100%{opacity:1}50%{opacity:.3}}
+#sar-badge,#rate-badge{font-weight:700;color:#fff}
+.role-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+.role-tab{padding:9px 20px;border-radius:var(--rf);border:2px solid var(--b);background:var(--sf);
+  color:var(--ts);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.role-tab.active{background:var(--p);color:#fff;border-color:var(--p)}
+.role-tab:hover:not(.active){border-color:var(--p);color:var(--p)}
+.portal-hub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.portal-card{background:var(--sf);border:1px solid var(--b);border-radius:var(--rl);
+  overflow:hidden;transition:all .3s;display:flex;flex-direction:column}
+.portal-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.1)}
+.portal-card.hidden{display:none}
+.pc-header{display:flex;align-items:center;gap:12px;padding:18px 20px;color:#fff}
+.bsma-hdr{background:linear-gradient(135deg,#0066CC,#0891B2)}
+.givc-hdr{background:linear-gradient(135deg,#059669,#0F766E)}
+.sbs-hdr{background:linear-gradient(135deg,#7C3AED,#4F46E5)}
+.oracle-hdr{background:linear-gradient(135deg,#C9A84C,#92400E)}
+.nphies-hdr{background:linear-gradient(135deg,#1A2B4A,#0066CC)}
+.voice-hdr{background:linear-gradient(135deg,#DB2777,#9333EA)}
+.pc-icon{font-size:1.6rem;min-width:36px}
+.pc-name{font-size:.95rem;font-weight:700;color:#fff}
+.pc-sub{font-size:.72rem;color:rgba(255,255,255,.8)}
+.pc-badge{margin-inline-start:auto;display:flex;align-items:center;gap:4px;
+  background:rgba(255,255,255,.15);padding:3px 10px;border-radius:20px;
+  font-size:.65rem;font-weight:700;color:#fff;white-space:nowrap}
+.dot-live{width:6px;height:6px;border-radius:50%;background:#4ADE80;
+  display:inline-block;animation:pulseAnim 2s infinite}
+.dot-ok{color:#10B981}
+.pc-body{padding:16px 20px;flex:1}
+.pc-features{list-style:none;font-size:.79rem;color:var(--t);line-height:1.7;margin-bottom:14px}
+.pc-features li{padding:2px 0;border-bottom:1px solid var(--b)}
+.pc-features li:last-child{border:none}
+.pc-stats{display:flex;border:1px solid var(--b);border-radius:var(--r);overflow:hidden;margin-top:10px}
+.pcs{flex:1;text-align:center;padding:8px 4px;border-inline-end:1px solid var(--b)}
+.pcs:last-child{border:none}
+.pcs-n{font-size:.85rem;font-weight:700;color:var(--n)}
+.pcs-l{font-size:.62rem;color:var(--ts);margin-top:1px}
+.pc-footer{padding:14px 20px;border-top:1px solid var(--b);display:flex;gap:8px;align-items:center}
+.btn-portal{flex:1;display:inline-flex;align-items:center;justify-content:center;
+  padding:9px 14px;border-radius:var(--rf);font-size:.79rem;font-weight:700;
+  text-decoration:none;color:#fff;transition:all .2s}
+.btn-portal:hover{opacity:.88;transform:translateY(-1px)}
+.bsma-btn{background:linear-gradient(135deg,#0066CC,#0891B2)}
+.givc-btn{background:linear-gradient(135deg,#059669,#0F766E)}
+.sbs-btn{background:linear-gradient(135deg,#7C3AED,#4F46E5)}
+.oracle-btn{background:linear-gradient(135deg,#C9A84C,#92400E)}
+.nphies-btn{background:linear-gradient(135deg,#1A2B4A,#0066CC)}
+.voice-btn{background:linear-gradient(135deg,#DB2777,#9333EA)}
+.btn-secondary-sm{padding:8px 12px;border-radius:var(--rf);font-size:.75rem;font-weight:600;
+  border:1px solid var(--b);background:var(--bg);color:var(--ts);text-decoration:none;transition:all .2s}
+.btn-secondary-sm:hover{border-color:var(--p);color:var(--p)}
+.btn-voice{padding:8px 12px;border-radius:var(--rf);font-size:.75rem;font-weight:600;
+  background:rgba(219,39,119,.1);border:1px solid rgba(219,39,119,.2);color:#DB2777;
+  text-decoration:none;transition:all .2s;white-space:nowrap}
+@media(max-width:1100px){.portal-hub-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){.portal-hub-grid{grid-template-columns:1fr}}
 /* BLOG */
 .g4-blog{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 @media(max-width:1100px){.g4-blog{grid-template-columns:repeat(2,1fr)}}
@@ -1000,6 +1059,7 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
     <a href="#depts">${T.depts}</a>
     <a href="#branches">${T.branches}</a>
     <a href="#doctors">${T.doctors}</a>
+    <a href="#portals">${ar ? 'بواباتنا' : 'Portals'}</a>
     <a href="#blog">${T.blog}</a>
     <a href="#academy">${T.academy_nav}</a>
     <a href="https://bsma.elfadil.com" target="_blank">BSMA</a>
@@ -1048,15 +1108,16 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
 </div>
 </section>
 
-<!-- INTEGRATION STRIP -->
+<!-- INTEGRATION STRIP — Live status badges -->
 <div class="int-strip">
 <div class="c"><div class="int-inner">
-  <span class="int-tag" id="oracle-tag">🔷 Oracle Bridge ✓</span>
-  <span class="int-tag" id="nphies-tag">🏛️ NPHIES Live ✓</span>
-  <span class="int-tag">🤖 ClaimLinc AI</span>
-  <span class="int-tag">💊 1,000 ${ar ? 'دواء' : 'Drugs'}</span>
-  <span class="int-tag">📚 286 ${ar ? 'وثيقة طبية' : 'Clinical Docs'}</span>
-  <span class="int-tag">🛡️ 10 ${ar ? 'مؤمّن' : 'Insurers'}</span>
+  <span class="int-tag status-tag" id="bsma-badge" onclick="goPortal('bsma')">🙂 BSMA <span class="pulse">●</span></span>
+  <span class="int-tag status-tag" id="givc-badge" onclick="goPortal('givc')">🩺 GIVC <span class="pulse">●</span></span>
+  <span class="int-tag status-tag" id="sbs-badge"  onclick="goPortal('sbs')">💰 SBS  <span class="pulse">●</span></span>
+  <span class="int-tag status-tag" id="oracle-tag">🔷 Oracle <span class="pulse" id="oracle-dot">●</span></span>
+  <span class="int-tag status-tag" id="nphies-tag">🏛️ NPHIES <span class="pulse">●</span></span>
+  <span class="int-tag" id="sar-badge">SAR <span id="sar-val">835.7M</span></span>
+  <span class="int-tag" id="rate-badge"><span id="rate-val">98.6</span>% ${ar ? 'موافقة' : 'Approval'}</span>
 </div></div>
 </div>
 
@@ -1096,6 +1157,210 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
 <div class="c">
   <div class="sec-head"><h2>${T.h_insurance}</h2><p>${T.p_insurance}</p></div>
   <div class="ins-grid">${insHtml}</div>
+</div>
+</section>
+
+<!-- PORTAL HUB — Role-based routing for all user types -->
+<section class="sec sec-alt" id="portals">
+<div class="c">
+  <div class="sec-head">
+    <h2>${ar ? 'بواباتنا الذكية' : 'Smart Portal Hub'}</h2>
+    <p>${ar ? 'الوصول الفوري للبوابة المناسبة — حسب دورك ومهمتك' : 'Instant access to the right portal — by role and task'}</p>
+  </div>
+
+  <!-- Role selector tabs -->
+  <div class="role-tabs">
+    <button class="role-tab active" data-role="all"     onclick="setRole(this,'all')">${ar ? '🌐 الكل' : '🌐 All'}</button>
+    <button class="role-tab"        data-role="patient"  onclick="setRole(this,'patient')">${ar ? '🙂 مريض' : '🙂 Patient'}</button>
+    <button class="role-tab"        data-role="clinician" onclick="setRole(this,'clinician')">${ar ? '🩺 طبيب' : '🩺 Clinician'}</button>
+    <button class="role-tab"        data-role="billing"  onclick="setRole(this,'billing')">${ar ? '💰 فواتير' : '💰 Billing'}</button>
+    <button class="role-tab"        data-role="admin"    onclick="setRole(this,'admin')">${ar ? '⚙️ إداري' : '⚙️ Admin'}</button>
+  </div>
+
+  <!-- Portal cards grid -->
+  <div class="portal-hub-grid" id="portal-grid">
+
+    <!-- BSMA — Patient Portal -->
+    <div class="portal-card" data-roles="all patient">
+      <div class="pc-header bsma-hdr">
+        <div class="pc-icon">🙂</div>
+        <div>
+          <div class="pc-name">BSMA</div>
+          <div class="pc-sub">${ar ? 'بوابة المريض' : 'Patient Portal'}</div>
+        </div>
+        <div class="pc-badge" id="bsma-status"><span class="dot-live"></span>${ar ? 'مباشر' : 'Live'}</div>
+      </div>
+      <div class="pc-body">
+        <ul class="pc-features">
+          <li>📅 ${ar ? 'حجز مواعيد عبر Oracle OPD' : 'Book via Oracle OPD'}</li>
+          <li>🛡️ ${ar ? 'التحقق من أهلية التأمين NPHIES' : 'NPHIES eligibility check'}</li>
+          <li>📋 ${ar ? 'متابعة المطالبات' : 'Track claims'}</li>
+          <li>🤖 ${ar ? 'بسمة — المساعدة الصوتية AI' : 'Basma — AI voice assistant'}</li>
+          <li>🔍 ${ar ? 'البحث في السجل الطبي' : 'Medical record search'}</li>
+        </ul>
+        <div class="pc-stats" id="bsma-live-stats">
+          <div class="pcs"><div class="pcs-n" id="bsma-pa">51,018</div><div class="pcs-l">${ar ? 'موافقة مسبقة' : 'Prior Auths'}</div></div>
+          <div class="pcs"><div class="pcs-n" id="bsma-claims">15,138</div><div class="pcs-l">${ar ? 'مطالبة' : 'Claims'}</div></div>
+          <div class="pcs"><div class="pcs-n">6</div><div class="pcs-l">${ar ? 'مستشفيات' : 'Hospitals'}</div></div>
+        </div>
+      </div>
+      <div class="pc-footer">
+        <a href="https://bsma.elfadil.com" target="_blank" class="btn btn-portal bsma-btn">${ar ? '🚀 الدخول لبوابة المريض' : '🚀 Enter Patient Portal'}</a>
+        <a href="/voice/widget" target="_blank" class="btn btn-voice">🎙️ ${ar ? 'بسمة' : 'Basma Voice'}</a>
+      </div>
+    </div>
+
+    <!-- GIVC — Clinician Portal -->
+    <div class="portal-card" data-roles="all clinician">
+      <div class="pc-header givc-hdr">
+        <div class="pc-icon">🩺</div>
+        <div>
+          <div class="pc-name">GIVC</div>
+          <div class="pc-sub">${ar ? 'بوابة الطبيب' : 'Clinician Portal'}</div>
+        </div>
+        <div class="pc-badge" id="givc-status"><span class="dot-live"></span>${ar ? 'مباشر' : 'Live'}</div>
+      </div>
+      <div class="pc-body">
+        <ul class="pc-features">
+          <li>🏥 ${ar ? 'قائمة انتظار المرضى المباشرة' : 'Live patient queue'}</li>
+          <li>📝 ${ar ? 'توثيق سريري FHIR R4' : 'FHIR R4 clinical docs'}</li>
+          <li>💊 ${ar ? 'الطلبات والصرف الدوائي' : 'Orders & prescriptions'}</li>
+          <li>📊 ${ar ? 'لوحة إحصائيات NPHIES' : 'NPHIES stats dashboard'}</li>
+          <li>🔗 ${ar ? 'الإحالات بين الأطباء' : 'Physician referrals'}</li>
+        </ul>
+        <div class="pc-stats" id="givc-live-stats">
+          <div class="pcs"><div class="pcs-n" id="givc-queue">—</div><div class="pcs-l">${ar ? 'في الانتظار' : 'In Queue'}</div></div>
+          <div class="pcs"><div class="pcs-n" id="givc-docs">5</div><div class="pcs-l">${ar ? 'طبيب متاح' : 'Doctors'}</div></div>
+          <div class="pcs"><div class="pcs-n" id="givc-rate">98.6%</div><div class="pcs-l">${ar ? 'موافقة' : 'Approval'}</div></div>
+        </div>
+      </div>
+      <div class="pc-footer">
+        <a href="https://givc.elfadil.com" target="_blank" class="btn btn-portal givc-btn">${ar ? '🚀 الدخول لبوابة الطبيب' : '🚀 Enter Clinician Portal'}</a>
+        <a href="https://sdc.elfadil.com" target="_blank" class="btn btn-secondary-sm">📋 SDC</a>
+      </div>
+    </div>
+
+    <!-- SBS — Billing Portal -->
+    <div class="portal-card" data-roles="all billing admin">
+      <div class="pc-header sbs-hdr">
+        <div class="pc-icon">💰</div>
+        <div>
+          <div class="pc-name">SBS ClaimLinc</div>
+          <div class="pc-sub">${ar ? 'بوابة الفواتير' : 'Billing & Claims'}</div>
+        </div>
+        <div class="pc-badge" id="sbs-status"><span class="dot-live"></span>${ar ? 'مباشر' : 'Live'}</div>
+      </div>
+      <div class="pc-body">
+        <ul class="pc-features">
+          <li>📤 ${ar ? 'تقديم مطالبات NPHIES' : 'NPHIES claim submission'}</li>
+          <li>🛡️ ${ar ? 'التحقق من تغطية التأمين' : 'Insurance coverage check'}</li>
+          <li>⚠️ ${ar ? 'تحليل رفضات الرياض (88.5%)' : 'Riyadh rejections analysis (88.5%)'}</li>
+          <li>🤖 ${ar ? 'ClaimLinc AI — تحسين تلقائي' : 'ClaimLinc AI auto-optimize'}</li>
+          <li>📊 ${ar ? 'تقارير إيرادات AR-DRG' : 'AR-DRG revenue reports'}</li>
+        </ul>
+        <div class="pc-stats" id="sbs-live-stats">
+          <div class="pcs"><div class="pcs-n">SAR 835M</div><div class="pcs-l">${ar ? 'إجمالي الشبكة' : 'Network'}</div></div>
+          <div class="pcs"><div class="pcs-n" id="sbs-cov">6</div><div class="pcs-l">${ar ? 'وثائق تأمين' : 'Coverage'}</div></div>
+          <div class="pcs"><div class="pcs-n" style="color:#EF4444">SAR 11.3M</div><div class="pcs-l">${ar ? 'رفضات RUH' : 'RUH Rejected'}</div></div>
+        </div>
+      </div>
+      <div class="pc-footer">
+        <a href="https://sbs.elfadil.com" target="_blank" class="btn btn-portal sbs-btn">${ar ? '🚀 الدخول لبوابة الفواتير' : '🚀 Enter Billing Portal'}</a>
+        <a href="/api/nphies/analysis" target="_blank" class="btn btn-secondary-sm">📊 API</a>
+      </div>
+    </div>
+
+    <!-- Oracle HIS — Admin/Clinical -->
+    <div class="portal-card" data-roles="all admin clinician">
+      <div class="pc-header oracle-hdr">
+        <div class="pc-icon">🔷</div>
+        <div>
+          <div class="pc-name">Oracle OASIS</div>
+          <div class="pc-sub">${ar ? 'نظام المستشفى HIS' : 'Hospital HIS'}</div>
+        </div>
+        <div class="pc-badge" id="oracle-status"><span class="dot-live"></span>${ar ? 'مباشر' : 'Live'}</div>
+      </div>
+      <div class="pc-body">
+        <ul class="pc-features">
+          <li>🏥 ${ar ? '6 مستشفيات Oracle OASIS' : '6 Oracle OASIS hospitals'}</li>
+          <li>🌐 ${ar ? 'جسر Cloudflare (بدون VPN)' : 'Cloudflare bridge (no VPN)'}</li>
+          <li>🔐 ${ar ? 'FHIR R4 + HIPAA + PDPL' : 'FHIR R4 + HIPAA + PDPL'}</li>
+          <li>🔄 ${ar ? 'مزامنة المواعيد تلقائياً' : 'Auto appointment sync'}</li>
+          <li>🧪 ${ar ? 'نتائج المختبر والأشعة' : 'Lab & radiology results'}</li>
+        </ul>
+        <div class="pc-stats oracle-tunnel" id="oracle-tunnel-stats">
+          <div class="pcs"><div class="pcs-n dot-ok">MED ✓</div><div class="pcs-l">Madinah</div></div>
+          <div class="pcs"><div class="pcs-n dot-ok">KHM ✓</div><div class="pcs-l">Khamis</div></div>
+          <div class="pcs"><div class="pcs-n dot-ok">ABH ✓</div><div class="pcs-l">Abha</div></div>
+        </div>
+      </div>
+      <div class="pc-footer">
+        <a href="https://oracle-riyadh.elfadil.com" target="_blank" class="btn btn-portal oracle-btn">${ar ? '🔷 Oracle الرياض' : '🔷 Oracle Riyadh'}</a>
+        <a href="https://oracle-madinah.elfadil.com" target="_blank" class="btn btn-secondary-sm">المدينة</a>
+      </div>
+    </div>
+
+    <!-- NPHIES — Compliance -->
+    <div class="portal-card" data-roles="all admin billing">
+      <div class="pc-header nphies-hdr">
+        <div class="pc-icon">🏛️</div>
+        <div>
+          <div class="pc-name">NPHIES</div>
+          <div class="pc-sub">${ar ? 'منصة التأمين الوطني' : 'National Health Insurance'}</div>
+        </div>
+        <div class="pc-badge"><span class="dot-live"></span>${ar ? 'مباشر' : 'Live'}</div>
+      </div>
+      <div class="pc-body">
+        <ul class="pc-features">
+          <li>✅ ${ar ? 'رفع مطالبات GSS مباشرة' : 'Direct GSS claim submission'}</li>
+          <li>🔍 ${ar ? 'التحقق من الأهلية (270/271)' : 'Eligibility (270/271)'}</li>
+          <li>📋 ${ar ? 'الموافقات المسبقة PA' : 'Prior authorizations'}</li>
+          <li>📊 ${ar ? '81 مطالبة GSS | 51,297 PA' : '81 GSS claims | 51,297 PA'}</li>
+          <li>🔔 ${ar ? 'تنبيهات رفض الرياض ⚠️' : 'Riyadh rejection alerts ⚠️'}</li>
+        </ul>
+        <div class="pc-stats">
+          <div class="pcs"><div class="pcs-n">SAR 835M</div><div class="pcs-l">Network</div></div>
+          <div class="pcs"><div class="pcs-n" style="color:#EAB308">88.5%</div><div class="pcs-l">RUH Rate</div></div>
+          <div class="pcs"><div class="pcs-n" style="color:#10B981">100%</div><div class="pcs-l">Others</div></div>
+        </div>
+      </div>
+      <div class="pc-footer">
+        <a href="https://portal.nphies.sa" target="_blank" class="btn btn-portal nphies-btn">${ar ? '🏛️ بوابة NPHIES' : '🏛️ NPHIES Portal'}</a>
+        <a href="/api/nphies/analysis" target="_blank" class="btn btn-secondary-sm">📊 ${ar ? 'تحليل' : 'Analysis'}</a>
+      </div>
+    </div>
+
+    <!-- Basma Voice — AI Assistant -->
+    <div class="portal-card" data-roles="all patient">
+      <div class="pc-header voice-hdr">
+        <div class="pc-icon">🎙️</div>
+        <div>
+          <div class="pc-name">${ar ? 'بسمة' : 'Basma AI'}</div>
+          <div class="pc-sub">${ar ? 'المساعد الصوتي الذكي' : 'Voice AI Assistant'}</div>
+        </div>
+        <div class="pc-badge"><span class="dot-live"></span>ElevenLabs</div>
+      </div>
+      <div class="pc-body">
+        <ul class="pc-features">
+          <li>🎙️ ${ar ? 'تفاعل صوتي بالعربية والإنجليزية' : 'Arabic & English voice'}</li>
+          <li>📅 ${ar ? 'حجز مواعيد بالصوت' : 'Voice appointment booking'}</li>
+          <li>🛡️ ${ar ? 'التحقق الفوري من التأمين' : 'Instant eligibility check'}</li>
+          <li>📋 ${ar ? 'متابعة مطالبات NPHIES' : 'Track NPHIES claims'}</li>
+          <li>🤖 ${ar ? 'DeepSeek V4 + Claude Sonnet' : 'DeepSeek V4 + Claude Sonnet'}</li>
+        </ul>
+        <div class="pc-stats">
+          <div class="pcs"><div class="pcs-n">v2.1</div><div class="pcs-l">Version</div></div>
+          <div class="pcs"><div class="pcs-n">AR/EN</div><div class="pcs-l">Bilingual</div></div>
+          <div class="pcs"><div class="pcs-n">24/7</div><div class="pcs-l">${ar ? 'متاح' : 'Available'}</div></div>
+        </div>
+      </div>
+      <div class="pc-footer">
+        <a href="/voice/widget" target="_blank" class="btn btn-portal voice-btn">${ar ? '🎙️ تحدث مع بسمة' : '🎙️ Talk to Basma'}</a>
+        <a href="https://voice.hnh.brainsait.org" target="_blank" class="btn btn-secondary-sm">Web</a>
+      </div>
+    </div>
+
+  </div><!-- /portal-hub-grid -->
 </div>
 </section>
 
@@ -1441,12 +1706,134 @@ function sendChat() {
   })
   .catch(function() { typing.textContent = AR ? 'عذراً، خطأ مؤقت.' : 'Sorry, temporary error.'; });
 }
+
+// ── PORTAL HUB — Live data loader + role filtering ─────────────
+function setRole(btn, role) {
+  document.querySelectorAll('.role-tab').forEach(function(t) { t.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.portal-card').forEach(function(card) {
+    var roles = card.getAttribute('data-roles') || 'all';
+    if (role === 'all' || roles.split(' ').includes(role)) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+}
+
+function goPortal(key) {
+  var portals = {bsma:'https://bsma.elfadil.com',givc:'https://givc.elfadil.com',
+    sbs:'https://sbs.elfadil.com',oracle:'https://oracle-bridge.brainsait.org/health',
+    nphies:'https://portal.nphies.sa'};
+  if (portals[key]) window.open(portals[key], '_blank');
+}
+
+(function loadPortalHub() {
+  fetch(API + '/api/portal-hub')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var net = d.nphies || {};
+
+      // SAR + approval in strip
+      var sarEl = document.getElementById('sar-val');
+      var rateEl = document.getElementById('rate-val');
+      if (sarEl && net.network_sar) sarEl.textContent = (net.network_sar / 1e6).toFixed(1) + 'M';
+      if (rateEl && net.approval_rate) rateEl.textContent = net.approval_rate;
+
+      // BSMA card stats
+      var bPa = document.getElementById('bsma-pa');
+      var bCl = document.getElementById('bsma-claims');
+      if (bPa) bPa.textContent = (net.total_pa || 51018).toLocaleString();
+      if (bCl) bCl.textContent = (net.total_claims || 15138).toLocaleString();
+
+      // SBS coverage
+      var sbsCov = document.getElementById('sbs-cov');
+      if (sbsCov && d.coverage) sbsCov.textContent = d.coverage.total || 6;
+
+      // GIVC approval rate
+      var gRate = document.getElementById('givc-rate');
+      if (gRate && net.approval_rate) gRate.textContent = net.approval_rate + '%';
+
+      // Oracle + NPHIES badges in strip
+      var oTag = document.getElementById('oracle-tag');
+      if (oTag) oTag.innerHTML = (d.oracle_status ? '🔷 Oracle <span class="pulse">●</span>' : '🔷 Oracle ~');
+      var nTag = document.getElementById('nphies-tag');
+      if (nTag && net.network_sar > 0) nTag.innerHTML = '🏛️ NPHIES <span class="pulse">●</span>';
+
+      // Portal status badges
+      Object.keys(d.portals || {}).forEach(function(k) {
+        var el = document.getElementById(k + '-status');
+        if (!el) return;
+        var live = d.portals[k].status === 'live';
+        el.style.background = live ? 'rgba(74,222,128,.2)' : 'rgba(239,68,68,.15)';
+        el.querySelector('.dot-live').style.background = live ? '#4ADE80' : '#EF4444';
+      });
+    })
+    .catch(function() {});
+
+  // GIVC queue separately (may be slow)
+  fetch('https://givc.elfadil.com/api/queue', { signal: AbortSignal.timeout(5000) })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var el = document.getElementById('givc-queue');
+      if (el) el.textContent = (d.queue || []).length;
+    })
+    .catch(function() {});
+})();
+
 </script>
 </body>
 </html>`;
 }
 
 // ─── MAIN ROUTER ──────────────────────────────────────────────────────────────
+// ─── PORTAL HUB API — aggregates BSMA + GIVC + SBS + Oracle + NPHIES live ──
+async function apiPortalHub(env) {
+  const [bsmaNet, givcData, sbsData, oracleData] = await Promise.allSettled([
+    fetch('https://bsma.elfadil.com/basma/network',            { signal: AbortSignal.timeout(6000) }).then(r => r.ok ? r.json() : null),
+    fetch('https://givc.elfadil.com/api/nphies/summary',       { signal: AbortSignal.timeout(6000) }).then(r => r.ok ? r.json() : null),
+    fetch('https://sbs.elfadil.com/claimlinc/coverage/batch',  {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: '{"status":"active"}',                               signal: AbortSignal.timeout(6000),
+    }).then(r => r.ok ? r.json() : null),
+    fetch('https://oracle-bridge.brainsait.org/health',         {
+      headers: { 'X-API-Key': 'bsma-oracle-b2af3196522b556636b09f5d268cb976' },
+                                                                 signal: AbortSignal.timeout(5000),
+    }).then(r => r.ok ? r.json() : null),
+  ]);
+
+  const net    = bsmaNet.value;
+  const givc   = givcData.value;
+  const sbs    = sbsData.value;
+  const oracle = oracleData.value;
+  const fin    = net?.financials || {};
+  const br     = net?.by_branch || {};
+
+  return ok({
+    timestamp: new Date().toISOString(),
+    portals: {
+      bsma:   { url: 'https://bsma.elfadil.com',   status: net   ? 'live' : 'degraded', label_ar: 'بوابة المريض',    label_en: 'Patient Portal',   emoji: '🙂', version: '3.0.0' },
+      givc:   { url: 'https://givc.elfadil.com',   status: givc  ? 'live' : 'degraded', label_ar: 'بوابة الطبيب',   label_en: 'Clinician Portal',  emoji: '🩺', version: '2.2.1' },
+      sbs:    { url: 'https://sbs.elfadil.com',    status: sbs   ? 'live' : 'degraded', label_ar: 'بوابة الفواتير', label_en: 'Billing Portal',    emoji: '💰', version: '2.2.0' },
+      oracle: { url: 'https://oracle-bridge.brainsait.org', status: oracle ? 'live' : 'degraded', label_ar: 'Oracle HIS', label_en: 'Oracle HIS', emoji: '🔷', version: '2.0.0' },
+      nphies: { url: 'https://portal.nphies.sa',   status: fin.network_total_sar ? 'live' : 'degraded', label_ar: 'NPHIES',  label_en: 'NPHIES',  emoji: '🏛️', version: 'live' },
+    },
+    nphies: {
+      network_sar:   fin.network_total_sar    || 835690702.81,
+      approval_rate: fin.network_approval_rate_pct || 98.6,
+      total_claims:  fin.total_claims_gss     || 15138,
+      total_pa:      net?.prior_auth?.network_total || 51018,
+      by_branch:     br,
+    },
+    coverage: {
+      total:    sbs?.total || 6,
+      records:  sbs?.coverage || [],
+    },
+    oracle_status: oracle?.ok || false,
+    givc_summary: givc || null,
+  });
+}
+
 export default {
   async fetch(req, env) {
     if (req.method === 'OPTIONS') return cors();
@@ -1560,6 +1947,8 @@ export default {
     if (path === '/api/academy/courses')                   return apiAcademy(req, null);
     if (path.startsWith('/api/academy/courses/'))          return apiAcademy(req, path.slice('/api/academy/courses/'.length));
     if (path === '/api/academy/stats')                     return ok({ total_courses: 5, total_hours: 62, accreditation: 'SCFHS CPD + CHI', repos: ['nphies-course-platform','sbs','brainsait-rcm','open-webui','brainsait-mcp-dxt'] });
+
+    if (path === '/api/portal-hub')                        return apiPortalHub(env);
 
     // ── Voice Agent Proxy (PUBLIC — before auth) ────────────
     if (path.startsWith('/voice')) {
