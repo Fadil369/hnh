@@ -1659,14 +1659,15 @@ function buildHTML(lang) {
 <meta name="description" content="${T.tagline}">
 <title>${T.title} | HNH</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Serif+Arabic:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>\u{1F3E5}</text></svg>">
 <style>
 :root{
   --p:#0066CC;--pd:#004499;--n:#1A2B4A;--a:#C9A84C;--g:linear-gradient(135deg,#0066CC,#1A2B4A);--ga:linear-gradient(135deg,#C9A84C,#E8D48A);
   --s:#10B981;--bg:#F0F4FA;--sf:#FFFFFF;--b:#E2E8F0;--t:#0F172A;--ts:#64748B;
   --sh:0 2px 8px rgba(0,0,0,.08);--shd:0 8px 32px rgba(0,0,0,.12);--r:14px;--rf:9999px;
-  --font:${ar ? "'Tajawal'" : "'Inter'"},sans-serif;
+  --font:${ar ? "'IBM Plex Sans Arabic'" : "'Plus Jakarta Sans'"},sans-serif;
+--font-serif:${ar ? "'Noto Serif Arabic'" : "'Playfair Display'"},serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -1947,6 +1948,56 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
   .chat-box{width:calc(100vw - 32px)}
   .ftr-grid{grid-template-columns:1fr}
 }
+
+/* ── Branch Cards ── */
+.branch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.branch-card{background:var(--sf);border:1px solid var(--b);border-radius:16px;padding:22px;cursor:pointer;transition:all .25s;text-align:center;position:relative}
+.branch-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3);border-color:var(--a)}
+.bc-icon{font-size:2.4rem;margin-bottom:10px}
+.bc-name{font-weight:700;font-size:1rem;margin-bottom:3px;color:var(--n)}
+.bc-city{font-size:.78rem;color:var(--ts);margin-bottom:6px}
+.bc-beds{font-size:.74rem;color:var(--ts);margin-bottom:8px}
+.bc-rate{font-size:.8rem;font-weight:600;margin-bottom:10px}
+.bc-btn{display:inline-block;background:linear-gradient(135deg,var(--a),var(--a2,#0055aa));color:#fff;padding:7px 16px;border-radius:20px;font-size:.75rem;font-weight:600;text-decoration:none;transition:opacity .2s}
+.bc-btn:hover{opacity:.85}
+
+/* ── Department Grid ── */
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.dept-card{background:var(--sf);border:1px solid var(--b);border-radius:14px;padding:18px 12px;text-align:center;text-decoration:none;color:inherit;transition:all .25s;display:flex;flex-direction:column;align-items:center;gap:8px}
+.dept-card:hover{border-color:var(--a);transform:translateY(-3px);background:rgba(0,102,204,.06)}
+.dept-icon{font-size:2rem}
+.dept-name{font-size:.78rem;font-weight:600;color:var(--n)}
+
+/* ── Blog Enhancements ── */
+.blog-card{background:var(--sf);border:1px solid var(--b);border-radius:16px;overflow:hidden;transition:all .3s;display:block;text-decoration:none;color:inherit}
+.blog-card:hover{box-shadow:0 16px 48px rgba(0,0,0,.35);transform:translateY(-4px);border-color:var(--a)}
+.blog-top{background:var(--g);padding:22px 20px 16px;display:flex;align-items:center;gap:10px;position:relative}
+.blog-emoji{font-size:2.2rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
+.blog-body{padding:18px 20px 20px}
+.blog-title{font-size:.95rem;font-weight:700;line-height:1.5;margin-bottom:8px;font-family:var(--font-serif,var(--font))}
+.blog-excerpt{font-size:.8rem;color:var(--ts);line-height:1.7;margin-bottom:12px}
+.blog-meta{display:flex;gap:12px;font-size:.72rem;color:var(--ts);flex-wrap:wrap}
+
+/* ── Academy Enhancements ── */
+.course-card{background:linear-gradient(160deg,var(--sf) 0%,rgba(0,102,204,.04) 100%);border:1px solid var(--b);border-radius:16px;padding:24px;border-top:3px solid var(--a);transition:all .3s;position:relative;overflow:hidden}
+.course-card::before{content:'';position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle,rgba(0,102,204,.08) 0%,transparent 70%);pointer-events:none}
+.course-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.3);border-top-color:var(--a2,#0066ff)}
+.course-icon{font-size:2.4rem;margin-bottom:12px;display:block}
+.course-title{font-size:.95rem;font-weight:700;color:var(--n);margin-bottom:8px;line-height:1.5;font-family:var(--font-serif,var(--font))}
+.course-desc{font-size:.8rem;color:var(--ts);line-height:1.7;margin-bottom:14px}
+.academy-stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.stat-card{background:linear-gradient(135deg,var(--a),rgba(0,102,204,.6));border-radius:14px;padding:16px 24px;text-align:center;flex:1;min-width:80px}
+.stat-n{font-size:1.6rem;font-weight:800;color:#fff}
+.stat-l{font-size:.75rem;color:rgba(255,255,255,.85);font-weight:500}
+
+/* ── Portal Link Buttons ── */
+.portal-shortcuts{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;padding:16px;background:rgba(0,102,204,.06);border-radius:12px;border:1px solid rgba(0,102,204,.15)}
+.ps-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;font-size:.78rem;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid transparent}
+.ps-btn.bsma{background:rgba(0,102,204,.15);color:#4ea5ff;border-color:rgba(0,102,204,.3)}
+.ps-btn.givc{background:rgba(16,185,129,.12);color:#10b981;border-color:rgba(16,185,129,.25)}
+.ps-btn.sbs{background:rgba(139,92,246,.12);color:#a78bfa;border-color:rgba(139,92,246,.25)}
+.ps-btn.status{background:rgba(245,158,11,.1);color:#fbbf24;border-color:rgba(245,158,11,.2)}
+.ps-btn:hover{transform:translateY(-1px);opacity:.9}
 </style>
 </head>
 <body>
@@ -2033,7 +2084,29 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
 <section class="sec" id="depts">
 <div class="c">
   <div class="sec-head"><h2>${T.h_depts}</h2><p>${T.p_depts}</p></div>
-  <div class="g4" id="dept-grid"><div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ts)">${T.loading}</div></div>
+  <div class="dept-grid" id="dept-grid">${ar ? `<a href="https://bsma.elfadil.com?dept=Cardiology" target="_blank" class="dept-card"><div class="dept-icon">❤️</div><div class="dept-name">القلب</div></a>
+<a href="https://bsma.elfadil.com?dept=Neurology" target="_blank" class="dept-card"><div class="dept-icon">🧠</div><div class="dept-name">الأعصاب</div></a>
+<a href="https://bsma.elfadil.com?dept=Orthopedics" target="_blank" class="dept-card"><div class="dept-icon">🦴</div><div class="dept-name">العظام</div></a>
+<a href="https://bsma.elfadil.com?dept=Pediatrics" target="_blank" class="dept-card"><div class="dept-icon">👶</div><div class="dept-name">الأطفال</div></a>
+<a href="https://bsma.elfadil.com?dept=Ophthalmology" target="_blank" class="dept-card"><div class="dept-icon">👁️</div><div class="dept-name">العيون</div></a>
+<a href="https://bsma.elfadil.com?dept=Dentistry" target="_blank" class="dept-card"><div class="dept-icon">🦷</div><div class="dept-name">الأسنان</div></a>
+<a href="https://bsma.elfadil.com?dept=Oncology" target="_blank" class="dept-card"><div class="dept-icon">🎗️</div><div class="dept-name">الأورام</div></a>
+<a href="https://bsma.elfadil.com?dept=Emergency" target="_blank" class="dept-card"><div class="dept-icon">🚨</div><div class="dept-name">الطوارئ</div></a>
+<a href="https://bsma.elfadil.com?dept=Internal%20Med" target="_blank" class="dept-card"><div class="dept-icon">🩺</div><div class="dept-name">الباطنة</div></a>
+<a href="https://bsma.elfadil.com?dept=Gynecology" target="_blank" class="dept-card"><div class="dept-icon">👩</div><div class="dept-name">النساء</div></a>
+<a href="https://bsma.elfadil.com?dept=Radiology" target="_blank" class="dept-card"><div class="dept-icon">📷</div><div class="dept-name">الأشعة</div></a>
+<a href="https://bsma.elfadil.com?dept=Laboratory" target="_blank" class="dept-card"><div class="dept-icon">🔬</div><div class="dept-name">المختبر</div></a>` : `<a href="https://bsma.elfadil.com?dept=Cardiology" target="_blank" class="dept-card"><div class="dept-icon">❤️</div><div class="dept-name">Cardiology</div></a>
+<a href="https://bsma.elfadil.com?dept=Neurology" target="_blank" class="dept-card"><div class="dept-icon">🧠</div><div class="dept-name">Neurology</div></a>
+<a href="https://bsma.elfadil.com?dept=Orthopedics" target="_blank" class="dept-card"><div class="dept-icon">🦴</div><div class="dept-name">Orthopedics</div></a>
+<a href="https://bsma.elfadil.com?dept=Pediatrics" target="_blank" class="dept-card"><div class="dept-icon">👶</div><div class="dept-name">Pediatrics</div></a>
+<a href="https://bsma.elfadil.com?dept=Ophthalmology" target="_blank" class="dept-card"><div class="dept-icon">👁️</div><div class="dept-name">Ophthalmology</div></a>
+<a href="https://bsma.elfadil.com?dept=Dentistry" target="_blank" class="dept-card"><div class="dept-icon">🦷</div><div class="dept-name">Dentistry</div></a>
+<a href="https://bsma.elfadil.com?dept=Oncology" target="_blank" class="dept-card"><div class="dept-icon">🎗️</div><div class="dept-name">Oncology</div></a>
+<a href="https://bsma.elfadil.com?dept=Emergency" target="_blank" class="dept-card"><div class="dept-icon">🚨</div><div class="dept-name">Emergency</div></a>
+<a href="https://bsma.elfadil.com?dept=Internal%20Med" target="_blank" class="dept-card"><div class="dept-icon">🩺</div><div class="dept-name">Internal Med</div></a>
+<a href="https://bsma.elfadil.com?dept=Gynecology" target="_blank" class="dept-card"><div class="dept-icon">👩</div><div class="dept-name">Gynecology</div></a>
+<a href="https://bsma.elfadil.com?dept=Radiology" target="_blank" class="dept-card"><div class="dept-icon">📷</div><div class="dept-name">Radiology</div></a>
+<a href="https://bsma.elfadil.com?dept=Laboratory" target="_blank" class="dept-card"><div class="dept-icon">🔬</div><div class="dept-name">Laboratory</div></a>`}</div>
 </div>
 </section>
 
@@ -2041,7 +2114,103 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
 <section class="sec sec-alt" id="branches">
 <div class="c">
   <div class="sec-head"><h2>${T.h_branches}</h2><p>${T.p_branches}</p></div>
-  <div class="g3" id="branch-grid"><div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ts)">${T.loading}</div></div>
+  <div class="branch-grid" id="branch-grid">
+${ar ? `<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?branch=r001','_blank')">
+  <div class="bc-icon">🏥</div>
+  <div class="bc-name">الرياض</div>
+  <div class="bc-city">الرياض</div>
+  <div class="bc-beds">300 سرير</div>
+  <div class="bc-rate" style="color:#ff6b6b">⚠️ 88.5%</div>
+  <a href="https://bsma.elfadil.com?branch=r001" target="_blank" class="bc-btn">حجز موعد</a>
+</div>
+<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?branch=m001','_blank')">
+  <div class="bc-icon">🕌</div>
+  <div class="bc-name">المدينة المنورة</div>
+  <div class="bc-city">المدينة</div>
+  <div class="bc-beds">250 سرير</div>
+  <div class="bc-rate" style="color:#00c864">✅ 100%</div>
+  <a href="https://bsma.elfadil.com?branch=m001" target="_blank" class="bc-btn">حجز موعد</a>
+</div>
+<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?branch=u001','_blank')">
+  <div class="bc-icon">🌿</div>
+  <div class="bc-name">عنيزة</div>
+  <div class="bc-city">عنيزة</div>
+  <div class="bc-beds">180 سرير</div>
+  <div class="bc-rate" style="color:#00c864">✅ 100%</div>
+  <a href="https://bsma.elfadil.com?branch=u001" target="_blank" class="bc-btn">حجز موعد</a>
+</div>
+<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?branch=k001','_blank')">
+  <div class="bc-icon">🏔️</div>
+  <div class="bc-name">خميس مشيط</div>
+  <div class="bc-city">خميس مشيط</div>
+  <div class="bc-beds">400 سرير</div>
+  <div class="bc-rate" style="color:#00c864">✅ 100%</div>
+  <a href="https://bsma.elfadil.com?branch=k001" target="_blank" class="bc-btn">حجز موعد</a>
+</div>
+<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?branch=j001','_blank')">
+  <div class="bc-icon">🌊</div>
+  <div class="bc-name">جيزان</div>
+  <div class="bc-city">جيزان</div>
+  <div class="bc-beds">220 سرير</div>
+  <div class="bc-rate" style="color:#00c864">✅ 100%</div>
+  <a href="https://bsma.elfadil.com?branch=j001" target="_blank" class="bc-btn">حجز موعد</a>
+</div>
+<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?branch=a001','_blank')">
+  <div class="bc-icon">⛰️</div>
+  <div class="bc-name">أبها</div>
+  <div class="bc-city">أبها</div>
+  <div class="bc-beds">200 سرير</div>
+  <div class="bc-rate" style="color:#00c864">✅ 100%</div>
+  <a href="https://bsma.elfadil.com?branch=a001" target="_blank" class="bc-btn">حجز موعد</a>
+</div>` : `<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?branch=r001','_blank')">
+  <div class="bc-icon">🏥</div>
+  <div class="bc-name">Riyadh</div>
+  <div class="bc-city">Riyadh</div>
+  <div class="bc-beds">300 beds</div>
+  <div class="bc-rate" style="color:#ff6b6b">⚠️ 88.5%</div>
+  <a href="https://bsma.elfadil.com?branch=r001" target="_blank" class="bc-btn">Book</a>
+</div>
+<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?branch=m001','_blank')">
+  <div class="bc-icon">🕌</div>
+  <div class="bc-name">Madinah</div>
+  <div class="bc-city">Madinah</div>
+  <div class="bc-beds">250 beds</div>
+  <div class="bc-rate" style="color:#00c864">✅ 100%</div>
+  <a href="https://bsma.elfadil.com?branch=m001" target="_blank" class="bc-btn">Book</a>
+</div>
+<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?branch=u001','_blank')">
+  <div class="bc-icon">🌿</div>
+  <div class="bc-name">Unaizah</div>
+  <div class="bc-city">Unaizah</div>
+  <div class="bc-beds">180 beds</div>
+  <div class="bc-rate" style="color:#00c864">✅ 100%</div>
+  <a href="https://bsma.elfadil.com?branch=u001" target="_blank" class="bc-btn">Book</a>
+</div>
+<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?branch=k001','_blank')">
+  <div class="bc-icon">🏔️</div>
+  <div class="bc-name">Khamis Mushait</div>
+  <div class="bc-city">Khamis</div>
+  <div class="bc-beds">400 beds</div>
+  <div class="bc-rate" style="color:#00c864">✅ 100%</div>
+  <a href="https://bsma.elfadil.com?branch=k001" target="_blank" class="bc-btn">Book</a>
+</div>
+<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?branch=j001','_blank')">
+  <div class="bc-icon">🌊</div>
+  <div class="bc-name">Jizan</div>
+  <div class="bc-city">Jizan</div>
+  <div class="bc-beds">220 beds</div>
+  <div class="bc-rate" style="color:#00c864">✅ 100%</div>
+  <a href="https://bsma.elfadil.com?branch=j001" target="_blank" class="bc-btn">Book</a>
+</div>
+<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?branch=a001','_blank')">
+  <div class="bc-icon">⛰️</div>
+  <div class="bc-name">Abha</div>
+  <div class="bc-city">Abha</div>
+  <div class="bc-beds">200 beds</div>
+  <div class="bc-rate" style="color:#00c864">✅ 100%</div>
+  <a href="https://bsma.elfadil.com?branch=a001" target="_blank" class="bc-btn">Book</a>
+</div>`}
+</div>
 </div>
 </section>
 
@@ -2053,7 +2222,56 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
     <input class="search-inp" id="doc-search" placeholder="${T.search_doc}">
     <select class="search-sel" id="spec-filter"><option value="">${T.all_specs}</option></select>
   </div>
-  <div class="g4" id="doc-grid"><div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ts)">${T.loading}</div></div>
+  <div class="g4" id="doc-grid">
+<div class="doc-card" onclick="window.open('https://bsma.elfadil.com?spec=Cardiology','_blank')" style="cursor:pointer">
+  <div class="doc-av" style="font-size:1.5rem">❤️</div>
+  <div class="doc-name">${ar ? "د. أحمد السعيد" : "Dr. Ahmed Al-Saeed"}</div>
+  <div class="doc-spec">Cardiology</div>
+  <div class="doc-dept" style="font-size:.72rem;color:var(--ts)">Riyadh</div>
+</div>
+<div class="doc-card" onclick="window.open('https://bsma.elfadil.com?spec=Cardiology','_blank')" style="cursor:pointer">
+  <div class="doc-av" style="font-size:1.5rem">❤️</div>
+  <div class="doc-name">${ar ? "د. محمد الشبراوي" : "Dr. Mohamed Al-Shabrawy"}</div>
+  <div class="doc-spec">Cardiology</div>
+  <div class="doc-dept" style="font-size:.72rem;color:var(--ts)">Riyadh</div>
+</div>
+<div class="doc-card" onclick="window.open('https://bsma.elfadil.com?spec=Pediatrics','_blank')" style="cursor:pointer">
+  <div class="doc-av" style="font-size:1.5rem">👶</div>
+  <div class="doc-name">${ar ? "د. فاطمة الزهراني" : "Dr. Fatima Al-Zahrani"}</div>
+  <div class="doc-spec">Pediatrics</div>
+  <div class="doc-dept" style="font-size:.72rem;color:var(--ts)">Madinah</div>
+</div>
+<div class="doc-card" onclick="window.open('https://bsma.elfadil.com?spec=Orthopedics','_blank')" style="cursor:pointer">
+  <div class="doc-av" style="font-size:1.5rem">🦴</div>
+  <div class="doc-name">${ar ? "د. عمر العسيري" : "Dr. Omar Al-Assiri"}</div>
+  <div class="doc-spec">Orthopedics</div>
+  <div class="doc-dept" style="font-size:.72rem;color:var(--ts)">Khamis</div>
+</div>
+<div class="doc-card" onclick="window.open('https://bsma.elfadil.com?spec=Gynecology','_blank')" style="cursor:pointer">
+  <div class="doc-av" style="font-size:1.5rem">👩</div>
+  <div class="doc-name">${ar ? "د. سارة الغامدي" : "Dr. Sarah Al-Ghamdi"}</div>
+  <div class="doc-spec">Gynecology</div>
+  <div class="doc-dept" style="font-size:.72rem;color:var(--ts)">Riyadh</div>
+</div>
+<div class="doc-card" onclick="window.open('https://bsma.elfadil.com?spec=Neurology','_blank')" style="cursor:pointer">
+  <div class="doc-av" style="font-size:1.5rem">🧠</div>
+  <div class="doc-name">${ar ? "د. خالد المالكي" : "Dr. Khalid Al-Maliki"}</div>
+  <div class="doc-spec">Neurology</div>
+  <div class="doc-dept" style="font-size:.72rem;color:var(--ts)">Jizan</div>
+</div>
+<div class="doc-card" onclick="window.open('https://bsma.elfadil.com?spec=Ophthalmology','_blank')" style="cursor:pointer">
+  <div class="doc-av" style="font-size:1.5rem">👁️</div>
+  <div class="doc-name">${ar ? "د. نورة القحطاني" : "Dr. Noura Al-Qahtani"}</div>
+  <div class="doc-spec">Ophthalmology</div>
+  <div class="doc-dept" style="font-size:.72rem;color:var(--ts)">Unaizah</div>
+</div>
+<div class="doc-card" onclick="window.open('https://bsma.elfadil.com?spec=Internal%20Med.','_blank')" style="cursor:pointer">
+  <div class="doc-av" style="font-size:1.5rem">🩺</div>
+  <div class="doc-name">${ar ? "د. يوسف الدوسري" : "Dr. Youssef Al-Dosari"}</div>
+  <div class="doc-spec">Internal Med.</div>
+  <div class="doc-dept" style="font-size:.72rem;color:var(--ts)">Abha</div>
+</div>
+</div>
   <div style="text-align:center;margin-top:24px">
     <a href="https://bsma.elfadil.com" target="_blank" class="btn btn-o">${T.view_all}</a>
   </div>
@@ -2069,6 +2287,19 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
 </section>
 
 <!-- PORTAL HUB \u2014 Role-based routing for all user types -->
+<section style="padding:14px 0;border-bottom:1px solid var(--b);background:rgba(0,0,0,.2)">
+<div class="c">
+<div class="portal-shortcuts">
+  <span style="font-size:.74rem;font-weight:600;color:var(--ts);align-self:center;white-space:nowrap">${ar ? "وصول سريع:" : "Quick Access:"}</span>
+  <a href="https://bsma.elfadil.com" target="_blank" class="ps-btn bsma">🙂 ${ar ? "بوابة المريض" : "Patient Portal"}</a>
+  <a href="https://givc.elfadil.com" target="_blank" class="ps-btn givc">🩺 ${ar ? "بوابة الطبيب" : "Clinician"}</a>
+  <a href="https://sbs.elfadil.com" target="_blank" class="ps-btn sbs">💰 ${ar ? "الفواتير" : "Billing"}</a>
+  <a href="https://givc.elfadil.com/handoff-board" target="_blank" class="ps-btn givc">📋 ${ar ? "لوحة المتابعة" : "Handoff Board"}</a>
+  <a href="/status" class="ps-btn status">📊 ${ar ? "حالة الأنظمة" : "System Status"}</a>
+  <a href="/denial" class="ps-btn sbs">🔮 ${ar ? "محلل الرفض AI" : "AI Denial Analyzer"}</a>
+</div>
+</div>
+</section>
 <section class="sec sec-alt" id="portals">
 <div class="c">
   <div class="sec-head">
