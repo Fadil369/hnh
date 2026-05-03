@@ -1,4 +1,4 @@
-# HNH Unified Worker — wrangler.toml
+# HNH Unified Worker v5.0 — wrangler.toml
 name = "hnh-unified"
 main = "worker.js"
 compatibility_date = "2026-05-01"
@@ -32,11 +32,10 @@ FACILITY_LICENSE   = "10000000000988"
 HUB_VERSION        = "9.0.0"
 
 # Secrets (wrangler secret put):
-#   API_KEY          ← protects /api/claims /api/visits /api/orders /api/rcm
-#   ORACLE_API_KEY   ← Oracle Bridge authentication (bsma-oracle-...)
-#   CLAIMLINC_KEY    ← ClaimLinc API key (override default)
-#   DEEPSEEK_API_KEY ← Basma primary AI model
-#   NPHIES_TOKEN     ← Direct NPHIES portal (optional)
+#   API_KEY            ← protects /api/claims /api/visits /api/orders /api/rcm
+#   ORACLE_API_KEY     ← Oracle Bridge authentication (fallback hardcoded in worker)
+#   CLAIMLINC_KEY      ← ClaimLinc NPHIES API key (fallback hardcoded in worker)
+#   NPHIES_TOKEN       ← Direct NPHIES portal (optional)
 #   ELEVENLABS_API_KEY ← Basma TTS (optional)
 
 # Route (already configured via CF API):
@@ -44,30 +43,4 @@ HUB_VERSION        = "9.0.0"
 
 [env.production]
 name = "hnh-unified"
-routes = [
-  { pattern = "hnh.brainsait.org/*", zone_name = "brainsait.org" }
-]
-
-[env.production.vars]
-ORACLE_BRIDGE_URL  = "https://oracle-bridge.brainsait.org"
-NPHIES_MIRROR_URL  = "https://nphies-mirror.brainsait-fadil.workers.dev"
-FACILITY_LICENSE   = "10000000000988"
-HUB_VERSION        = "9.0.0"
-
-[env.production.ai]
-binding = "AI"
-
-[[env.production.d1_databases]]
-binding = "DB"
-database_name = "hnh-gharnata"
-database_id = "d6960732-d5d0-4271-84e9-ba988c9c32dc"
-
-[[env.production.d1_databases]]
-binding = "HIS_DB"
-database_name = "his_database"
-database_id = "f79d9487-fd6e-45e0-aaf1-ea9f2a69493d"
-
-[[env.production.d1_databases]]
-binding = "BASMA_DB"
-database_name = "basma_production"
-database_id = "c30dd8f8-62f6-42f6-ad47-d442bf3bde7d"
+vars = { HUB_VERSION = "9.0.0" }
