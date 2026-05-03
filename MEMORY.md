@@ -3,7 +3,7 @@
 ## System Architecture
 
 ### Live Deployments
-- **hnh.brainsait.org** — `hnh-unified` worker v9.0.1 (monolith, deployed from root `wrangler.toml`)
+- **hnh.brainsait.org** — `hnh-unified` worker v12.0.0 (remote) / v12.1.0 (local) (monolith, deployed from root `wrangler.toml`)
 - **oracle-bridge.brainsait.org** — v2.0.1 (separate worker, elfadil.com zone for tunnel routing)
 - **api.brainsait.org** — ecosystem orchestrator (routes: /ecosystem/*, /claimlinc/*)
 - **claimlinc-api** — ClaimLinc integration worker (code deployed, routes need CF Dashboard setup)
