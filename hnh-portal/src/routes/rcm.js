@@ -153,8 +153,7 @@ export function rcmHealth() {
   });
 }
 
-export async function getRcmBatch(req, env, ctx, params) {
-  const batchId = params[0];
+export async function getRcmBatch(req, env, ctx, batchId) {
   const batch = KNOWN_BATCHES[batchId];
   if (!batch) return json({ error: `Batch ${batchId} not found`, available: Object.keys(KNOWN_BATCHES) }, 404);
 
@@ -390,8 +389,8 @@ export async function generateAppeal(req) {
   });
 }
 
-export async function getRcmDashboard(req, env, ctx, params) {
-  const branch = params[0] ?? 'riyadh';
+export async function getRcmDashboard(req, env, ctx, branch) {
+  branch = branch ?? 'riyadh';
 
   // Live rejected claims from D1
   let rejectedClaims = [];
@@ -428,7 +427,7 @@ export async function getRcmDashboard(req, env, ctx, params) {
   });
 }
 
-export async function getRejectedClaims(req, env, ctx, params, url) {
+export async function getRejectedClaims(req, env, ctx, _p, url) {
   if (!url) url = new URL(req.url);
   const branch = url.searchParams.get('branch') ?? '';
   const payer  = url.searchParams.get('payer') ?? '';
@@ -449,8 +448,7 @@ export async function getRejectedClaims(req, env, ctx, params, url) {
   return json({ success: true, count: results?.length ?? 0, claims: results ?? [] });
 }
 
-export async function markAppeal(req, env, ctx, params) {
-  const claimId = params[0];
+export async function markAppeal(req, env, ctx, claimId) {
   const body = await req.json();
   if (!env.DB) return json({ error: 'Database not available' }, 503);
   await env.DB.prepare(
@@ -466,8 +464,7 @@ export async function markAppeal(req, env, ctx, params) {
   return json({ success: true, claim_id: claimId, status: 'appealed', appeal_date: new Date().toISOString() });
 }
 
-export async function markResubmit(req, env, ctx, params) {
-  const claimId = params[0];
+export async function markResubmit(req, env, ctx, claimId) {
   const body = await req.json();
   if (!env.DB) return json({ error: 'Database not available' }, 503);
   await env.DB.prepare(
