@@ -5762,7 +5762,7 @@ load();setInterval(load,30000);
         return new Response(JSON.stringify({success:false,error:e.message}), {status:200,headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
       }
     }
-    const PROTECTED_PREFIXES = ["/api/claims", "/api/rcm/dashboard", "/api/rcm/claims", "/api/rcm/pipeline", "/api/rcm/reconcile/", "/api/rcm/trend", "/api/rcm/summary", "/api/sync/", "/api/oracle/diagnose", "/api/schema"];
+    const PROTECTED_PREFIXES = ["/api/claims", "/api/rcm/dashboard", "/api/rcm/claims", "/api/rcm/pipeline", "/api/rcm/reconcile/", "/api/sync/", "/api/oracle/diagnose", "/api/schema"];
   
     // ─── /basma/chat — Basma AI Voice Handler (direct DeepSeek, no chaining) ───────
     if (path.startsWith('/knowledge/')) {
@@ -6195,11 +6195,9 @@ load();setInterval(load,30000);
     if (path === "/api/rcm/validate/lab") return apiRcmLabValidate(req);
     if (path === "/api/rcm/settlement-cycle") return apiRcmSettlementCycle(req, env);
 
-    // RCM Auto-Pilot v2 endpoints
+    // RCM Auto-Pilot v2 endpoints (protected — write operations)
     if (path === '/api/rcm/pipeline')        return rcmJson(await rcmAutoPipeline(env, ctx));
     if (path.startsWith('/api/rcm/reconcile/')) return rcmReconcile(req, env);
-    if (path === '/api/rcm/trend')           return rcmTrendReport(env);
-    if (path === '/api/rcm/summary')         return rcmDailySummary(env);
 
     if (path.startsWith("/api/sync/")) return apiSync(env, path.slice("/api/sync/".length));
     if (path === "/api/schema") {
@@ -6212,6 +6210,11 @@ load();setInterval(load,30000);
       return ok({ database: "hnh-gharnata", version: VERSION, tables: counts });
     }
   }
+
+  // ── RCM Auto-Pilot v2 (public — read-only aggregates) ──────────────────
+  if (path === '/api/rcm/trend')   return rcmTrendReport(env);
+  if (path === '/api/rcm/summary') return rcmDailySummary(env);
+
   return err("Not found", 404);
 }
 __name(handleRequest, "handleRequest");
