@@ -5470,7 +5470,102 @@ load();setInterval(load,30000);
     const PROTECTED_PREFIXES = ["/api/claims", "/api/rcm/dashboard", "/api/rcm/claims", "/api/sync/", "/api/oracle/diagnose", "/api/schema"];
   
     // ─── /basma/chat — Basma AI Voice Handler (direct DeepSeek, no chaining) ───────
-    if (path === '/api/system-status' && req.method === 'GET') {
+    if (path.startsWith('/knowledge/')) {
+    // RAG Knowledge Base — searches Oracle OASIS + NPHIES docs
+    const subpath = path.replace('/knowledge','');
+
+    if (subpath === '/search' || subpath === '/search/') {
+      const q = url.searchParams.get('q') || '';
+      const category = url.searchParams.get('category') || '';
+      const limit = Math.min(parseInt(url.searchParams.get('limit') || '5'), 20);
+      if (!q) return new Response(JSON.stringify({error:'q required'}), {status:400,headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
+      try {
+        let sql = `SELECT id, title, category, source, lang,
+                   substr(content,1,400) as preview
+                   FROM rag_documents WHERE content LIKE ?`;
+        const params = [`%${q}%`];
+        if (category) { sql += ' AND category=?'; params.push(category); }
+        sql += ` ORDER BY CASE WHEN title LIKE ? THEN 0 ELSE 1 END, created_at DESC LIMIT ?`;
+        params.push(`%${q}%`, limit);
+        const rows = await env.DB.prepare(sql).bind(...params).all();
+        return new Response(JSON.stringify({
+          query: q, category: category||'all',
+          count: rows.results.length, results: rows.results
+        }), {headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*','Cache-Control':'no-cache'}});
+      } catch(e) {
+        return new Response(JSON.stringify({error:e.message}), {status:500,headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
+      }
+    }
+
+    if (subpath === '/categories' || subpath === '/categories/') {
+      const rows = await env.DB.prepare(
+        'SELECT category, COUNT(*) as count, COUNT(DISTINCT source) as sources FROM rag_documents GROUP BY category ORDER BY count DESC'
+      ).all();
+      const total = await env.DB.prepare('SELECT COUNT(*) as n FROM rag_documents').first();
+      return new Response(JSON.stringify({
+        categories: rows.results, total_docs: total?.n || 0
+      }), {headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
+    }
+
+    if (subpath === '/ask' && req.method === 'POST') {
+      // RAG-augmented answer
+      const body = await req.json().catch(()=>({}));
+      const question = body.question || body.q || '';
+      const lang = body.lang || 'ar';
+      if (!question) return new Response(JSON.stringify({error:'question required'}), {status:400,headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
+      // Extract keywords for broader search
+      const words = question.replace(/[^a-zA-Z0-9\u0600-\u06FF ]/g,' ').split(' ').filter(w=>w.length>3).slice(0,5);
+      const searchTerms = [question.slice(0,40), ...words.slice(0,2)];
+      let allResults = [];
+      for(const term of searchTerms) {
+        const r = await env.DB.prepare(
+          'SELECT title, category, substr(content,1,600) as chunk FROM rag_documents WHERE content LIKE ? LIMIT 3'
+        ).bind('%'+term+'%').all();
+        allResults.push(...(r.results||[]));
+      }
+      // Deduplicate by title
+      const seen = new Set(); const rows = {results: allResults.filter(r=>{if(seen.has(r.title)){return false;}seen.add(r.title);return true;}).slice(0,4)};
+      const context = (rows.results||[]).map(r => '['+r.title+']\n'+r.chunk).join('\n\n---\n\n');
+      const augmented_question = context
+        ? (lang==='ar' ? 'استناداً للوثائق التالية:\n\n' : 'Based on the following documents:\n\n') + context + '\n\n---\n\n' + question
+        : question;
+      // Call DeepSeek directly with RAG context
+      const deepseekKey = env.DEEPSEEK_API_KEY || '';
+      let answer = '';
+      if (deepseekKey) {
+        const systemPrompt = lang==='ar'
+          ? 'أنت بسمة، المساعدة الطبية لمستشفيات الحياة الوطني. أجب بدقة واستناداً للوثائق المقدمة فقط. كن موجزاً.'
+          : 'You are Basma, medical assistant for Al Hayat National Hospital. Answer accurately based only on the provided documents. Be concise.';
+        const userMsg = context
+          ? 'Context from hospital knowledge base:\n\n' + context + '\n\n---\n\nQuestion: ' + question
+          : question;
+        try {
+          const dsResp = await fetch('https://api.deepseek.com/chat/completions', {
+            method: 'POST',
+            headers: {'Authorization':'Bearer '+deepseekKey,'Content-Type':'application/json'},
+            body: JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:systemPrompt},{role:'user',content:userMsg}],max_tokens:300,temperature:0.3}),
+            signal: AbortSignal.timeout(18000)
+          });
+          const dsData = await dsResp.json();
+          answer = dsData.choices?.[0]?.message?.content || '';
+        } catch(e) { answer = ''; }
+      }
+      return new Response(JSON.stringify({
+        question, lang,
+        context_docs: rows.results.length,
+        sources: (rows.results||[]).map(r=>({title:r.title,category:r.category})),
+        answer,
+        model: 'deepseek+rag'
+      }), {headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
+    }
+
+    return new Response(JSON.stringify({
+      endpoints: ['/knowledge/search?q=&category=&limit=', '/knowledge/categories', '/knowledge/ask (POST)'],
+      categories: ['clinical','nphies','patient-guide','hospitals','brainsait'],
+      total_docs: 191
+    }), {headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
+  }
+  if (path === '/api/system-status' && req.method === 'GET') {
     try {
       const [statsR, oracleR] = await Promise.allSettled([
         fetch('https://hnh.brainsait.org/api/stats', {signal: AbortSignal.timeout(5000)}).then(r=>r.json()),
