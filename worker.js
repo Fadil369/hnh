@@ -3630,16 +3630,17 @@ async function apiPortalHub(env) {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: '{"status":"active"}',                               signal: AbortSignal.timeout(6000),
     }).then(r => r.ok ? r.json() : null),
-    fetch('https://oracle-bridge.brainsait.org/health',         {
+    fetch('https://oracle-bridge.brainsait.org/diagnose/status',    {
       headers: { 'X-API-Key': oracleKey },
-                                                                 signal: AbortSignal.timeout(8000),
-    }).then(r => r.ok ? r.json() : { ok: false }),
+                                                                 signal: AbortSignal.timeout(3000),
+    }).then(r => r.ok ? r.json() : { ok: false }).catch(() => ({ ok: false })),
   ]);
 
   const net    = bsmaNet.status    === 'fulfilled' ? bsmaNet.value    : null;
   const givc   = givcData.status   === 'fulfilled' ? givcData.value   : null;
   const sbs    = sbsData.status    === 'fulfilled' ? sbsData.value    : null;
-  const oracle = oracleData.status === 'fulfilled' ? (oracleData.value || { ok: false }) : { ok: false };
+  const diagnoseCached = oracleData.status === 'fulfilled' ? oracleData.value : null;
+  const oracle = diagnoseCached ? 'live' : null;
   const fin    = net?.financials || {};
   const br     = net?.by_branch || {};
 
@@ -3663,9 +3664,12 @@ async function apiPortalHub(env) {
       total:    sbs?.total || 6,
       records:  sbs?.coverage || [],
     },
-    oracle_status: oracle !== null
-      ? { ok: true, reachable_count: Object.values(TUNNEL_STATUS).filter(h => h.reachable).length, hospitals: TUNNEL_STATUS, source: 'tunnel-verified' }
-      : { ok: false, reachable_count: 0, hospitals: TUNNEL_STATUS, source: 'static-fallback' },
+    oracle_status: {
+      ok: !!oracle,
+      reachable_count: Object.values(TUNNEL_STATUS).filter(h => h.reachable).length,
+      hospitals: diagnoseCached?.hospitals || TUNNEL_STATUS,
+      source: diagnoseCached?.cached ? 'bridge-cached' : 'tunnel-verified',
+    },
     givc_summary: givc || null,
   };
 
@@ -3713,9 +3717,7 @@ async function apiDashboard(env) {
       },
       portals:       hub.portals  || {},
       coverage:      hub.coverage || { total: 6 },
-      oracle_status: hub.oracle_status !== null
-        ? { ok: true, reachable_count: Object.values(TUNNEL_STATUS).filter(h => h.reachable).length, hospitals: TUNNEL_STATUS, source: 'tunnel-verified' }
-        : { ok: false, reachable_count: 0, hospitals: TUNNEL_STATUS, source: 'static-fallback' },
+      oracle_status: hub.oracle_status || { ok: false, reachable_count: 0, hospitals: TUNNEL_STATUS, source: 'static-fallback' },
     };
     mcSet('dashboard', data, 60000); // 1-minute cache
     return ok(data);
