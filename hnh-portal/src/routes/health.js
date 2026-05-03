@@ -46,7 +46,7 @@ export async function health(env) {
   return {
     success: true,
     status: 'healthy',
-    version: '1.0.0',
+    version: '9.0.0',
     name: 'HNH Portal - BrainSAIT Healthcare OS',
     timestamp: new Date().toISOString(),
     database: env.DB ? 'connected' : 'unavailable',

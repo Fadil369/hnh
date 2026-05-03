@@ -1,15 +1,15 @@
 /**
- * HNH Unified Worker v8.0 — hnh.brainsait.org
+ * HNH Unified Worker v9.0 — hnh.brainsait.org
  * مستشفيات الحياة الوطني — Hayat National Hospitals
  * BrainSAIT Healthcare OS
  *
  * Architecture: Clean ES module, no nested template literal issues
  * All inline JS uses string concatenation — zero backtick nesting
- * v8.0: Bug fixes — lang detection, /api/departments, oracle health, visits/orders handlers
+ * v9.0: Post-8.3 production sync — SEO pages, modular ecosystem, NPHIES dashboard
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = '15.1.0';
+const VERSION        = '9.0.0';
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';

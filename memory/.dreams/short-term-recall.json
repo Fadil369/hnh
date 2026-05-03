@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-02T15:16:19.274Z",
+  "updatedAt": "2026-05-03T06:48:10.724Z",
   "entries": {
     "memory:memory/2026-04-28.md:18:36": {
       "key": "memory:memory/2026-04-28.md:18:36",
@@ -352,18 +352,20 @@
       "endLine": 632,
       "source": "memory",
       "snippet": "Built a brand new Cloudflare Worker `hnh-portal` from scratch — a bilingual (AR/EN) SPA + REST API for **Hayat National Hospital** at `hnh.brainsait.org/*`. Handles 7 hospital branches, patient management, appointments, NPHIES claims, FHIR R4, insurance eligibility, AI medical chat, and dashboards. ### Project Location 📁 `/Users/fadil369/.openclaw/workspace/hnh-portal/` ### D1 Database: `hnh-gharnata` (UUID: d6960732-d5d0-4271-84e9-ba988c9c32dc) Pre-existing database with a **real hospital schema** (not our dummy migration). Key tables: - `patients` — Real patient data already populated (full_name_ar, full_name_en, first_name_ar, first_name_en, phone, national_id, insurance_company) - `pr",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.3914345890283584,
+      "totalScore": 0.7624582678079604,
       "maxScore": 0.3914345890283584,
       "firstRecalledAt": "2026-05-02T14:41:15.890Z",
-      "lastRecalledAt": "2026-05-02T14:41:15.890Z",
+      "lastRecalledAt": "2026-05-03T06:48:10.724Z",
       "queryHashes": [
-        "cffa19fce7ea"
+        "cffa19fce7ea",
+        "dc90b3a1fb91"
       ],
       "recallDays": [
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-03"
       ],
       "conceptTags": [
         "hnh-portal",
@@ -445,18 +447,20 @@
       "endLine": 460,
       "source": "memory",
       "snippet": "### All Endpoints Tested & Working ✅ Verified all 16+ API endpoints + bilingual SPA at `https://hnh-portal.brainsait-fadil.workers.dev/`. ### Key Fixes During Development - **Error 1101 (Worker threw exception):** `servePage()` returned a plain string, not a `Response` object. Fixed by wrapping in `new Response(html, {...})`. - **Route handler param mismatch:** For routes with no URL captures (`^/api/claims$`), `params = []` so `...params` adds nothing, shifting arguments. Fixed handlers to accept `url` as optional by using `new URL(req.url)` internally when `url` is undefined. - **D1 schema mismatch:** Pre-existing `claims` and `patients` tables have different columns than our migration. F",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.36849925518035886,
+      "totalScore": 0.7321242958307266,
       "maxScore": 0.36849925518035886,
       "firstRecalledAt": "2026-05-02T14:41:15.890Z",
-      "lastRecalledAt": "2026-05-02T14:41:15.890Z",
+      "lastRecalledAt": "2026-05-03T06:48:10.724Z",
       "queryHashes": [
-        "cffa19fce7ea"
+        "cffa19fce7ea",
+        "dc90b3a1fb91"
       ],
       "recallDays": [
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-03"
       ],
       "conceptTags": [
         "api/claims",
@@ -498,6 +502,37 @@
         "info",
         "doctors",
         "clinics"
+      ]
+    },
+    "memory:memory/2026-04-30.md:522:545": {
+      "key": "memory:memory/2026-04-30.md:522:545",
+      "path": "memory/2026-04-30.md",
+      "startLine": 522,
+      "endLine": 545,
+      "source": "memory",
+      "snippet": "- **Voice chat flow:** User text → AI reply (trimmed to 500 chars) → TTS request (trimmed to 400 chars) → base64 audio → JSON response ## Technical Notes - Cloudflare Workers deploy size: ~191KB total / ~45KB gzip - Route: `mellissa.brainsait.org/*` attached to `mellissa-api` worker - D1 DB: `mellissa-db` (UUID: 9ad61eae-f053-4778-bfb7-8df965e422f6) - Cache-Control: `no-cache, no-store, must-revalidate` (prevents edge caching of HTML) - DNS: CNAME `mellissa.brainsait.org → mellissa-api.brainsait-fadil.workers.dev` (proxied) - Config version constant lives in `src/config.js` and drives `/api/health` response - CDN map assets (Leaflet CSS/JS) loaded from `unpkg.com` and `cdn.jsdelivr.net` - O",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3521051466464996,
+      "maxScore": 0.3521051466464996,
+      "firstRecalledAt": "2026-05-03T06:48:10.724Z",
+      "lastRecalledAt": "2026-05-03T06:48:10.724Z",
+      "queryHashes": [
+        "dc90b3a1fb91"
+      ],
+      "recallDays": [
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "mellissa.brainsait.org",
+        "mellissa-api",
+        "mellissa-db",
+        "cache-control",
+        "no-cache",
+        "no-store",
+        "must-revalidate",
+        "src/config.js"
       ]
     }
   }

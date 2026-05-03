@@ -29,7 +29,7 @@ database_id = "c30dd8f8-62f6-42f6-ad47-d442bf3bde7d"
 ORACLE_BRIDGE_URL  = "https://oracle-bridge.brainsait.org"
 NPHIES_MIRROR_URL  = "https://nphies-mirror.brainsait-fadil.workers.dev"
 FACILITY_LICENSE   = "10000000000988"
-HUB_VERSION        = "15.1.0"
+HUB_VERSION        = "9.0.0"
 
 # Secrets (wrangler secret put):
 #   API_KEY          ← protects /api/claims /api/visits /api/orders /api/rcm
@@ -52,7 +52,7 @@ routes = [
 ORACLE_BRIDGE_URL  = "https://oracle-bridge.brainsait.org"
 NPHIES_MIRROR_URL  = "https://nphies-mirror.brainsait-fadil.workers.dev"
 FACILITY_LICENSE   = "10000000000988"
-HUB_VERSION        = "15.1.0"
+HUB_VERSION        = "9.0.0"
 
 [env.production.ai]
 binding = "AI"
