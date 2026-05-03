@@ -986,9 +986,9 @@ async function apiAppointments(req, env) {
       env.DB.prepare(
         "SELECT a.*, p.full_name_ar as patient_name FROM appointments a LEFT JOIN patients p ON a.patient_id=p.id WHERE a.appointment_date=? ORDER BY a.appointment_time LIMIT 100"
       ).bind(date).all().then((r) => r.results || []).catch(() => []),
-      env.HIS_DB?.prepare(
+      (env.HIS_DB ? env.HIS_DB.prepare(
         "SELECT id, patient_name, appointment_type as clinic_name, date(scheduled_time) as appointment_date, time(scheduled_time) as appointment_time, status, 'his_database' as source FROM bsma_appointments WHERE date(scheduled_time)=? LIMIT 50"
-      ).bind(date).all().then((r) => r.results || []).catch(() => [])
+      ).bind(date).all().then((r) => r.results || []).catch(() => []) : Promise.resolve([]))
     ]);
     const seen = new Set(primary.map((a) => a.id));
     const all = [...primary, ...his.filter((h) => !seen.has(h.id))];
@@ -997,10 +997,10 @@ async function apiAppointments(req, env) {
   if (req.method === "POST") {
     const d = await req.json().catch(() => ({}));
     const r = await env.DB.prepare(
-      "INSERT INTO appointments (patient_id,clinic_name,appointment_date,appointment_time,appointment_type,status) VALUES (?,?,?,?,?,?)"
-    ).bind(d.patient_id || null, d.clinic_name || "General", d.appointment_date, d.appointment_time, d.appointment_type || "new", "scheduled").run();
-    oracleFetch(env, "/api/opd/book", { method: "POST", body: JSON.stringify({ ...d, facility_license: FACILITY_LIC }) }).catch(() => {
-    });
+      "INSERT INTO appointments (patient_id,clinic_name,appointment_date,appointment_time,appointment_type,status,notes) VALUES (?,?,?,?,?,?,?)"
+    ).bind(d.patient_id ? (Number(d.patient_id)||1) : 1, d.clinic_name || "General", d.appointment_date, d.appointment_time, d.appointment_type || "new", "scheduled", d.notes || null).run();
+    // Oracle OPD booking — fire and forget, don't block response
+    try { oracleFetch(env, "/api/opd/book", { method: "POST", body: JSON.stringify({ ...d, facility_license: FACILITY_LIC }) }).catch(()=>{}); } catch(e) {}
     return ok({ id: r.meta.last_row_id }, 201);
   }
   return err("Method not allowed", 405);
@@ -5808,18 +5808,23 @@ load();setInterval(load,30000);
       const question = body.question || body.q || '';
       const lang = body.lang || 'ar';
       if (!question) return new Response(JSON.stringify({error:'question required'}), {status:400,headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
-      // Extract keywords for broader search
-      const words = question.replace(/[^a-zA-Z0-9\u0600-\u06FF ]/g,' ').split(' ').filter(w=>w.length>3).slice(0,5);
-      const searchTerms = [question.slice(0,40), ...words.slice(0,2)];
+      // Multi-strategy search: full question + individual significant words
+      const cleanQ = question.replace(/[؟?!.،,]/g,' ').trim();
+      const words = cleanQ.split(/\s+/).filter(w => w.length > 2);
+      const searchTerms = [cleanQ.slice(0,50)];
+      // Add 3-char+ words as individual searches
+      for(const w of words.slice(0,4)) {
+        if(w.length >= 3) searchTerms.push(w);
+      }
       let allResults = [];
       for(const term of searchTerms) {
         const r = await env.DB.prepare(
-          'SELECT title, category, substr(content,1,600) as chunk FROM rag_documents WHERE content LIKE ? LIMIT 3'
+          'SELECT title, category, substr(content,1,800) as chunk FROM rag_documents WHERE content LIKE ? ORDER BY created_at DESC LIMIT 3'
         ).bind('%'+term+'%').all();
         allResults.push(...(r.results||[]));
       }
-      // Deduplicate by title
-      const seen = new Set(); const rows = {results: allResults.filter(r=>{if(seen.has(r.title)){return false;}seen.add(r.title);return true;}).slice(0,4)};
+      // Deduplicate by title, keep best
+      const seen = new Set(); const rows = {results: allResults.filter(r=>{if(seen.has(r.title)){return false;}seen.add(r.title);return true;}).slice(0,5)};
       const context = (rows.results||[]).map(r => '['+r.title+']\n'+r.chunk).join('\n\n---\n\n');
       const augmented_question = context
         ? (lang==='ar' ? 'استناداً للوثائق التالية:\n\n' : 'Based on the following documents:\n\n') + context + '\n\n---\n\n' + question
@@ -5829,17 +5834,18 @@ load();setInterval(load,30000);
       let answer = '';
       if (deepseekKey) {
         const systemPrompt = lang==='ar'
-          ? 'أنت بسمة، المساعدة الطبية لمستشفيات الحياة الوطني. أجب بدقة واستناداً للوثائق المقدمة فقط. كن موجزاً.'
-          : 'You are Basma, medical assistant for Al Hayat National Hospital. Answer accurately based only on the provided documents. Be concise.';
-        const userMsg = context
-          ? 'Context from hospital knowledge base:\n\n' + context + '\n\n---\n\nQuestion: ' + question
-          : question;
+          ? 'أنت بسمة، المساعدة الطبية لمستشفيات الحياة الوطني. أجب بدقة وبشكل موجز استناداً للوثائق المقدمة. إذا لم تجد الإجابة في الوثائق، قل ذلك بوضوح.'
+          : 'You are Basma, medical assistant for Al Hayat National Hospital. Answer accurately and concisely based on the provided documents. If the answer is not in the documents, say so clearly.';
+        const contextSection = context
+          ? (lang==='ar' ? 'وثائق قاعدة المعرفة:\n\n' : 'Knowledge base documents:\n\n') + context + '\n\n---\n\n'
+          : '';
+        const userMsg = contextSection + (lang==='ar' ? 'السؤال: ' : 'Question: ') + question;
         try {
           const dsResp = await fetch('https://api.deepseek.com/chat/completions', {
             method: 'POST',
             headers: {'Authorization':'Bearer '+deepseekKey,'Content-Type':'application/json'},
-            body: JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:systemPrompt},{role:'user',content:userMsg}],max_tokens:300,temperature:0.3}),
-            signal: AbortSignal.timeout(18000)
+            body: JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:systemPrompt},{role:'user',content:userMsg}],max_tokens:400,temperature:0.2,stream:false}),
+            signal: AbortSignal.timeout(22000)
           });
           const dsData = await dsResp.json();
           answer = dsData.choices?.[0]?.message?.content || '';
@@ -6015,7 +6021,7 @@ load();setInterval(load,30000);
               const r = await env.DB.prepare(
                 'INSERT INTO appointments (patient_id, clinic_name, appointment_date, appointment_time, notes, status, appointment_type) VALUES (?, ?, ?, ?, ?, ?, ?)'
               ).bind(
-                args.patient_name || 'voice-patient',
+                0,
                 dept,
                 apDate,
                 args.time || '10:00',
