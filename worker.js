@@ -3076,6 +3076,12 @@ a{color:inherit;text-decoration:none}
 .kcard-l{font-size:.78rem;color:var(--sub);margin-top:4px;font-weight:500}
 .kcard.blue{border-left:4px solid var(--blue)}
 .kcard.purple{border-left:4px solid var(--purple)}
+.kcard.gradient{border:none;background:linear-gradient(135deg,#1E1B4B,#312E81);color:#fff;min-width:100px}
+.kcard.gradient .kcard-l{color:#A5B4FC}
+/* Auto-Pilot strip */
+.ap-strip{display:flex;gap:10px;margin-bottom:20px;align-items:stretch;flex-wrap:wrap}
+.ap-strip .kcard{flex:1;min-width:80px}
+.ap-strip .kcard.gradient{min-width:80px}
 .kcard.green{border-left:4px solid var(--green)}
 .kcard.amber{border-left:4px solid var(--amber)}
 /* Track boards */
@@ -3198,7 +3204,19 @@ textarea.jarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,23
     <div class="kcard purple"><div class="kcard-n" id="kpi-codes">${Object.keys(NPHIES_DENIAL).length - 1}</div><div class="kcard-l">${ar ? "\u0623\u0643\u0648\u0627\u062F \u0645\u062F\u0639\u0648\u0645\u0629" : "Codes Supported"}</div></div>
   </div>
 
-  <!-- PHASE 1: INGEST -->
+  <!-- RCM Auto-Pilot Dashboard -->
+  <div class="ap-strip" id="ap-strip">
+    <div class="kcard gradient"><div class="kcard-n" id="ap-today">\u2014</div><div class="kcard-l">${ar ? "اليوم" : "Today"}</div></div>
+    <div class="kcard gradient"><div class="kcard-n" id="ap-30d">\u2014</div><div class="kcard-l">30\u062F</div></div>
+    <div class="kcard gradient"><div class="kcard-n" id="ap-60d">\u2014</div><div class="kcard-l">60\u062F</div></div>
+    <div class="kcard gradient"><div class="kcard-n" id="ap-90d">\u2014</div><div class="kcard-l">90\u062F</div></div>
+    <div style="display:flex;gap:8px;align-items:center;padding:8px">
+      <button class="btn btn-sm btn-primary" onclick="runAutoPipeline()" style="font-size:.8rem;padding:6px 14px">\u{1F916} ${ar ? "تشغيل التنبآت" : "Run Pipeline"}</button>
+      <button class="btn btn-sm btn-ghost" onclick="loadAutopilotData()" style="font-size:.8rem;padding:6px 14px">\u{1F504} ${ar ? "تحديث" : "Refresh"}</button>
+      <span id="ap-loader" style="display:none" class="loader"></span>
+    </div>
+  </div>
+
   <div id="phase-1">
     <div class="grid-2">
       <div>
@@ -3634,8 +3652,55 @@ function showResult(elId, msg, type) {
   el.innerHTML = '<div class="' + cls + '">' + msg + '</div>';
 }
 
+// ── RCM Auto-Pilot ──────────────────────────────────────────────────────────
+function runAutoPipeline() {
+  var ldr = document.getElementById('ap-loader');
+  if (ldr) ldr.style.display = '';
+  fetch('/api/rcm/pipeline')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (ldr) ldr.style.display = 'none';
+      var msg = d.success 
+        ? '\u2705 Pipeline ran: ' + (d.pulled || 0) + ' pulled, ' + (d.classified || 0) + ' classified, ' + (d.appealed || 0) + ' appeals' 
+        : '\u274C Error: ' + (d.error || 'Unknown');
+      if (d.errors && d.errors.length) msg += '<br><small>' + d.errors.join('; ') + '</small>';
+      showResult('ingest-result', msg, d.success ? 'success' : 'warn');
+      loadAutopilotData();
+    })
+    .catch(function(e) { if (ldr) ldr.style.display = 'none'; showResult('ingest-result', 'Error: ' + e.message, 'err'); });
+}
+
+function loadAutopilotData() {
+  // Load daily summary
+  fetch('/api/rcm/summary')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.success) {
+        var today = document.getElementById('ap-today');
+        if (today) today.textContent = d.new_rejections || 0;
+      }
+    })
+    .catch(function() {});
+
+  // Load 30/60/90 day trends
+  fetch('/api/rcm/trend')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.success && d.trends) {
+        var el30 = document.getElementById('ap-30d');
+        var el60 = document.getElementById('ap-60d');
+        var el90 = document.getElementById('ap-90d');
+        if (el30 && d.trends['30d']) el30.textContent = d.trends['30d'].total_rejections || 0;
+        if (el60 && d.trends['60d']) el60.textContent = d.trends['60d'].total_rejections || 0;
+        if (el90 && d.trends['90d']) el90.textContent = d.trends['90d'].total_rejections || 0;
+      }
+    })
+    .catch(function() {});
+}
+
 // Init
 loadStats();
+loadAutopilotData();
 <\/script>
 </body>
 
