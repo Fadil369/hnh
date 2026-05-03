@@ -1998,6 +1998,20 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
 .ps-btn.sbs{background:rgba(139,92,246,.12);color:#a78bfa;border-color:rgba(139,92,246,.25)}
 .ps-btn.status{background:rgba(245,158,11,.1);color:#fbbf24;border-color:rgba(245,158,11,.2)}
 .ps-btn:hover{transform:translateY(-1px);opacity:.9}
+
+/* ── RCM Section ── */
+.rcm-kpi-bar{display:flex;gap:12px;flex-wrap:wrap;background:rgba(0,0,0,.25);border-radius:14px;padding:16px 20px;margin-bottom:24px;border:1px solid rgba(255,255,255,.06)}
+.rcm-kpi{flex:1;min-width:80px;text-align:center}
+.rcm-kv{font-size:1.4rem;font-weight:800;font-family:var(--font-serif,var(--font))}
+.rcm-kl{font-size:.7rem;color:var(--ts);margin-top:2px}
+.rcm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.rcm-card{background:var(--sf);border:1px solid var(--b);border-radius:14px;padding:20px;cursor:pointer;transition:all .25s;text-decoration:none;color:inherit;display:block}
+.rcm-card:hover{border-color:var(--a);transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.rcm-card.rcm-primary{background:linear-gradient(135deg,rgba(0,102,204,.18),rgba(0,50,150,.1));border-color:rgba(0,102,204,.4)}
+.rcm-icon{font-size:2rem;margin-bottom:10px}
+.rcm-title{font-weight:700;font-size:.9rem;margin-bottom:6px}
+.rcm-desc{font-size:.78rem;color:var(--ts);line-height:1.6}
+.rcm-arrow{font-size:.75rem;color:var(--a);margin-top:8px;font-weight:600}
 </style>
 </head>
 <body>
@@ -2556,6 +2570,94 @@ ${ar ? `<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?
 </section>
 
 <!-- BLOG -->
+
+<!-- RCM TEAM WORKSPACE -->
+<section class="sec sec-alt" id="rcm">
+<div class="c">
+  <div class="sec-head">
+    <h2>${ar ? "مركز RCM — إدارة دورة الإيراد" : "RCM Workspace — Revenue Cycle"}</h2>
+    <p>${ar ? "أدوات متكاملة للفريق: تحليل الرفض، الطعون، التحقق من الأسعار، ومعالجة المطالبات" : "Integrated tools: denial analysis, appeals, price validation, and claim processing"}</p>
+  </div>
+
+  <!-- Batch 550181 KPIs -->
+  <div class="rcm-kpi-bar">
+    <div class="rcm-kpi"><div class="rcm-kv" style="color:#ff6b6b">SAR 73,862</div><div class="rcm-kl">${ar ? "إجمالي الرفض" : "Total Shortfall"}</div></div>
+    <div class="rcm-kpi"><div class="rcm-kv" style="color:#00c864">87%</div><div class="rcm-kl">${ar ? "نسبة الاسترداد" : "Recovery Rate"}</div></div>
+    <div class="rcm-kpi"><div class="rcm-kv">1,415</div><div class="rcm-kl">${ar ? "سطر رفض" : "Rejection Lines"}</div></div>
+    <div class="rcm-kpi"><div class="rcm-kv" style="color:#ffb400">88.5%</div><div class="rcm-kl">${ar ? "موافقة الرياض" : "Riyadh Approval"}</div></div>
+    <div class="rcm-kpi"><div class="rcm-kv">BUPA</div><div class="rcm-kl">${ar ? "الجهة الدافعة" : "Batch 550181 Payer"}</div></div>
+  </div>
+
+  <!-- RCM Tool Cards -->
+  <div class="rcm-grid">
+    <a href="/denial" class="rcm-card rcm-primary">
+      <div class="rcm-icon">🔮</div>
+      <div class="rcm-title">${ar ? "محلل الرفض بالذكاء الاصطناعي" : "AI Denial Analyzer"}</div>
+      <div class="rcm-desc">${ar ? "تنبؤ بالرفض + مولّد الطعون + تصحيح الأكواد" : "Rejection prediction + appeal generator + code corrections"}</div>
+      <div class="rcm-arrow">← ${ar ? "افتح المركز" : "Open Workspace"}</div>
+    </a>
+
+    <div class="rcm-card" onclick="rcmTest('validate')">
+      <div class="rcm-icon">✅</div>
+      <div class="rcm-title">${ar ? "التحقق من السعر" : "Price Validator"}</div>
+      <div class="rcm-desc">${ar ? "يكتشف BE-1-6: المحلول الملحي 3.16 ريال (كان 3.76)" : "Detect BE-1-6: Normal Saline SR 3.16 vs billed 3.76"}</div>
+      <div id="rcm-val-result" style="font-size:.75rem;color:#4ea5ff;margin-top:6px"></div>
+    </div>
+
+    <div class="rcm-card" onclick="rcmTest('duplicate')">
+      <div class="rcm-icon">🔍</div>
+      <div class="rcm-title">${ar ? "كاشف التكرار" : "Duplicate Detector"}</div>
+      <div class="rcm-desc">${ar ? "يمنع BE-1-5: 57 حالة مكررة في Batch 550181" : "Prevent BE-1-5: 57 duplicate claims detected"}</div>
+      <div id="rcm-dup-result" style="font-size:.75rem;color:#4ea5ff;margin-top:6px"></div>
+    </div>
+
+    <div class="rcm-card" onclick="rcmTest('dashboard')">
+      <div class="rcm-icon">📊</div>
+      <div class="rcm-title">${ar ? "لوحة RCM المباشرة" : "RCM Live Dashboard"}</div>
+      <div class="rcm-desc">${ar ? "KPIs المطالبات، معدلات الرفض، خط الاسترداد لكل فرع" : "Claims KPIs, rejection rates, recovery pipeline per branch"}</div>
+      <div id="rcm-dash-result" style="font-size:.75rem;color:#4ea5ff;margin-top:6px"></div>
+    </div>
+
+    <div class="rcm-card" onclick="rcmTest('pbm')">
+      <div class="rcm-icon">💊</div>
+      <div class="rcm-title">${ar ? "التحقق الدوائي PBM" : "PBM Drug Validator"}</div>
+      <div class="rcm-desc">${ar ? "MN-1-1: أوندانسيترون + J06 = رفض مضمون" : "MN-1-1: Ondansetron + J06 = guaranteed rejection"}</div>
+      <div id="rcm-pbm-result" style="font-size:.75rem;color:#4ea5ff;margin-top:6px"></div>
+    </div>
+
+    <a href="/api/rcm/batch/550181" target="_blank" class="rcm-card">
+      <div class="rcm-icon">📋</div>
+      <div class="rcm-title">${ar ? "حالة Batch 550181" : "Batch 550181 Case"}</div>
+      <div class="rcm-desc">${ar ? "BUPA الرياض فبراير 2026 — البيانات الكاملة بصيغة JSON" : "BUPA Riyadh Feb 2026 — Full JSON data"}</div>
+      <div class="rcm-arrow">JSON ↗</div>
+    </a>
+  </div>
+</div>
+</section>
+
+<script>
+async function rcmTest(type){
+  var resultIds = {validate:'rcm-val-result',duplicate:'rcm-dup-result',dashboard:'rcm-dash-result',pbm:'rcm-pbm-result'};
+  var el = document.getElementById(resultIds[type]);
+  if(el) el.textContent = AR ? 'جاري الاختبار...' : 'Testing...';
+  try{
+    var url = type === 'dashboard' ? '/api/rcm/dashboard/riyadh' : '/api/rcm/validate/'+type;
+    var body = type === 'validate' ? {service_code:'NS001',billed_price:3.76,payer:'BUPA Arabia'} :
+               type === 'duplicate' ? {claims:[{id:'C1',patient_id:'P001',service:'99213',date:'2026-02-01'},{id:'C2',patient_id:'P001',service:'99213',date:'2026-02-01'}]} :
+               type === 'pbm' ? {drugs:[{name:'ondansetron',code:'J01'}],diagnosis_codes:['J06.9']} : {};
+    var method = type === 'dashboard' ? 'GET' : 'POST';
+    var opts = {method:method,headers:{'Content-Type':'application/json'}};
+    if(method==='POST') opts.body = JSON.stringify(body);
+    var r = await fetch(url, opts);
+    var d = await r.json();
+    if(el){
+      if(type==='dashboard') el.textContent = '✅ '+(d.stats?'claims: '+d.stats.total_claims:'live');
+      else el.textContent = d.issues?.length ? '⚠️ '+d.issues.length+' issues found' : d.valid ? '✅ Valid' : '✅ '+JSON.stringify(d).slice(0,40);
+    }
+  }catch(e){if(el)el.textContent='❌ '+e.message.slice(0,40);}
+}
+</script>
+
 <section class="sec" id="blog">
 <div class="c">
   <div class="sec-head"><h2>${T.h_blog}</h2><p>${T.p_blog}</p></div>
