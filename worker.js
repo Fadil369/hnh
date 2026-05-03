@@ -2087,11 +2087,7 @@ h1 .gold{background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-col
   <span class="int-tag status-tag" id="givc-badge" onclick="goPortal('givc')" title="Clinician Portal \u2014 givc.elfadil.com">\u{1FA7A} GIVC <span class="pulse">\u25CF</span></span>
   <span class="int-tag status-tag" id="sbs-badge"  onclick="goPortal('sbs')"  title="Billing Portal \u2014 sbs.elfadil.com">\u{1F4B0} SBS  <span class="pulse">\u25CF</span></span>
   <span class="int-tag status-tag" id="oracle-tag" onclick="goPortal('oracle')" title="${ar ? "Oracle HIS \u2014 \u0627\u0644\u0646\u0641\u0642 \u0645\u062A\u0648\u0642\u0641 (\u0627\u0646\u062A\u0647\u062A \u0645\u0647\u0644\u0629 \u062C\u0645\u064A\u0639 \u0627\u0644\u0641\u0631\u0648\u0639)" : "Oracle HIS \u2014 Tunnel degraded (all branches timeout)"}">\u{1F537} Oracle \u26A0</span>
-  <span class="int-tag status-tag" id="nphies-tag" onclick="goPortal('nphies')" title="NPHIES Portal">\u{1F3DB}\uFE0F NPHIES <span class="pulse">\u25CF</span></span>
-  <span class="int-tag" id="sar-badge" title="${ar ? "\u0625\u062C\u0645\u0627\u0644\u064A \u0634\u0628\u0643\u0629 NPHIES" : "Total NPHIES Network"}">\u{1F4B0} SAR <span id="sar-val">835.7M</span></span>
-  <span class="int-tag" id="rate-badge" title="${ar ? "\u0645\u0639\u062F\u0644 \u0645\u0648\u0627\u0641\u0642\u0629 \u0627\u0644\u0634\u0628\u0643\u0629" : "Network Approval Rate"}"><span id="rate-val">98.6</span>% ${ar ? "\u0645\u0648\u0627\u0641\u0642\u0629" : "\u2713 Approval"}</span>
-  <span class="int-tag" style="cursor:pointer" onclick="document.getElementById('portals').scrollIntoView({behavior:'smooth'})">${ar ? "\u{1F399}\uFE0F \u0628\u0633\u0645\u0629 AI" : "\u{1F399}\uFE0F Basma AI"}</span>
-</div></div>
+  <span class="int-tag status-tag" id="nphies-tag" onclick="goPortal('nphies')" title="NPHIES Portal">\u{1F3DB}\uFE0F NPHIES <span class="pulse">\u25CF</span></span></div>
 </div>
 
 <!-- DEPARTMENTS -->
@@ -2344,18 +2340,8 @@ ${ar ? `<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?
         <div class="pc-badge" id="bsma-status"><span class="dot-live"></span>${ar ? "\u0645\u0628\u0627\u0634\u0631" : "Live"}</div>
       </div>
       <div class="pc-body">
-        <ul class="pc-features">
-          <li>\u{1F4C5} ${ar ? "\u062D\u062C\u0632 \u0645\u0648\u0627\u0639\u064A\u062F \u0639\u0628\u0631 Oracle OPD" : "Book via Oracle OPD"}</li>
-          <li>\u{1F6E1}\uFE0F ${ar ? "\u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0623\u0647\u0644\u064A\u0629 \u0627\u0644\u062A\u0623\u0645\u064A\u0646 NPHIES" : "NPHIES eligibility check"}</li>
-          <li>\u{1F4CB} ${ar ? "\u0645\u062A\u0627\u0628\u0639\u0629 \u0627\u0644\u0645\u0637\u0627\u0644\u0628\u0627\u062A" : "Track claims"}</li>
-          <li>\u{1F916} ${ar ? "\u0628\u0633\u0645\u0629 \u2014 \u0627\u0644\u0645\u0633\u0627\u0639\u062F\u0629 \u0627\u0644\u0635\u0648\u062A\u064A\u0629 AI" : "Basma \u2014 AI voice assistant"}</li>
-          <li>\u{1F50D} ${ar ? "\u0627\u0644\u0628\u062D\u062B \u0641\u064A \u0627\u0644\u0633\u062C\u0644 \u0627\u0644\u0637\u0628\u064A" : "Medical record search"}</li>
-        </ul>
-        <div class="pc-stats" id="bsma-live-stats">
-          <div class="pcs"><div class="pcs-n" id="bsma-pa">51,018</div><div class="pcs-l">${ar ? "\u0645\u0648\u0627\u0641\u0642\u0629 \u0645\u0633\u0628\u0642\u0629" : "Prior Auths"}</div></div>
-          <div class="pcs"><div class="pcs-n" id="bsma-claims">15,138</div><div class="pcs-l">${ar ? "\u0645\u0637\u0627\u0644\u0628\u0629" : "Claims"}</div></div>
-          <div class="pcs"><div class="pcs-n">6</div><div class="pcs-l">${ar ? "\u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A" : "Hospitals"}</div></div>
-        </div>
+        
+        
       </div>
       <div class="pc-footer">
         <a href="https://bsma.elfadil.com" target="_blank" class="btn btn-portal bsma-btn">${ar ? "\u{1F680} \u0627\u0644\u062F\u062E\u0648\u0644 \u0644\u0628\u0648\u0627\u0628\u0629 \u0627\u0644\u0645\u0631\u064A\u0636" : "\u{1F680} Enter Patient Portal"}</a>
@@ -2374,18 +2360,8 @@ ${ar ? `<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?
         <div class="pc-badge" id="givc-status"><span class="dot-live"></span>${ar ? "\u0645\u0628\u0627\u0634\u0631" : "Live"}</div>
       </div>
       <div class="pc-body">
-        <ul class="pc-features">
-          <li>\u{1F3E5} ${ar ? "\u0642\u0627\u0626\u0645\u0629 \u0627\u0646\u062A\u0638\u0627\u0631 \u0627\u0644\u0645\u0631\u0636\u0649 \u0627\u0644\u0645\u0628\u0627\u0634\u0631\u0629" : "Live patient queue"}</li>
-          <li>\u{1F4DD} ${ar ? "\u062A\u0648\u062B\u064A\u0642 \u0633\u0631\u064A\u0631\u064A FHIR R4" : "FHIR R4 clinical docs"}</li>
-          <li>\u{1F48A} ${ar ? "\u0627\u0644\u0637\u0644\u0628\u0627\u062A \u0648\u0627\u0644\u0635\u0631\u0641 \u0627\u0644\u062F\u0648\u0627\u0626\u064A" : "Orders & prescriptions"}</li>
-          <li>\u{1F4CA} ${ar ? "\u0644\u0648\u062D\u0629 \u0625\u062D\u0635\u0627\u0626\u064A\u0627\u062A NPHIES" : "NPHIES stats dashboard"}</li>
-          <li>\u{1F517} ${ar ? "\u0627\u0644\u0625\u062D\u0627\u0644\u0627\u062A \u0628\u064A\u0646 \u0627\u0644\u0623\u0637\u0628\u0627\u0621" : "Physician referrals"}</li>
-        </ul>
-        <div class="pc-stats" id="givc-live-stats">
-          <div class="pcs"><div class="pcs-n" id="givc-queue">\u2014</div><div class="pcs-l">${ar ? "\u0641\u064A \u0627\u0644\u0627\u0646\u062A\u0638\u0627\u0631" : "In Queue"}</div></div>
-          <div class="pcs"><div class="pcs-n" id="givc-docs">5</div><div class="pcs-l">${ar ? "\u0637\u0628\u064A\u0628 \u0645\u062A\u0627\u062D" : "Doctors"}</div></div>
-          <div class="pcs"><div class="pcs-n" id="givc-rate">98.6%</div><div class="pcs-l">${ar ? "\u0645\u0648\u0627\u0641\u0642\u0629" : "Approval"}</div></div>
-        </div>
+        
+        
       </div>
       <div class="pc-footer">
         <a href="https://givc.elfadil.com" target="_blank" class="btn btn-portal givc-btn">${ar ? "\u{1F680} \u0627\u0644\u062F\u062E\u0648\u0644 \u0644\u0628\u0648\u0627\u0628\u0629 \u0627\u0644\u0637\u0628\u064A\u0628" : "\u{1F680} Enter Clinician Portal"}</a>
@@ -2404,18 +2380,8 @@ ${ar ? `<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?
         <div class="pc-badge" id="sbs-status"><span class="dot-live"></span>${ar ? "\u0645\u0628\u0627\u0634\u0631" : "Live"}</div>
       </div>
       <div class="pc-body">
-        <ul class="pc-features">
-          <li>\u{1F4E4} ${ar ? "\u062A\u0642\u062F\u064A\u0645 \u0645\u0637\u0627\u0644\u0628\u0627\u062A NPHIES" : "NPHIES claim submission"}</li>
-          <li>\u{1F6E1}\uFE0F ${ar ? "\u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u062A\u063A\u0637\u064A\u0629 \u0627\u0644\u062A\u0623\u0645\u064A\u0646" : "Insurance coverage check"}</li>
-          <li>\u26A0\uFE0F ${ar ? "\u062A\u062D\u0644\u064A\u0644 \u0631\u0641\u0636\u0627\u062A \u0627\u0644\u0631\u064A\u0627\u0636 (88.5%)" : "Riyadh rejections analysis (88.5%)"}</li>
-          <li>\u{1F916} ${ar ? "ClaimLinc AI \u2014 \u062A\u062D\u0633\u064A\u0646 \u062A\u0644\u0642\u0627\u0626\u064A" : "ClaimLinc AI auto-optimize"}</li>
-          <li>\u{1F4CA} ${ar ? "\u062A\u0642\u0627\u0631\u064A\u0631 \u0625\u064A\u0631\u0627\u062F\u0627\u062A AR-DRG" : "AR-DRG revenue reports"}</li>
-        </ul>
-        <div class="pc-stats" id="sbs-live-stats">
-          <div class="pcs"><div class="pcs-n">SAR 835M</div><div class="pcs-l">${ar ? "\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0634\u0628\u0643\u0629" : "Network"}</div></div>
-          <div class="pcs"><div class="pcs-n" id="sbs-cov">6</div><div class="pcs-l">${ar ? "\u0648\u062B\u0627\u0626\u0642 \u062A\u0623\u0645\u064A\u0646" : "Coverage"}</div></div>
-          <div class="pcs"><div class="pcs-n" style="color:#EF4444">SAR 11.3M</div><div class="pcs-l">${ar ? "\u0631\u0641\u0636\u0627\u062A RUH" : "RUH Rejected"}</div></div>
-        </div>
+        
+        
       </div>
       <div class="pc-footer">
         <a href="https://sbs.elfadil.com" target="_blank" class="btn btn-portal sbs-btn">${ar ? "\u{1F680} \u0627\u0644\u062F\u062E\u0648\u0644 \u0644\u0628\u0648\u0627\u0628\u0629 \u0627\u0644\u0641\u0648\u0627\u062A\u064A\u0631" : "\u{1F680} Enter Billing Portal"}</a>
@@ -2434,21 +2400,8 @@ ${ar ? `<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?
         <div class="pc-badge" id="oracle-status" style="background:rgba(239,68,68,.12);color:#EF4444"><span class="dot-live" style="background:#EF4444"></span>${ar ? "\u0645\u062A\u062F\u0647\u0648\u0631" : "Degraded"}</div>
       </div>
       <div class="pc-body">
-        <ul class="pc-features">
-          <li>\u{1F3E5} ${ar ? "6 \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A Oracle OASIS" : "6 Oracle OASIS hospitals"}</li>
-          <li>\u{1F310} ${ar ? "\u062C\u0633\u0631 Cloudflare (\u0628\u062F\u0648\u0646 VPN)" : "Cloudflare bridge (no VPN)"}</li>
-          <li>\u{1F510} ${ar ? "FHIR R4 + HIPAA + PDPL" : "FHIR R4 + HIPAA + PDPL"}</li>
-          <li>\u{1F504} ${ar ? "\u0645\u0632\u0627\u0645\u0646\u0629 \u0627\u0644\u0645\u0648\u0627\u0639\u064A\u062F \u062A\u0644\u0642\u0627\u0626\u064A\u0627\u064B" : "Auto appointment sync"}</li>
-          <li>\u{1F9EA} ${ar ? "\u0646\u062A\u0627\u0626\u062C \u0627\u0644\u0645\u062E\u062A\u0628\u0631 \u0648\u0627\u0644\u0623\u0634\u0639\u0629" : "Lab & radiology results"}</li>
-        </ul>
-        <div class="pc-stats oracle-tunnel" id="oracle-tunnel-stats">
-          <div class="pcs"><div class="pcs-n dot-err">RUH \u274C</div><div class="pcs-l">Riyadh</div></div>
-          <div class="pcs"><div class="pcs-n dot-ok">MED \u2705</div><div class="pcs-l">Madinah</div></div>
-          <div class="pcs"><div class="pcs-n dot-err">KHM \u274C</div><div class="pcs-l">Khamis</div></div>
-          <div class="pcs"><div class="pcs-n dot-ok">ABH \u2705</div><div class="pcs-l">Abha</div></div>
-          <div class="pcs"><div class="pcs-n dot-err">JZN \u274C</div><div class="pcs-l">Jizan</div></div>
-          <div class="pcs"><div class="pcs-n dot-ok">UNA \u2705</div><div class="pcs-l">Unaizah</div></div>
-        </div>
+        
+        
       </div>
       <div class="pc-footer">
         <a href="https://oracle-riyadh.brainsait.org" target="_blank" class="btn btn-portal oracle-btn">${ar ? "\u{1F537} Oracle \u0627\u0644\u0631\u064A\u0627\u0636" : "\u{1F537} Oracle Riyadh"}</a>
@@ -2467,13 +2420,7 @@ ${ar ? `<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?
         <div class="pc-badge"><span class="dot-live"></span>${ar ? "\u0645\u0628\u0627\u0634\u0631" : "Live"}</div>
       </div>
       <div class="pc-body">
-        <ul class="pc-features">
-          <li>\u2705 ${ar ? "\u0631\u0641\u0639 \u0645\u0637\u0627\u0644\u0628\u0627\u062A GSS \u0645\u0628\u0627\u0634\u0631\u0629" : "Direct GSS claim submission"}</li>
-          <li>\u{1F50D} ${ar ? "\u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0627\u0644\u0623\u0647\u0644\u064A\u0629 (270/271)" : "Eligibility (270/271)"}</li>
-          <li>\u{1F4CB} ${ar ? "\u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0627\u062A \u0627\u0644\u0645\u0633\u0628\u0642\u0629 PA" : "Prior authorizations"}</li>
-          <li>\u{1F4CA} ${ar ? "81 \u0645\u0637\u0627\u0644\u0628\u0629 GSS | 51,297 PA" : "81 GSS claims | 51,297 PA"}</li>
-          <li>\u{1F514} ${ar ? "\u062A\u0646\u0628\u064A\u0647\u0627\u062A \u0631\u0641\u0636 \u0627\u0644\u0631\u064A\u0627\u0636 \u26A0\uFE0F" : "Riyadh rejection alerts \u26A0\uFE0F"}</li>
-        </ul>
+        
         <div class="pc-stats">
           <div class="pcs"><div class="pcs-n">SAR 835M</div><div class="pcs-l">Network</div></div>
           <div class="pcs"><div class="pcs-n" style="color:#EAB308">88.5%</div><div class="pcs-l">RUH Rate</div></div>
@@ -2497,13 +2444,7 @@ ${ar ? `<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?
         <div class="pc-badge"><span class="dot-live"></span>ElevenLabs</div>
       </div>
       <div class="pc-body">
-        <ul class="pc-features">
-          <li>\u{1F399}\uFE0F ${ar ? "\u062A\u0641\u0627\u0639\u0644 \u0635\u0648\u062A\u064A \u0628\u0627\u0644\u0639\u0631\u0628\u064A\u0629 \u0648\u0627\u0644\u0625\u0646\u062C\u0644\u064A\u0632\u064A\u0629" : "Arabic & English voice"}</li>
-          <li>\u{1F4C5} ${ar ? "\u062D\u062C\u0632 \u0645\u0648\u0627\u0639\u064A\u062F \u0628\u0627\u0644\u0635\u0648\u062A" : "Voice appointment booking"}</li>
-          <li>\u{1F6E1}\uFE0F ${ar ? "\u0627\u0644\u062A\u062D\u0642\u0642 \u0627\u0644\u0641\u0648\u0631\u064A \u0645\u0646 \u0627\u0644\u062A\u0623\u0645\u064A\u0646" : "Instant eligibility check"}</li>
-          <li>\u{1F4CB} ${ar ? "\u0645\u062A\u0627\u0628\u0639\u0629 \u0645\u0637\u0627\u0644\u0628\u0627\u062A NPHIES" : "Track NPHIES claims"}</li>
-          <li>\u{1F916} ${ar ? "DeepSeek V4 + Claude Sonnet" : "DeepSeek V4 + Claude Sonnet"}</li>
-        </ul>
+        
         <div class="pc-stats">
           <div class="pcs"><div class="pcs-n">v2.1</div><div class="pcs-l">Version</div></div>
           <div class="pcs"><div class="pcs-n">AR/EN</div><div class="pcs-l">Bilingual</div></div>
@@ -2520,58 +2461,6 @@ ${ar ? `<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?
 </div>
 </section>
 
-<!-- NPHIES DASHBOARD -->
-<section class="sec" id="nphies-dashboard">
-<div class="c">
-  <div class="sec-head"><h2>${ar ? "\u0644\u0648\u062D\u0629 NPHIES \u0627\u0644\u062D\u064A\u0629" : "Live NPHIES Dashboard"}</h2>
-    <p>${ar ? "\u0628\u064A\u0627\u0646\u0627\u062A \u062D\u064A\u0629 \u0645\u0646 \u0634\u0628\u0643\u0629 \u0627\u0644\u062A\u0623\u0645\u064A\u0646 \u0627\u0644\u0635\u062D\u064A \u0627\u0644\u0633\u0639\u0648\u062F\u064A \u2014 \u0645\u064F\u062D\u062F\u064E\u0651\u062B\u0629 \u0644\u062D\u0638\u064A\u0627\u064B" : "Live Saudi health insurance network data \u2014 updated in real-time"}</p>
-  </div>
-  <div class="nphies-grid">
-    <div class="nphies-main">
-      <div class="nphies-banner">
-        <div class="nb-label">${ar ? "\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0634\u0628\u0643\u0629 2026" : "Network Total 2026"}</div>
-        <div class="nb-amount">SAR 835,690,702</div>
-        <div class="nb-sub">${ar ? "AlInma Medical Services \u2014 \u0645\u062C\u0645\u0648\u0639\u0629 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A" : "AlInma Medical Services \u2014 Hayat National Group"}</div>
-        <div class="nb-bar"><div class="nb-fill" style="width:98.6%"></div></div>
-        <div class="nb-rate">98.6% ${ar ? "\u0645\u0639\u062F\u0644 \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629" : "Approval Rate"}</div>
-      </div>
-      <div class="branch-grid">
-        <div class="branch-card bc-ok"><div class="bc-name">${ar ? "\u062C\u0627\u0632\u0627\u0646" : "Jizan"}</div><div class="bc-pct">100%</div><div class="bc-sar">SAR 211.6M</div></div>
-        <div class="branch-card bc-ok"><div class="bc-name">${ar ? "\u062E\u0645\u064A\u0633 \u0645\u0634\u064A\u0637" : "Khamis"}</div><div class="bc-pct">100%</div><div class="bc-sar">SAR 200.9M</div></div>
-        <div class="branch-card bc-ok"><div class="bc-name">${ar ? "\u0639\u0646\u064A\u0632\u0629" : "Unaizah"}</div><div class="bc-pct">100%</div><div class="bc-sar">SAR 120.8M</div></div>
-        <div class="branch-card bc-ok"><div class="bc-name">${ar ? "\u0623\u0628\u0647\u0627" : "Abha"}</div><div class="bc-pct">100%</div><div class="bc-sar">SAR 112.7M</div></div>
-        <div class="branch-card bc-ok"><div class="bc-name">${ar ? "\u0627\u0644\u0645\u062F\u064A\u0646\u0629" : "Madinah"}</div><div class="bc-pct">100%</div><div class="bc-sar">SAR 91.8M</div></div>
-        <div class="branch-card bc-warn"><div class="bc-name">\u26A0\uFE0F ${ar ? "\u0627\u0644\u0631\u064A\u0627\u0636" : "Riyadh"}</div><div class="bc-pct bc-warn-txt">88.5%</div><div class="bc-sar">SAR 97.9M</div></div>
-      </div>
-    </div>
-    <div class="nphies-side">
-      <div class="reject-card">
-        <div class="rc-title">\u26A0\uFE0F ${ar ? "\u062A\u0646\u0628\u064A\u0647: \u0631\u0641\u0636\u0627\u062A \u0627\u0644\u0631\u064A\u0627\u0636" : "Alert: Riyadh Rejections"}</div>
-        <div class="rc-amount">SAR 11,301,117</div>
-        <div class="rc-sub">${ar ? "\u0645\u0637\u0627\u0644\u0628\u0627\u062A \u0645\u0631\u0641\u0648\u0636\u0629 \u062A\u062D\u062A\u0627\u062C \u0625\u062C\u0631\u0627\u0621 \u0639\u0627\u062C\u0644" : "Rejected claims needing urgent action"}</div>
-        <div class="rc-causes">
-          <div class="rc-cause"><span class="rc-pct">35%</span><span>${ar ? "\u0645\u0648\u0627\u0641\u0642\u0629 \u0645\u0633\u0628\u0642\u0629 \u0645\u0641\u0642\u0648\u062F\u0629" : "Missing prior auth"}</span></div>
-          <div class="rc-cause"><span class="rc-pct">28%</span><span>${ar ? "\u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u062A\u0631\u0645\u064A\u0632" : "Incorrect coding"}</span></div>
-          <div class="rc-cause"><span class="rc-pct">22%</span><span>${ar ? "\u0623\u0647\u0644\u064A\u0629 \u063A\u064A\u0631 \u0645\u0624\u0643\u062F\u0629" : "Eligibility not verified"}</span></div>
-          <div class="rc-cause"><span class="rc-pct">10%</span><span>${ar ? "\u0627\u0646\u062A\u0647\u0627\u0621 \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629" : "Expired authorization"}</span></div>
-          <div class="rc-cause"><span class="rc-pct">5%</span><span>${ar ? "\u0645\u0637\u0627\u0644\u0628\u0629 \u0645\u0643\u0631\u0631\u0629" : "Duplicate claim"}</span></div>
-        </div>
-        <a href="https://bsma.elfadil.com" class="btn-enroll" style="display:block;text-align:center;margin-top:12px">${ar ? "\u{1F916} \u0641\u0639\u0651\u0644 ClaimLinc AI" : "\u{1F916} Activate ClaimLinc AI"}</a>
-      </div>
-      <div class="pa-card">
-        <div class="pa-row"><span>${ar ? "\u0625\u062C\u0645\u0627\u0644\u064A PA" : "Total PA"}</span><strong>51,018</strong></div>
-        <div class="pa-row"><span>${ar ? "\u0627\u0644\u0645\u0637\u0627\u0644\u0628\u0627\u062A" : "Claims"}</span><strong>15,138</strong></div>
-        <div class="pa-row"><span>${ar ? "\u0627\u0644\u0641\u0631\u0648\u0639" : "Branches"}</span><strong>6</strong></div>
-        <div class="pa-row"><span>${ar ? "\u0628\u064A\u0627\u0646\u0627\u062A \u0628\u062A\u0627\u0631\u064A\u062E" : "As of"}</span><strong>2026-04-26</strong></div>
-      </div>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- BLOG -->
-
-<!-- RCM TEAM WORKSPACE -->
 <section class="sec sec-alt" id="rcm">
 <div class="c">
   <div class="sec-head">
@@ -2604,19 +2493,18 @@ ${ar ? `<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?
       <div id="rcm-val-result" style="font-size:.75rem;color:#4ea5ff;margin-top:6px"></div>
     </div>
 
-    <div class="rcm-card" onclick="rcmTest('duplicate')">
+    <div class="rcm-card" onclick="rcmTest('dup')">
       <div class="rcm-icon">🔍</div>
       <div class="rcm-title">${ar ? "كاشف التكرار" : "Duplicate Detector"}</div>
       <div class="rcm-desc">${ar ? "يمنع BE-1-5: 57 حالة مكررة في Batch 550181" : "Prevent BE-1-5: 57 duplicate claims detected"}</div>
       <div id="rcm-dup-result" style="font-size:.75rem;color:#4ea5ff;margin-top:6px"></div>
     </div>
 
-    <div class="rcm-card" onclick="rcmTest('dashboard')">
-      <div class="rcm-icon">📊</div>
-      <div class="rcm-title">${ar ? "لوحة RCM المباشرة" : "RCM Live Dashboard"}</div>
-      <div class="rcm-desc">${ar ? "KPIs المطالبات، معدلات الرفض، خط الاسترداد لكل فرع" : "Claims KPIs, rejection rates, recovery pipeline per branch"}</div>
-      <div id="rcm-dash-result" style="font-size:.75rem;color:#4ea5ff;margin-top:6px"></div>
-    </div>
+    <a href="/denial#predictor" class="rcm-card">
+      <div class="rcm-icon">🧠</div>
+      <div class="rcm-title">${ar ? "مركز الطعون والاعتراضات" : "Denial & Appeals Center"}</div>
+      <div class="rcm-desc">${ar ? "توليد خطابات اعتراض + تصحيح الأكواد + متابعة الاسترداد" : "Generate appeal letters, fix codes, track recovery"}</div>
+    </a>
 
     <div class="rcm-card" onclick="rcmTest('pbm')">
       <div class="rcm-icon">💊</div>
@@ -2637,24 +2525,26 @@ ${ar ? `<div class="branch-card" onclick="window.open('https://bsma.elfadil.com?
 
 <script>
 async function rcmTest(type){
-  var resultIds = {validate:'rcm-val-result',duplicate:'rcm-dup-result',dashboard:'rcm-dash-result',pbm:'rcm-pbm-result'};
-  var el = document.getElementById(resultIds[type]);
-  if(el) el.textContent = AR ? 'جاري الاختبار...' : 'Testing...';
+  var els = {price:'rcm-val-result', dup:'rcm-dup-result', pbm:'rcm-pbm-result'};
+  var el = document.getElementById(els[type]);
+  if(!el) return;
+  el.textContent = AR ? 'جاري...' : 'Running...';
+  var payloads = {
+    price: {payer:'BUPA',items:[{serv_code:'0109222573',serv_desc:'Normal Saline 0.9% IV',billed_amount:3.76,quantity:102},{serv_code:'0109222574',serv_desc:'Normal Saline 0.9% IV 1L',billed_amount:7.50,quantity:50}]},
+    dup:   {claims:[{id:'C001',patient_id:'P001',service_code:'99213',service_date:'2026-02-01',amount:150,payer:'BUPA'},{id:'C002',patient_id:'P001',service_code:'99213',service_date:'2026-02-01',amount:150,payer:'BUPA'}]},
+    pbm:   {items:[{drug_name:'ondansetron',drug_code:'1001233084',icd_codes:['J06.9']},{drug_name:'omeprazole',drug_code:'2205222999',icd_codes:['Z00.0']}]}
+  };
+  var paths = {price:'/api/rcm/validate/price', dup:'/api/rcm/validate/duplicate', pbm:'/api/rcm/validate/pbm'};
+  var resultFn = {
+    price: function(d){var v=d.violations||[];return v.length?'⚠️ '+v.length+(AR?' مخالفة سعرية — '+v[0].serv_desc+' ('+v[0].billed_amount+' vs '+v[0].contracted_price+' ر.س)':' price issues — '+v[0].serv_desc):('✅ '+(AR?'أسعار صحيحة':'All prices OK'));},
+    dup:  function(d){var v=d.duplicates||d.duplicate_groups||[];return v.length?'⚠️ '+v.length+(AR?' تكرار مكتشف':' duplicates found'):'✅ '+(AR?'لا تكرار':'No duplicates');},
+    pbm:  function(d){var v=d.violations||[];return v.length?'⚠️ '+v.length+(AR?' تعارض دوائي — '+v[0].drug_name:' PBM issues — '+v[0].drug_name):'✅ '+(AR?'أدوية مناسبة':'Drugs OK');}
+  };
   try{
-    var url = type === 'dashboard' ? '/api/rcm/dashboard/riyadh' : '/api/rcm/validate/'+type;
-    var body = type === 'validate' ? {service_code:'NS001',billed_price:3.76,payer:'BUPA Arabia'} :
-               type === 'duplicate' ? {claims:[{id:'C1',patient_id:'P001',service:'99213',date:'2026-02-01'},{id:'C2',patient_id:'P001',service:'99213',date:'2026-02-01'}]} :
-               type === 'pbm' ? {drugs:[{name:'ondansetron',code:'J01'}],diagnosis_codes:['J06.9']} : {};
-    var method = type === 'dashboard' ? 'GET' : 'POST';
-    var opts = {method:method,headers:{'Content-Type':'application/json'}};
-    if(method==='POST') opts.body = JSON.stringify(body);
-    var r = await fetch(url, opts);
+    var r = await fetch(paths[type],{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payloads[type])});
     var d = await r.json();
-    if(el){
-      if(type==='dashboard') el.textContent = '✅ '+(d.stats?'claims: '+d.stats.total_claims:'live');
-      else el.textContent = d.issues?.length ? '⚠️ '+d.issues.length+' issues found' : d.valid ? '✅ Valid' : '✅ '+JSON.stringify(d).slice(0,40);
-    }
-  }catch(e){if(el)el.textContent='❌ '+e.message.slice(0,40);}
+    el.textContent = resultFn[type] ? resultFn[type](d) : '✅ Done';
+  }catch(e){el.textContent='❌ error';}
 }
 </script>
 
@@ -5577,7 +5467,7 @@ load();setInterval(load,30000);
         return new Response(JSON.stringify({success:false,error:e.message}), {status:200,headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
       }
     }
-    const PROTECTED_PREFIXES = ["/api/claims", "/api/rcm", "/api/sync/", "/api/oracle/diagnose", "/api/schema"];
+    const PROTECTED_PREFIXES = ["/api/claims", "/api/rcm/dashboard", "/api/rcm/claims", "/api/sync/", "/api/oracle/diagnose", "/api/schema"];
   
     // ─── /basma/chat — Basma AI Voice Handler (direct DeepSeek, no chaining) ───────
     if (path === '/api/system-status' && req.method === 'GET') {
