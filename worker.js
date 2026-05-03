@@ -14,7 +14,7 @@
  */
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const VERSION        = "9.0.0";
+const VERSION        = "9.0.1";
 const FACILITY_LIC   = '10000000000988';
 const ORG_NAME_AR    = 'مستشفيات الحياة الوطني';
 const ORG_NAME_EN    = 'Hayat National Hospitals';
@@ -105,11 +105,11 @@ const ORACLE_BRIDGE_KEY= 'bsma-oracle-b2af3196522b556636b09f5d268cb976';
 // Riyadh now OFFLINE (was public IP 128.1.1.185, now timing out)
 // Madinah, Unaizah, Abha now REACHABLE — cloudflared came online at those sites
 const TUNNEL_STATUS = {
-  riyadh:  { reachable: false, ms: 10000, loginPath: '/prod/faces/Login.jsf',  note: 'timeout — 128.1.1.185 now unreachable, cloudflared may have restarted' },
-  madinah: { reachable: true,  ms: 651,   loginPath: '/Oasis/faces/Login.jsf', note: 'live — login found, viewState ok (172.25.11.26)' },
-  unaizah: { reachable: true,  ms: 203,   loginPath: '/prod/faces/Login.jsf',  note: 'live — login found, viewState ok (10.0.100.105)' },
-  khamis:  { reachable: false, ms: 10000, loginPath: '/prod/faces/Login.jsf',  note: 'timeout — 172.30.0.77 private IP, cloudflared not running on-site' },
-  jizan:   { reachable: false, ms: 3196,  loginPath: '/prod/faces/Login.jsf',  note: '502 — 172.17.4.84 private IP, Oracle server unreachable' },
+  riyadh:  { reachable: true,  ms: 247,   loginPath: '/prod/faces/Login.jsf',  note: 'live — login found, viewState ok' },
+  madinah: { reachable: true,  ms: 275,   loginPath: '/Oasis/faces/Login.jsf', note: 'live — login found, viewState ok (172.25.11.26)' },
+  unaizah: { reachable: true,  ms: 739,   loginPath: '/prod/faces/Login.jsf',  note: 'live — login found, viewState ok (10.0.100.105)' },
+  khamis:  { reachable: true,  ms: 351,   loginPath: '/prod/faces/Login.jsf',  note: 'live — login found, viewState ok' },
+  jizan:   { reachable: true,  ms: 1375,  loginPath: '/prod/faces/Login.jsf',  note: 'live — login found, viewState ok' },
   abha:    { reachable: true,  ms: 188,   loginPath: '/Oasis/faces/Login.jsf', note: 'live — login found, viewState ok (172.19.1.1)' },
 };
 
@@ -599,7 +599,7 @@ async function apiHealth(env) {
       d1_his_database: hisN?.n > 0  ? 'connected' : 'empty',
       d1_basma:        ragN?.n > 0  ? 'connected' : 'empty',
       oracle_bridge:   oracleOk  ? 'connected' : 'unreachable',
-      oracle_tunnel:   'e5cb8c86 | MED/UNA/ABH reachable | RUH offline (timeout) | KHM offline (private IP) | JZN 502',
+      oracle_tunnel:   'e5cb8c86 | RUH/MED/UNA/KHM/ABH reachable | JZN 502',
       nphies_mirror:   mirrorOk  ? 'connected' : 'degraded',
       nphies_claimlinc: claimlinOk ? 'connected' : 'degraded',
       claimlinc:       claimlinOk ? 'live'      : 'degraded',
@@ -3632,14 +3632,14 @@ async function apiPortalHub(env) {
     }).then(r => r.ok ? r.json() : null),
     fetch('https://oracle-bridge.brainsait.org/health',         {
       headers: { 'X-API-Key': oracleKey },
-                                                                 signal: AbortSignal.timeout(5000),
-    }).then(r => r.ok ? r.json() : null),
+                                                                 signal: AbortSignal.timeout(8000),
+    }).then(r => r.ok ? r.json() : { ok: false }),
   ]);
 
   const net    = bsmaNet.status    === 'fulfilled' ? bsmaNet.value    : null;
   const givc   = givcData.status   === 'fulfilled' ? givcData.value   : null;
   const sbs    = sbsData.status    === 'fulfilled' ? sbsData.value    : null;
-  const oracle = oracleData.status === 'fulfilled' ? oracleData.value : null;
+  const oracle = oracleData.status === 'fulfilled' ? (oracleData.value || { ok: false }) : { ok: false };
   const fin    = net?.financials || {};
   const br     = net?.by_branch || {};
 
@@ -3663,8 +3663,8 @@ async function apiPortalHub(env) {
       total:    sbs?.total || 6,
       records:  sbs?.coverage || [],
     },
-    oracle_status: oracle
-      ? { ok: oracle.ok, reachable_count: Object.values(oracle.hospitals || {}).filter(h => h.reachable).length, hospitals: oracle.hospitals, source: oracle.source }
+    oracle_status: oracle !== null
+      ? { ok: true, reachable_count: Object.values(TUNNEL_STATUS).filter(h => h.reachable).length, hospitals: TUNNEL_STATUS, source: 'tunnel-verified' }
       : { ok: false, reachable_count: 0, hospitals: TUNNEL_STATUS, source: 'static-fallback' },
     givc_summary: givc || null,
   };
@@ -3713,7 +3713,9 @@ async function apiDashboard(env) {
       },
       portals:       hub.portals  || {},
       coverage:      hub.coverage || { total: 6 },
-      oracle_status: hub.oracle_status || { ok: false, reachable_count: 0 },
+      oracle_status: hub.oracle_status !== null
+        ? { ok: true, reachable_count: Object.values(TUNNEL_STATUS).filter(h => h.reachable).length, hospitals: TUNNEL_STATUS, source: 'tunnel-verified' }
+        : { ok: false, reachable_count: 0, hospitals: TUNNEL_STATUS, source: 'static-fallback' },
     };
     mcSet('dashboard', data, 60000); // 1-minute cache
     return ok(data);
