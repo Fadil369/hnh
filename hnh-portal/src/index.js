@@ -14,6 +14,10 @@ import { getFHIRPatient, searchFHIRPatients, getFHIRPractitioner, getFHIRAppoint
 import { getStats } from './routes/statistics.js';
 import { handleChat } from './ai/chat.js';
 import { handleVoiceSpeak, handleVoiceChat, handleVoiceVoices, handleVoiceOptions } from './routes/voice.js';
+import {
+  rcmHealth, getRcmBatch, validatePrice, validateDuplicate, validatePbm, validateAll,
+  generateAppeal, getRcmDashboard, getRejectedClaims, markAppeal, markResubmit,
+} from './routes/rcm.js';
 import { servePage } from './pages.js';
 
 const router = new Router();
@@ -88,6 +92,20 @@ router.get('/api/fhir/Coverage/([^/]+)', (req, env, ctx, p) => getFHIRCoverage(r
 
 // AI Chat (BasmaGuist Medical)
 router.post('/api/chat', (req, env) => handleChat(req, env));
+
+// RCM — Revenue Cycle Management
+router.get('/api/rcm/health',                              () => rcmHealth());
+router.get('/api/rcm/batch/([^/]+)',                        (req, env, ctx, p) => getRcmBatch(req, env, ctx, p));
+router.post('/api/rcm/validate/price',                      (req) => validatePrice(req));
+router.post('/api/rcm/validate/duplicate',                  (req) => validateDuplicate(req));
+router.post('/api/rcm/validate/pbm',                        (req) => validatePbm(req));
+router.post('/api/rcm/validate',                            (req) => validateAll(req));
+router.post('/api/rcm/appeal/generate',                     (req) => generateAppeal(req));
+router.get('/api/rcm/dashboard/([^/]+)',                    (req, env, ctx, p) => getRcmDashboard(req, env, ctx, p));
+router.get('/api/rcm/claims/rejected',                      (req, env, ctx, p, url) => getRejectedClaims(req, env, ctx, p, url));
+router.post('/api/rcm/claims/([^/]+)/appeal',               (req, env, ctx, p) => markAppeal(req, env, ctx, p));
+router.post('/api/rcm/claims/([^/]+)/resubmit',             (req, env, ctx, p) => markResubmit(req, env, ctx, p));
+
 
 // Voice Routes (ElevenLabs TTS Proxy for Basma Agent)
 router.post('/api/voice/speak', (req, env) => handleVoiceSpeak(req, env));
