@@ -44,3 +44,7 @@ HUB_VERSION        = "9.0.1"
 [env.production]
 name = "hnh-unified"
 vars = { HUB_VERSION = "9.0.1" }
+
+# Cron triggers
+[triggers]
+crons = ["0 3 * * *"]  # 06:00 AST = 03:00 UTC, daily

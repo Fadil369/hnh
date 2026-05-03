@@ -4196,6 +4196,13 @@ async function apiDashboard(env) {
 }
 __name(apiDashboard, "apiDashboard");
 var worker_default = {
+  // Daily cron: RCM auto-pipeline (06:00 AST)
+  async scheduled(event, env, ctx) {
+    console.log('[CRON] RCM auto-pipeline started at', new Date().toISOString());
+    const result = await rcmAutoPipeline(env, ctx);
+    console.log('[CRON] RCM pipeline complete:', JSON.stringify(result));
+  },
+
   async fetch(req, env) {
     if (req.method === "OPTIONS") return cors();
     const t0 = Date.now();
@@ -5149,6 +5156,229 @@ async function apiRejectedClaims(req, env) {
   } catch(e) { return rcmJson({success:false,error:e.message},500); }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// RCM AUTO-PILOT — Phase 2 | Production | BrainSAIT ClaimLinc
+// ═══════════════════════════════════════════════════════════════════════════
+
+async function rcmAutoPipeline(env, ctx) {
+  const t0 = Date.now();
+  const results = { pulled: 0, classified: 0, appealed: 0, errors: [] };
+  const branches = ['riyadh', 'madinah', 'unaizah', 'khamis', 'jizan', 'abha'];
+  const NPHIES_KEY = env.CLAIMLINC_KEY || '';
+
+  for (const branch of branches) {
+    try {
+      const rejectUrl = `https://api.brainsait.org/nphies/rejections/${branch}`;
+      const resp = await fetch(rejectUrl, {
+        headers: { 'X-API-Key': NPHIES_KEY },
+        signal: AbortSignal.timeout(30000),
+      });
+      if (!resp.ok) { results.errors.push(`${branch}: NPHIES returned ${resp.status}`); continue; }
+      const data = await resp.json();
+      const rejections = data?.results || data?.rejections || [];
+      if (!rejections.length) continue;
+
+      let inserted = 0, updated = 0;
+      for (const r of rejections.slice(0, 200)) {
+        const existing = await env.DB.prepare(
+          "SELECT id FROM claims WHERE claim_number = ? AND branch = ?"
+        ).bind(r.claim_number || r.claimNumber, branch).first();
+
+        if (existing) {
+          await env.DB.prepare(`UPDATE claims SET
+            nphies_rejection_code = COALESCE(?, nphies_rejection_code),
+            nphies_rejection_desc = COALESCE(?, nphies_rejection_desc),
+            reject_amount = COALESCE(CAST(? AS REAL), reject_amount),
+            nphies_status = ?,
+            status = CASE WHEN status NOT IN ('appealed','resubmitted','recovered') THEN 'rejected' ELSE status END,
+            updated_at = datetime('now')
+            WHERE id = ?`).bind(
+            r.rejection_code || r.code, r.rejection_reason || r.reason,
+            r.rejected_amount || r.amount, 'synced', existing.id
+          ).run();
+          updated++;
+        } else {
+          await env.DB.prepare(`INSERT INTO claims
+            (claim_number, patient_id, payer_name, total_amount, paid_amount, status,
+             nphies_rejection_code, nphies_rejection_desc, reject_amount, batch_number,
+             branch, nphies_status, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, 'rejected', ?, ?, ?, ?, ?, 'new', datetime('now'), datetime('now'))`
+          ).bind(
+            r.claim_number || r.claimNumber, r.patient_id || 0,
+            r.payer_name || r.payer || 'Unknown',
+            r.total_amount || r.billed || 0, r.paid_amount || 0,
+            r.rejection_code || r.code, r.rejection_reason || r.reason,
+            r.rejected_amount || r.amount, r.batch_number || '',
+            branch
+          ).run();
+          inserted++;
+        }
+      }
+      results.pulled += rejections.length;
+
+      const newRejections = await env.DB.prepare(
+        `SELECT id, claim_number, total_amount, payer_name, nphies_rejection_code,
+                nphies_rejection_desc, nphies_status
+         FROM claims WHERE branch = ? AND status = 'rejected'
+         AND (nphies_status = 'new' OR nphies_status IS NULL)
+         AND (appeal_date IS NULL) LIMIT 50`
+      ).bind(branch).all();
+
+      for (const claim of (newRejections.results || [])) {
+        const code = (claim.nphies_rejection_code || '').toUpperCase();
+        const strength = classifyAppealStrength(code, claim.total_amount || 0);
+        await env.DB.prepare(
+          `UPDATE claims SET appeal_strength = ?, nphies_status = 'triaged',
+           appeal_notes = ?, updated_at = datetime('now') WHERE id = ?`
+        ).bind(strength.label, strength.notes, claim.id).run();
+        results.classified++;
+        if (strength.score >= 3) results.appealed++;
+      }
+    } catch (e) {
+      results.errors.push(`${branch}: ${e.message}`);
+    }
+  }
+  const elapsed = Date.now() - t0;
+  return { ...results, elapsed_ms: elapsed, ts: new Date().toISOString() };
+}
+
+function classifyAppealStrength(code, amount) {
+  const m = {
+    'CV-1-4':  { score: 1, label: 'weak',   notes: 'Coverage exclusion — verify policy before proceeding' },
+    'BE-1-6':  { score: 4, label: 'strong', notes: 'Price discrepancy — correct and resubmit' },
+    'BE-1-5':  { score: 2, label: 'medium', notes: 'Duplicate — classify type before action' },
+    'AD-3-1':  { score: 1, label: 'weak',   notes: 'Follow-up period — document new episode or accept' },
+    'MN-1-1':  { score: 4, label: 'strong', notes: 'Medical necessity — needs physician appeal letter' },
+  };
+  const base = m[code] || { score: 2, label: 'medium', notes: `Review ${code} denial guidelines` };
+  if (amount > 1000) base.score = Math.min(base.score + 1, 5);
+  if (base.score >= 4) base.label = 'strong';
+  return base;
+}
+
+async function rcmReconcile(req, env) {
+  const url = new URL(req.url);
+  const claimNumber = url.pathname.split('/').pop();
+  if (!claimNumber) return rcmJson({success:false, error:'Claim number required'}, 400);
+
+  const result = { claim_number: claimNumber, oracle: null, nphies: null, match_found: false, discrepancies: [], auto_appeal_needed: false };
+
+  try {
+    const nphiesKey = env.CLAIMLINC_KEY || '';
+    const claimRes = await fetch(
+      `https://api.brainsait.org/nphies/claims/riyadh?claim_number=${encodeURIComponent(claimNumber)}`,
+      { headers: { 'X-API-Key': nphiesKey }, signal: AbortSignal.timeout(15000) }
+    );
+    if (claimRes.ok) { result.nphies = await claimRes.json(); result.match_found = true; }
+    else { result.nphies = { status: claimRes.status, error: 'Not found in NPHIES' }; }
+  } catch (e) { result.nphies = { error: e.message }; }
+
+  try {
+    const oracleRes = await oracleCall(env, 'GET', `/claims/${claimNumber}`, null, 'riyadh');
+    if (oracleRes) result.oracle = oracleRes;
+    else result.oracle = { error: 'Oracle unreachable or claim not found' };
+  } catch (e) { result.oracle = { error: e.message }; }
+
+  if (result.nphies?.status === 'rejected') {
+    const local = await env.DB.prepare(
+      "SELECT id, status, appeal_date FROM claims WHERE claim_number = ?"
+    ).bind(claimNumber).first().catch(() => null);
+    if (!local || local.status !== 'appealed') result.auto_appeal_needed = true;
+    if (local && local.status === 'rejected')
+      result.discrepancies.push(`NPHIES: rejected, D1: ${local.status}`);
+  }
+
+  return rcmJson({success:true, ...result});
+}
+
+async function rcmTrendReport(env) {
+  const days = [30, 60, 90];
+  const trends = {};
+
+  for (const d of days) {
+    const rows = await env.DB.prepare(`
+      SELECT nphies_rejection_code, COUNT(*) as count, COALESCE(SUM(total_amount),0) as total_sar
+      FROM claims
+      WHERE status IN ('rejected','denied')
+        AND julianday('now') - julianday(created_at) <= ?
+        AND nphies_rejection_code IS NOT NULL
+      GROUP BY nphies_rejection_code
+      ORDER BY count DESC
+    `).bind(d).all();
+
+    const codes = {};
+    let total = 0, totalSar = 0;
+    for (const r of (rows.results || [])) {
+      codes[r.nphies_rejection_code] = { count: r.count, sar: r.total_sar };
+      total += r.count;
+      totalSar += r.total_sar;
+    }
+    trends[`${d}d`] = { total_rejections: total, total_sar: totalSar, codes };
+  }
+
+  const movement = {};
+  if (trends['30d'] && trends['60d']) {
+    for (const [code, info] of Object.entries(trends['60d'].codes)) {
+      const last30 = trends['30d'].codes[code]?.count || 0;
+      const prev30 = info.count - last30;
+      if (prev30 > 0) {
+        movement[code] = {
+          prev_30d: prev30, last_30d: last30,
+          direction: last30 > prev30 ? 'increasing' : last30 < prev30 ? 'decreasing' : 'stable',
+          pct_change: prev30 > 0 ? Math.round(((last30 - prev30) / prev30) * 100) : 0,
+        };
+      }
+    }
+  }
+
+  const priorityActions = [];
+  for (const [code, mov] of Object.entries(movement)) {
+    if (mov.direction === 'increasing' && mov.pct_change > 20) {
+      priorityActions.push({ code, severity: 'high', action: `${code} increased ${mov.pct_change}% — investigate root cause` });
+    }
+  }
+
+  return rcmJson({
+    success: true,
+    period: { from: '-90d', to: 'today' },
+    trends, movement, priority_actions: priorityActions,
+    generated_at: new Date().toISOString(),
+  });
+}
+
+async function rcmDailySummary(env) {
+  const today = new Date().toISOString().split('T')[0];
+
+  const [newToday, pipeline, statusBreakdown] = await Promise.all([
+    env.DB.prepare(
+      "SELECT COUNT(*) as new_rejections, COALESCE(SUM(reject_amount),0) as new_sar FROM claims WHERE DATE(created_at) = ? AND status = 'rejected'"
+    ).bind(today).first().catch(() => ({ new_rejections: 0, new_sar: 0 })),
+
+    env.DB.prepare(
+      "SELECT nphies_rejection_code, COUNT(*) as count, COALESCE(SUM(reject_amount),0) as total_sar FROM claims WHERE DATE(created_at) = ? AND status = 'rejected' GROUP BY nphies_rejection_code ORDER BY count DESC"
+    ).bind(today).all().catch(() => ({ results: [] })),
+
+    env.DB.prepare(
+      "SELECT status, COUNT(*) as count, COALESCE(SUM(total_amount),0) as total_sar FROM claims WHERE status IN ('rejected','appealed','resubmitted','recovered') GROUP BY status"
+    ).all().catch(() => ({ results: [] })),
+  ]);
+
+  const codes = {};
+  for (const r of (pipeline.results || [])) codes[r.nphies_rejection_code] = { c: r.count, s: r.total_sar };
+  const breakdown = {};
+  for (const r of (statusBreakdown.results || [])) breakdown[r.status] = { c: r.count, s: r.total_sar };
+
+  return rcmJson({
+    success: true, date: today,
+    new_rejections: newToday?.new_rejections || 0,
+    new_amount_sar: Math.round((newToday?.new_sar || 0) * 100) / 100,
+    codes, pipeline_status: breakdown,
+    summary: (newToday?.new_rejections || 0) > 0
+      ? `📥 ${newToday.new_rejections} new rejections worth SR ${Math.round(newToday.new_sar)}`
+      : '✅ No new rejections today',
+  });
+}
+
 async function handleRequest(req, env, url, path) {
   if (path === "/" || path === "/index.html" || path === "/blog" || path === "/academy") {
     const lang = url.searchParams.get("lang") === "en" ? "en" : "ar";
@@ -5467,7 +5697,7 @@ load();setInterval(load,30000);
         return new Response(JSON.stringify({success:false,error:e.message}), {status:200,headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
       }
     }
-    const PROTECTED_PREFIXES = ["/api/claims", "/api/rcm/dashboard", "/api/rcm/claims", "/api/sync/", "/api/oracle/diagnose", "/api/schema"];
+    const PROTECTED_PREFIXES = ["/api/claims", "/api/rcm/dashboard", "/api/rcm/claims", "/api/rcm/pipeline", "/api/rcm/reconcile/", "/api/rcm/trend", "/api/rcm/summary", "/api/sync/", "/api/oracle/diagnose", "/api/schema"];
   
     // ─── /basma/chat — Basma AI Voice Handler (direct DeepSeek, no chaining) ───────
     if (path.startsWith('/knowledge/')) {
@@ -5893,9 +6123,13 @@ load();setInterval(load,30000);
     if (path === "/api/rcm/preauth-check") return apiRcmPreAuthCheck(req);
     if (path === "/api/rcm/validate/lab") return apiRcmLabValidate(req);
     if (path === "/api/rcm/settlement-cycle") return apiRcmSettlementCycle(req, env);
-    
-    
-    
+
+    // RCM Auto-Pilot v2 endpoints
+    if (path === '/api/rcm/pipeline')        return rcmJson(await rcmAutoPipeline(env, ctx));
+    if (path.startsWith('/api/rcm/reconcile/')) return rcmReconcile(req, env);
+    if (path === '/api/rcm/trend')           return rcmTrendReport(env);
+    if (path === '/api/rcm/summary')         return rcmDailySummary(env);
+
     if (path.startsWith("/api/sync/")) return apiSync(env, path.slice("/api/sync/".length));
     if (path === "/api/schema") {
       const tables = ["patients", "appointments", "claims", "providers", "departments", "rag_documents"];
