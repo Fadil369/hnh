@@ -5746,6 +5746,49 @@ load();setInterval(load,30000);
     return serveAcademyCourse(cid, langP);
   }
   if (path.startsWith("/voice")) {
+    // /voice/tts — text-to-speech via ElevenLabs API
+    if (path === '/voice/tts' && req.method === 'POST') {
+      try {
+        const body = await req.json();
+        const text = (body.text || '').slice(0, 400);
+        const lang = body.lang || 'ar';
+        if (!text) return err('text required', 400);
+        // Forward to voice agent, fall back on ElevenLabs direct
+        const apiKey = env.ELEVENLABS_API_KEY || '';
+        if (apiKey) {
+          const voiceId = lang === 'ar' ? 'KxMRrXEjbJ6kZ93yT3fq' : 'EXAVITQu4vr4xnSDxMaL';
+          const elResp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'xi-api-key': apiKey,
+            },
+            body: JSON.stringify({
+              text,
+              model_id: lang === 'ar' ? 'eleven_multilingual_v2' : 'eleven_turbo_v2_5',
+              voice_settings: { stability: 0.4, similarity_boost: 0.8, style: 0.25, speaker_boost: true },
+            }),
+            signal: AbortSignal.timeout(20000),
+          });
+          if (elResp.ok) {
+            return new Response(elResp.body, {
+              status: 200,
+              headers: { 'Content-Type': 'audio/mpeg', ...CORS, 'Cache-Control': 'no-cache' },
+            });
+          }
+        }
+        // Fallback: return JSON so BSMA can use browser SpeechSynthesis
+        return new Response(JSON.stringify({ text, lang, tts: 'unavailable', note: 'Use browser SpeechSynthesis' }), {
+          status: 200,
+          headers: { ...JSON_H },
+        });
+      } catch (e) {
+        return new Response(JSON.stringify({ text: '', tts: 'error', error: e.message }), {
+          status: 200,
+          headers: { ...JSON_H },
+        });
+      }
+    }
     const VOICE_WORKER = "https://basma-voice-agent.brainsait-fadil.workers.dev";
     try {
       const vUrl = VOICE_WORKER + path + (url.search || "");

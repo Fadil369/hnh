@@ -14,7 +14,7 @@ const CORS = {
 };
 
 const SECURITY_HEADERS = {
-  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://bsma.elfadil.com https://hnh.brainsait.org https://api.brainsait.org https://voice.elfadil.com https://nphies-mirror.brainsait-fadil.workers.dev https://maillinc.brainsait-fadil.workers.dev; media-src 'self' blob:; frame-ancestors 'none'; form-action 'self'",
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' https://elevenlabs.io https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://bsma.elfadil.com https://hnh.brainsait.org https://api.brainsait.org https://voice.elfadil.com https://nphies-mirror.brainsait-fadil.workers.dev https://maillinc.brainsait-fadil.workers.dev https://api.elevenlabs.io; media-src 'self' blob:; frame-ancestors 'none'; form-action 'self'",
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
@@ -52,12 +52,12 @@ export default {
 
     // === API PROXY: /basma/* routes (match old healthcare-gateway API) ===
 
-    // /basma/chat → Voice Agent (DeepSeek via voice.elfadil.com)
+    // /basma/chat → HNH Backend (DeepSeek via hnh.brainsait.org)
     if (path === '/basma/chat' && method === 'POST') {
       try {
-        const voiceAgentUrl = env.VOICE_AGENT_URL || 'https://voice.elfadil.com';
+        const hnhUrl = env.HNH_BACKEND || 'https://hnh.brainsait.org';
         const body = await request.json();
-        const res = await fetch(`${voiceAgentUrl}/bsma/chat`, {
+        const res = await fetch(`${hnhUrl}/basma/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-Source': 'bsma-portal' },
           body: JSON.stringify(body),
@@ -76,11 +76,33 @@ export default {
       }
     }
 
-    // /basma/tts → ElevenLabs TTS proxy
+    // /basma/tts → ElevenLabs TTS proxy (falls back to HNH)
     if (path === '/basma/tts' && method === 'POST') {
       try {
         const { text, lang = 'ar' } = await request.json();
-        const apiKey = env.ELEVENLABS_API_KEY || 'c1d91fafae6e5acfeae2366c3163e3a9';
+        const apiKey = env.ELEVENLABS_API_KEY || '';
+        if (!apiKey) {
+          // No ElevenLabs key → forward to HNH backend
+          const hnhUrl = env.HNH_BACKEND || 'https://hnh.brainsait.org';
+          const hnResp = await fetch(`${hnhUrl}/voice/tts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Source': 'bsma-portal' },
+            body: JSON.stringify({ text, lang }),
+            signal: AbortSignal.timeout(20000),
+          });
+          if (hnResp.status === 200) {
+            const audio = await hnResp.arrayBuffer();
+            return new Response(audio, {
+              status: 200,
+              headers: { 'Content-Type': 'audio/mpeg', ...CORS, 'Cache-Control': 'no-cache' },
+            });
+          }
+          // If no TTS upstream works either, return error
+          return new Response(JSON.stringify({ error: true, message: 'TTS not configured' }), {
+            status: 503,
+            headers: { 'Content-Type': 'application/json', ...CORS },
+          });
+        }
         const voiceId = lang === 'ar' ? 'KxMRrXEjbJ6kZ93yT3fq' : 'EXAVITQu4vr4xnSDxMaL';
         const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`, {
           method: 'POST',
