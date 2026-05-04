@@ -317,6 +317,40 @@ export default {
       }
     }
 
+    // === /comms/whatsapp-template → Twilio ContentSid template sender ===
+    if (path === '/comms/whatsapp-template' && method === 'POST') {
+      try {
+        const body = await request.json();
+        const { to, content_sid, variables } = body;
+        if (!to || !content_sid) return new Response(JSON.stringify({ error: 'to and content_sid required' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
+        const phone = to.startsWith('+') ? to : '+966' + to.replace(/^0/, '');
+        const TWILIO_SID = env.TWILIO_ACCOUNT_SID;
+        const TWILIO_TOKEN = env.TWILIO_AUTH_TOKEN;
+        const FROM = 'whatsapp:+14155238886';
+        const form = new URLSearchParams({
+          To: 'whatsapp:' + phone,
+          From: FROM,
+          ContentSid: content_sid,
+          ContentVariables: JSON.stringify(variables || {}),
+        });
+        const r = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`, {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Basic ' + btoa(TWILIO_SID + ':' + TWILIO_TOKEN),
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: form.toString(),
+          signal: AbortSignal.timeout(15000),
+        });
+        const data = await r.json();
+        return new Response(JSON.stringify({ success: !!data.sid, sid: data.sid, status: data.status, to: phone }), {
+          headers: { 'Content-Type': 'application/json', ...CORS },
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ error: true, message: err.message }), { status: 502, headers: { 'Content-Type': 'application/json', ...CORS } });
+      }
+    }
+
     // === /api/* → HNH Backend Proxy ===
     if (path.startsWith('/api/')) {
       try {

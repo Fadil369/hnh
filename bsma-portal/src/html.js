@@ -582,24 +582,15 @@ async function bA(e){
       const bid=bk.id||'—';
       html(res,'<div style="padding:12px;background:var(--sl);border-radius:var(--rs);color:var(--succ);line-height:1.8">✅ <strong>'+_('bookingOk')+'</strong> #'+bid+'<br>'+hn+' | '+sn+' | '+d+' '+t+'<br>'+n.value+'</div>');
       tt(_('bookingSuccess')+' — '+hn,'ok');
-      // Send WhatsApp confirmation
+      // Send WhatsApp appointment reminder template
       const phone=p.value.startsWith('+')?p.value:'+966'+p.value.replace(/^0/,'');
-      const msg=(lang==='ar'?
-        'عزيزنا '+n.value+'،
-تم تأكيد موعدك في مستشفيات الحياة الوطني 🏥
-📅 '+d+' الساعة '+t+'
-🏥 '+hn+' — '+sn+'
-رقم الحجز: #'+bid+'
-للاستفسار: بسمة 😊':
-        'Dear '+n.value+',
-Your appointment is confirmed at Hayat National Hospital 🏥
-📅 '+d+' at '+t+'
-🏥 '+hn+' — '+sn+'
-Booking #'+bid+'
-Questions? Basma 😊');
-      fetch(BA+'/comms/sms',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({to:phone,message:msg,channel:'whatsapp'}),signal:AbortSignal.timeout(10000)})
-        .catch(()=>{});
+      const [yr,mo,dy]=d.split('-');
+      const tVar1=parseInt(mo)+'/'+parseInt(dy);
+      const [hr,mn]=t.split(':');const h24=parseInt(hr);
+      const tVar2=(h24>12?h24-12:h24||12)+':'+(mn||'00')+(h24>=12?'pm':'am');
+      fetch(BA+'/comms/whatsapp-template',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({to:phone,content_sid:'HXb5b62575e6e4ff6129ad7c8efe1f983e',variables:{'1':tVar1,'2':tVar2}}),
+        signal:AbortSignal.timeout(10000)}).catch(()=>{});
     } else {
       html(res,'<div style="padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)">❌ '+_('bookingFail')+'</div>');
     }
