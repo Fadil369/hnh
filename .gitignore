@@ -3,3 +3,5 @@ node_modules/
 out/
 *.log
 *.tsbuildinfo
+.secrets
+integrations/nphies/__pycache__/

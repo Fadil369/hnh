@@ -1,0 +1,1 @@
+This folder contains the built output assets for the worker "brainsait-voice" generated at 2026-04-28T23:11:55.187Z.
