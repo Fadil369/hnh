@@ -499,7 +499,7 @@ async function sendWhatsApp(){
   if(!phone||!body){tt('أدخل رقم الجوال ونص الرسالة','err');return;}
   html(res,'⏳ جاري الإرسال...');
   try{
-    const r=await fetch(BA+'/comms/sms',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:'whatsapp:'+phone,message:body,channel:'whatsapp'}),signal:AbortSignal.timeout(15000)});
+    const r=await fetch(BA+'/comms/sms',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:phone,message:body,channel:'whatsapp'}),signal:AbortSignal.timeout(15000)});
     const d=await r.json();
     html(res,d.success||d.sid?'✅ تم الإرسال':'❌ '+(d.error||'فشل'));
   }catch(e){html(res,'❌ '+e.message);}
@@ -509,7 +509,7 @@ async function sendOtp(){
   if(!phone){tt('أدخل رقم الجوال','err');return;}
   html(res,'⏳ جاري الإرسال...');
   try{
-    const r=await fetch(BA+'/comms/verify/phone',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone_number:phone}),signal:AbortSignal.timeout(15000)});
+    const r=await fetch(BA+'/comms/verify/phone',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:phone}),signal:AbortSignal.timeout(15000)});
     const d=await r.json();
     html(res,d.success?'✅ تم إرسال OTP':'❌ '+(d.error||'فشل'));
   }catch(e){html(res,'❌ '+e.message);}
@@ -519,7 +519,7 @@ async function verifyOtp(){
   if(!phone||!code){tt('أدخل الجوال والرمز','err');return;}
   html(res,'⏳ جاري التحقق...');
   try{
-    const r=await fetch(BA+'/comms/verify/confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone_number:phone,otp:code}),signal:AbortSignal.timeout(15000)});
+    const r=await fetch(BA+'/comms/verify/confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:phone,otp:code}),signal:AbortSignal.timeout(15000)});
     const d=await r.json();
     html(res,d.success?'✅ تم التحقق بنجاح':'❌ '+(d.error||'رمز خاطئ'));
   }catch(e){html(res,'❌ '+e.message);}

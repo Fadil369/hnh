@@ -52,12 +52,12 @@ export default {
 
     // === API PROXY: /basma/* routes (match old healthcare-gateway API) ===
 
-    // /basma/chat → Voice Agent (HNH AI Assistant)
+    // /basma/chat → Voice Agent (DeepSeek via voice.elfadil.com)
     if (path === '/basma/chat' && method === 'POST') {
       try {
-        const voiceAgentUrl = env.VOICE_AGENT_URL || 'https://hnh.brainsait.org';
+        const voiceAgentUrl = env.VOICE_AGENT_URL || 'https://voice.elfadil.com';
         const body = await request.json();
-        const res = await fetch(`${voiceAgentUrl}/api/assistant`, {
+        const res = await fetch(`${voiceAgentUrl}/bsma/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-Source': 'bsma-portal' },
           body: JSON.stringify(body),
