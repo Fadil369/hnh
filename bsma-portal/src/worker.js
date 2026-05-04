@@ -289,34 +289,6 @@ export default {
       }), { headers: { 'Content-Type': 'application/json', ...CORS, 'Cache-Control': 'max-age=3600' } });
     }
 
-    // === /comms/* → MailLinc Communication Proxy ===
-    if (path.startsWith('/comms/')) {
-      try {
-        const maillincUrl = env.MAILLINC_URL || 'https://maillinc.brainsait-fadil.workers.dev';
-        const maillincPath = path.replace('/comms', '');
-        const res = await fetch(`${maillincUrl}${maillincPath}${url.search}`, {
-          method,
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Source': 'bsma-portal',
-            ...(env.MAILLINC_API_KEY ? { 'X-API-Key': env.MAILLINC_API_KEY } : {}),
-          },
-          body: method === 'POST' ? await request.clone().text() : undefined,
-          signal: AbortSignal.timeout(15000),
-        });
-        const data = await res.text();
-        return new Response(data, {
-          status: res.status,
-          headers: { 'Content-Type': res.headers.get('Content-Type') || 'application/json', ...CORS },
-        });
-      } catch (err) {
-        return new Response(JSON.stringify({ error: true, message: 'MailLinc unavailable', detail: err.message }), {
-          status: 502,
-          headers: { 'Content-Type': 'application/json', ...CORS },
-        });
-      }
-    }
-
     // === /comms/whatsapp-template → Twilio ContentSid template sender ===
     if (path === '/comms/whatsapp-template' && method === 'POST') {
       try {
@@ -350,6 +322,36 @@ export default {
         return new Response(JSON.stringify({ error: true, message: err.message }), { status: 502, headers: { 'Content-Type': 'application/json', ...CORS } });
       }
     }
+
+
+    // === /comms/* → MailLinc Communication Proxy ===
+    if (path.startsWith('/comms/')) {
+      try {
+        const maillincUrl = env.MAILLINC_URL || 'https://maillinc.brainsait-fadil.workers.dev';
+        const maillincPath = path.replace('/comms', '');
+        const res = await fetch(`${maillincUrl}${maillincPath}${url.search}`, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Source': 'bsma-portal',
+            ...(env.MAILLINC_API_KEY ? { 'X-API-Key': env.MAILLINC_API_KEY } : {}),
+          },
+          body: method === 'POST' ? await request.clone().text() : undefined,
+          signal: AbortSignal.timeout(15000),
+        });
+        const data = await res.text();
+        return new Response(data, {
+          status: res.status,
+          headers: { 'Content-Type': res.headers.get('Content-Type') || 'application/json', ...CORS },
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ error: true, message: 'MailLinc unavailable', detail: err.message }), {
+          status: 502,
+          headers: { 'Content-Type': 'application/json', ...CORS },
+        });
+      }
+    }
+
 
     // === /api/* → HNH Backend Proxy ===
     if (path.startsWith('/api/')) {
