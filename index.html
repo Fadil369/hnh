@@ -12,7 +12,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════
    RESET & VARIABLES
@@ -246,7 +246,8 @@ html[dir="rtl"] .cta-box h2{font-family:var(--font-ar)}
 .qr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:1.5rem}
 .qr-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:1.5rem;text-align:center;transition:.4s}
 .qr-card:hover{border-color:rgba(0,212,255,.25);transform:translateY(-3px)}
-.qr-card canvas,.qr-card img{margin:0 auto .8rem;border-radius:8px}
+.qr-card .qr-gen{margin:0 auto .8rem}
+.qr-card .qr-gen img{border-radius:8px;margin:0 auto;display:block}
 .qr-card .qr-label{font-size:.85rem;font-weight:600;color:#fff}
 .qr-card .qr-url{font-size:.7rem;color:var(--gray-500);word-break:break-all;margin-top:.2rem}
 
@@ -314,7 +315,7 @@ footer a{color:var(--gray-400)}
   .qr-section{page-break-before:always}
   .qr-grid{grid-template-columns:repeat(4,1fr)!important;gap:1rem}
   .qr-card{padding:1rem}
-  .qr-card canvas{width:120px!important;height:120px!important}
+  .qr-card .qr-gen img{width:120px!important;height:120px!important}
   footer{color:#888!important;border-top-color:#ddd!important}
   footer a{color:#555!important}
   .author-avatar{border-color:#0066cc!important}
@@ -785,22 +786,22 @@ footer a{color:var(--gray-400)}
     </div>
     <div class="qr-grid reveal">
       <div class="qr-card">
-        <canvas id="qr-dashboard"></canvas>
+        <div id="qr-dashboard" class="qr-gen"></div>
         <div class="qr-label" data-lang="en">Live Dashboard</div><div class="qr-label" data-lang="ar">لوحة التحكم الحية</div>
         <div class="qr-url">hnh.brainsait.org</div>
       </div>
       <div class="qr-card">
-        <canvas id="qr-corporate"></canvas>
+        <div id="qr-corporate" class="qr-gen"></div>
         <div class="qr-label" data-lang="en">Corporate Website</div><div class="qr-label" data-lang="ar">الموقع الرسمي</div>
         <div class="qr-url">hayathospitals.com</div>
       </div>
       <div class="qr-card">
-        <canvas id="qr-profile"></canvas>
+        <div id="qr-profile" class="qr-gen"></div>
         <div class="qr-label" data-lang="en">Author Profile</div><div class="qr-label" data-lang="ar">الملف الشخصي للمؤلف</div>
         <div class="qr-url">fadil369.github.io/Profile</div>
       </div>
       <div class="qr-card">
-        <canvas id="qr-gravatar"></canvas>
+        <div id="qr-gravatar" class="qr-gen"></div>
         <div class="qr-label" data-lang="en">Gravatar</div><div class="qr-label" data-lang="ar">غرافاتار</div>
         <div class="qr-url">gravatar.com/fadil369</div>
       </div>
@@ -941,15 +942,16 @@ footer a{color:var(--gray-400)}
 
   // ─── QR CODES ───
   function makeQR(id,url){
-    var c=document.getElementById(id);
-    if(!c||typeof QRCode==='undefined')return;
-    QRCode.toCanvas(c,url,{
+    var el=document.getElementById(id);
+    if(!el||typeof QRCode==='undefined')return;
+    el.innerHTML='';
+    new QRCode(el,{
+      text:url,
       width:160,
-      margin:2,
-      color:{dark:'#0a1628',light:'#ffffff'},
-      errorCorrectionLevel:'H'
-    },function(err){
-      if(err)console.warn('QR error for '+id,err);
+      height:160,
+      colorDark:'#0a1628',
+      colorLight:'#ffffff',
+      correctLevel:QRCode.CorrectLevel.H
     });
   }
   function initQR(){
