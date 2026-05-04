@@ -11,6 +11,7 @@ const bsmaHtml = `<!DOCTYPE html>
 <title>BasmaGuist Medical AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A4%96%3C/text%3E%3C/svg%3E">
 <style>
 /* BASMA AI v3.0 Enhanced */
@@ -175,10 +176,12 @@ main{flex:1;display:flex;overflow:hidden}
   <button class="tab" data-tab="elig">🛡️ أهلية</button>
   <button class="tab" data-tab="appt">📅 مواعيد</button>
   <button class="tab" data-tab="oracle">🔗 Oracle</button>
+  <button class="tab" data-tab="comms">📞 تواصل</button>
 </nav>
 <main>
 <section class="pn on" id="pn-voice">
   <div class="vp">
+    <div style="margin-bottom:14px"><elevenlabs-convai agent-id="agent_3401kaac3de5fsnvvfyye79vp9es"></elevenlabs-convai></div>
     <div class="vr" id="voiceRing" data-a="toggleVoice"><span class="vi" id="voiceIcon">🎙️</span></div>
     <div class="vs" id="voiceStatus">اضغط للتحدث مع بسمة</div>
     <div class="vsu" id="voiceSub">تتحدث العربية والإنجليزية</div>
@@ -253,6 +256,47 @@ main{flex:1;display:flex;overflow:hidden}
   <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:16px">🔗 Oracle Health</h2>
   <div class="g3" id="oracleStats"></div>
   <div class="cd"><div class="cd-h" data-a="toggleCard">🔄 حالة الربط <span>▼</span></div><div class="cd-b" id="oracleDetail"></div></div>
+</section>
+<section class="pn" id="pn-comms">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:16px">📞 التواصل مع المريض</h2>
+  <div class="g3" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+    <div class="sc" style="border-left:3px solid var(--succ)">
+      <div class="sc-i">💬</div><div class="sc-l">SMS</div>
+      <div class="fg" style="margin-top:10px"><input id="smsPhone" placeholder="+9665xxxxxxxx" style="width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit"></div>
+      <div class="fg"><textarea id="smsBody" rows="2" placeholder="نص الرسالة..." style="width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit;resize:none"></textarea></div>
+      <button class="btn btn-o btn-w btn-sm" style="margin-bottom:6px" data-a="draftSms">✨ صياغة بالذكاء الاصطناعي</button>
+      <button class="btn btn-s btn-w btn-sm" data-a="sendSms">📤 إرسال SMS</button>
+      <div id="smsResult" style="margin-top:8px;font-size:.8rem"></div>
+    </div>
+    <div class="sc" style="border-left:3px solid var(--blue)">
+      <div class="sc-i">📞</div><div class="sc-l">مكالمة صوتية</div>
+      <div class="fg" style="margin-top:10px"><input id="callPhone" placeholder="+9665xxxxxxxx" style="width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit"></div>
+      <button class="btn btn-p btn-w btn-sm" data-a="startCall">📞 اتصال مع بسمة</button>
+      <div id="callResult" style="margin-top:8px;font-size:.8rem"></div>
+    </div>
+    <div class="sc" style="border-left:3px solid var(--succ)">
+      <div class="sc-i">🟢</div><div class="sc-l">WhatsApp</div>
+      <div class="fg" style="margin-top:10px"><input id="waPhone" placeholder="+9665xxxxxxxx" style="width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit"></div>
+      <div class="fg"><textarea id="waBody" rows="2" placeholder="نص الرسالة..." style="width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit;resize:none"></textarea></div>
+      <button class="btn btn-o btn-w btn-sm" style="margin-bottom:6px" data-a="draftWa">✨ صياغة بالذكاء الاصطناعي</button>
+      <button class="btn btn-w btn-sm" style="background:linear-gradient(135deg,#25d366,#128c7e);color:#fff" data-a="sendWhatsApp">🟢 إرسال WhatsApp</button>
+      <div id="waResult" style="margin-top:8px;font-size:.8rem"></div>
+    </div>
+  </div>
+  <div class="cd" style="margin-top:14px">
+    <div class="cd-h" data-a="toggleCard">🔢 إرسال OTP تحقق <span>▼</span></div>
+    <div class="cd-b hide">
+      <div class="fr">
+        <div class="fg"><label>رقم الجوال</label><input id="otpPhone" placeholder="+9665xxxxxxxx"></div>
+        <div class="fg" style="display:flex;align-items:flex-end"><button class="btn btn-p btn-w" data-a="sendOtp">📲 إرسال OTP</button></div>
+      </div>
+      <div class="fr" style="margin-top:8px">
+        <div class="fg"><label>رمز التحقق</label><input id="otpCode" placeholder="123456" maxlength="6"></div>
+        <div class="fg" style="display:flex;align-items:flex-end"><button class="btn btn-s btn-w" data-a="verifyOtp">✅ تحقق</button></div>
+      </div>
+      <div id="otpResult" style="margin-top:8px;font-size:.8rem"></div>
+    </div>
+  </div>
 </section>
 </main>
 <script>
@@ -400,6 +444,87 @@ async function lM(){
   }catch(e){html(st,'<div class="em"><div class="ei">⚠️</div><h3>'+_('failed')+'</h3></div>');}
 }
 
+// ─── DeepSeek AI Drafting ───
+async function draftMsg(targetId, context){
+  const res=$(targetId);
+  if(!res){return '';}
+  html(res,'⏳ بسمة تفكر...');
+  try{
+    const r=await fetch(BA+'/basma/chat',{method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(15000),
+      body:JSON.stringify({message:'اكتب رسالة قصيرة ومهنية باللغة العربية للمريض حول: '+context+'. الرسالة يجب أن تكون من مستشفى الحياة الوطني، قصيرة (3 جمل فقط)، ودودة ومهنية.',lang:'ar',hospital:hosp})});
+    const d=await r.json();
+    const txt=d.reply||d.message||d.text||'';
+    html(res,'');
+    return txt;
+  }catch(e){html(res,'');return '';}
+}
+async function draftSms(){
+  const body=$('smsBody'),res=$('smsResult');
+  if(!body)return;
+  const ctx=body.value||'تذكير بالموعد الطبي';
+  const txt=await draftMsg('smsResult',ctx);
+  if(txt){body.value=txt;tt('✨ تمت الصياغة','ok');}
+}
+async function draftWa(){
+  const body=$('waBody'),res=$('waResult');
+  if(!body)return;
+  const ctx=body.value||'تذكير بالموعد الطبي';
+  const txt=await draftMsg('waResult',ctx);
+  if(txt){body.value=txt;tt('✨ تمت الصياغة','ok');}
+}
+
+// ─── Communications ───
+async function sendSms(){
+  const phone=$('smsPhone').value.trim(),body=$('smsBody').value.trim(),res=$('smsResult');
+  if(!phone||!body){tt('أدخل رقم الجوال ونص الرسالة','err');return;}
+  html(res,'⏳ جاري الإرسال...');
+  try{
+    const r=await fetch(BA+'/comms/sms',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:phone,message:body}),signal:AbortSignal.timeout(15000)});
+    const d=await r.json();
+    html(res,d.success||d.sid?'✅ تم الإرسال':'❌ '+(d.error||'فشل'));
+  }catch(e){html(res,'❌ '+e.message);}
+}
+async function startCall(){
+  const phone=$('callPhone').value.trim(),res=$('callResult');
+  if(!phone){tt('أدخل رقم الجوال','err');return;}
+  html(res,'⏳ جاري بدء المكالمة...');
+  try{
+    const r=await fetch(BA+'/comms/call',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:phone}),signal:AbortSignal.timeout(15000)});
+    const d=await r.json();
+    html(res,d.success||d.sid?'✅ جاري الاتصال...':'❌ '+(d.error||'فشل'));
+  }catch(e){html(res,'❌ '+e.message);}
+}
+async function sendWhatsApp(){
+  const phone=$('waPhone').value.trim(),body=$('waBody').value.trim(),res=$('waResult');
+  if(!phone||!body){tt('أدخل رقم الجوال ونص الرسالة','err');return;}
+  html(res,'⏳ جاري الإرسال...');
+  try{
+    const r=await fetch(BA+'/comms/sms',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:'whatsapp:'+phone,message:body,channel:'whatsapp'}),signal:AbortSignal.timeout(15000)});
+    const d=await r.json();
+    html(res,d.success||d.sid?'✅ تم الإرسال':'❌ '+(d.error||'فشل'));
+  }catch(e){html(res,'❌ '+e.message);}
+}
+async function sendOtp(){
+  const phone=$('otpPhone').value.trim(),res=$('otpResult');
+  if(!phone){tt('أدخل رقم الجوال','err');return;}
+  html(res,'⏳ جاري الإرسال...');
+  try{
+    const r=await fetch(BA+'/comms/verify/phone',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone_number:phone}),signal:AbortSignal.timeout(15000)});
+    const d=await r.json();
+    html(res,d.success?'✅ تم إرسال OTP':'❌ '+(d.error||'فشل'));
+  }catch(e){html(res,'❌ '+e.message);}
+}
+async function verifyOtp(){
+  const phone=$('otpPhone').value.trim(),code=$('otpCode').value.trim(),res=$('otpResult');
+  if(!phone||!code){tt('أدخل الجوال والرمز','err');return;}
+  html(res,'⏳ جاري التحقق...');
+  try{
+    const r=await fetch(BA+'/comms/verify/confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone_number:phone,otp:code}),signal:AbortSignal.timeout(15000)});
+    const d=await r.json();
+    html(res,d.success?'✅ تم التحقق بنجاح':'❌ '+(d.error||'رمز خاطئ'));
+  }catch(e){html(res,'❌ '+e.message);}
+}
+
 // ─── Oracle ───
 async function lO(){
   const st=$('oracleStats'),dt=$('oracleDetail');
@@ -468,14 +593,14 @@ function init(){
   document.addEventListener('click',e=>{
     const t=e.target.closest('[data-a]');if(!t)return;
     const a=t.dataset.a;
-    if(a==='toggleVoice')sV();else if(a==='clearVoice')clV();else if(a==='sendChat')sC();else if(a==='toggleChatMic')tCM();else if(a==='checkElig')cE();
+    if(a==='toggleVoice')sV();else if(a==='clearVoice')clV();else if(a==='sendChat')sC();else if(a==='toggleChatMic')tCM();else if(a==='checkElig')cE();else if(a==='sendSms')sendSms();else if(a==='startCall')startCall();else if(a==='sendWhatsApp')sendWhatsApp();else if(a==='sendOtp')sendOtp();else if(a==='verifyOtp')verifyOtp();else if(a==='draftSms')draftSms();else if(a==='draftWa')draftWa();
   });
 
   // Hospital chips
   qa('.hc-btn').forEach(b=>{b.addEventListener('click',()=>{qa('.hc-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');hosp=b.dataset.h;localStorage.setItem('bm_hosp',hosp);lI();lM();lO();});});
 
   // Tab switching
-  qa('.tab').forEach(t=>{t.addEventListener('click',()=>{qa('.tab').forEach(x=>x.classList.remove('on'));qa('.pn').forEach(p=>p.classList.remove('on'));t.classList.add('on');const pn=$('pn-'+t.dataset.tab);if(pn)pn.classList.add('on');if(t.dataset.tab==='insights')lI();if(t.dataset.tab==='nphies')lM();if(t.dataset.tab==='oracle')lO();if(t.dataset.tab==='elig')lP();if(t.dataset.tab==='chat'&&!chH.length)aCM('bo','👋 السلام عليكم! أنا بسمة، مساعد مستشفيات الحياة الوطني الذكي. كيف أقدر أساعدك اليوم؟');});});
+  qa('.tab').forEach(t=>{t.addEventListener('click',()=>{qa('.tab').forEach(x=>x.classList.remove('on'));qa('.pn').forEach(p=>p.classList.remove('on'));t.classList.add('on');const pn=$('pn-'+t.dataset.tab);if(pn)pn.classList.add('on');if(t.dataset.tab==='insights')lI();if(t.dataset.tab==='nphies')lM();if(t.dataset.tab==='oracle')lO();if(t.dataset.tab==='elig')lP();if(t.dataset.tab==='comms'){}if(t.dataset.tab==='chat'&&!chH.length)aCM('bo','👋 السلام عليكم! أنا بسمة، مساعد مستشفيات الحياة الوطني الذكي. كيف أقدر أساعدك اليوم؟');});});
 
   // Voice hints
   qa('.vq').forEach(b=>{b.addEventListener('click',()=>{const q=b.dataset.q;if(q){const t=$('voiceTranscript');if(t)t.textContent=q;pV(q);}});});

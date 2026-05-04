@@ -14,7 +14,7 @@ const CORS = {
 };
 
 const SECURITY_HEADERS = {
-  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://bsma.elfadil.com https://hnh.brainsait.org https://api.brainsait.org https://voice.elfadil.com https://nphies-mirror.brainsait-fadil.workers.dev; media-src 'self' blob:; frame-ancestors 'none'; form-action 'self'",
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://bsma.elfadil.com https://hnh.brainsait.org https://api.brainsait.org https://voice.elfadil.com https://nphies-mirror.brainsait-fadil.workers.dev https://maillinc.brainsait-fadil.workers.dev; media-src 'self' blob:; frame-ancestors 'none'; form-action 'self'",
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
@@ -43,7 +43,7 @@ export default {
         version: '3.0.0',
         status: 'healthy',
         timestamp: new Date().toISOString(),
-        features: ['voice', 'chat', 'oracle', 'nphies', 'insights', 'eligibility'],
+        features: ['voice', 'chat', 'oracle', 'nphies', 'insights', 'eligibility', 'sms', 'call', 'whatsapp'],
         hospitals: ['riyadh', 'madinah', 'unaizah', 'khamis', 'jizan', 'abha'],
       }), {
         headers: { 'Content-Type': 'application/json', ...CORS },
@@ -287,6 +287,34 @@ export default {
           { id: 'abha', name_ar: 'أبها', name_en: 'Abha', city: 'Abha' },
         ],
       }), { headers: { 'Content-Type': 'application/json', ...CORS, 'Cache-Control': 'max-age=3600' } });
+    }
+
+    // === /comms/* → MailLinc Communication Proxy ===
+    if (path.startsWith('/comms/')) {
+      try {
+        const maillincUrl = env.MAILLINC_URL || 'https://maillinc.brainsait-fadil.workers.dev';
+        const maillincPath = path.replace('/comms', '');
+        const res = await fetch(`${maillincUrl}${maillincPath}${url.search}`, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Source': 'bsma-portal',
+            ...(env.MAILLINC_API_KEY ? { 'X-API-Key': env.MAILLINC_API_KEY } : {}),
+          },
+          body: method === 'POST' ? await request.clone().text() : undefined,
+          signal: AbortSignal.timeout(15000),
+        });
+        const data = await res.text();
+        return new Response(data, {
+          status: res.status,
+          headers: { 'Content-Type': res.headers.get('Content-Type') || 'application/json', ...CORS },
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ error: true, message: 'MailLinc unavailable', detail: err.message }), {
+          status: 502,
+          headers: { 'Content-Type': 'application/json', ...CORS },
+        });
+      }
     }
 
     // === /api/* → HNH Backend Proxy ===
