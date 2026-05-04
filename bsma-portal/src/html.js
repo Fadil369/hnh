@@ -564,15 +564,48 @@ async function lP(){
 }
 
 // ─── Appointments ───
-function bA(e){
+async function bA(e){
   e.preventDefault();const n=$('apName'),p=$('apPhone');
   if(!n||!n.value.trim()){tt(_('nameRequired'),'err');return;}
   if(!p||p.value.length<10){tt(_('phoneInvalid'),'err');return;}
   const h=$('apHosp').value,s=$('apSpec').value,d=$('apDate').value,t=$('apTime').value;
   const hn=(HM[h]?HM[h][lang]:h),sn=(SM[s]?SM[s][lang]:s);
-  tt(_('bookingSuccess')+' — '+hn,'ok');
   const res=$('apptResult');
-  html(res,'<div style="padding:12px;background:var(--sl);border-radius:var(--rs);color:var(--succ);line-height:1.8">✅ <strong>'+_('bookingOk')+'</strong><br>'+hn+' | '+sn+' | '+d+' '+t+'<br>'+n.value+' | '+p.value+'</div>');
+  html(res,'<div style="padding:12px;color:var(--tm)">⏳ جاري الحجز...</div>');
+  try{
+    // Book via HNH API
+    const r=await fetch(BA+'/api/appointments',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({patient_id:null,clinic_name:sn,appointment_date:d,appointment_time:t,appointment_type:'Outpatient',notes:n.value+' | '+p.value}),
+      signal:AbortSignal.timeout(10000)});
+    const bk=await r.json();
+    if(bk.success||bk.id){
+      const bid=bk.id||'—';
+      html(res,'<div style="padding:12px;background:var(--sl);border-radius:var(--rs);color:var(--succ);line-height:1.8">✅ <strong>'+_('bookingOk')+'</strong> #'+bid+'<br>'+hn+' | '+sn+' | '+d+' '+t+'<br>'+n.value+'</div>');
+      tt(_('bookingSuccess')+' — '+hn,'ok');
+      // Send WhatsApp confirmation
+      const phone=p.value.startsWith('+')?p.value:'+966'+p.value.replace(/^0/,'');
+      const msg=(lang==='ar'?
+        'عزيزنا '+n.value+'،
+تم تأكيد موعدك في مستشفيات الحياة الوطني 🏥
+📅 '+d+' الساعة '+t+'
+🏥 '+hn+' — '+sn+'
+رقم الحجز: #'+bid+'
+للاستفسار: بسمة 😊':
+        'Dear '+n.value+',
+Your appointment is confirmed at Hayat National Hospital 🏥
+📅 '+d+' at '+t+'
+🏥 '+hn+' — '+sn+'
+Booking #'+bid+'
+Questions? Basma 😊');
+      fetch(BA+'/comms/sms',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({to:phone,message:msg,channel:'whatsapp'}),signal:AbortSignal.timeout(10000)})
+        .catch(()=>{});
+    } else {
+      html(res,'<div style="padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)">❌ '+_('bookingFail')+'</div>');
+    }
+  }catch(e2){
+    html(res,'<div style="padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)">❌ '+e2.message+'</div>');
+  }
 }
 
 // ─── Language ───
