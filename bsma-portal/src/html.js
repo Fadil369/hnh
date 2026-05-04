@@ -217,6 +217,10 @@ main{flex:1;display:flex;overflow:hidden}
     <div class="ib" id="integBar"></div>
   </div>
   <div class="g3" id="insightCards"></div>
+  <!-- NPHIES Riyadh Live -->
+  <div class="cd"><div class="cd-h" data-a="toggleCard">🏛️ NPHIES الرياض — بيانات مباشرة <span>▼</span></div><div class="cd-b" id="nphiesLive"><div class="ld">⏳ جاري التحميل...</div></div></div>
+  <!-- Oracle Approvals Live -->
+  <div class="cd"><div class="cd-h" data-a="toggleCard">✅ طابور الموافقات اليوم <span>▼</span></div><div class="cd-b hide" id="oracleApprovals"><div class="ld">⏳</div></div></div>
   <div class="cd"><div class="cd-h" data-a="toggleCard">🏥 أداء الفروع <span>▼</span></div><div class="cd-b" id="branchTable"></div></div>
   <div class="cd"><div class="cd-h" data-a="toggleCard">📋 تفاصيل المطالبات <span>▼</span></div><div class="cd-b" id="claimsDetail"></div></div>
 </section>
@@ -525,6 +529,52 @@ async function verifyOtp(){
   }catch(e){html(res,'❌ '+e.message);}
 }
 
+// ─── NPHIES Riyadh Live ───
+async function lNL(){
+  const el=$('nphiesLive');if(!el)return;
+  try{
+    const d=await fetch(BA+'/basma/riyadh-live',{signal:AbortSignal.timeout(15000)}).then(r=>r.json());
+    if(d.ok){
+      const items=d.items||[];
+      let h='<div class="g3" style="margin-bottom:12px">';
+      h+='<div class="sc" style="border-left:3px solid var(--teal)"><div class="sc-i">💰</div><div class="sc-l">إجمالي GSS</div><div class="sc-v">'+n2(Math.round(d.total_amount_sar/1e6))+' M SAR</div><div class="sc-d">'+d.total_gss+' سجل</div></div>';
+      h+='<div class="sc" style="border-left:3px solid var(--succ)"><div class="sc-i">✅</div><div class="sc-l">نسبة الموافقة</div><div class="sc-v">'+d.approval_rate_pct+'%</div><div class="sc-d">'+d.approved_count+' موافق</div></div>';
+      h+='<div class="sc" style="border-left:3px solid var(--blue)"><div class="sc-i">🏥</div><div class="sc-l">المنشأة</div><div class="sc-v" style="font-size:.75rem">الرياض</div><div class="sc-d">'+d.license+'</div></div>';
+      h+='</div>';
+      if(items.length){
+        h+='<div class="tw"><table><thead><tr><th>الحالة</th><th>الدافع</th><th>المبلغ SAR</th><th>الشهر</th></tr></thead><tbody>';
+        items.forEach(i=>{h+='<tr><td><span style="color:'+(i.status==='Approved'?'var(--succ)':'var(--warn)')+'">'+i.status+'</span></td><td>'+i.payer+'</td><td>'+n2(Math.round(i.amount))+'</td><td>'+i.month+'</td></tr>';});
+        h+='</tbody></table></div>';
+      }
+      h+='<div style="font-size:.72rem;color:var(--td);margin-top:8px">آخر تحديث: '+dt(d.as_of)+'</div>';
+      html(el,h);
+    } else {
+      html(el,'<div style="color:var(--warn);font-size:.85rem">⚠️ '+（d.error||'تعذّر تحميل البيانات')+'</div>');
+    }
+  }catch(e){html(el,'<div style="color:var(--err);font-size:.85rem">❌ '+e.message+'</div>');}
+}
+
+// ─── Oracle Approvals Live ───
+async function lOA(){
+  const el=$('oracleApprovals');if(!el)return;
+  try{
+    const d=await fetch(HN+'/api/health',{signal:AbortSignal.timeout(10000)}).then(r=>r.json());
+    const approvals=d.today_approvals||null;
+    if(approvals){
+      const s=approvals.summary||{};
+      let h='<div class="g3" style="margin-bottom:12px">';
+      h+='<div class="sc"><div class="sc-i">📂</div><div class="sc-l">مفتوح اليوم</div><div class="sc-v">'+n2(s.opened)+'</div></div>';
+      h+='<div class="sc"><div class="sc-i">📤</div><div class="sc-l">مرسل</div><div class="sc-v">'+n2(s.posted)+'</div></div>';
+      h+='<div class="sc"><div class="sc-i">⚡</div><div class="sc-l">أولوية</div><div class="sc-v" style="color:var(--warn)">'+n2(s.give_priority)+'</div></div>';
+      h+='<div class="sc"><div class="sc-i">💬</div><div class="sc-l">ردود</div><div class="sc-v">'+n2(s.has_response)+'</div></div>';
+      h+='</div>';
+      html(el,h);
+    } else {
+      html(el,'<div class="ld">⏳ جاري استرداد بيانات Oracle...</div>');
+    }
+  }catch(e){html(el,'<div style="color:var(--tm);font-size:.85rem">—</div>');}
+}
+
 // ─── Oracle ───
 async function lO(){
   const st=$('oracleStats'),dt=$('oracleDetail');
@@ -624,7 +674,7 @@ function init(){
   qa('.hc-btn').forEach(b=>{b.addEventListener('click',()=>{qa('.hc-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');hosp=b.dataset.h;localStorage.setItem('bm_hosp',hosp);lI();lM();lO();});});
 
   // Tab switching
-  qa('.tab').forEach(t=>{t.addEventListener('click',()=>{qa('.tab').forEach(x=>x.classList.remove('on'));qa('.pn').forEach(p=>p.classList.remove('on'));t.classList.add('on');const pn=$('pn-'+t.dataset.tab);if(pn)pn.classList.add('on');if(t.dataset.tab==='insights')lI();if(t.dataset.tab==='nphies')lM();if(t.dataset.tab==='oracle')lO();if(t.dataset.tab==='elig')lP();if(t.dataset.tab==='comms'){}if(t.dataset.tab==='chat'&&!chH.length)aCM('bo','👋 السلام عليكم! أنا بسمة، مساعد مستشفيات الحياة الوطني الذكي. كيف أقدر أساعدك اليوم؟');});});
+  qa('.tab').forEach(t=>{t.addEventListener('click',()=>{qa('.tab').forEach(x=>x.classList.remove('on'));qa('.pn').forEach(p=>p.classList.remove('on'));t.classList.add('on');const pn=$('pn-'+t.dataset.tab);if(pn)pn.classList.add('on');if(t.dataset.tab==='insights'){lI();lNL();lOA();}if(t.dataset.tab==='nphies')lM();if(t.dataset.tab==='oracle')lO();if(t.dataset.tab==='elig')lP();if(t.dataset.tab==='comms'){}if(t.dataset.tab==='chat'&&!chH.length)aCM('bo','👋 السلام عليكم! أنا بسمة، مساعد مستشفيات الحياة الوطني الذكي. كيف أقدر أساعدك اليوم؟');});});
 
   // Voice hints
   qa('.vq').forEach(b=>{b.addEventListener('click',()=>{const q=b.dataset.q;if(q){const t=$('voiceTranscript');if(t)t.textContent=q;pV(q);}});});
@@ -647,7 +697,7 @@ function init(){
   const at=$('apTime');if(at)at.value='10:00';
 
   // Initial data load
-  setTimeout(()=>{lI();lM();lO();lP();},500);
+  setTimeout(()=>{lI();lM();lO();lP();lNL();},500);
 }
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();

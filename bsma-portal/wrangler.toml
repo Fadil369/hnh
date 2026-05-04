@@ -12,3 +12,7 @@ routes = [
 BASMA_API_BACKEND = "https://mellissa.brainsait.org"
 HNH_BACKEND = "https://hnh.brainsait.org"
 ENVIRONMENT = "production"
+
+[[kv_namespaces]]
+binding = "BSMA_CACHE"
+id = "d7db4659947e48a59b2153585e7676e5"

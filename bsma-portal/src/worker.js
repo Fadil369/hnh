@@ -289,6 +289,23 @@ export default {
       }), { headers: { 'Content-Type': 'application/json', ...CORS, 'Cache-Control': 'max-age=3600' } });
     }
 
+    // === /basma/riyadh-live → NPHIES Riyadh GSS from KV cache (pushed by Pi every 30min) ===
+    if (path === '/basma/riyadh-live' && method === 'GET') {
+      try {
+        const cached = env.BSMA_CACHE ? await env.BSMA_CACHE.get('riyadh-gss') : null;
+        if (cached) {
+          return new Response(cached, { headers: { 'Content-Type': 'application/json', ...CORS, 'X-Cache': 'HIT' } });
+        }
+        return new Response(JSON.stringify({ ok: false, error: 'Cache miss — sync pending' }), {
+          status: 503, headers: { 'Content-Type': 'application/json', ...CORS, 'X-Cache': 'MISS' },
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ ok: false, error: err.message }), {
+          status: 502, headers: { 'Content-Type': 'application/json', ...CORS },
+        });
+      }
+    }
+
     // === /comms/whatsapp-template → Twilio ContentSid template sender ===
     if (path === '/comms/whatsapp-template' && method === 'POST') {
       try {
