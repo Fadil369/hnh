@@ -11,15 +11,21 @@
   "dependencies": {
     "next": "^16.2.4",
     "react": "^19.2.1",
-    "react-dom": "^19.2.1"
+    "react-dom": "^19.2.1",
+    "postcss": "^8.5.10"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.0.0",
-    "postcss": "^8.0.0",
+    "postcss": "^8.5.13",
     "tailwindcss": "^3.0.0",
     "typescript": "^5.0.0"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "^8.5.10"
+    }
   }
 }
