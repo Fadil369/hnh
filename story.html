@@ -209,12 +209,12 @@ html[dir="rtl"] .story h2,.story-right h2{font-family:var(--font-ar);line-height
     <div class="cover-right">
       <div class="cover-qr-wrap">
         <div class="qr-box">
-          <canvas id="qr1-dash" width="100" height="100"></canvas>
+          <div id="qr1-dash" data-size="100" style="display:inline-block"></div>
           <div class="qr-lbl">Live Dashboard</div>
           <div class="qr-url">hnh.brainsait.org</div>
         </div>
         <div class="qr-box">
-          <canvas id="qr1-corp" width="100" height="100"></canvas>
+          <div id="qr1-corp" data-size="100" style="display:inline-block"></div>
           <div class="qr-lbl">Old Website</div>
           <div class="qr-url">hayathospitals.com</div>
         </div>
@@ -297,7 +297,7 @@ html[dir="rtl"] .story h2,.story-right h2{font-family:var(--font-ar);line-height
     <div class="story-sidebar">
       <div class="divider" style="margin-bottom:4mm"></div>
       <div class="qr-box">
-        <canvas id="qr2-dash" width="90" height="90"></canvas>
+        <div id="qr2-dash" data-size="90" style="display:inline-block"></div>
         <div class="qr-lbl">Live Dashboard</div>
         <div class="qr-url">hnh.brainsait.org</div>
       </div>
@@ -332,7 +332,7 @@ html[dir="rtl"] .story h2,.story-right h2{font-family:var(--font-ar);line-height
       <div class="divider" style="margin:4mm 0"></div>
       <div style="text-align:center">
         <div class="qr-box" style="display:inline-block">
-          <canvas id="qr3-old" width="80" height="80"></canvas>
+          <div id="qr3-old" data-size="80" style="display:inline-block"></div>
           <div class="qr-lbl">Old Website</div>
           <div class="qr-url">hayathospitals.com</div>
         </div>
@@ -353,7 +353,7 @@ html[dir="rtl"] .story h2,.story-right h2{font-family:var(--font-ar);line-height
       <div class="divider" style="margin:4mm 0"></div>
       <div style="text-align:center">
         <div class="qr-box" style="display:inline-block">
-          <canvas id="qr3-new" width="80" height="80"></canvas>
+          <div id="qr3-new" data-size="80" style="display:inline-block"></div>
           <div class="qr-lbl">Live Dashboard</div>
           <div class="qr-url">hnh.brainsait.org</div>
         </div>
@@ -444,17 +444,17 @@ html[dir="rtl"] .story h2,.story-right h2{font-family:var(--font-ar);line-height
 
   <div class="impact-bottom">
     <div class="qr-box">
-      <canvas id="qr4-dash" width="80" height="80"></canvas>
+      <div id="qr4-dash" data-size="80" style="display:inline-block"></div>
       <div class="qr-lbl">Dashboard</div>
       <div class="qr-url">hnh.brainsait.org</div>
     </div>
     <div class="qr-box">
-      <canvas id="qr4-profile" width="80" height="80"></canvas>
+      <div id="qr4-profile" data-size="80" style="display:inline-block"></div>
       <div class="qr-lbl">Author</div>
       <div class="qr-url">fadil369.github.io/Profile</div>
     </div>
     <div class="qr-box">
-      <canvas id="qr4-grav" width="80" height="80"></canvas>
+      <div id="qr4-grav" data-size="80" style="display:inline-block"></div>
       <div class="qr-lbl">Gravatar</div>
       <div class="qr-url">gravatar.com/fadil369</div>
     </div>
@@ -490,24 +490,24 @@ html[dir="rtl"] .story h2,.story-right h2{font-family:var(--font-ar);line-height
     <div class="author-right">
       <div class="author-qr-row">
         <div class="qr-box">
-          <canvas id="qr5-profile" width="100" height="100"></canvas>
+          <div id="qr5-profile" data-size="100" style="display:inline-block"></div>
           <div class="qr-lbl">Author Profile</div>
           <div class="qr-url">fadil369.github.io/Profile</div>
         </div>
         <div class="qr-box">
-          <canvas id="qr5-grav" width="100" height="100"></canvas>
+          <div id="qr5-grav" data-size="100" style="display:inline-block"></div>
           <div class="qr-lbl">Gravatar</div>
           <div class="qr-url">gravatar.com/fadil369</div>
         </div>
       </div>
       <div class="author-qr-row">
         <div class="qr-box">
-          <canvas id="qr5-site" width="100" height="100"></canvas>
+          <div id="qr5-site" data-size="100" style="display:inline-block"></div>
           <div class="qr-lbl">Full Website</div>
           <div class="qr-url">fadil369.github.io/hnh</div>
         </div>
         <div class="qr-box">
-          <canvas id="qr5-dash" width="100" height="100"></canvas>
+          <div id="qr5-dash" data-size="100" style="display:inline-block"></div>
           <div class="qr-lbl">Live Dashboard</div>
           <div class="qr-url">hnh.brainsait.org</div>
         </div>
@@ -528,7 +528,7 @@ html[dir="rtl"] .story h2,.story-right h2{font-family:var(--font-ar);line-height
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 (function(){
   var qrIds=[
@@ -548,9 +548,10 @@ html[dir="rtl"] .story h2,.story-right h2{font-family:var(--font-ar);line-height
   function init(){
     if(typeof QRCode==='undefined'){setTimeout(init,200);return}
     qrIds.forEach(function(q){
-      var c=document.getElementById(q[0]);
-      if(!c)return;
-      QRCode.toCanvas(c,q[1],{width:c.width,margin:1,color:{dark:'#0a1628',light:'#ffffff'},errorCorrectionLevel:'H'},function(e){if(e)console.warn(e)});
+      var el=document.getElementById(q[0]);
+      if(!el)return;
+      el.innerHTML='';
+      new QRCode(el,{text:q[1],width:el.getAttribute('data-size')||100,height:el.getAttribute('data-size')||100,colorDark:'#0a1628',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
     });
   }
   if(document.readyState==='complete')init();
