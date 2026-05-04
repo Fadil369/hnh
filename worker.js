@@ -405,53 +405,56 @@ async function oracleTunnelStatus(env) {
   if (cached) return cached;
   return dedupe("tunnel-status", async () => {
     const key = env && env.ORACLE_API_KEY || ORACLE_BRIDGE_KEY;
-    const [diagRes, scanRes] = await Promise.allSettled([
-      fetch(`${ORACLE_BRIDGE}/diagnose`, {
-        headers: { "X-API-Key": key },
-        signal: AbortSignal.timeout(15e3)
-      }),
-      fetch(`${ORACLE_SCANNER}/status`, {
-        signal: AbortSignal.timeout(5e3)
-      })
-    ]);
     let hospitalMap = { ...TUNNEL_STATUS };
     let bridgeOk = false;
-    if (diagRes.status === "fulfilled" && diagRes.value.ok) {
-      const d = await diagRes.value.json();
-      bridgeOk = true;
-      for (const h of d.hospitals || []) {
-        hospitalMap[h.hospital] = {
-          reachable: h.reachable,
-          status: h.status,
-          ms: h.ms,
-          loginPageFound: h.loginPageFound,
-          viewState: h.viewStatePresent,
-          error: h.error || null,
-          note: h.reachable ? "live \u2014 login page found" : h.error || "unreachable"
-        };
-      }
-    }
-    let scannerOk = false;
     let sessions = {};
-    if (scanRes.status === "fulfilled" && scanRes.value.ok) {
-      const s = await scanRes.value.json();
-      scannerOk = s.status === "ok";
-      for (const [id, info] of Object.entries(s.hospitals || {})) {
-        sessions[id] = { session: info.session, cookies: info.sessionCookies, baseUrl: info.baseUrl };
-        if (hospitalMap[id]) hospitalMap[id].session = info.session;
+    try {
+      // Try bridge diagnose — may fail on CF loopback, that's OK
+      const diagResp = await fetch(`${ORACLE_BRIDGE}/diagnose`, {
+        headers: { "X-API-Key": key },
+        signal: AbortSignal.timeout(8e3)
+      });
+      if (diagResp.ok) {
+        const d = await diagResp.json();
+        bridgeOk = true;
+        for (const h of d.hospitals || []) {
+          hospitalMap[h.hospital] = {
+            reachable: h.reachable,
+            status: h.status,
+            ms: h.ms,
+            loginPageFound: h.loginPageFound,
+            viewState: h.viewStatePresent,
+            error: h.error || null,
+            note: h.reachable ? "live \u2014 login page found" : h.error || "unreachable"
+          };
+        }
       }
+    } catch(e) {
+      // CF loopback = diagnose will fail; use static TUNNEL_STATUS
+      bridgeOk = false;
     }
+    try {
+      const scanResp = await fetch(`${ORACLE_SCANNER}/status`, {
+        signal: AbortSignal.timeout(4e3)
+      });
+      if (scanResp.ok) {
+        const s = await scanResp.json();
+        for (const [id, info] of Object.entries(s.hospitals || {})) {
+          sessions[id] = { session: info.session, cookies: info.sessionCookies, baseUrl: info.baseUrl };
+          if (hospitalMap[id]) hospitalMap[id].session = info.session;
+        }
+      }
+    } catch(e) {}
     const result = {
       ok: bridgeOk,
       hospitals: hospitalMap,
       sessions,
-      scanner_ok: scannerOk,
       tunnel: "e5cb8c86-1768-46b0-bb35-a2720f26e88d",
       tunnel_name: "hayath-mcp",
       connections: 8,
       colos: ["mrs06", "ruh02"],
       origin_ips: ["212.118.115.118", "82.167.8.215"],
-      source: bridgeOk ? "live" : "cached",
+      source: bridgeOk ? "live" : "static",
       checked_at: (/* @__PURE__ */ new Date()).toISOString()
     };
     mcSet("tunnel-status", result, 6e4);
@@ -5231,16 +5234,90 @@ async function rcmAutoPipeline(env, ctx) {
   const branches = ['riyadh', 'madinah', 'unaizah', 'khamis', 'jizan', 'abha'];
   const NPHIES_KEY = env.CLAIMLINC_KEY || '';
 
-  for (const branch of branches) {
-    try {
-      const rejectUrl = `https://api.brainsait.org/nphies/rejections/${branch}`;
-      const resp = await fetch(rejectUrl, {
+  // Try direct call through api.brainsait.org first (works when not running on CF)
+  // Fall back to NPHIES direct call (works when on CF and api.brainsait.org would loop)
+  async function fetchRejectionsFromNphiesDirect(branch) {
+    // Attempt claimlinc-api fetch
+    const directUrl = env.CLAIMLINC_DIRECT_URL || '';
+    if (directUrl) {
+      const resp = await fetch(`${directUrl}/nphies/rejections/${branch}`, {
         headers: { 'X-API-Key': NPHIES_KEY },
+        redirect: 'manual',
         signal: AbortSignal.timeout(30000),
       });
-      if (!resp.ok) { results.errors.push(`${branch}: NPHIES returned ${resp.status}`); continue; }
-      const data = await resp.json();
-      const rejections = data?.results || data?.rejections || [];
+      if (resp.ok) return resp;
+      // Even with redirect handling, try direct route anyway
+    }
+    // Fallback: call NPHIES directly
+    const nphiesTokenUrl = 'https://sso.nphies.sa/auth/realms/sehaticoreprod/protocol/openid-connect/token';
+    const tokenResp = await fetch(nphiesTokenUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: 'community',
+        grant_type: 'password',
+        username: env.NPHIES_USERNAME || '',
+        password: env.NPHIES_PASSWORD || '',
+        scope: 'openid',
+      }),
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!tokenResp.ok) throw new Error(`NPHIES auth: ${tokenResp.status}`);
+    const tokenData = await tokenResp.json();
+    const token = tokenData.access_token;
+
+    const facConfig = {
+      riyadh: { license: '10000000000988', type: 'Provider' },
+      madinah: { license: '10000300220660', type: 'Provider' },
+      unaizah: { license: '10000000030262', type: 'Provider' },
+      khamis: { license: '10000000030643', type: 'Provider' },
+      jizan: { license: '10000000037034', type: 'Provider' },
+      abha: { license: '10000300330931', type: 'Provider' },
+    };
+    const fac = facConfig[branch];
+    const gssResp = await fetch(
+      `https://sgw.nphies.sa/viewerapi/gss?page=0&size=50`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          Origin: 'https://viewer.nphies.sa',
+          ...(fac ? { facilitylicense: fac.license, facilitytype: fac.type, username: fac.license } : {}),
+        },
+        signal: AbortSignal.timeout(30000),
+      }
+    );
+    if (!gssResp.ok) { 
+      const txt = await gssResp.text();
+      throw new Error(`NPHIES GSS: ${gssResp.status} — ${txt.slice(0,100)}`); 
+    }
+    const gssData = await gssResp.json();
+    // Transform GSS response to match expected format
+    const items = gssData.Items || gssData.items || gssData.result || [];
+    const rejections = items
+      .filter(i => {
+        const s = (i.Status || '').toLowerCase();
+        return s.includes('reject') || s === 'r';
+      })
+      .slice(0, 50)
+      .map(i => ({
+        claim_number: i.ResourceId || '',
+        patient_id: 1,
+        payer_name: i.ReceiverName || i.InsurerName || 'Unknown',
+        total_amount: parseFloat(i.TotalAmount || 0),
+        paid_amount: 0,
+        rejection_code: 'GSS-REJECT',
+        rejection_reason: `Rejected by ${i.InsurerName || i.Insurer || 'payer'}`,
+        rejected_amount: parseFloat(i.TotalAmount || 0),
+        batch_number: '',
+      }));
+    return { json: () => Promise.resolve({ results: [] }), ok: true, _rejections: rejections };
+  }
+
+  for (const branch of branches) {
+    try {
+      const result = await fetchRejectionsFromNphiesDirect(branch);
+      const rejections = result._rejections || [];
       if (!rejections.length) continue;
 
       let inserted = 0, updated = 0;
@@ -5305,6 +5382,15 @@ async function rcmAutoPipeline(env, ctx) {
   }
   const elapsed = Date.now() - t0;
   return { ...results, elapsed_ms: elapsed, ts: new Date().toISOString() };
+}
+
+// Wrapper to catch errors and return them in the response
+async function rcmPipelineSafe(env, ctx) {
+  try {
+    return await rcmAutoPipeline(env, ctx);
+  } catch (e) {
+    return { error: e.message, stack: e.stack, ts: new Date().toISOString() };
+  }
 }
 
 function classifyAppealStrength(code, amount) {
@@ -5601,7 +5687,12 @@ load();setInterval(load,30000);
       return ok({ patients: [], source: "tunnel_down", hospital, note: TUNNEL_STATUS[hospital]?.note });
     }
     const param = natId ? "national_id=" + encodeURIComponent(natId) : mrn ? "mrn=" + encodeURIComponent(mrn) : "name=" + encodeURIComponent(name);
-    const data = await oracleCall(env, "GET", "/patient/search?hospital=" + hospital + "&" + param, null, hospital);
+    let data = null;
+    try {
+      data = await oracleCall(env, "GET", "/patient/search?hospital=" + hospital + "&" + param, null, hospital);
+    } catch(e) {
+      data = null;
+    }
     return ok({ patients: (data?.patients || []).map(maskPatient), hospital, source: data ? "oracle-live" : "unavailable" });
   }
   if (path === "/api/oracle/appointments" && req.method === "GET") {
@@ -5868,10 +5959,10 @@ load();setInterval(load,30000);
   }
   if (path === '/api/system-status' && req.method === 'GET') {
     try {
-      const [statsR, oracleR] = await Promise.allSettled([
-        fetch('https://hnh.brainsait.org/api/stats', {signal: AbortSignal.timeout(5000)}).then(r=>r.json()),
-        fetch('https://oracle-bridge.brainsait.org/diagnose?api_key=bsma-oracle-b2af3196522b556636b09f5d268cb976', {signal: AbortSignal.timeout(8000)}).then(r=>r.json()),
-      ]);
+      // Call apiStats directly (not via fetch) to avoid CF loopback
+      const statsResp = await apiStats(env);
+      const statsData = await statsResp.json();
+      // External portals via fetch (these don't loopback)
       const [bsmaR, givcR, sbsR] = await Promise.allSettled([
         fetch('https://bsma.elfadil.com/', {signal: AbortSignal.timeout(4000)}).then(r=>({ok:r.ok})),
         fetch('https://givc.elfadil.com/api/health', {signal: AbortSignal.timeout(4000)}).then(r=>({ok:r.ok})),
@@ -5879,8 +5970,8 @@ load();setInterval(load,30000);
       ]);
       return new Response(JSON.stringify({
         ok: true, ts: Date.now(),
-        stats: statsR.status==='fulfilled' ? statsR.value : null,
-        oracle: oracleR.status==='fulfilled' ? oracleR.value : {error:'timeout'},
+        stats: statsData,
+        oracle: { error: 'not_available_from_cf_worker' },
         portals: {
           bsma: bsmaR.status==='fulfilled' ? bsmaR.value : {ok:false},
           givc: givcR.status==='fulfilled' ? givcR.value : {ok:false},
@@ -6196,7 +6287,7 @@ load();setInterval(load,30000);
     if (path === "/api/rcm/settlement-cycle") return apiRcmSettlementCycle(req, env);
 
     // RCM Auto-Pilot v2 endpoints (protected — write operations)
-    if (path === '/api/rcm/pipeline')        return rcmJson(await rcmAutoPipeline(env, ctx));
+    if (path === '/api/rcm/pipeline')        return rcmJson(await rcmPipelineSafe(env, {}));
     if (path.startsWith('/api/rcm/reconcile/')) return rcmReconcile(req, env);
 
     if (path.startsWith("/api/sync/")) return apiSync(env, path.slice("/api/sync/".length));

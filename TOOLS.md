@@ -31,6 +31,11 @@ Things like:
 - Default speaker: Kitchen HomePod
 ```
 
+## Repos
+- `~/repos/brainsait-org` — ecosystem orchestrator (claimlinc-worker, nphies, voice-agent)
+  - Remote configured with PAT auth — ask user for token if push needed
+- `~/repos/oracle-setup` — oracle bridge + tunnel infra
+
 ## Why Separate?
 
 Skills are shared. Your setup is yours. Keeping them apart means you can update skills without losing your notes, and share skills without leaking your infrastructure.

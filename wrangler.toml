@@ -43,7 +43,25 @@ HUB_VERSION        = "9.0.1"
 
 [env.production]
 name = "hnh-unified"
-vars = { HUB_VERSION = "9.0.1" }
+vars = { HUB_VERSION = "9.0.1", ORACLE_BRIDGE_URL = "https://oracle-bridge.brainsait.org", NPHIES_MIRROR_URL = "https://nphies-mirror.brainsait-fadil.workers.dev", FACILITY_LICENSE = "10000000000988" }
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "hnh-gharnata"
+database_id = "d6960732-d5d0-4271-84e9-ba988c9c32dc"
+
+[[env.production.d1_databases]]
+binding = "HIS_DB"
+database_name = "his_database"
+database_id = "f79d9487-fd6e-45e0-aaf1-ea9f2a69493d"
+
+[[env.production.d1_databases]]
+binding = "BASMA_DB"
+database_name = "basma_production"
+database_id = "c30dd8f8-62f6-42f6-ad47-d442bf3bde7d"
+
+[env.production.ai]
+binding = "AI"
 
 # Cron triggers
 [triggers]
