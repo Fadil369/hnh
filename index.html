@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BrainSAIT × Hayat National Hospitals — AI-Native Healthcare Transformation</title>
+<meta name="description" content="How BrainSAIT transformed Hayat National Hospitals into an AI-native healthcare ecosystem achieving 98.6% claim approval and SAR 9.8M in AI-driven recoveries.">
+<meta name="author" content="Dr. Mohamed El Fadil">
+<meta property="og:title" content="BrainSAIT × مستشفيات الحياة الوطنية">
+<meta property="og:description" content="التحول الرقمي بالذكاء الاصطناعي — شبكة بقيمة 835.7 مليون ريال، نسبة موافقة 98.6%">
+<meta property="og:url" content="https://fadil369.github.io/hnh/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════
+   RESET & VARIABLES
+   ═══════════════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#0a1628;--primary-light:#0f2240;--accent:#00d4ff;--accent2:#7c3aed;
+  --accent3:#10b981;--gold:#f59e0b;--rose:#f43f5e;--white:#ffffff;
+  --gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
+  --gray-300:#cbd5e1;--gray-400:#94a3b8;--gray-500:#64748b;
+  --gray-600:#475569;--gray-700:#334155;--gray-800:#1e293b;
+  --gradient-main:linear-gradient(135deg,#0a1628 0%,#0f2240 30%,#1a1040 60%,#0a1628 100%);
+  --gradient-accent:linear-gradient(135deg,#00d4ff,#7c3aed);
+  --gradient-warm:linear-gradient(135deg,#f59e0b,#f43f5e);
+  --gradient-success:linear-gradient(135deg,#10b981,#00d4ff);
+  --shadow-sm:0 1px 3px rgba(0,0,0,.1);
+  --shadow-md:0 4px 20px rgba(0,0,0,.15);
+  --shadow-lg:0 20px 60px rgba(0,0,0,.25);
+  --shadow-glow:0 0 40px rgba(0,212,255,.15);
+  --radius:16px;--radius-sm:10px;--radius-lg:24px;
+  --font-main:'Inter','Noto Sans Arabic',system-ui,-apple-system,sans-serif;
+  --font-display:'Space Grotesk','Noto Sans Arabic',var(--font-main);
+  --font-ar:'Noto Sans Arabic','Inter',var(--font-main);
+}
+html{scroll-behavior:smooth;font-size:16px;overflow-x:hidden}
+body{font-family:var(--font-main);background:var(--primary);color:var(--white);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+/* RTL support */
+html[dir="rtl"]{direction:rtl;text-align:right}
+html[dir="rtl"] body{font-family:var(--font-ar)}
+html[dir="rtl"] .hero h1,html[dir="rtl"] .section-header h2,html[dir="rtl"] .metric-val,
+html[dir="rtl"] .feature-card h3,html[dir="rtl"] .strategy-card h3,
+html[dir="rtl"] .market-stat .big{font-family:var(--font-ar)}
+html[dir="rtl"] .nav-links{direction:ltr}
+html[dir="rtl"] .timeline{padding-left:0;padding-right:2.5rem}
+html[dir="rtl"] .timeline::before{left:auto;right:0}
+html[dir="rtl"] .timeline-item::before{left:auto;right:-2.5rem;transform:translateX(6px)}
+html[dir="rtl"] .compare-table th,html[dir="rtl"] .compare-table td{text-align:right}
+html[dir="rtl"] .hero-visual{right:auto;left:-5%}
+html[dir="rtl"] .strategy-card .step{right:auto;left:1rem}
+a{color:var(--accent);text-decoration:none;transition:.3s}
+a:hover{color:#fff;text-shadow:0 0 10px rgba(0,212,255,.5)}
+img{max-width:100%;display:block}
+button{cursor:pointer;border:none;font-family:inherit}
+
+/* ═══════════════════════════════════════════════════
+   LANG TOGGLE
+   ═══════════════════════════════════════════════════ */
+[data-lang]{display:none}
+html[data-show-lang="en"] [data-lang="en"],
+html[data-show-lang="ar"] [data-lang="ar"]{display:revert}
+
+/* ═══════════════════════════════════════════════════
+   UTILITY & LAYOUT
+   ═══════════════════════════════════════════════════ */
+.container{max-width:1200px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem)}
+.section{padding:clamp(3rem,8vw,7rem) 0;position:relative}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(1.5rem,3vw,2.5rem)}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(1.5rem,3vw,2rem)}
+.text-center{text-align:center}
+.text-gradient{background:var(--gradient-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.badge{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .9rem;border-radius:50px;font-size:.75rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.badge-accent{background:rgba(0,212,255,.12);color:var(--accent);border:1px solid rgba(0,212,255,.25)}
+.badge-gold{background:rgba(245,158,11,.12);color:var(--gold);border:1px solid rgba(245,158,11,.25)}
+.badge-success{background:rgba(16,185,129,.12);color:var(--accent3);border:1px solid rgba(16,185,129,.25)}
+
+/* ═══════════════════════════════════════════════════
+   ANIMATED BACKGROUND
+   ═══════════════════════════════════════════════════ */
+.bg-mesh{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.bg-mesh::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,.08),transparent 70%);top:-10%;left:-10%;animation:float1 20s ease-in-out infinite}
+.bg-mesh::after{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.06),transparent 70%);bottom:-10%;right:-10%;animation:float2 25s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(80px,60px) scale(1.1)}66%{transform:translate(-40px,100px) scale(.95)}}
+@keyframes float2{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-60px,-80px) scale(1.05)}66%{transform:translate(70px,-40px) scale(1.1)}}
+.particle-field{position:fixed;inset:0;z-index:-1;pointer-events:none}
+.particle{position:absolute;width:2px;height:2px;background:rgba(0,212,255,.4);border-radius:50%;animation:drift linear infinite}
+@keyframes drift{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-10vh) scale(1);opacity:0}}
+
+/* ═══════════════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════════════ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:.8rem 0;transition:.4s;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.nav.scrolled{background:rgba(10,22,40,.92);box-shadow:0 1px 30px rgba(0,0,0,.3)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.nav-logo{display:flex;align-items:center;gap:.6rem;font-family:var(--font-display);font-weight:700;font-size:1.2rem;color:#fff}
+.nav-logo svg{width:36px;height:36px}
+.nav-links{display:flex;gap:1.2rem;list-style:none;align-items:center}
+.nav-links a{color:var(--gray-300);font-size:.85rem;font-weight:500;transition:.3s}
+.nav-links a:hover{color:var(--accent)}
+.lang-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .75rem;border-radius:50px;font-size:.78rem;font-weight:600;cursor:pointer;transition:.3s;border:1.5px solid rgba(0,212,255,.3);background:rgba(0,212,255,.08);color:var(--accent);letter-spacing:.03em}
+.lang-btn:hover{background:rgba(0,212,255,.18);border-color:var(--accent);color:#fff}
+.lang-btn .flag{font-size:1rem}
+.nav-toggle{display:none;background:none;color:#fff;font-size:1.5rem;padding:.3rem}
+@media(max-width:768px){
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:rgba(10,22,40,.97);flex-direction:column;padding:1.5rem;gap:1rem;backdrop-filter:blur(20px)}
+  .nav-links.open{display:flex}
+  .nav-toggle{display:block}
+}
+
+/* ═══════════════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════════════ */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:5rem}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(0,212,255,.07),transparent 60%),radial-gradient(ellipse at 70% 30%,rgba(124,58,237,.05),transparent 50%)}
+.hero-content{position:relative;z-index:2;max-width:750px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1.5rem;animation:fadeUp .8s ease-out;flex-wrap:wrap}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.2rem,6vw,4.2rem);font-weight:800;line-height:1.1;margin-bottom:1.2rem;animation:fadeUp .8s ease-out .15s both}
+html[dir="rtl"] .hero h1{line-height:1.3}
+.hero h1 .line2{display:block;background:var(--gradient-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(1rem,2.2vw,1.25rem);color:var(--gray-300);max-width:580px;margin-bottom:2.5rem;animation:fadeUp .8s ease-out .3s both}
+.hero-stats{display:flex;flex-wrap:wrap;gap:2rem;margin-bottom:2.5rem;animation:fadeUp .8s ease-out .45s both}
+.hero-stat .num{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1}
+html[dir="rtl"] .hero-stat .num{font-family:var(--font-ar)}
+.hero-stat .num.cyan{color:var(--accent)}
+.hero-stat .num.purple{color:var(--accent2)}
+.hero-stat .num.green{color:var(--accent3)}
+.hero-stat .label{font-size:.8rem;color:var(--gray-400);margin-top:.25rem}
+.hero-actions{display:flex;flex-wrap:wrap;gap:1rem;animation:fadeUp .8s ease-out .6s both}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 1.8rem;border-radius:50px;font-weight:600;font-size:.9rem;transition:.3s}
+.btn-primary{background:var(--gradient-accent);color:#0a1628;box-shadow:0 4px 20px rgba(0,212,255,.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,212,255,.4);color:#0a1628}
+.btn-outline{border:1.5px solid rgba(255,255,255,.2);color:#fff;background:rgba(255,255,255,.04)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.08)}
+.hero-visual{position:absolute;right:-5%;top:50%;transform:translateY(-50%);width:45%;max-width:600px;opacity:.6;pointer-events:none}
+.hero-visual .ring{position:absolute;border:1.5px solid rgba(0,212,255,.15);border-radius:50%;animation:spin 30s linear infinite}
+.hero-visual .ring:nth-child(1){width:400px;height:400px;top:50%;left:50%;transform:translate(-50%,-50%)}
+.hero-visual .ring:nth-child(2){width:300px;height:300px;top:50%;left:50%;transform:translate(-50%,-50%);animation-duration:25s;animation-direction:reverse;border-color:rgba(124,58,237,.12)}
+.hero-visual .ring:nth-child(3){width:200px;height:200px;top:50%;left:50%;transform:translate(-50%,-50%);animation-duration:20s;border-color:rgba(16,185,129,.1)}
+@keyframes spin{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══════════════════════════════════════════════════
+   METRIC CARDS
+   ═══════════════════════════════════════════════════ */
+.metric-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:clamp(1.2rem,3vw,2rem);position:relative;overflow:hidden;transition:.4s}
+.metric-card:hover{border-color:rgba(0,212,255,.25);transform:translateY(-4px);box-shadow:var(--shadow-glow)}
+.metric-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0}
+.metric-card.cyan::before{background:var(--gradient-accent)}
+.metric-card.purple::before{background:linear-gradient(90deg,#7c3aed,#a78bfa)}
+.metric-card.green::before{background:var(--gradient-success)}
+.metric-card.gold::before{background:var(--gradient-warm)}
+.metric-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem}
+.metric-icon.cyan{background:rgba(0,212,255,.12)}
+.metric-icon.purple{background:rgba(124,58,237,.12)}
+.metric-icon.green{background:rgba(16,185,129,.12)}
+.metric-icon.gold{background:rgba(245,158,11,.12)}
+.metric-val{font-family:var(--font-display);font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;line-height:1.1;margin-bottom:.3rem}
+html[dir="rtl"] .metric-val{font-family:var(--font-ar)}
+.metric-label{font-size:.85rem;color:var(--gray-400)}
+
+/* ═══════════════════════════════════════════════════
+   SECTION HEADERS
+   ═══════════════════════════════════════════════════ */
+.section-header{margin-bottom:clamp(2rem,5vw,3.5rem)}
+.section-header .eyebrow{margin-bottom:.8rem}
+.section-header h2{font-family:var(--font-display);font-size:clamp(1.6rem,4vw,2.8rem);font-weight:800;line-height:1.15;margin-bottom:.8rem}
+html[dir="rtl"] .section-header h2{font-family:var(--font-ar);line-height:1.3}
+.section-header p{color:var(--gray-400);max-width:600px;font-size:1.05rem}
+.section-header.centered{margin-left:auto;margin-right:auto;text-align:center}
+.section-header.centered p{margin:0 auto}
+
+/* ═══════════════════════════════════════════════════
+   FEATURE CARDS
+   ═══════════════════════════════════════════════════ */
+.feature-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:clamp(1.5rem,3vw,2.2rem);transition:.4s;position:relative}
+.feature-card:hover{border-color:rgba(0,212,255,.2);background:rgba(255,255,255,.05);transform:translateY(-3px)}
+.feature-card h3{font-family:var(--font-display);font-size:1.15rem;font-weight:700;margin-bottom:.6rem}
+html[dir="rtl"] .feature-card h3{font-family:var(--font-ar)}
+.feature-card p{color:var(--gray-400);font-size:.9rem;line-height:1.7}
+.feature-card .icon-wrap{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1rem;background:rgba(0,212,255,.08)}
+
+/* ═══════════════════════════════════════════════════
+   COMPARISON TABLE
+   ═══════════════════════════════════════════════════ */
+.compare-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius);border:1px solid rgba(255,255,255,.06)}
+.compare-table{width:100%;border-collapse:collapse;min-width:700px}
+.compare-table th,.compare-table td{padding:clamp(.7rem,2vw,1.1rem) clamp(.8rem,2vw,1.3rem);text-align:left;border-bottom:1px solid rgba(255,255,255,.05);font-size:.88rem;vertical-align:top}
+html[dir="rtl"] .compare-table th,html[dir="rtl"] .compare-table td{text-align:right}
+.compare-table thead th{background:rgba(0,212,255,.06);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);white-space:nowrap}
+.compare-table tbody tr{transition:.3s}
+.compare-table tbody tr:hover{background:rgba(0,212,255,.03)}
+.compare-table .col-feature{font-weight:600;color:#fff;min-width:160px}
+.compare-table .win{color:var(--accent3)}
+.compare-table .lose{color:var(--gray-500)}
+
+/* ═══════════════════════════════════════════════════
+   TIMELINE
+   ═══════════════════════════════════════════════════ */
+.timeline{position:relative;padding-left:2.5rem}
+html[dir="rtl"] .timeline{padding-left:0;padding-right:2.5rem}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--accent),var(--accent2),var(--accent3))}
+html[dir="rtl"] .timeline::before{left:auto;right:0}
+.timeline-item{position:relative;padding-bottom:2.5rem}
+.timeline-item::before{content:'';position:absolute;left:-2.5rem;top:.4rem;width:14px;height:14px;border-radius:50%;border:3px solid var(--accent);background:var(--primary);transform:translateX(-6px)}
+html[dir="rtl"] .timeline-item::before{left:auto;right:-2.5rem;transform:translateX(6px)}
+.timeline-item h4{font-family:var(--font-display);font-weight:700;margin-bottom:.3rem}
+html[dir="rtl"] .timeline-item h4{font-family:var(--font-ar)}
+.timeline-item p{color:var(--gray-400);font-size:.9rem}
+
+/* ═══════════════════════════════════════════════════
+   MARKET OPPORTUNITY
+   ═══════════════════════════════════════════════════ */
+.market-stat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:1.8rem;text-align:center;transition:.4s}
+.market-stat:hover{border-color:rgba(0,212,255,.2);transform:translateY(-3px)}
+.market-stat .big{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1}
+html[dir="rtl"] .market-stat .big{font-family:var(--font-ar)}
+.market-stat .sub{color:var(--gray-400);font-size:.85rem;margin-top:.4rem}
+
+/* ═══════════════════════════════════════════════════
+   STRATEGY CARDS
+   ═══════════════════════════════════════════════════ */
+.strategy-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:clamp(1.5rem,3vw,2.2rem);position:relative;overflow:hidden;transition:.4s}
+.strategy-card:hover{border-color:rgba(124,58,237,.3);transform:translateY(-3px)}
+.strategy-card .step{font-family:var(--font-display);font-size:3rem;font-weight:900;position:absolute;top:-.5rem;right:1rem;opacity:.08;line-height:1}
+html[dir="rtl"] .strategy-card .step{right:auto;left:1rem}
+.strategy-card h3{font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:.6rem}
+html[dir="rtl"] .strategy-card h3{font-family:var(--font-ar)}
+.strategy-card p{color:var(--gray-400);font-size:.9rem}
+
+/* ═══════════════════════════════════════════════════
+   CTA SECTION
+   ═══════════════════════════════════════════════════ */
+.cta-section{background:linear-gradient(135deg,rgba(0,212,255,.06),rgba(124,58,237,.06));border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.cta-box{text-align:center;max-width:700px;margin:0 auto}
+.cta-box h2{font-family:var(--font-display);font-size:clamp(1.8rem,4.5vw,2.8rem);font-weight:800;margin-bottom:1rem}
+html[dir="rtl"] .cta-box h2{font-family:var(--font-ar)}
+.cta-box p{color:var(--gray-300);margin-bottom:2rem;font-size:1.05rem}
+
+/* ═══════════════════════════════════════════════════
+   QR CODE SECTION
+   ═══════════════════════════════════════════════════ */
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:1.5rem}
+.qr-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:1.5rem;text-align:center;transition:.4s}
+.qr-card:hover{border-color:rgba(0,212,255,.25);transform:translateY(-3px)}
+.qr-card canvas,.qr-card img{margin:0 auto .8rem;border-radius:8px}
+.qr-card .qr-label{font-size:.85rem;font-weight:600;color:#fff}
+.qr-card .qr-url{font-size:.7rem;color:var(--gray-500);word-break:break-all;margin-top:.2rem}
+
+/* ═══════════════════════════════════════════════════
+   AUTHOR / FOOTER
+   ═══════════════════════════════════════════════════ */
+.author-card{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);padding:clamp(1.5rem,3vw,2.5rem);margin-bottom:3rem}
+.author-avatar{width:80px;height:80px;border-radius:50%;border:3px solid rgba(0,212,255,.3);object-fit:cover}
+.author-info h3{font-family:var(--font-display);font-size:1.3rem;font-weight:700}
+html[dir="rtl"] .author-info h3{font-family:var(--font-ar)}
+.author-info p{color:var(--gray-400);font-size:.9rem}
+.author-links{display:flex;gap:1rem;margin-top:.5rem;flex-wrap:wrap}
+.author-links a{font-size:.8rem;display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border-radius:50px;background:rgba(255,255,255,.06);color:var(--gray-300);transition:.3s}
+.author-links a:hover{background:rgba(0,212,255,.12);color:var(--accent)}
+footer{padding:2rem 0;border-top:1px solid rgba(255,255,255,.06);text-align:center;color:var(--gray-500);font-size:.8rem}
+footer a{color:var(--gray-400)}
+
+/* ═══════════════════════════════════════════════════
+   SCROLL REVEAL
+   ═══════════════════════════════════════════════════ */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease-out,transform .7s ease-out}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.2),rgba(124,58,237,.2),transparent);margin:0}
+
+/* ═══════════════════════════════════════════════════
+   PRINT STYLES
+   ═══════════════════════════════════════════════════ */
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
+  body{background:#fff!important;color:#1a1a2e!important;font-size:11pt}
+  .bg-mesh,.particle-field,.hero-visual,.nav,.no-print{display:none!important}
+  .section{padding:1.5rem 0;page-break-inside:avoid}
+  .container{max-width:100%;padding:0 1cm}
+  .hero{min-height:auto;padding:2rem 0}
+  .hero h1{font-size:28pt!important;color:#0a1628!important}
+  .hero h1 .line2{-webkit-text-fill-color:#0066cc!important;background:none!important;color:#0066cc!important}
+  .hero-sub,.hero-stat .label{color:#444!important}
+  .hero-stat .num{color:#0066cc!important;-webkit-text-fill-color:#0066cc!important}
+  .metric-card,.feature-card,.strategy-card,.market-stat,.qr-card,.author-card{background:#f8f9fa!important;border:1px solid #e0e0e0!important;color:#1a1a2e!important;box-shadow:none!important}
+  .metric-card h3,.feature-card h3,.strategy-card h3,.qr-card .qr-label,.author-info h3{color:#0a1628!important}
+  .metric-card p,.feature-card p,.strategy-card p,.metric-label,.qr-card .qr-url{color:#555!important}
+  .metric-val{color:#0066cc!important;-webkit-text-fill-color:#0066cc!important}
+  .section-header h2{color:#0a1628!important}
+  .section-header p,.section-header .eyebrow{color:#555!important}
+  .badge{border-color:#ccc!important;color:#333!important;background:#f0f0f0!important}
+  .compare-table{border:1px solid #ddd!important}
+  .compare-table th{background:#e8f0fe!important;color:#0a1628!important}
+  .compare-table td{border-bottom:1px solid #eee!important;color:#333!important}
+  .compare-table .col-feature{color:#0a1628!important}
+  .compare-table .win{color:#00875a!important}
+  .compare-table .lose{color:#888!important}
+  .text-gradient{-webkit-text-fill-color:#0066cc!important;background:none!important;color:#0066cc!important}
+  .cta-section{background:#f0f7ff!important;border-color:#ddd!important}
+  .cta-box h2{color:#0a1628!important}
+  .cta-box p{color:#444!important}
+  .btn-primary{background:#0066cc!important;color:#fff!important}
+  .btn-outline{border-color:#0066cc!important;color:#0066cc!important;background:transparent!important}
+  a{color:#0066cc!important}
+  .qr-section{page-break-before:always}
+  .qr-grid{grid-template-columns:repeat(4,1fr)!important;gap:1rem}
+  .qr-card{padding:1rem}
+  .qr-card canvas{width:120px!important;height:120px!important}
+  footer{color:#888!important;border-top-color:#ddd!important}
+  footer a{color:#555!important}
+  .author-avatar{border-color:#0066cc!important}
+  .author-links a{background:#f0f0f0!important;color:#333!important;border:1px solid #ddd!important}
+  h1,h2,h3,h4{page-break-after:avoid}
+  .compare-wrap{page-break-inside:avoid}
+  @page{size:A4;margin:1.5cm;@bottom-center{content:"Dr. Mohamed El Fadil — BrainSAIT | Page " counter(page);font-size:8pt;color:#888}}
+}
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════ */
+@media(max-width:640px){
+  .hero-stats{gap:1.2rem}
+  .hero-stat .num{font-size:1.6rem}
+  .hero-actions{flex-direction:column}
+  .btn{width:100%;justify-content:center}
+  .author-card{flex-direction:column;text-align:center}
+  .author-links{justify-content:center}
+  .qr-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ BACKGROUND ═══════════ -->
+<div class="bg-mesh"></div>
+<div class="particle-field" id="particles"></div>
+
+<!-- ═══════════ NAVIGATION ═══════════ -->
+<nav class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo">
+      <svg viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="16" stroke="url(#lg)" stroke-width="2"/><path d="M12 18c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6" stroke="url(#lg)" stroke-width="2" stroke-linecap="round"/><circle cx="18" cy="18" r="2" fill="#00d4ff"/><defs><linearGradient id="lg" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#00d4ff"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs></svg>
+      BrainSAIT
+    </a>
+    <button class="nav-toggle no-print" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
+    <ul class="nav-links no-print">
+      <li><a href="#overview" data-lang="en">Overview</a><a href="#overview" data-lang="ar">نظرة عامة</a></li>
+      <li><a href="#features" data-lang="en">Features</a><a href="#features" data-lang="ar">الم capabilities</a></li>
+      <li><a href="#comparison" data-lang="en">Comparison</a><a href="#comparison" data-lang="ar">المقارنة</a></li>
+      <li><a href="#market" data-lang="en">Market</a><a href="#market" data-lang="ar">السوق</a></li>
+      <li><a href="#strategy" data-lang="en">Strategy</a><a href="#strategy" data-lang="ar">الاستراتيجية</a></li>
+      <li><a href="#qrcodes" data-lang="en">QR Codes</a><a href="#qrcodes" data-lang="ar">رموز QR</a></li>
+      <li><a href="#contact" data-lang="en">Contact</a><a href="#contact" data-lang="ar">تواصل</a></li>
+      <li><button class="lang-btn" id="langToggle" onclick="toggleLang()"><span class="flag">🌐</span> <span id="langLabel">AR</span></button></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero" id="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="badge badge-accent" data-lang="en">🧠 AI-Native Healthcare</span>
+        <span class="badge badge-accent" data-lang="ar">🧠 رعاية صحية مدعومة بالذكاء الاصطناعي</span>
+        <span class="badge badge-gold" data-lang="en">🇸🇦 Vision 2030</span>
+        <span class="badge badge-gold" data-lang="ar">🇸🇦 رؤية 2030</span>
+      </div>
+      <h1>
+        <span data-lang="en">Transforming<br><span class="line2">Hayat National Hospitals</span><br>Into an AI Powerhouse</span>
+        <span data-lang="ar">تحويل<br><span class="line2">مستشفى الحياة الوطني</span><br>إلى قوة بديلة بالذكاء الاصطناعي</span>
+      </h1>
+      <p class="hero-sub" data-lang="en">How BrainSAIT turned a 6-branch hospital network into a fully integrated, AI-driven operational ecosystem — achieving a 98.6% claim approval rate and SAR 9.8M in AI-driven recoveries.</p>
+      <p class="hero-sub" data-lang="ar">كيف حوّلت BrainSAIT شبكة مستشفيات من 6 فروع إلى نظام تشغيلي متكامل مدعوم بالذكاء الاصطناعي — مما أدى إلى تحقيق نسبة موافقة على المطالبات بنسبة 98.6% واسترداد 9.8 مليون ريال سعودي.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="num cyan" data-target="835.7" data-prefix="SAR " data-suffix="M">SAR 0</div>
+          <div class="label" data-lang="en">Network Value</div>
+          <div class="label" data-lang="ar">قيمة الشبكة</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num purple" data-target="98.6" data-suffix="%">0%</div>
+          <div class="label" data-lang="en">Claim Approval</div>
+          <div class="label" data-lang="ar">نسبة الموافقة</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num green" data-target="9.8" data-prefix="SAR " data-suffix="M">SAR 0</div>
+          <div class="label" data-lang="en">AI Recoveries</div>
+          <div class="label" data-lang="ar">استرداد بالذكاء الاصطناعي</div>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a href="https://hnh.brainsait.org" target="_blank" class="btn btn-primary" data-lang="en">🚀 View Live Dashboard</a>
+        <a href="https://hnh.brainsait.org" target="_blank" class="btn btn-primary" data-lang="ar">🚀 عرض لوحة التحكم</a>
+        <a href="#comparison" class="btn btn-outline" data-lang="en">📊 See Comparison</a>
+        <a href="#comparison" class="btn btn-outline" data-lang="ar">📊 عرض المقارنة</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual no-print"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ EXECUTIVE SUMMARY ═══════════ -->
+<section class="section" id="overview">
+  <div class="container">
+    <div class="section-header centered reveal">
+      <div class="eyebrow"><span class="badge badge-accent" data-lang="en">Executive Summary</span><span class="badge badge-accent" data-lang="ar">الملخص التنفيذي</span></div>
+      <h2><span data-lang="en">The <span class="text-gradient">Two-Speed</span> Digital Reality</span><span data-lang="ar">الواقع الرقمي <span class="text-gradient">بسرعتين</span></span></h2>
+      <p data-lang="en">Two digital properties. One hospital group. Worlds apart in capability.</p>
+      <p data-lang="ar">נכסان رقميان. مجموعة مستشفيات واحدة. عوالم مختلفة في القدرة.</p>
+    </div>
+    <div class="grid-2">
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="icon-wrap">🏥</div>
+        <h3 data-lang="en">Corporate Website <span style="color:var(--gray-500);font-weight:400;font-size:.8rem">hayathospitals.com</span></h3>
+        <h3 data-lang="ar">الموقع الرسمي <span style="color:var(--gray-500);font-weight:400;font-size:.8rem">hayathospitals.com</span></h3>
+        <p data-lang="en">A traditional corporate brochure — marketing, patient information, and recruitment. Shows the <em>what</em>: 1,200 beds, 700+ doctors, 40,000 annual surgeries. But not the <em>how</em> or <em>how well</em>.</p>
+        <p data-lang="ar">كتيب تقليدي — تسويق، معلومات المرضى، والتوظيف. يظهر <em>ماذا</em>: 1,200 سرير، أكثر من 700 طبيب، 40,000 عملية سنوياً. لكن ليس <em>كيف</em> أو <em>مدى جودة</em> الأداء.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2" style="border-color:rgba(0,212,255,.15)">
+        <div class="icon-wrap" style="background:rgba(0,212,255,.15)">⚡</div>
+        <h3 data-lang="en">BrainSAIT Dashboard <span style="color:var(--accent);font-weight:400;font-size:.8rem">hnh.brainsait.org</span></h3>
+        <h3 data-lang="ar">لوحة تحكم BrainSAIT <span style="color:var(--accent);font-weight:400;font-size:.8rem">hnh.brainsait.org</span></h3>
+        <p data-lang="en">The operational nerve center — real-time AI-driven decision-making, financial performance, and claims management. This is the <strong>proof of concept</strong> for a truly AI-driven hospital network.</p>
+        <p data-lang="ar">مركز العمليات العصبي — اتخاذ قرارات فورية بالذكاء الاصطناعي، الأداء المالي، وإدارة المطالبات. هذا هو <strong>دليل التطبيق العملي</strong> لشبكة مستشفيات مدعومة بالذكاء الاصطناعي.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ KEY METRICS ═══════════ -->
+<section class="section" id="metrics">
+  <div class="container">
+    <div class="section-header centered reveal">
+      <div class="eyebrow"><span class="badge badge-success" data-lang="en">Proven Impact</span><span class="badge badge-success" data-lang="ar">تأثير مثبت</span></div>
+      <h2><span data-lang="en">Numbers That <span class="text-gradient">Speak</span></span><span data-lang="ar">أرقام <span class="text-gradient">تتحدث</span></span></h2>
+      <p data-lang="en">Real results from a real deployment across 6 hospital branches.</p>
+      <p data-lang="ar">نتائج حقيقية من نشر فعلي عبر 6 فروع مستشفيات.</p>
+    </div>
+    <div class="grid-3">
+      <div class="metric-card cyan reveal reveal-delay-1">
+        <div class="metric-icon cyan">🏢</div>
+        <div class="metric-val text-gradient" data-target="6">0</div>
+        <div class="metric-label" data-lang="en">Hospital Branches</div>
+        <div class="metric-label" data-lang="ar">فروع المستشفيات</div>
+      </div>
+      <div class="metric-card purple reveal reveal-delay-2">
+        <div class="metric-icon purple">👨‍⚕️</div>
+        <div class="metric-val" style="color:var(--accent2)" data-target="269">0</div>
+        <div class="metric-label" data-lang="en">Doctors</div>
+        <div class="metric-label" data-lang="ar">أطباء</div>
+      </div>
+      <div class="metric-card green reveal reveal-delay-3">
+        <div class="metric-icon green">🛏️</div>
+        <div class="metric-val" style="color:var(--accent3)" data-target="1050">0</div>
+        <div class="metric-label" data-lang="en">Beds</div>
+        <div class="metric-label" data-lang="ar">أسرّة</div>
+      </div>
+      <div class="metric-card gold reveal reveal-delay-1">
+        <div class="metric-icon gold">🏢</div>
+        <div class="metric-val" style="color:var(--gold)" data-target="20">0</div>
+        <div class="metric-label" data-lang="en">Departments</div>
+        <div class="metric-label" data-lang="ar">أقسام</div>
+      </div>
+      <div class="metric-card cyan reveal reveal-delay-2">
+        <div class="metric-icon cyan">🛡️</div>
+        <div class="metric-val text-gradient" data-target="10">0</div>
+        <div class="metric-label" data-lang="en">Insurance Partners</div>
+        <div class="metric-label" data-lang="ar">شركاء التأمين</div>
+      </div>
+      <div class="metric-card purple reveal reveal-delay-3">
+        <div class="metric-icon purple">📊</div>
+        <div class="metric-val" style="color:var(--accent2)" data-target="98.6" data-suffix="%">0%</div>
+        <div class="metric-label" data-lang="en">Claim Approval Rate</div>
+        <div class="metric-label" data-lang="ar">نسبة الموافقة على المطالبات</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ FEATURES ═══════════ -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-header centered reveal">
+      <div class="eyebrow"><span class="badge badge-accent" data-lang="en">Capabilities</span><span class="badge badge-accent" data-lang="ar">القدرات</span></div>
+      <h2><span data-lang="en">AI-Native <span class="text-gradient">Architecture</span></span><span data-lang="ar">بنية <span class="text-gradient">مدعومة بالذكاء الاصطناعي</span></span></h2>
+      <p data-lang="en">Built on FHIR R4, fully bilingual (AR/EN), compliant with HL7, NPHIES, HIPAA, and Saudi Vision 2030.</p>
+      <p data-lang="ar">مبني على معايير FHIR R4، ثنائي اللغة (عربي/إنجليزي)، متوافق مع HL7 وNPHIES وHIPAA ورؤية السعودية 2030.</p>
+    </div>
+    <div class="grid-3">
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="icon-wrap" style="background:rgba(0,212,255,.1)">🔗</div>
+        <h3 data-lang="en">Unified Network</h3>
+        <h3 data-lang="ar">شبكة موحدة</h3>
+        <p data-lang="en">Integrates 6 hospital branches, 10 insurance partners (Bupa, Tawuniya, MedGulf), and multiple digital gateways into one operational view.</p>
+        <p data-lang="ar">تجمع بين 6 فروع مستشفيات، و10 شركاء تأمين (بوبا، التعاونية، مدغلف)، وبوابات رقمية متعددة في عرض تشغيلي واحد.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="icon-wrap" style="background:rgba(124,58,237,.1)">🤖</div>
+        <h3 data-lang="en">AI Revenue Cycle</h3>
+        <h3 data-lang="ar">دورة الإيرادات بالذكاء الاصطناعي</h3>
+        <p data-lang="en">98.6% claim approval (vs 82% industry avg). Automated denial analysis, appeal generation, and PBM drug interaction checking.</p>
+        <p data-lang="ar">نسبة موافقة على المطالبات 98.6% (مقارنة بمتوسط الصناعة 82%). تحليل تلقائي للرفض، إنشاء الطعون، والتحقق من تفاعلات الأدوية.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="icon-wrap" style="background:rgba(16,185,129,.1)">🎤</div>
+        <h3 data-lang="en">بسمة (Basma) Voice AI</h3>
+        <h3 data-lang="ar">مساعد بسمة الصوتي</h3>
+        <p data-lang="en">Bilingual AR/EN intelligent voice assistant built on ElevenLabs v2.1, available 24/7 for patient interaction and support.</p>
+        <p data-lang="ar">مساعد صوتي ذكي ثنائي اللغة (عربي/إنجليزي) مبني على ElevenLabs v2.1، متاح على مدار الساعة لتفاعل ودعم المرضى.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="icon-wrap" style="background:rgba(245,158,11,.1)">🔐</div>
+        <h3 data-lang="en">Smart Portals</h3>
+        <h3 data-lang="ar">بوابات ذكية</h3>
+        <p data-lang="en">Role-based access: BSMA (Patient), GIVC (Physician), SBS ClaimLinc (Billing), NPHIES integration, and Oracle OASIS HIS.</p>
+        <p data-lang="ar">وصول قائم على الأدوار: BSMA (المرضى)، GIVC (الأطباء)، SBS ClaimLinc (الفواتير)، تكامل NPHIES، ونظام Oracle OASIS HIS.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="icon-wrap" style="background:rgba(244,63,94,.1)">💊</div>
+        <h3 data-lang="en">PBM Drug Checker</h3>
+        <h3 data-lang="ar">فاحص التفاعلات الدوائية</h3>
+        <p data-lang="en">Automatically flags prescription combinations likely to be rejected. Prevents billing issues before they happen.</p>
+        <p data-lang="ar">يحدد تلقائياً تركيبات الوصفات المرفوضة محتملاً. يمنع مشكلات الفوترة قبل حدوثها.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="icon-wrap" style="background:rgba(0,212,255,.1)">🔍</div>
+        <h3 data-lang="en">Duplicate Detection</h3>
+        <h3 data-lang="ar">كشف التكرار</h3>
+        <p data-lang="en">Prevents duplicate billing in real-time. One batch caught 57 duplicate claims, saving significant revenue leakage.</p>
+        <p data-lang="ar">يمنع الفوترة المزدوجة في الوقت الفعلي. دفعة واحدة رصدت 57 مطالبة مكررة، مما وفّر تسرباً كبيراً في الإيرادات.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ COMPARISON TABLE ═══════════ -->
+<section class="section" id="comparison">
+  <div class="container">
+    <div class="section-header centered reveal">
+      <div class="eyebrow"><span class="badge badge-gold" data-lang="en">Head-to-Head</span><span class="badge badge-gold" data-lang="ar">مواجهة مباشرة</span></div>
+      <h2><span data-lang="en">Dashboard vs. <span class="text-gradient">Corporate Site</span></span><span data-lang="ar">لوحة التحكم مقابل <span class="text-gradient">الموقع الرسمي</span></span></h2>
+      <p data-lang="en">A side-by-side comparison of the two digital presences of Hayat National Hospitals.</p>
+      <p data-lang="ar">مقارنة جنب إلى جنب للحضور الرقمي لمجموعة مستشفيات الحياة الوطني.</p>
+    </div>
+    <div class="compare-wrap reveal">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th data-lang="en">Feature</th><th data-lang="ar">الميزة</th>
+            <th data-lang="en">BrainSAIT Dashboard</th><th data-lang="ar">لوحة تحكم BrainSAIT</th>
+            <th data-lang="en">Corporate Website</th><th data-lang="ar">الموقع الرسمي</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-feature" data-lang="en">Primary Function</td><td class="col-feature" data-lang="ar">الوظيفة الرئيسية</td>
+            <td class="win" data-lang="en">Operational Command Center — real-time AI-driven decision-making</td><td class="win" data-lang="ar">مركز قيادة تشغيلي — اتخاذ قرارات فورية بالذكاء الاصطناعي</td>
+            <td class="lose" data-lang="en">Traditional Corporate Brochure — marketing &amp; recruitment</td><td class="lose" data-lang="ar">كتيب تقليدي — تسويق وتوظيف</td>
+          </tr>
+          <tr>
+            <td class="col-feature" data-lang="en">Data &amp; Analytics</td><td class="col-feature" data-lang="ar">البيانات والتحليلات</td>
+            <td class="win" data-lang="en">Dynamic, real-time, actionable with granular drill-downs</td><td class="win" data-lang="ar">ديناميكي، فوري، قابل للتنفيذ مع تفاصيل دقيقة</td>
+            <td class="lose" data-lang="en">Static, historical, high-level overview only</td><td class="lose" data-lang="ar">ثابت، تاريخي، نظرة عامة فقط</td>
+          </tr>
+          <tr>
+            <td class="col-feature" data-lang="en">Core Technologies</td><td class="col-feature" data-lang="ar">التقنيات الأساسية</td>
+            <td class="win" data-lang="en">AI-native architecture, autonomous agents (LINC), voice assistant (Basma)</td><td class="win" data-lang="ar">بنية مدعومة بالذكاء الاصطناعي، عوامل مستقلة (LINC)، مساعد صوتي (بسمة)</td>
+            <td class="lose" data-lang="en">Partnerships and equipment highlights</td><td class="lose" data-lang="ar">شراكات وأبرز المعدات</td>
+          </tr>
+          <tr>
+            <td class="col-feature" data-lang="en">User Experience</td><td class="col-feature" data-lang="ar">تجربة المستخدم</td>
+            <td class="win" data-lang="en">Role-based dashboards for CFOs, RCM teams, network directors</td><td class="win" data-lang="ar">لوحات تحكم حسب الأدوار للمديرين الماليين وفرق الإيرادات</td>
+            <td class="lose" data-lang="en">Designed for patients, job seekers, general public</td><td class="lose" data-lang="ar">مصمم للمرضى والباحثين عن عمل والجمهور العام</td>
+          </tr>
+          <tr>
+            <td class="col-feature" data-lang="en">Vision 2030</td><td class="col-feature" data-lang="ar">رؤية 2030</td>
+            <td class="win" data-lang="en"><strong>Demonstrates</strong> compliance through deep NPHIES integration</td><td class="win" data-lang="ar"><strong>يُظهر</strong> الامتثال من خلال تكامل عميق مع NPHIES</td>
+            <td class="lose" data-lang="en"><strong>Declares</strong> alignment through mission statements</td><td class="lose" data-lang="ar"><strong>يعلن</strong> الانسجام من خلال بيانات المهمة</td>
+          </tr>
+          <tr>
+            <td class="col-feature" data-lang="en">Competitive Edge</td><td class="col-feature" data-lang="ar">الميزة التنافسية</td>
+            <td class="win" data-lang="en">Digital maturity — proof of concept for AI-driven operations</td><td class="win" data-lang="ar">النضج الرقمي — دليل تطبيق عملي للعمليات المدعومة بالذكاء الاصطناعي</td>
+            <td class="lose" data-lang="en">Strong brand but digital presence lags behind innovation</td><td class="lose" data-lang="ar">علامة تجارية قوية لكن الحضور الرقمي متخلف عن الابتكار</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ RCM DEEP DIVE ═══════════ -->
+<section class="section" id="rcm">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="eyebrow"><span class="badge badge-success" data-lang="en">Deep Dive</span><span class="badge badge-success" data-lang="ar">تحليل معمق</span></div>
+      <h2><span data-lang="en">AI-Driven <span class="text-gradient">Revenue Cycle</span></span><span data-lang="ar">دورة الإيرادات <span class="text-gradient">بالمدعومة بالذكاء الاصطناعي</span></span></h2>
+      <p data-lang="en">The financial engine behind the dashboard — proven, measurable, and transformative.</p>
+      <p data-lang="ar">المحرك المالي خلف لوحة التحكم — مثبت وقابل للقياس وتحويلي.</p>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="timeline reveal">
+          <div class="timeline-item">
+            <h4 data-lang="en">Claim Submission &amp; Tracking</h4><h4 data-lang="ar">تقديم المطالبات وتتبعها</h4>
+            <p data-lang="en">Real-time monitoring across all 6 branches with instant visibility into approval status and bottlenecks.</p>
+            <p data-lang="ar">مراقبة فورية عبر جميع الفروع الستة مع رؤية فورية لحالة الموافقة والاختناقات.</p>
+          </div>
+          <div class="timeline-item">
+            <h4 data-lang="en">AI Denial Prediction</h4><h4 data-lang="ar">التنبؤ بالرفض بالذكاء الاصطناعي</h4>
+            <p data-lang="en">Predictive analytics flag claims likely to be rejected before submission. Riyadh branch: 88.5% approval with AI actively predicting rejections.</p>
+            <p data-lang="ar">التحليلات التنبؤية تحدد المطالبات المرفوضة محتملاً قبل التقديم. فرع الرياض: نسبة موافقة 88.5% مع تنبؤ فعال بالرفض.</p>
+          </div>
+          <div class="timeline-item">
+            <h4 data-lang="en">Automated Appeal Generation</h4><h4 data-lang="ar">إنشاء الطعون تلقائياً</h4>
+            <p data-lang="en">AI generates appeal letters automatically, recovering SAR 9.8M that would otherwise be lost.</p>
+            <p data-lang="ar">ينشئ الذكاء الاصطناعي خطابات الطعون تلقائياً، مسترداً 9.8 مليون ريال كانت ستُفقد.</p>
+          </div>
+          <div class="timeline-item">
+            <h4 data-lang="en">Price Verification</h4><h4 data-lang="ar">التحقق من الأسعار</h4>
+            <p data-lang="en">AI detects billing anomalies — e.g., Saline solution priced at SAR 3.16 vs expected SAR 3.76 — preventing underbilling.</p>
+            <p data-lang="ar">يكتشف الذكاء الاصطناعي الشذوذ في الفوترة — مثل محلول ملحي بسعر 3.16 ريال مقابل 3.76 ريال متوقع — مما يمنع الفوترة المنخفضة.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="metric-card cyan reveal" style="margin-bottom:1.5rem">
+          <div class="metric-val text-gradient" style="font-size:2.5rem">SAR 9.8M</div>
+          <div class="metric-label" style="font-size:1rem;margin-top:.5rem" data-lang="en">Recovered through AI-driven denial analysis and appeal generation — revenue that would have been written off.</div>
+          <div class="metric-label" style="font-size:1rem;margin-top:.5rem" data-lang="ar">تم استرداده من خلال تحليل الرفض وإنشاء الطعون بالذكاء الاصطناعي — إيرادات كانت ستُ쳇 من الدفاتر.</div>
+        </div>
+        <div class="metric-card purple reveal">
+          <div class="metric-val" style="color:var(--accent2);font-size:2.5rem">98.6%</div>
+          <div class="metric-label" style="font-size:1rem;margin-top:.5rem" data-lang="en">Claim approval rate — 16.6 percentage points above the industry average of ~82%. That's millions in accelerated cash flow.</div>
+          <div class="metric-label" style="font-size:1rem;margin-top:.5rem" data-lang="ar">نسبة الموافقة على المطالبات — 16.6 نقطة مئوية فوق متوسط الصناعة ~82%. هذا ملايين في التدفق النقدي المتسارع.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ MARKET OPPORTUNITY ═══════════ -->
+<section class="section" id="market">
+  <div class="container">
+    <div class="section-header centered reveal">
+      <div class="eyebrow"><span class="badge badge-gold" data-lang="en">Market</span><span class="badge badge-gold" data-lang="ar">السوق</span></div>
+      <h2><span data-lang="en">The <span class="text-gradient">Opportunity</span></span><span data-lang="ar"><span class="text-gradient">الفرصة</span> السوقية</span></h2>
+      <p data-lang="en">Saudi Arabia's digital health market is exploding — and most hospital groups are still running on legacy systems.</p>
+      <p data-lang="ar">سوق الصحة الرقمية في السعودية ينفجر — ومعظم مجموعات المستشفيات لا تزال تعمل بأنظمة قديمة.</p>
+    </div>
+    <div class="grid-3">
+      <div class="market-stat reveal reveal-delay-1">
+        <div class="big text-gradient">$4.4B</div>
+        <div class="sub" data-lang="en">Saudi Digital Health Market 2025</div>
+        <div class="sub" data-lang="ar">سوق الصحة الرقمية السعودي 2025</div>
+      </div>
+      <div class="market-stat reveal reveal-delay-2">
+        <div class="big" style="color:var(--accent2)">$18.3B</div>
+        <div class="sub" data-lang="en">Projected by 2032 (22.6% CAGR)</div>
+        <div class="sub" data-lang="ar">المتوقع بحلول 2032 (معدل نمو 22.6%)</div>
+      </div>
+      <div class="market-stat reveal reveal-delay-3">
+        <div class="big" style="color:var(--accent3)">$2.56B</div>
+        <div class="sub" data-lang="en">Healthcare IT Growth (2025–2030)</div>
+        <div class="sub" data-lang="ar">نمو تقنية المعلومات الصحية (2025-2030)</div>
+      </div>
+    </div>
+    <div class="feature-card reveal" style="margin-top:2rem;text-align:center;border-color:rgba(0,212,255,.15)">
+      <h3 style="font-size:1.2rem" data-lang="en">The BrainSAIT Playbook</h3>
+      <h3 style="font-size:1.2rem" data-lang="ar">منهجية BrainSAIT</h3>
+      <p style="max-width:700px;margin:.8rem auto 0;color:var(--gray-300)" data-lang="en">Many large, reputable Saudi hospital groups have strong corporate brands but weak operational AI. BrainSAIT partners with these "sleeping giants" to digitize their operations and unlock significant financial value — just as it has done for Hayat National Hospitals.</p>
+      <p style="max-width:700px;margin:.8rem auto 0;color:var(--gray-300)" data-lang="ar">العديد من مجموعات المستشفيات السعودية الكبيرة ذات السمعة الطيبة لديها علامات تجارية قوية لكن ذكاءً اصطناعياً تشغيلياً ضعيفاً. تتشارك BrainSAIT مع هذه "العمالقة النائمين" لرقمنة عملياتهم وإطلاق قيمة مالية كبيرة — كما فعلت مع مستشفيات الحياة الوطني.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ STRATEGY ═══════════ -->
+<section class="section" id="strategy">
+  <div class="container">
+    <div class="section-header centered reveal">
+      <div class="eyebrow"><span class="badge badge-accent" data-lang="en">Playbook</span><span class="badge badge-accent" data-lang="ar">المنهجية</span></div>
+      <h2><span data-lang="en">Go-to-Market <span class="text-gradient">Strategy</span></span><span data-lang="ar">استراتيجية <span class="text-gradient">الوصول للسوق</span></span></h2>
+      <p data-lang="en">Three proven strategies to convert prospects into partners.</p>
+      <p data-lang="ar">ثلاث استراتيجيات مثبتة لتحويل العملاء المحتملين إلى شركاء.</p>
+    </div>
+    <div class="grid-3">
+      <div class="strategy-card reveal reveal-delay-1">
+        <div class="step">01</div>
+        <h3 data-lang="en">🪞 The Mirror Test</h3>
+        <h3 data-lang="ar">🪞 اختبار المرآة</h3>
+        <p data-lang="en">In every sales meeting, show both the corporate website and the BrainSAIT dashboard. Ask: <em>"Which one represents the future of your network?"</em> The contrast sells itself.</p>
+        <p data-lang="ar">في كل اجتماع مبيعات، اعرض كل من الموقع الرسمي ولوحة تحكم BrainSAIT. اسأل: <em>"أيهما يمثل مستقبل شبكتك؟"</em> التناقض يبيع نفسه.</p>
+      </div>
+      <div class="strategy-card reveal reveal-delay-2">
+        <div class="step">02</div>
+        <h3 data-lang="en">🤝 Smart Hospital Alliance</h3>
+        <h3 data-lang="ar">🤝 تحالف المستشفى الذكي</h3>
+        <p data-lang="en">Formalize partnerships between BrainSAIT's operational AI and hardware leaders like GE HealthCare. Pitch a joint "Smart Hospital" solution where advanced imaging feeds directly into AI-driven RCM.</p>
+        <p data-lang="ar">حوّل الشراكات بين ذكاء BrainSAIT التشغيلي وقادة الأجهزة مثل GE HealthCare إلى شراكات رسمية. قدم حلاً مشتركاً "للمستشفى الذكي" حيث تغذي التصوير المتقدم مباشرة دورة الإيرادات المدعومة بالذكاء الاصطناعي.</p>
+      </div>
+      <div class="strategy-card reveal reveal-delay-3">
+        <div class="step">03</div>
+        <h3 data-lang="en">👔 C-Suite "Two-Speed" Pitch</h3>
+        <h3 data-lang="ar">👔 عرض "السرعتين" للمديرين التنفيذيين</h3>
+        <p data-lang="en">Sell to CEOs and CFOs by highlighting the gap: their corporate site is their past, a BrainSAIT dashboard is their future. The transition = 5–15% margin improvement.</p>
+        <p data-lang="ar">بع للمديرين التنفيذيين والماليين من خلال إبراز الفجوة: موقعهم الرسمي ماضيهم، ولوحة تحكم BrainSAIT مستقبلهم. الانتقال = تحسين هامش 5-15%.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ AUDIENCE ═══════════ -->
+<section class="section" id="audience">
+  <div class="container">
+    <div class="section-header centered reveal">
+      <div class="eyebrow"><span class="badge badge-success" data-lang="en">Audience</span><span class="badge badge-success" data-lang="ar">الجمهور المستهدف</span></div>
+      <h2><span data-lang="en">Who <span class="text-gradient">Benefits</span></span><span data-lang="ar">من <span class="text-gradient">يستفيد</span></span></h2>
+      <p data-lang="en">Every stakeholder sees a different value in the same platform.</p>
+      <p data-lang="ar">كل أصحاب المصلحة يرون قيمة مختلفة في نفس المنصة.</p>
+    </div>
+    <div class="grid-2">
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="icon-wrap" style="background:rgba(0,212,255,.1)">👔</div>
+        <h3 data-lang="en">Hospital Leadership</h3><h3 data-lang="ar">قيادة المستشفى</h3>
+        <p data-lang="en">A mirror showing operational reality that the corporate site only hints at. A tool for internal transformation and data-driven decision-making.</p>
+        <p data-lang="ar">مرآة تظهر الواقع التشغيلي الذي يلمح إليه الموقع الرسمي فقط. أداة للتحول الداخلي واتخاذ القرارات المبنية على البيانات.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="icon-wrap" style="background:rgba(124,58,237,.1)">🏗️</div>
+        <h3 data-lang="en">Multi-Branch Networks</h3><h3 data-lang="ar">الشبكات متعددة الفروع</h3>
+        <p data-lang="en">A demonstrable leap in financial and operational performance. The dashboard is a powerful "see it in action" demo for KSA providers.</p>
+        <p data-lang="ar">قفزة ملموسة في الأداء المالي والتشغيلي. لوحة التحكم عرض توضيحي قوي "شاهدها أثناء العمل" لمقدمي الرعاية في السعودية.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="icon-wrap" style="background:rgba(16,185,129,.1)">📈</div>
+        <h3 data-lang="en">Investors &amp; Analysts</h3><h3 data-lang="ar">المستثمرون والمحللون</h3>
+        <p data-lang="en">Real-time transparency and proof of performance that static investor presentations cannot match. Live data, live confidence.</p>
+        <p data-lang="ar">شفافية فورية وإثبات للأداء لا يمكن للمستعرضات الثابتة للمستثمرين مطابقتها. بيانات حية، ثقة حية.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-4">
+        <div class="icon-wrap" style="background:rgba(245,158,11,.1)">🔬</div>
+        <h3 data-lang="en">Technology Partners</h3><h3 data-lang="ar">شركاء التكنولوجيا</h3>
+        <p data-lang="en">An integration layer that makes advanced diagnostic hardware part of an intelligent, revenue-optimized workflow. GE HealthCare and beyond.</p>
+        <p data-lang="ar">طبقة تكامل تجعل أجهزة التشخيص المتقدمة جزءاً من سير عمل ذكي محسّن للإيرادات. GE HealthCare وأبعد.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ QR CODES ═══════════ -->
+<section class="section qr-section" id="qrcodes">
+  <div class="container">
+    <div class="section-header centered reveal">
+      <div class="eyebrow"><span class="badge badge-accent" data-lang="en">Quick Access</span><span class="badge badge-accent" data-lang="ar">وصول سريع</span></div>
+      <h2><span data-lang="en">Scan &amp; <span class="text-gradient">Explore</span></span><span data-lang="ar">امسح &amp; <span class="text-gradient">استكشف</span></span></h2>
+      <p data-lang="en">QR codes for all key properties — scan to visit instantly.</p>
+      <p data-lang="ar">رموز QR لجميع الخصائص الرئيسية — امسح للزيارة فوراً.</p>
+    </div>
+    <div class="qr-grid reveal">
+      <div class="qr-card">
+        <canvas id="qr-dashboard"></canvas>
+        <div class="qr-label" data-lang="en">Live Dashboard</div><div class="qr-label" data-lang="ar">لوحة التحكم الحية</div>
+        <div class="qr-url">hnh.brainsait.org</div>
+      </div>
+      <div class="qr-card">
+        <canvas id="qr-corporate"></canvas>
+        <div class="qr-label" data-lang="en">Corporate Website</div><div class="qr-label" data-lang="ar">الموقع الرسمي</div>
+        <div class="qr-url">hayathospitals.com</div>
+      </div>
+      <div class="qr-card">
+        <canvas id="qr-profile"></canvas>
+        <div class="qr-label" data-lang="en">Author Profile</div><div class="qr-label" data-lang="ar">الملف الشخصي للمؤلف</div>
+        <div class="qr-url">fadil369.github.io/Profile</div>
+      </div>
+      <div class="qr-card">
+        <canvas id="qr-gravatar"></canvas>
+        <div class="qr-label" data-lang="en">Gravatar</div><div class="qr-label" data-lang="ar">غرافاتار</div>
+        <div class="qr-url">gravatar.com/fadil369</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ CTA ═══════════ -->
+<section class="section cta-section" id="contact">
+  <div class="container">
+    <div class="cta-box reveal">
+      <h2><span data-lang="en">Ready to Make the <span class="text-gradient">Leap?</span></span><span data-lang="ar">مستعد لإجراء <span class="text-gradient">القفزة؟</span></span></h2>
+      <p data-lang="en">The Hayat National Hospitals Group has built one of the Kingdom's largest healthcare networks — and equipped it with one of its most intelligent. See how your network can do the same.</p>
+      <p data-lang="ar">بنت مجموعة مستشفيات الحياة الوطني واحدة من أكبر شبكات الرعاية الصحية في المملكة — وزودتها بإحدى أنظمة الذكاء الاصطناعي الأكثر تطوراً. شاهد كيف يمكن لشبكتك القيام بنفس الشيء.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center">
+        <a href="https://hnh.brainsait.org" target="_blank" class="btn btn-primary" data-lang="en">🚀 Explore the Dashboard</a>
+        <a href="https://hnh.brainsait.org" target="_blank" class="btn btn-primary" data-lang="ar">🚀 استكشف لوحة التحكم</a>
+        <a href="https://fadil369.github.io/Profile/" target="_blank" class="btn btn-outline" data-lang="en">👤 Contact Dr. El Fadil</a>
+        <a href="https://fadil369.github.io/Profile/" target="_blank" class="btn btn-outline" data-lang="ar">👤 تواصل مع د. الفاضل</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="container">
+    <div class="author-card reveal">
+      <img src="https://gravatar.com/avatar/fadil369?s=160" alt="Dr. Mohamed El Fadil" class="author-avatar" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22><rect fill=%22%230f2240%22 width=%2280%22 height=%2280%22 rx=%2240%22/><text x=%2240%22 y=%2250%22 text-anchor=%22middle%22 fill=%22%2300d4ff%22 font-size=%2230%22>ME</text></svg>'">
+      <div class="author-info">
+        <h3>Dr. Mohamed El Fadil</h3>
+        <p data-lang="en">Creator of BrainSAIT — AI-Native Healthcare Platform</p>
+        <p data-lang="ar">مؤسس BrainSAIT — منصة رعاية صحية مدعومة بالذكاء الاصطناعي</p>
+        <div class="author-links">
+          <a href="https://fadil369.github.io/Profile/" target="_blank">🌐 <span data-lang="en">Portfolio</span><span data-lang="ar">الملف الشخصي</span></a>
+          <a href="https://gravatar.com/fadil369" target="_blank">📸 Gravatar</a>
+          <a href="https://hnh.brainsait.org" target="_blank">🏥 <span data-lang="en">Dashboard</span><span data-lang="ar">لوحة التحكم</span></a>
+        </div>
+      </div>
+    </div>
+    <p style="margin-bottom:.5rem"><strong>BrainSAIT × Hayat National Hospitals</strong> <span data-lang="en">— AI-Network Operations Dashboard</span><span data-lang="ar">— لوحة عمليات الشبكة بالذكاء الاصطناعي</span></p>
+    <p>© 2025 Dr. Mohamed El Fadil · <a href="https://fadil369.github.io/Profile/">Profile</a> · <a href="https://gravatar.com/fadil369">Gravatar</a> · <a href="https://hnh.brainsait.org">Dashboard</a></p>
+    <p style="margin-top:.8rem;font-size:.7rem;color:var(--gray-600)" data-lang="en">Sources: Hayat National Hospitals corporate website, BrainSAIT live dashboard, GE HealthCare press release, Forbes Middle East, Saudi market reports.</p>
+    <p style="margin-top:.8rem;font-size:.7rem;color:var(--gray-600)" data-lang="ar">المصادر: الموقع الرسمي لمجموعة مستشفيات الحياة الوطني، لوحة تحكم BrainSAIT الحية، بيان صحفي من GE HealthCare، فوربس الشرق الأوسط، تقارير السوق السعودي.</p>
+  </div>
+</footer>
+
+<!-- ═══════════ JAVASCRIPT ═══════════ -->
+<script>
+(function(){
+  'use strict';
+
+  // ─── LANGUAGE TOGGLE ───
+  var currentLang='en';
+  function setLang(lang){
+    currentLang=lang;
+    document.documentElement.setAttribute('data-show-lang',lang);
+    document.documentElement.setAttribute('lang',lang);
+    document.documentElement.setAttribute('dir',lang==='ar'?'rtl':'ltr');
+    document.getElementById('langLabel').textContent=lang==='en'?'AR':'EN';
+    // Re-generate QR codes (they don't change but ensure canvas is visible)
+  }
+  window.toggleLang=function(){
+    setLang(currentLang==='en'?'ar':'en');
+  };
+  // Initialize
+  document.documentElement.setAttribute('data-show-lang','en');
+
+  // ─── PARTICLES ───
+  var pf=document.getElementById('particles');
+  for(var i=0;i<40;i++){
+    var p=document.createElement('div');
+    p.className='particle';
+    p.style.left=Math.random()*100+'%';
+    p.style.animationDuration=(8+Math.random()*15)+'s';
+    p.style.animationDelay=Math.random()*10+'s';
+    p.style.width=p.style.height=(1+Math.random()*2)+'px';
+    pf.appendChild(p);
+  }
+
+  // ─── NAV SCROLL ───
+  var nav=document.getElementById('nav');
+  var ticking=false;
+  window.addEventListener('scroll',function(){
+    if(!ticking){
+      requestAnimationFrame(function(){
+        nav.classList.toggle('scrolled',window.scrollY>60);
+        ticking=false;
+      });
+      ticking=true;
+    }
+  });
+
+  // ─── SCROLL REVEAL ───
+  var reveals=document.querySelectorAll('.reveal');
+  var ro=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target)}
+    });
+  },{threshold:0.15,rootMargin:'0px 0px -40px 0px'});
+  reveals.forEach(function(el){ro.observe(el)});
+
+  // ─── COUNTER ANIMATION ───
+  function animateCounter(el){
+    var target=parseFloat(el.dataset.target);
+    var prefix=el.dataset.prefix||'';
+    var suffix=el.dataset.suffix||'';
+    var isDecimal=target%1!==0;
+    var duration=2000;
+    var start=performance.now();
+    function update(now){
+      var progress=Math.min((now-start)/duration,1);
+      var eased=1-Math.pow(1-progress,3);
+      var current=eased*target;
+      el.textContent=prefix+(isDecimal?current.toFixed(1):Math.floor(current).toLocaleString())+suffix;
+      if(progress<1)requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+  var counters=document.querySelectorAll('[data-target]');
+  var co=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){animateCounter(e.target);co.unobserve(e.target)}
+    });
+  },{threshold:0.5});
+  counters.forEach(function(el){co.observe(el)});
+
+  // ─── SMOOTH SCROLL ───
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      var t=document.querySelector(this.getAttribute('href'));
+      if(t){t.scrollIntoView({behavior:'smooth',block:'start'});document.querySelector('.nav-links').classList.remove('open')}
+    });
+  });
+
+  // ─── QR CODES ───
+  function makeQR(id,url){
+    var c=document.getElementById(id);
+    if(!c||typeof QRCode==='undefined')return;
+    QRCode.toCanvas(c,url,{
+      width:160,
+      margin:2,
+      color:{dark:'#0a1628',light:'#ffffff'},
+      errorCorrectionLevel:'H'
+    },function(err){
+      if(err)console.warn('QR error for '+id,err);
+    });
+  }
+  function initQR(){
+    if(typeof QRCode==='undefined'){setTimeout(initQR,200);return}
+    makeQR('qr-dashboard','https://hnh.brainsait.org');
+    makeQR('qr-corporate','https://hayathospitals.com');
+    makeQR('qr-profile','https://fadil369.github.io/Profile/');
+    makeQR('qr-gravatar','https://gravatar.com/fadil369');
+  }
+  initQR();
+
+})();
+</script>
+</body>
+</html>
