@@ -1,6 +1,6 @@
 export const CONFIG = {
   NAME: 'HNH Portal - BrainSAIT Healthcare OS',
-  VERSION: '9.0.0',
+  VERSION: '9.1.0',
   SITE_URL: 'https://hnh.brainsait.org',
   CONTACT_EMAIL: 'info@hnh.brainsait.org',
 

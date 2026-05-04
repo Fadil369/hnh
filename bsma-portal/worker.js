@@ -1337,10 +1337,33 @@ function _startRecog(){
   };
 
   recog.onerror=(e)=>{
-    if(e.error==='no-speech'&&isL)setTimeout(()=>{if(isL)_startRecog();},400);
+    if(e.error==='no-speech'&&isL){setTimeout(()=>{if(isL)_startRecog();},400);return;}
+    // Device not found, permission denied, or service unavailable — stop session gracefully
+    isL=false;
+    if(recog){try{recog.stop();}catch(_){}}
+    const ri=$('voiceRing');const ic=$('voiceIcon');const si=$('voiceStatus');const wi=$('voiceWaves');
+    if(ri)ri.className='vr';if(ic)ic.textContent='\u{1F399}\uFE0F';if(wi)wi.className='vw pa';
+    const micErrMsgs={
+      'not-allowed':'\u274C \u062A\u0645 \u0631\u0641\u0636 \u0627\u0644\u0648\u0635\u0648\u0644 \u0625\u0644\u0649 \u0627\u0644\u0645\u064A\u0643\u0631\u0648\u0641\u0648\u0646. \u064A\u0631\u062C\u0649 \u0627\u0644\u0633\u0645\u0627\u062D \u0645\u0646 \u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u0645\u062A\u0635\u0641\u062D.',
+      'service-not-allowed':'\u274C \u062A\u0645 \u0631\u0641\u0636 \u0627\u0644\u0648\u0635\u0648\u0644 \u0625\u0644\u0649 \u0627\u0644\u0645\u064A\u0643\u0631\u0648\u0641\u0648\u0646. \u064A\u0631\u062C\u0649 \u0627\u0644\u0633\u0645\u0627\u062D \u0645\u0646 \u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u0645\u062A\u0635\u0641\u062D.',
+      'audio-capture':'\u274C \u0644\u0645 \u064A\u062A\u0645 \u0627\u0644\u0639\u062B\u0648\u0631 \u0639\u0644\u0649 \u0645\u064A\u0643\u0631\u0648\u0641\u0648\u0646. \u062A\u0623\u0643\u062F \u0645\u0646 \u062A\u0648\u0635\u064A\u0644 \u0627\u0644\u062C\u0647\u0627\u0632.'
+    };
+    const msg=micErrMsgs[e.error]||('\u26A0\uFE0F \u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u0645\u064A\u0643\u0631\u0648\u0641\u0648\u0646: '+e.error+'. \u064A\u0631\u062C\u0649 \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629 \u0645\u0631\u0629 \u0623\u062E\u0631\u0649.');
+    if(si)si.textContent=msg;
+    tt(msg,'err');
   };
 
-  try{recog.start();}catch(e){}
+  try{recog.start();}catch(e){
+    // Catches NotFoundError (no mic device) and other synchronous start failures
+    isL=false;
+    const ri=$('voiceRing');const ic=$('voiceIcon');const si=$('voiceStatus');const wi=$('voiceWaves');
+    if(ri)ri.className='vr';if(ic)ic.textContent='\u{1F399}\uFE0F';if(wi)wi.className='vw pa';
+    const msg=e.name==='NotFoundError'
+      ?'\u274C \u0644\u0645 \u064A\u062A\u0645 \u0627\u0644\u0639\u062B\u0648\u0631 \u0639\u0644\u0649 \u0645\u064A\u0643\u0631\u0648\u0641\u0648\u0646. \u062A\u0623\u0643\u062F \u0645\u0646 \u062A\u0648\u0635\u064A\u0644 \u0627\u0644\u062C\u0647\u0627\u0632.'
+      :'\u26A0\uFE0F \u062A\u0639\u0630\u0631 \u062A\u0634\u063A\u064A\u0644 \u0627\u0644\u0645\u064A\u0643\u0631\u0648\u0641\u0648\u0646. \u064A\u0631\u062C\u0649 \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629 \u0645\u0631\u0629 \u0623\u062E\u0631\u0649.';
+    if(si)si.textContent=msg;
+    tt(msg,'err');
+  }
 }
 async function pV(t){
   if(!t||!t.trim())return;
@@ -2079,6 +2102,78 @@ var worker_default = {
         });
       }
     }
+    // === /comms/whatsapp-template → Twilio WhatsApp ContentSid template ===
+    if (path === "/comms/whatsapp-template" && method === "POST") {
+      try {
+        const body = await request.json();
+        const { to, content_sid, variables } = body;
+        if (!to || !content_sid) return new Response(JSON.stringify({ error: "to and content_sid required" }), { status: 400, headers: { "Content-Type": "application/json", ...CORS } });
+        const TWILIO_SID = env2.TWILIO_ACCOUNT_SID;
+        const TWILIO_TOKEN = env2.TWILIO_AUTH_TOKEN;
+        if (!TWILIO_SID || !TWILIO_TOKEN) return new Response(JSON.stringify({ error: "Twilio not configured" }), { status: 503, headers: { "Content-Type": "application/json", ...CORS } });
+        const phone = to.startsWith("+") ? to : "+966" + to.replace(/^0/, "");
+        const form = new URLSearchParams({
+          To: "whatsapp:" + phone,
+          From: "whatsapp:+14155238886",
+          ContentSid: content_sid,
+          ContentVariables: JSON.stringify(variables || {}),
+        });
+        const r = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`, {
+          method: "POST",
+          headers: { "Authorization": "Basic " + btoa(TWILIO_SID + ":" + TWILIO_TOKEN), "Content-Type": "application/x-www-form-urlencoded" },
+          body: form.toString(),
+          signal: AbortSignal.timeout(15000),
+        });
+        const data = await r.json();
+        return new Response(JSON.stringify({ success: !!data.sid, sid: data.sid, status: data.status, to: phone }), { headers: { "Content-Type": "application/json", ...CORS } });
+      } catch (err) {
+        return new Response(JSON.stringify({ error: true, message: err.message }), { status: 502, headers: { "Content-Type": "application/json", ...CORS } });
+      }
+    }
+
+    // === /comms/sms → Twilio SMS ===
+    if (path === "/comms/sms" && method === "POST") {
+      try {
+        const body = await request.json();
+        const { to, message } = body;
+        if (!to || !message) return new Response(JSON.stringify({ error: "to and message required" }), { status: 400, headers: { "Content-Type": "application/json", ...CORS } });
+        const TWILIO_SID = env2.TWILIO_ACCOUNT_SID;
+        const TWILIO_TOKEN = env2.TWILIO_AUTH_TOKEN;
+        const TWILIO_FROM = env2.TWILIO_PHONE_NUMBER || "+12013862972";
+        if (!TWILIO_SID || !TWILIO_TOKEN) return new Response(JSON.stringify({ error: "Twilio not configured" }), { status: 503, headers: { "Content-Type": "application/json", ...CORS } });
+        const phone = to.startsWith("+") ? to : "+966" + to.replace(/^0/, "");
+        const form = new URLSearchParams({ To: phone, From: TWILIO_FROM, Body: message });
+        const r = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`, {
+          method: "POST",
+          headers: { "Authorization": "Basic " + btoa(TWILIO_SID + ":" + TWILIO_TOKEN), "Content-Type": "application/x-www-form-urlencoded" },
+          body: form.toString(),
+          signal: AbortSignal.timeout(15000),
+        });
+        const data = await r.json();
+        return new Response(JSON.stringify({ success: !!data.sid, sid: data.sid, status: data.status, to: phone }), { headers: { "Content-Type": "application/json", ...CORS } });
+      } catch (err) {
+        return new Response(JSON.stringify({ error: true, message: err.message }), { status: 502, headers: { "Content-Type": "application/json", ...CORS } });
+      }
+    }
+
+    // === /comms/* → MailLinc Communication Proxy ===
+    if (path.startsWith("/comms/")) {
+      try {
+        const maillincUrl = env2.MAILLINC_URL || "https://maillinc.brainsait-fadil.workers.dev";
+        const maillincPath = path.replace("/comms", "");
+        const res = await fetch(`${maillincUrl}${maillincPath}${url.search}`, {
+          method,
+          headers: { "Content-Type": "application/json", "X-Source": "bsma-portal", ...(env2.MAILLINC_API_KEY ? { "X-API-Key": env2.MAILLINC_API_KEY } : {}) },
+          body: method === "POST" ? await request.clone().text() : void 0,
+          signal: AbortSignal.timeout(15000),
+        });
+        const data = await res.text();
+        return new Response(data, { status: res.status, headers: { "Content-Type": res.headers.get("Content-Type") || "application/json", ...CORS } });
+      } catch (err) {
+        return new Response(JSON.stringify({ error: true, message: "MailLinc unavailable", detail: err.message }), { status: 502, headers: { "Content-Type": "application/json", ...CORS } });
+      }
+    }
+
     if (path.startsWith("/api/")) {
       try {
         const backendResponse = await fetch(`${env2.HNH_BACKEND || "https://hnh.brainsait.org"}${path}${url.search}`, {

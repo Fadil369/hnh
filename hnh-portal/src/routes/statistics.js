@@ -34,7 +34,6 @@ export async function getStats(env) {
       total_providers: providerCount || S.doctors || 700,
       total_branches: 5,
       total_beds: S.beds || 1200,
-      total_branches: 5,
       total_departments: ALL_DEPTS.length || DEPARTMENTS.length,
       total_claims: stats?.total_claims || 0,
       submitted_claims: stats?.submitted_claims || 0,

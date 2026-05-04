@@ -18,6 +18,19 @@ import {
   rcmHealth, getRcmBatch, validatePrice, validateDuplicate, validatePbm, validateAll,
   generateAppeal, getRcmDashboard, getRejectedClaims, markAppeal, markResubmit,
 } from './routes/rcm.js';
+import { handleSearch } from './routes/search.js';
+import {
+  createVisit, listVisits, getVisit, updateVisit, recordVitals,
+  listNurses, createNurse, getNurseSchedule, getHomecareStats,
+} from './routes/homecare.js';
+import {
+  createSession, listSessions, getSession, updateSession,
+  startSession, endSession, issuePrescription, getPrescriptions,
+  getProviderAvailability, getTelehealthStats,
+} from './routes/telehealth.js';
+import {
+  emailAppointment, emailHomecare, emailTelehealth, emailFollowup, emailSend, getEmailLog,
+} from './routes/email.js';
 import { servePage } from './pages.js';
 
 const router = new Router();
@@ -112,6 +125,41 @@ router.post('/api/voice/speak', (req, env) => handleVoiceSpeak(req, env));
 router.post('/api/voice/chat', (req, env) => handleVoiceChat(req, env));
 router.get('/api/voice/voices', () => handleVoiceVoices());
 // Voice OPTIONS handled in voice handler itself
+
+// AI Search (AutoRAG brainsait-ai-search)
+router.get('/api/search', (req, env) => handleSearch(req, env));
+router.post('/api/search', (req, env) => handleSearch(req, env));
+
+// Home Care — رعاية منزلية
+router.post('/api/homecare/visits',                     (req, env) => createVisit(req, env));
+router.get('/api/homecare/visits',                      (req, env) => listVisits(req, env));
+router.get('/api/homecare/visits/([^/]+)',               (req, env, ctx, p) => getVisit(req, env, ctx, p));
+router.patch('/api/homecare/visits/([^/]+)',             (req, env, ctx, p) => updateVisit(req, env, ctx, p));
+router.post('/api/homecare/visits/([^/]+)/vitals',       (req, env, ctx, p) => recordVitals(req, env, ctx, p));
+router.get('/api/homecare/nurses',                      (req, env) => listNurses(req, env));
+router.post('/api/homecare/nurses',                     (req, env) => createNurse(req, env));
+router.get('/api/homecare/nurses/([^/]+)/schedule',     (req, env, ctx, p) => getNurseSchedule(req, env, ctx, p));
+router.get('/api/homecare/stats',                       (_, env) => getHomecareStats(_, env));
+
+// Telehealth — استشارات عن بُعد
+router.post('/api/telehealth/sessions',                              (req, env) => createSession(req, env));
+router.get('/api/telehealth/sessions',                               (req, env) => listSessions(req, env));
+router.get('/api/telehealth/sessions/([^/]+)',                        (req, env, ctx, p) => getSession(req, env, ctx, p));
+router.patch('/api/telehealth/sessions/([^/]+)',                      (req, env, ctx, p) => updateSession(req, env, ctx, p));
+router.post('/api/telehealth/sessions/([^/]+)/start',                 (req, env, ctx, p) => startSession(req, env, ctx, p));
+router.post('/api/telehealth/sessions/([^/]+)/end',                   (req, env, ctx, p) => endSession(req, env, ctx, p));
+router.post('/api/telehealth/sessions/([^/]+)/prescriptions',         (req, env, ctx, p) => issuePrescription(req, env, ctx, p));
+router.get('/api/telehealth/sessions/([^/]+)/prescriptions',          (req, env, ctx, p) => getPrescriptions(req, env, ctx, p));
+router.get('/api/telehealth/providers/([^/]+)/availability',          (req, env, ctx, p) => getProviderAvailability(req, env, ctx, p));
+router.get('/api/telehealth/stats',                                   (_, env) => getTelehealthStats(_, env));
+
+// Email — البريد الإلكتروني
+router.post('/api/email/appointment', (req, env) => emailAppointment(req, env));
+router.post('/api/email/homecare',    (req, env) => emailHomecare(req, env));
+router.post('/api/email/telehealth',  (req, env) => emailTelehealth(req, env));
+router.post('/api/email/followup',    (req, env) => emailFollowup(req, env));
+router.post('/api/email/send',        (req, env) => emailSend(req, env));
+router.get('/api/email/log',          (req, env) => getEmailLog(req, env));
 
 // SPA — serve for everything else
 router.get('/', (req, env, ctx, p, url) => servePage(req));

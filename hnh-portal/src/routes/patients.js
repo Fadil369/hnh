@@ -72,7 +72,7 @@ export async function updatePatient(req, env, ctx, params) {
   const binds = [];
   
   for (const [key, value] of Object.entries(body)) {
-    const allowed = ['national_id','name_ar','name_en','phone','email','dob','gender','insurance_company','insurance_id','blood_type','allergies'];
+    const allowed = ['national_id','full_name_ar','full_name_en','phone','email','date_of_birth','gender','insurance_company','insurance_id','blood_type','allergies'];
     if (allowed.includes(key)) {
       fields.push(`${key} = ?`);
       binds.push(value);

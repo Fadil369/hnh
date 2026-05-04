@@ -146,7 +146,7 @@ export async function handleVoiceChat(request, env) {
     let reply = '';
     try {
       // Import AI chat handler
-      const { handleChat } = await import('./routes/chat.js');
+      const { handleChat } = await import('../ai/chat.js');
       const chatRes = await handleChat(new Request('http://internal/api/chat', {
         method: 'POST',
         body: JSON.stringify({ message: text, session_id: sessionId, language: lang }),

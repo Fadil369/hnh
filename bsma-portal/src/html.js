@@ -149,6 +149,12 @@ main{flex:1;display:flex;overflow:hidden}
 .ib .up{background:var(--sl);color:var(--succ)}
 .ib .dn{background:var(--el);color:var(--err)}
 .ib .wa{background:var(--wl);color:var(--warn)}
+.srch-ans{background:linear-gradient(135deg,rgba(232,82,141,.08),rgba(147,51,234,.08));border:1px solid rgba(232,82,141,.2);border-radius:var(--r);padding:16px;font-size:.88rem;line-height:1.9;margin-bottom:12px}
+.srch-src{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.srch-src span{display:inline-block;padding:3px 10px;border-radius:10px;background:var(--pl);color:var(--purple);font-size:.72rem;border:1px solid rgba(147,51,234,.2)}
+.visit-card{background:var(--gl);border:var(--gbd);border-radius:var(--r);padding:14px;margin-bottom:10px;border-inline-start:3px solid var(--teal)}
+.sess-card{background:var(--gl);border:var(--gbd);border-radius:var(--r);padding:14px;margin-bottom:10px;border-inline-start:3px solid var(--blue)}
+.sess-code{font-size:1rem;font-weight:700;color:var(--blue);letter-spacing:.12em;margin:4px 0}
 @media(max-width:768px){.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}header{padding:0 12px;height:auto;flex-wrap:wrap;gap:6px}.hc{order:3;width:100%;justify-content:flex-start;padding:4px 0}.pn{padding:14px}.tab{padding:9px 8px;font-size:.75rem}.sc{padding:14px}.sc-v{font-size:1.3rem}}
 </style>
 </head>
@@ -177,6 +183,9 @@ main{flex:1;display:flex;overflow:hidden}
   <button class="tab" data-tab="appt">📅 مواعيد</button>
   <button class="tab" data-tab="oracle">🔗 Oracle</button>
   <button class="tab" data-tab="comms">📞 تواصل</button>
+  <button class="tab" data-tab="search">🔍 بحث</button>
+  <button class="tab" data-tab="homecare">🏠 رعاية</button>
+  <button class="tab" data-tab="telehealth">🎥 تطبيب</button>
 </nav>
 <main>
 <section class="pn on" id="pn-voice">
@@ -286,6 +295,14 @@ main{flex:1;display:flex;overflow:hidden}
       <button class="btn btn-w btn-sm" style="background:linear-gradient(135deg,#25d366,#128c7e);color:#fff" data-a="sendWhatsApp">🟢 إرسال WhatsApp</button>
       <div id="waResult" style="margin-top:8px;font-size:.8rem"></div>
     </div>
+    <div class="sc" style="border-left:3px solid var(--purple)">
+      <div class="sc-i">✉️</div><div class="sc-l">البريد الإلكتروني</div>
+      <div class="fg" style="margin-top:10px"><input id="emTo" placeholder="patient@example.com" style="width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit"></div>
+      <div class="fg"><select id="emType" style="width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit"><option value="appointment">تأكيد موعد</option><option value="homecare">زيارة منزلية</option><option value="telehealth">رابط تطبيب</option><option value="followup">متابعة</option></select></div>
+      <div class="fg"><input id="emName" placeholder="اسم المريض" style="width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit"></div>
+      <button class="btn btn-w btn-sm" style="background:linear-gradient(135deg,var(--purple),#7c3aed);color:#fff;margin-bottom:6px" data-a="sendEmail">✉️ إرسال البريد</button>
+      <div id="emResult" style="margin-top:8px;font-size:.8rem"></div>
+    </div>
   </div>
   <div class="cd" style="margin-top:14px">
     <div class="cd-h" data-a="toggleCard">🔢 إرسال OTP تحقق <span>▼</span></div>
@@ -299,6 +316,123 @@ main{flex:1;display:flex;overflow:hidden}
         <div class="fg" style="display:flex;align-items:flex-end"><button class="btn btn-s btn-w" data-a="verifyOtp">✅ تحقق</button></div>
       </div>
       <div id="otpResult" style="margin-top:8px;font-size:.8rem"></div>
+    </div>
+  </div>
+</section>
+<section class="pn" id="pn-search">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:16px">🔍 البحث الذكي بالذكاء الاصطناعي</h2>
+  <div class="cd">
+    <div class="cd-b">
+      <div class="fg">
+        <label>ابحث في قاعدة معرفة المستشفيات</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="srchIn" placeholder="طبيب، قسم، إجراء، دواء، نظام..." style="flex:1;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:10px 14px;font-size:.88rem;font-family:inherit">
+          <button class="btn btn-p" style="white-space:nowrap" data-a="doSearch">🔍 بحث</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
+        <button class="vq" data-a="srchHint" data-q="أطباء القلب والأوعية الدموية">❤️ قلب</button>
+        <button class="vq" data-a="srchHint" data-q="مواعيد وإجراءات الطوارئ">🚨 طوارئ</button>
+        <button class="vq" data-a="srchHint" data-q="التأمين الطبي والأهلية">🛡️ تأمين</button>
+        <button class="vq" data-a="srchHint" data-q="الرعاية الصحية المنزلية">🏠 رعاية منزلية</button>
+        <button class="vq" data-a="srchHint" data-q="التطبيب عن بعد والاستشارات الإلكترونية">🎥 تطبيب</button>
+        <button class="vq" data-a="srchHint" data-q="مطالبات NPHIES والتحصيل المالي">💰 مطالبات</button>
+      </div>
+    </div>
+  </div>
+  <div id="srchResult" style="margin-top:14px"></div>
+</section>
+<section class="pn" id="pn-homecare">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:16px">🏠 الرعاية الصحية المنزلية</h2>
+  <div class="g2">
+    <form id="hcForm">
+      <div class="cd">
+        <div class="cd-h" data-a="toggleCard">📋 جدولة زيارة منزلية <span>▼</span></div>
+        <div class="cd-b">
+          <div class="fg"><label>اسم المريض</label><input id="hcName" placeholder="الاسم الكامل"></div>
+          <div class="fg"><label>رقم الجوال</label><input id="hcPhone" placeholder="+9665xxxxxxxx"></div>
+          <div class="fg"><label>العنوان التفصيلي</label><input id="hcAddr" placeholder="الحي، الشارع، رقم المبنى"></div>
+          <div class="fg"><label>نوع الزيارة</label>
+            <select id="hcType">
+              <option value="general_checkup">فحص عام</option>
+              <option value="wound_care">عناية بالجروح</option>
+              <option value="iv_therapy">علاج وريدي</option>
+              <option value="physiotherapy">علاج طبيعي</option>
+              <option value="post_surgery">متابعة ما بعد الجراحة</option>
+              <option value="elderly_care">رعاية المسنين</option>
+              <option value="chronic_disease">متابعة الأمراض المزمنة</option>
+            </select>
+          </div>
+          <div class="fr">
+            <div class="fg"><label>التاريخ</label><input id="hcDate" type="date"></div>
+            <div class="fg"><label>الوقت</label><input id="hcTime" type="time" value="09:00"></div>
+          </div>
+          <div class="fg"><label>ملاحظات</label><textarea id="hcNotes" rows="2" placeholder="حالة خاصة أو تعليمات..." style="width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit;resize:none"></textarea></div>
+          <button class="btn btn-p btn-w" type="submit">🏠 جدولة الزيارة</button>
+          <div id="hcResult" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </form>
+    <div>
+      <div class="cd">
+        <div class="cd-h" data-a="toggleCard">📅 زيارات اليوم <span>▼</span></div>
+        <div class="cd-b" id="hcVisits"><div class="ld">⏳ جاري التحميل...</div></div>
+      </div>
+      <div class="cd" style="margin-top:14px">
+        <div class="cd-h" data-a="toggleCard">👩‍⚕️ الممرضات المتاحات <span>▼</span></div>
+        <div class="cd-b hide" id="hcNurses"><div class="ld">⏳</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="pn" id="pn-telehealth">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:16px">🎥 التطبيب عن بُعد</h2>
+  <div class="g2">
+    <div>
+      <form id="thForm">
+        <div class="cd">
+          <div class="cd-h" data-a="toggleCard">🆕 إنشاء جلسة جديدة <span>▼</span></div>
+          <div class="cd-b">
+            <div class="fg"><label>اسم المريض</label><input id="thPatient" placeholder="اسم المريض"></div>
+            <div class="fg"><label>رقم الجوال (للإشعار)</label><input id="thPhone" placeholder="+9665xxxxxxxx"></div>
+            <div class="fg"><label>الطبيب</label>
+              <select id="thProvider">
+                <option value="dr_qahtani">د. سعد القحطاني — قلب</option>
+                <option value="dr_shehri">د. ليلى الشهري — أطفال</option>
+                <option value="dr_otaibi">د. عبدالله العتيبي — عظام</option>
+                <option value="dr_bili">د. أميرة البيلي — جلدية</option>
+                <option value="dr_farouk">د. وسام فاروق — نساء وولادة</option>
+                <option value="dr_husseini">د. مريم الحسيني — نساء وولادة</option>
+                <option value="dr_daboura">د. معاوية دبورة — تجميل</option>
+              </select>
+            </div>
+            <div class="fr">
+              <div class="fg"><label>التاريخ</label><input id="thDate" type="date"></div>
+              <div class="fg"><label>الوقت</label><input id="thTime" type="time" value="10:00"></div>
+            </div>
+            <div class="fg"><label>سبب الاستشارة</label><input id="thReason" placeholder="وصف موجز للحالة الطبية"></div>
+            <button class="btn btn-p btn-w" type="submit">🎥 إنشاء الجلسة</button>
+            <div id="thResult" style="margin-top:12px"></div>
+          </div>
+        </div>
+      </form>
+      <div class="cd" style="margin-top:14px">
+        <div class="cd-h" data-a="toggleCard">🔑 انضمام بكود الجلسة <span>▼</span></div>
+        <div class="cd-b hide">
+          <div class="fg"><label>كود الجلسة</label><input id="thJoinCode" placeholder="XXXX-XXXX" style="letter-spacing:.1em;font-size:1rem;font-weight:700"></div>
+          <button class="btn btn-s btn-w" data-a="joinTH">🔗 انضمام للجلسة</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="cd">
+        <div class="cd-h" data-a="toggleCard">🟢 الجلسات النشطة <span>▼</span></div>
+        <div class="cd-b" id="thSessions"><div class="ld">⏳ جاري التحميل...</div></div>
+      </div>
+      <div class="cd" style="margin-top:14px">
+        <div class="cd-h" data-a="toggleCard">📊 إحصائيات التطبيب <span>▼</span></div>
+        <div class="cd-b hide" id="thStats"><div class="ld">⏳</div></div>
+      </div>
     </div>
   </div>
 </section>
@@ -321,6 +455,10 @@ const T={ar:{
   authHealthy:'المصادقة سليمة',errors:'أخطاء',nphiesAvailable:'NPHIES متاح',yes:'نعم',no:'لا',
   bookingSuccess:'تم حجز موعدك بنجاح',phoneInvalid:'أدخل رقم جوال صحيح',nameRequired:'أدخل الاسم',
   idRequired:'أدخل رقم الهوية',idShort:'أدخل رقم هوية صحيح (10 أرقام)',live:'متصل',
+  searching:'جاري البحث...',noResults:'لم يُعثر على نتائج',srchPowered:'مشغّل بـ AutoRAG',
+  hcScheduled:'تم الجدولة بنجاح',hcFail:'تعذّر الجدولة',hcNameReq:'أدخل اسم المريض',hcAddrReq:'أدخل العنوان',
+  thCreated:'تم إنشاء الجلسة',thFail:'تعذّر الإنشاء',thNameReq:'أدخل اسم المريض',thJoinReq:'أدخل كود الجلسة',
+  emailSent:'تم الإرسال بنجاح',emailFail:'تعذّر الإرسال',emailReq:'أدخل البريد الإلكتروني',
 },en:{
   listening:'Listening...',tapTalk:'Tap to talk to Basma',thinking:'Basma thinking...',speaking:'Basma speaking...',
   voiceSub:'Speaks Arabic and English',loading:'Loading...',failed:'Connection failed',retry:'Try again',
@@ -335,6 +473,10 @@ const T={ar:{
   authHealthy:'Auth Healthy',errors:'Errors',nphiesAvailable:'NPHIES Available',yes:'Yes',no:'No',
   bookingSuccess:'Appointment booked',phoneInvalid:'Enter valid phone',nameRequired:'Enter name',
   idRequired:'Enter ID',idShort:'Enter valid ID (10 digits)',live:'Live',
+  searching:'Searching...',noResults:'No results found',srchPowered:'Powered by AutoRAG',
+  hcScheduled:'Visit scheduled',hcFail:'Scheduling failed',hcNameReq:'Enter patient name',hcAddrReq:'Enter address',
+  thCreated:'Session created',thFail:'Failed to create session',thNameReq:'Enter patient name',thJoinReq:'Enter session code',
+  emailSent:'Email sent',emailFail:'Email failed',emailReq:'Enter email address',
 }};
 
 // ─── Helpers ───
@@ -649,6 +791,155 @@ async function bA(e){
   }
 }
 
+// ─── AI Search ───
+async function doSearch(){
+  const q=$('srchIn');if(!q)return;const query=q.value.trim();if(!query){tt(_('searching'),'err');return;}
+  const res=$('srchResult');
+  html(res,'<div class="cd"><div class="cd-b"><div class="ld">🔍 '+_('searching')+'</div></div></div>');
+  try{
+    const d=await fetch(HN+'/api/search?q='+encodeURIComponent(query)+'&lang='+lang,{signal:AbortSignal.timeout(20000)}).then(r=>r.json());
+    const ans=d.answer||d.result||_('noResults');
+    const srcs=d.sources||d.chunks||[];
+    let h='<div class="cd"><div class="cd-b">';
+    h+='<div class="srch-ans">'+ans+'</div>';
+    if(srcs.length){
+      h+='<div style="font-size:.75rem;color:var(--tm);margin-bottom:6px">📚 المصادر:</div><div class="srch-src">';
+      srcs.forEach(function(s){h+='<span>📄 '+(s.title||s.filename||s)+'</span>';});
+      h+='</div>';
+    }
+    h+='<div style="font-size:.7rem;color:var(--td);margin-top:10px">⚡ '+_('srchPowered')+' · brainsait-ai-search</div>';
+    h+='</div></div>';
+    html(res,h);
+  }catch(e){html(res,'<div class="cd"><div class="cd-b" style="color:var(--err)">❌ '+e.message+'</div></div>');}
+}
+
+// ─── Home Care ───
+async function lHC(){
+  const vl=$('hcVisits'),nl=$('hcNurses');if(!vl)return;
+  html(vl,'<div class="ld">⏳ '+_('loading')+'</div>');
+  try{
+    const today=new Date().toISOString().split('T')[0];
+    const d=await fetch(HN+'/api/homecare/visits?date='+today+'&hospital_id='+hosp,{signal:AbortSignal.timeout(10000)}).then(r=>r.json());
+    const visits=d.visits||d.data||[];
+    if(!visits.length){html(vl,'<div class="em"><div class="ei">🏠</div><h3>لا توجد زيارات اليوم</h3><p>جدِّل زيارة جديدة</p></div>');
+    }else{
+      let h='';
+      visits.forEach(function(v){
+        const st=v.status||'scheduled';
+        const stColor=st==='completed'?'var(--succ)':st==='in_progress'?'var(--blue)':st==='cancelled'?'var(--err)':'var(--warn)';
+        const stLabel=st==='completed'?'مكتملة':st==='in_progress'?'جارية':st==='cancelled'?'ملغاة':'مجدولة';
+        h+='<div class="visit-card">';
+        h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+        h+='<strong style="font-size:.9rem">'+(v.patient_name||'—')+'</strong>';
+        h+='<span style="font-size:.72rem;padding:3px 8px;border-radius:10px;background:rgba(0,0,0,.3);color:'+stColor+'">● '+stLabel+'</span>';
+        h+='</div>';
+        h+='<div style="font-size:.8rem;color:var(--tm)">'+(v.visit_type||'—')+' · '+(v.scheduled_time?v.scheduled_time.substring(0,5):'—')+'</div>';
+        h+='<div style="font-size:.78rem;color:var(--td);margin-top:4px">📍 '+(v.address||'—')+'</div>';
+        if(v.vitals&&Object.keys(v.vitals).length){h+='<div style="margin-top:8px;font-size:.75rem;color:var(--teal)">🩺 '+(v.vitals.bp?'BP: '+v.vitals.bp+' ':' ')+(v.vitals.spo2?'SpO2: '+v.vitals.spo2+'% ':' ')+(v.vitals.temp?'T: '+v.vitals.temp+'°C ':'')+'</div>';}
+        h+='</div>';
+      });
+      html(vl,h);
+    }
+  }catch(e){html(vl,'<div class="em"><div class="ei">⚠️</div><h3>'+_('failed')+'</h3></div>');}
+  if(nl){html(nl,'<div class="ld">⏳</div>');
+    try{
+      const nd=await fetch(HN+'/api/homecare/nurses?available=true',{signal:AbortSignal.timeout(8000)}).then(r=>r.json());
+      const nurses=nd.nurses||nd.data||[];
+      if(!nurses.length){html(nl,'<div style="color:var(--tm);font-size:.85rem;padding:8px">لا يوجد ممرضات متاحات الآن</div>');}
+      else{let nh='<div style="display:flex;flex-direction:column;gap:8px">';nurses.forEach(function(n){nh+='<div style="display:flex;justify-content:space-between;align-items:center;font-size:.85rem"><span>👩‍⚕️ '+(n.name||n.nurse_name||'—')+'</span><span style="font-size:.72rem;color:var(--succ)">● متاحة</span></div>';});nh+='</div>';html(nl,nh);}
+    }catch(e2){html(nl,'<div style="color:var(--tm);font-size:.85rem;padding:8px">—</div>');}
+  }
+}
+async function bookHC(e){
+  e.preventDefault();
+  const nm=$('hcName'),ph=$('hcPhone'),ad=$('hcAddr'),tp=$('hcType'),dt=$('hcDate'),tm=$('hcTime'),nt=$('hcNotes'),res=$('hcResult');
+  if(!nm||!nm.value.trim()){tt(_('hcNameReq'),'err');return;}
+  if(!ad||!ad.value.trim()){tt(_('hcAddrReq'),'err');return;}
+  html(res,'<div style="color:var(--tm)">⏳ جاري الجدولة...</div>');
+  try{
+    const r=await fetch(HN+'/api/homecare/visits',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({patient_name:nm.value,patient_phone:ph?ph.value:'',address:ad.value,visit_type:tp?tp.value:'general_checkup',scheduled_date:dt?dt.value:new Date().toISOString().split('T')[0],scheduled_time:tm?tm.value:'09:00',notes:nt?nt.value:'',hospital_id:hosp}),
+      signal:AbortSignal.timeout(12000)}).then(r=>r.json());
+    if(r.success||r.id||r.visit_id){
+      const vid=r.id||r.visit_id||'—';
+      html(res,'<div style="padding:12px;background:var(--sl);border-radius:var(--rs);color:var(--succ);line-height:1.8">✅ '+_('hcScheduled')+'! #'+vid+'<br>'+nm.value+' · '+(dt?dt.value:'')+'</div>');
+      tt('✅ '+_('hcScheduled'),'ok');lHC();
+    }else{html(res,'<div style="padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)">❌ '+(r.error||r.message||_('hcFail'))+'</div>');}
+  }catch(e2){html(res,'<div style="padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)">❌ '+e2.message+'</div>');}
+}
+
+// ─── Telehealth ───
+async function lTH(){
+  const sl=$('thSessions'),st=$('thStats');if(!sl)return;
+  html(sl,'<div class="ld">⏳ '+_('loading')+'</div>');
+  try{
+    const d=await fetch(HN+'/api/telehealth/sessions?status=scheduled&hospital_id='+hosp,{signal:AbortSignal.timeout(10000)}).then(r=>r.json());
+    const sessions=d.sessions||d.data||[];
+    if(!sessions.length){html(sl,'<div class="em"><div class="ei">🎥</div><h3>لا توجد جلسات نشطة</h3><p>أنشئ جلسة جديدة</p></div>');}
+    else{
+      let h='';
+      sessions.forEach(function(s){
+        const code=s.room_code||s.session_code||'—';
+        const url=s.join_url||s.room_url||('https://telehealth.brainsait.org/room/'+code);
+        h+='<div class="sess-card">';
+        h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+        h+='<strong style="font-size:.9rem">'+(s.patient_name||'—')+'</strong>';
+        h+='<a href="'+url+'" target="_blank" style="font-size:.72rem;padding:4px 12px;border-radius:10px;background:var(--blue);color:#fff;text-decoration:none">🎥 دخول</a>';
+        h+='</div>';
+        h+='<div class="sess-code">📟 '+code+'</div>';
+        h+='<div style="font-size:.78rem;color:var(--tm)">'+(s.provider_name||'—')+' · '+(s.scheduled_date||'—')+' '+(s.scheduled_time?s.scheduled_time.substring(0,5):'')+'</div>';
+        if(s.reason)h+='<div style="font-size:.75rem;color:var(--td);margin-top:4px">'+s.reason+'</div>';
+        h+='</div>';
+      });
+      html(sl,h);
+    }
+  }catch(e){html(sl,'<div class="em"><div class="ei">⚠️</div><h3>'+_('failed')+'</h3></div>');}
+  if(st){html(st,'<div class="ld">⏳</div>');
+    try{
+      const sd=await fetch(HN+'/api/telehealth/stats',{signal:AbortSignal.timeout(8000)}).then(r=>r.json());
+      html(st,'<div style="font-size:.85rem;line-height:2"><div>📊 الجلسات اليوم: <strong>'+n2(sd.today||0)+'</strong></div><div>✅ مكتملة: <strong>'+n2(sd.completed||0)+'</strong></div><div>⏳ مجدولة: <strong>'+n2(sd.scheduled||0)+'</strong></div><div>👥 المرضى: <strong>'+n2(sd.total_patients||0)+'</strong></div></div>');
+    }catch(e2){html(st,'<div style="color:var(--tm);font-size:.85rem;padding:8px">—</div>');}
+  }
+}
+async function createTH(e){
+  e.preventDefault();
+  const pt=$('thPatient'),ph=$('thPhone'),pv=$('thProvider'),dt=$('thDate'),tm=$('thTime'),rs=$('thReason'),res=$('thResult');
+  if(!pt||!pt.value.trim()){tt(_('thNameReq'),'err');return;}
+  html(res,'<div style="color:var(--tm)">⏳ جاري إنشاء الجلسة...</div>');
+  try{
+    const r=await fetch(HN+'/api/telehealth/sessions',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({patient_name:pt.value,patient_phone:ph?ph.value:'',provider_id:pv?pv.value:'',scheduled_date:dt?dt.value:new Date().toISOString().split('T')[0],scheduled_time:tm?tm.value:'10:00',reason:rs?rs.value:'استشارة طبية',hospital_id:hosp}),
+      signal:AbortSignal.timeout(15000)}).then(r=>r.json());
+    if(r.success||r.session_id||r.id){
+      const code=r.room_code||r.session_code||'—';
+      const url=r.join_url||('https://telehealth.brainsait.org/room/'+code);
+      html(res,'<div style="padding:14px;background:var(--sl);border-radius:var(--rs);color:var(--succ);line-height:2">✅ '+_('thCreated')+'!<br><span style="font-size:1.1rem;font-weight:700;color:var(--blue);letter-spacing:.15em">📟 '+code+'</span><br><a href="'+url+'" target="_blank" style="color:var(--blue);font-size:.85rem">🔗 رابط الجلسة</a></div>');
+      tt('✅ جلسة: '+code,'ok');
+      if(ph&&ph.value){const phone=ph.value.startsWith('+')?ph.value:'+966'+ph.value.replace(/^0/,'');fetch(BA+'/comms/sms',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:phone,message:'جلسة تطبيب عن بُعد — '+(pt?pt.value:'')+' | كود: '+code+' | '+url})}).catch(()=>{});}
+      lTH();
+    }else{html(res,'<div style="padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)">❌ '+(r.error||r.message||_('thFail'))+'</div>');}
+  }catch(e2){html(res,'<div style="padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)">❌ '+e2.message+'</div>');}
+}
+function joinTH(){
+  const c=$('thJoinCode');if(!c||!c.value.trim()){tt(_('thJoinReq'),'err');return;}
+  const code=c.value.trim().toUpperCase();
+  window.open('https://telehealth.brainsait.org/room/'+code,'_blank');
+  tt('🎥 جاري الدخول: '+code,'ok');
+}
+
+// ─── Email ───
+async function sendEmail(){
+  const to=$('emTo'),tp=$('emType'),nm=$('emName'),res=$('emResult');
+  if(!to||!to.value.trim()){tt(_('emailReq'),'err');return;}
+  html(res,'⏳ جاري الإرسال...');
+  try{
+    const r=await fetch(HN+'/api/email/send',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({to:to.value,template:tp?tp.value:'appointment',patient_name:nm?nm.value:'المريض الكريم',lang:'ar',hospital:hosp}),
+      signal:AbortSignal.timeout(15000)}).then(r=>r.json());
+    html(res,r.success||r.id?'✅ '+_('emailSent'):'❌ '+(r.error||_('emailFail')));
+  }catch(e){html(res,'❌ '+e.message);}
+}
+
 // ─── Language ───
 function tL(){
   lang=lang==='ar'?'en':'ar';localStorage.setItem('bm_lang',lang);
@@ -667,14 +958,15 @@ function init(){
   document.addEventListener('click',e=>{
     const t=e.target.closest('[data-a]');if(!t)return;
     const a=t.dataset.a;
-    if(a==='toggleVoice')sV();else if(a==='clearVoice')clV();else if(a==='sendChat')sC();else if(a==='toggleChatMic')tCM();else if(a==='checkElig')cE();else if(a==='sendSms')sendSms();else if(a==='startCall')startCall();else if(a==='sendWhatsApp')sendWhatsApp();else if(a==='sendOtp')sendOtp();else if(a==='verifyOtp')verifyOtp();else if(a==='draftSms')draftSms();else if(a==='draftWa')draftWa();
+    if(a==='toggleVoice')sV();else if(a==='clearVoice')clV();else if(a==='sendChat')sC();else if(a==='toggleChatMic')tCM();else if(a==='checkElig')cE();else if(a==='sendSms')sendSms();else if(a==='startCall')startCall();else if(a==='sendWhatsApp')sendWhatsApp();else if(a==='sendOtp')sendOtp();else if(a==='verifyOtp')verifyOtp();else if(a==='draftSms')draftSms();else if(a==='draftWa')draftWa();else if(a==='doSearch')doSearch();else if(a==='joinTH')joinTH();else if(a==='sendEmail')sendEmail();
+    else if(a==='srchHint'){const si=$('srchIn');if(si){si.value=t.dataset.q||'';doSearch();}}
   });
 
   // Hospital chips
   qa('.hc-btn').forEach(b=>{b.addEventListener('click',()=>{qa('.hc-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');hosp=b.dataset.h;localStorage.setItem('bm_hosp',hosp);lI();lM();lO();});});
 
   // Tab switching
-  qa('.tab').forEach(t=>{t.addEventListener('click',()=>{qa('.tab').forEach(x=>x.classList.remove('on'));qa('.pn').forEach(p=>p.classList.remove('on'));t.classList.add('on');const pn=$('pn-'+t.dataset.tab);if(pn)pn.classList.add('on');if(t.dataset.tab==='insights'){lI();lNL();lOA();}if(t.dataset.tab==='nphies')lM();if(t.dataset.tab==='oracle')lO();if(t.dataset.tab==='elig')lP();if(t.dataset.tab==='comms'){}if(t.dataset.tab==='chat'&&!chH.length)aCM('bo','👋 السلام عليكم! أنا بسمة، مساعد مستشفيات الحياة الوطني الذكي. كيف أقدر أساعدك اليوم؟');});});
+  qa('.tab').forEach(t=>{t.addEventListener('click',()=>{qa('.tab').forEach(x=>x.classList.remove('on'));qa('.pn').forEach(p=>p.classList.remove('on'));t.classList.add('on');const pn=$('pn-'+t.dataset.tab);if(pn)pn.classList.add('on');    if(t.dataset.tab==='insights'){lI();lNL();lOA();}if(t.dataset.tab==='nphies')lM();if(t.dataset.tab==='oracle')lO();if(t.dataset.tab==='elig')lP();if(t.dataset.tab==='homecare')lHC();if(t.dataset.tab==='telehealth')lTH();if(t.dataset.tab==='chat'&&!chH.length)aCM('bo','👋 السلام عليكم! أنا بسمة، مساعد مستشفيات الحياة الوطني الذكي. كيف أقدر أساعدك اليوم؟');});});
 
   // Voice hints
   qa('.vq').forEach(b=>{b.addEventListener('click',()=>{const q=b.dataset.q;if(q){const t=$('voiceTranscript');if(t)t.textContent=q;pV(q);}});});
@@ -692,8 +984,19 @@ function init(){
   // Appointments form
   const af=$('apptForm');if(af)af.addEventListener('submit',bA);
 
+  // Home Care form
+  const hf=$('hcForm');if(hf)hf.addEventListener('submit',bookHC);
+
+  // Telehealth form
+  const tf=$('thForm');if(tf)tf.addEventListener('submit',createTH);
+
+  // Search enter key
+  const si=$('srchIn');if(si)si.addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+
   // Set default date
   const ad=$('apDate');if(ad){const d=new Date();d.setDate(d.getDate()+1);ad.value=d.toISOString().split('T')[0];}
+  const hd=$('hcDate');if(hd){const d=new Date();d.setDate(d.getDate()+1);hd.value=d.toISOString().split('T')[0];}
+  const thd=$('thDate');if(thd){const d=new Date();d.setDate(d.getDate()+1);thd.value=d.toISOString().split('T')[0];}
   const at=$('apTime');if(at)at.value='10:00';
 
   // Initial data load

@@ -337,6 +337,7 @@ export default {
         const phone = to.startsWith('+') ? to : '+966' + to.replace(/^0/, '');
         const TWILIO_SID = env.TWILIO_ACCOUNT_SID;
         const TWILIO_TOKEN = env.TWILIO_AUTH_TOKEN;
+        if (!TWILIO_SID || !TWILIO_TOKEN) return new Response(JSON.stringify({ error: 'Twilio not configured' }), { status: 503, headers: { 'Content-Type': 'application/json', ...CORS } });
         const FROM = 'whatsapp:+14155238886';
         const form = new URLSearchParams({
           To: 'whatsapp:' + phone,
@@ -362,6 +363,35 @@ export default {
       }
     }
 
+    // === /comms/sms → Twilio direct SMS ===
+    if (path === '/comms/sms' && method === 'POST') {
+      try {
+        const body = await request.json();
+        const { to, message } = body;
+        if (!to || !message) return new Response(JSON.stringify({ error: 'to and message required' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
+        const TWILIO_SID = env.TWILIO_ACCOUNT_SID;
+        const TWILIO_TOKEN = env.TWILIO_AUTH_TOKEN;
+        const TWILIO_FROM = env.TWILIO_PHONE_NUMBER || '+12013862972';
+        if (!TWILIO_SID || !TWILIO_TOKEN) return new Response(JSON.stringify({ error: 'Twilio not configured' }), { status: 503, headers: { 'Content-Type': 'application/json', ...CORS } });
+        const phone = to.startsWith('+') ? to : '+966' + to.replace(/^0/, '');
+        const form = new URLSearchParams({ To: phone, From: TWILIO_FROM, Body: message });
+        const r = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`, {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Basic ' + btoa(TWILIO_SID + ':' + TWILIO_TOKEN),
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: form.toString(),
+          signal: AbortSignal.timeout(15000),
+        });
+        const data = await r.json();
+        return new Response(JSON.stringify({ success: !!data.sid, sid: data.sid, status: data.status, to: phone }), {
+          headers: { 'Content-Type': 'application/json', ...CORS },
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ error: true, message: err.message }), { status: 502, headers: { 'Content-Type': 'application/json', ...CORS } });
+      }
+    }
 
     // === /comms/* → MailLinc Communication Proxy ===
     if (path.startsWith('/comms/')) {

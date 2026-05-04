@@ -12,7 +12,14 @@ routes = [
 BASMA_API_BACKEND = "https://mellissa.brainsait.org"
 HNH_BACKEND = "https://hnh.brainsait.org"
 ENVIRONMENT = "production"
+MAILLINC_URL = "https://maillinc.brainsait-fadil.workers.dev"
 
 [[kv_namespaces]]
 binding = "BSMA_CACHE"
 id = "d7db4659947e48a59b2153585e7676e5"
+
+# Secrets (wrangler secret put --name bsma-portal):
+#   TWILIO_ACCOUNT_SID   ← Twilio account SID for SMS/WhatsApp
+#   TWILIO_AUTH_TOKEN    ← Twilio auth token
+#   TWILIO_PHONE_NUMBER  ← Twilio SMS sender number (e.g. +12013862972)
+#   MAILLINC_API_KEY     ← MailLinc API key (optional)

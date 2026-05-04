@@ -1,92 +1,119 @@
 import { json } from '../utils/response.js';
 
-// NPHIES Eligibility & Benefits (270/271)
+const CLAIMLINC_BASE = 'https://api.brainsait.org/nphies';
+
+function claimlinKey(env) {
+  return env.CLAIMLINC_KEY || '';
+}
+
+// NPHIES Eligibility & Benefits (270/271) — via ClaimLinc
 export async function checkEligibility(req, env) {
   const body = await req.json();
-  
+
   const {
     patient_id,
     insurance_id,
     insurance_company,
-    service_type,  // medical, dental, pharmacy, hospital
+    service_type,   // medical, dental, pharmacy, hospital
     provider_npi,
+    national_id,
   } = body;
 
   if (!insurance_id) {
     return json({ success: false, message: 'Insurance ID required' }, 400);
   }
 
-  // Look up patient
+  // Look up patient from DB
   let patient = null;
   if (patient_id) {
     patient = await env.DB.prepare('SELECT * FROM patients WHERE id = ?').bind(patient_id).first();
   }
 
-  // Mock 271 response
-  const eligibilityResponse = {
-    transaction_id: 'NPH-EB-' + Date.now().toString(36).toUpperCase(),
-    subscriber: {
-      insurance_id: insurance_id,
-      name: patient ? patient.name_ar : 'Patient',
-      relationship: 'Self',
-    },
-    payer: {
-      company: insurance_company || 'Bupa Arabia',
-      payer_id: 'BUPA001',
-    },
-    status: 'active',
-    coverage: {
-      inpatient: {
-        covered: true,
-        deductible: 1000,
-        deductible_remaining: 500,
-        co_pay_percentage: 10,
-        max_benefit: 500000,
-        max_benefit_remaining: 350000,
+  const transactionId = 'NPH-EB-' + Date.now().toString(36).toUpperCase();
+
+  // === Attempt real ClaimLinc eligibility check ===
+  let eligibilityResponse = null;
+  const clKey = claimlinKey(env);
+
+  if (clKey) {
+    try {
+      const clRes = await fetch(`${CLAIMLINC_BASE}/eligibility`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': clKey,
+        },
+        body: JSON.stringify({
+          transaction_id: transactionId,
+          subscriber_id: insurance_id,
+          subscriber_name: patient ? (patient.full_name_en || patient.full_name_ar) : null,
+          national_id: national_id || (patient ? patient.national_id : null),
+          insurance_company: insurance_company || null,
+          service_type: service_type || 'medical',
+          provider_npi: provider_npi || null,
+          facility_license: env.FACILITY_LICENSE || '10000000000988',
+        }),
+        signal: AbortSignal.timeout(8000),
+      });
+
+      if (clRes.ok) {
+        const clData = await clRes.json();
+        eligibilityResponse = {
+          ...clData,
+          transaction_id: transactionId,
+          source: 'claimlinc-live',
+        };
+      }
+    } catch (e) {
+      console.error('ClaimLinc eligibility error:', e?.message?.slice(0, 100));
+    }
+  }
+
+  // === Fallback: structured mock response (clearly marked) ===
+  if (!eligibilityResponse) {
+    eligibilityResponse = {
+      transaction_id: transactionId,
+      source: 'fallback',
+      warning: 'ClaimLinc unavailable — response is estimated, not live',
+      subscriber: {
+        insurance_id: insurance_id,
+        name: patient ? (patient.full_name_en || patient.full_name_ar || 'Patient') : 'Patient',
+        relationship: 'Self',
       },
-      outpatient: {
-        covered: true,
-        deductible: 200,
-        deductible_remaining: 100,
-        co_pay_percentage: 20,
-        max_visits: 12,
-        visits_remaining: 8,
+      payer: {
+        company: insurance_company || 'Unknown',
+        payer_id: null,
       },
-      pharmacy: {
-        covered: true,
-        co_pay_percentage: 15,
-        max_annual: 10000,
+      status: 'unknown',
+      coverage: {
+        inpatient: { covered: null, deductible: null, co_pay_percentage: null, max_benefit: null },
+        outpatient: { covered: null, deductible: null, co_pay_percentage: null },
+        pharmacy: { covered: null, co_pay_percentage: null },
+        dental: { covered: null, co_pay_percentage: null },
       },
-      dental: {
-        covered: service_type === 'dental',
-        co_pay_percentage: 20,
-        max_annual: 5000,
-      },
-    },
-    exclusions: [
-      'Pre-existing conditions (first 6 months)',
-      'Cosmetic surgery',
-      'Experimental treatments',
-    ],
-    effective_date: '2026-01-01',
-    expiry_date: '2026-12-31',
-    network: 'Preferred Provider Network',
-  };
+      exclusions: [],
+      effective_date: null,
+      expiry_date: null,
+      network: null,
+    };
+  }
 
   // Log the check
-  if (env.DB) {
-    await env.DB.prepare(
-      `INSERT INTO eligibility_checks (id, patient_id, insurance_company, service_type, response_json, status)
-       VALUES (?, ?, ?, ?, ?, ?)`
-    ).bind(
-      'ELG' + Date.now().toString(36).toUpperCase(),
-      patient_id || null,
-      insurance_company || null,
-      service_type || 'medical',
-      JSON.stringify(eligibilityResponse),
-      'completed'
-    ).run();
-  }
+  try {
+    if (env.DB) {
+      await env.DB.prepare(
+        `INSERT INTO eligibility_checks (id, patient_id, insurance_company, service_type, response_json, status)
+         VALUES (?, ?, ?, ?, ?, ?)`
+      ).bind(
+        'ELG' + Date.now().toString(36).toUpperCase(),
+        patient_id || null,
+        insurance_company || null,
+        service_type || 'medical',
+        JSON.stringify(eligibilityResponse),
+        eligibilityResponse.source === 'claimlinc-live' ? 'completed' : 'fallback'
+      ).run();
+    }
+  } catch (e) {}
 
   return json({ success: true, eligibility: eligibilityResponse });
 }
@@ -99,37 +126,50 @@ export async function verifyInsurance(req, env) {
     return json({ success: false, message: 'Insurance ID required' }, 400);
   }
 
-  const mockCompanies = [
-    { name: 'Bupa Arabia', id: 'BUPA', network: 'Gold', coverage: 90 },
-    { name: 'Tawuniya', id: 'TAW', network: 'Platinum', coverage: 100 },
-    { name: 'MedGulf', id: 'MED', network: 'Silver', coverage: 75 },
-    { name: 'Allianz Saudi Fransi', id: 'ASF', network: 'Gold', coverage: 85 },
-    { name: 'GlobeMed', id: 'GLB', network: 'Basic', coverage: 60 },
-    { name: 'Amana', id: 'AMA', network: 'Premium', coverage: 95 },
-    { name: 'Arabian Shield', id: 'AS', network: 'Gold', coverage: 80 },
-    { name: 'Sagr', id: 'SGR', network: 'Silver', coverage: 70 },
-    { name: 'GIG Gulf', id: 'GIG', network: 'Platinum', coverage: 90 },
-    { name: 'Walaa', id: 'WAL', network: 'Basic', coverage: 50 },
-  ];
+  // Format validation (local, no API needed)
+  const isValidFormat = insurance_id.length >= 8 && /^\d+$/.test(insurance_id.replace(/-/g, ''));
 
-  const company = mockCompanies.find(c => 
-    insurance_company ? c.name.toLowerCase().includes(insurance_company.toLowerCase()) : true
-  ) || mockCompanies[0];
+  if (!isValidFormat) {
+    return json({
+      success: true,
+      verified: false,
+      message: 'Insurance ID format invalid — must be numeric, minimum 8 digits',
+    });
+  }
 
-  const isValid = insurance_id.length >= 8 && /^\d+$/.test(insurance_id.replace(/-/g, ''));
+  // Attempt ClaimLinc verification
+  const clKey = claimlinKey(env);
+  if (clKey) {
+    try {
+      const clRes = await fetch(`${CLAIMLINC_BASE}/eligibility`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-API-Key': clKey },
+        body: JSON.stringify({ subscriber_id: insurance_id, insurance_company: insurance_company || null }),
+        signal: AbortSignal.timeout(6000),
+      });
+      if (clRes.ok) {
+        const clData = await clRes.json();
+        return json({
+          success: true,
+          verified: clData.status === 'active' || clData.verified === true,
+          details: clData,
+          source: 'claimlinc-live',
+        });
+      }
+    } catch (e) {}
+  }
 
+  // Fallback: format-only verification
   return json({
     success: true,
-    verified: isValid,
-    details: isValid ? {
-      company: company.name,
-      network: company.network,
-      coverage_percentage: company.coverage,
+    verified: true,
+    source: 'format-only',
+    warning: 'Live verification unavailable — format only checked',
+    details: {
+      company: insurance_company || 'Unknown',
       insurance_id: insurance_id,
-      valid_until: '2026-12-31',
-      member_since: '2024-01-01',
-    } : null,
-    message: isValid ? 'Insurance verified successfully' : 'Insurance ID format invalid',
+    },
+    message: 'Insurance ID format valid. Live network verification unavailable.',
   });
 }
 
@@ -141,7 +181,7 @@ export async function getEligibilityHistory(req, env, ctx, params) {
 
   if (results) {
     for (const r of results) {
-      try { r.response_json = JSON.parse(r.response_json); } catch(e) {}
+      try { r.response_json = JSON.parse(r.response_json); } catch (e) {}
     }
   }
 

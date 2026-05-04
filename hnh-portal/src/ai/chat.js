@@ -124,7 +124,7 @@ export async function handleChat(req, env) {
     });
     aiResponse = ai.response || ai.choices?.[0]?.message?.content || '';
   } catch (e) {
-    console.error('AI error, trying fallback:', e);
+    console.error('AI error, trying CF fallback:', e);
     try {
       const ai = await env.AI.run(CONFIG.AI_FALLBACK_MODEL, {
         messages,
@@ -133,7 +133,32 @@ export async function handleChat(req, env) {
       });
       aiResponse = ai.response || ai.choices?.[0]?.message?.content || '';
     } catch (e2) {
-      aiResponse = getFallbackResponse(message, language);
+      // DeepSeek as final AI fallback before hardcoded responses
+      if (env.DEEPSEEK_API_KEY) {
+        try {
+          const dsRes = await fetch('https://api.deepseek.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${env.DEEPSEEK_API_KEY}`,
+            },
+            body: JSON.stringify({
+              model: 'deepseek-chat',
+              messages,
+              max_tokens: CONFIG.AI_MAX_TOKENS,
+              temperature: CONFIG.AI_TEMPERATURE,
+            }),
+            signal: AbortSignal.timeout(15000),
+          });
+          const dsData = await dsRes.json();
+          aiResponse = dsData.choices?.[0]?.message?.content || getFallbackResponse(message, language);
+        } catch (e3) {
+          console.error('DeepSeek fallback error:', e3);
+          aiResponse = getFallbackResponse(message, language);
+        }
+      } else {
+        aiResponse = getFallbackResponse(message, language);
+      }
     }
   }
 
