@@ -25,6 +25,7 @@ binding = "BASMA_DB"
 database_name = "basma_production"
 database_id = "c30dd8f8-62f6-42f6-ad47-d442bf3bde7d"
 
+# Service Bindings (Workers to Worker communication)
 [[services]]
 binding = "CLAIMLINC_SERVICE"
 service = "claimlinc-api"
@@ -33,27 +34,69 @@ service = "claimlinc-api"
 binding = "GIVC_SERVICE"
 service = "givc-portal"
 
+# Additional service bindings for new integrations
+# Uncomment when creating new workers:
+# [[services]]
+# binding = "MAILLINC_SERVICE"
+# service = "maillinc"
+
+# [[services]]
+# binding = "ORACLE_BRIDGE_SERVICE"
+# service = "oracle-bridge"
+
 [vars]
 ORACLE_BRIDGE_URL  = "https://oracle-bridge.brainsait.org"
 NPHIES_MIRROR_URL  = "https://nphies-mirror.brainsait-fadil.workers.dev"
 FACILITY_LICENSE   = "10000000000988"
 MAILLINC_URL       = "https://maillinc.brainsait-fadil.workers.dev"
-HUB_VERSION        = "9.1.0"
+HUB_VERSION        = "9.2.0"
 
-# Secrets (wrangler secret put):
+# Secrets (wrangler secret put <secret_name>):
+# ============================================
+# Core System APIs
 #   API_KEY            ← protects /api/claims /api/visits /api/orders /api/rcm
-#   ORACLE_API_KEY     ← Oracle Bridge authentication (fallback hardcoded in worker)
-#   CLAIMLINC_KEY      ← ClaimLinc NPHIES API key (fallback hardcoded in worker)
+#   ORACLE_API_KEY     ← Oracle Bridge authentication
+#   CLAIMLINC_KEY      ← ClaimLinc NPHIES API key
+
+# NPHIES & Government
 #   NPHIES_TOKEN       ← Direct NPHIES portal (optional)
-#   ELEVENLABS_API_KEY ← Basma TTS (optional)
-#   DEEPSEEK_API_KEY   ← DeepSeek V3 AI (required — no hardcoded fallback)
+#   NPHIES_ENVIRONMENT ← "sandbox" or "production"
+
+# AI Services
+#   ELEVENLABS_API_KEY    ← Basma TTS voice synthesis
+#   DEEPSEEK_API_KEY      ← DeepSeek V3 AI (primary AI backup)
+#   OPENAI_API_KEY        ← OpenAI GPT (optional backup)
+
+# Communication Services  
+#   TWILIO_ACCOUNT_SID    ← Twilio account for SMS/Voice
+#   TWILIO_AUTH_TOKEN     ← Twilio auth token
+#   TWILIO_PHONE_NUMBER   ← Twilio phone number (+966...)
+#   WHATSAPP_TOKEN        ← WhatsApp Business API token
+#   WHATSAPP_PHONE_ID     ← WhatsApp Business phone ID
+
+# Email Services
+#   SENDGRID_API_KEY      ← SendGrid for transactional emails
+#   EMAIL_FROM_ADDRESS    ← noreply@hnh.brainsait.org
+#   EMAIL_FROM_NAME       ← "HNH Healthcare"
+
+# External Service URLs (for health checks)
+#   HOMECARE_URL         ← https://homecare.hayathospitals.com
+#   TELEHEALTH_URL       ← https://telehealth.brainsait.org
+#   ACADEMY_URL          ← https://academy.hayathospitals.com
+#   BASMA_URL            ← https://bsma.elfadil.com
 
 # Route (already configured via CF API):
 # hnh.brainsait.org/* → hnh-unified
 
 [env.production]
 name = "hnh-unified"
-vars = { HUB_VERSION = "9.1.0", ORACLE_BRIDGE_URL = "https://oracle-bridge.brainsait.org", NPHIES_MIRROR_URL = "https://nphies-mirror.brainsait-fadil.workers.dev", FACILITY_LICENSE = "10000000000988", MAILLINC_URL = "https://maillinc.brainsait-fadil.workers.dev" }
+vars = { 
+  HUB_VERSION = "9.2.0", 
+  ORACLE_BRIDGE_URL = "https://oracle-bridge.brainsait.org", 
+  NPHIES_MIRROR_URL = "https://nphies-mirror.brainsait-fadil.workers.dev", 
+  FACILITY_LICENSE = "10000000000988", 
+  MAILLINC_URL = "https://maillinc.brainsait-fadil.workers.dev" 
+}
 
 [[env.production.d1_databases]]
 binding = "DB"

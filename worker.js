@@ -1,9 +1,699 @@
-var cu=Object.defineProperty;var r=(u,a)=>cu(u,"name",{value:a,configurable:!0});var H=(u,a)=>()=>(u&&(a=u(u=0)),a);var j=(u,a)=>{for(var e in a)cu(u,e,{get:a[e],enumerable:!0})};var x,T,S=H(()=>{x={NAME:"HNH Portal - BrainSAIT Healthcare OS",VERSION:"9.1.0",SITE_URL:"https://hnh.brainsait.org",CONTACT_EMAIL:"info@hnh.brainsait.org",AI_MODEL:"@cf/meta/llama-3.3-70b-instruct-fp8-fast",AI_FALLBACK_MODEL:"@cf/meta/llama-3-8b-instruct",AI_MAX_TOKENS:600,AI_TEMPERATURE:.6,RATE_LIMIT_WINDOW_MS:6e4,RATE_LIMIT_MAX_REQUESTS:100,NPHIES_VERSION:"V2",NPHIES_CLAIMS_VERSION:"5010",BRANCHES:{RIYADH:"R001",JAZAN:"J001",KHAMIS_MUSHAIT:"K001",MADINAH:"M001",UNAYZAH:"U001"},CORPORATE:{FOUNDED:1999,OWNER:"Al-Inmaa Medical Services Company (\u0634\u0631\u0643\u0629 \u0627\u0644\u0627\u0646\u0645\u0627\u0621 \u0644\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0637\u0628\u064A\u0629)",CHAIRMAN:"A. Mohammed bin Nasser bin Jar Allah",CEO:{name_ar:"\u062F. \u0641\u0648\u0632\u064A\u0629 \u0627\u0644\u062C\u0627\u0631 \u0627\u0644\u0644\u0647",name_en:"Dr. Fawzia Al-Jar Allah"},CEO_ASSISTANT:{name_ar:"\u062F. \u062D\u0633\u064A\u0646 \u0628\u0646 \u062D\u0633\u0648\u0633\u0629",name_en:"Dr. Hussein bin Husousa"},CEO_ACHIEVEMENT:"Selected among top 100 healthcare leaders in the Middle East",YEARS_OPERATING:"25+ years",STATS:{doctors:700,outpatient_clinics:500,employees:3500,beds:1200,surgeries_per_year:4e4,nurses:1200,branches:5,annual_outpatient_visits:22e5},VISION:"To be a leader in healthcare in Saudi Arabia and the Middle East through continuous innovation, high-quality care meeting global standards, and horizontal expansion across the Kingdom.",MISSION:"Providing distinguished, integrated, patient-focused healthcare committed to innovative treatment supported by highly experienced specialists, with quality, efficiency, and compassion.",VALUES:["Superior and professional healthcare","Honesty and credibility","Commitment to social responsibility","Full commitment to patient and visitor privacy","Commitment to Islamic teachings","Quality and safety"]},DEPARTMENTS:[{id:"emergency",ar:"\u0637\u0648\u0627\u0631\u0626",en:"Emergency"},{id:"internal",ar:"\u0628\u0627\u0637\u0646\u064A\u0629",en:"Internal Medicine"},{id:"surgery",ar:"\u062C\u0631\u0627\u062D\u0629 \u0639\u0627\u0645\u0629 \u0648\u062C\u0631\u0627\u062D\u0629 \u0633\u0645\u0646\u0629",en:"General & Bariatric Surgery"},{id:"orthopedics",ar:"\u0639\u0638\u0627\u0645",en:"Orthopedics"},{id:"pediatrics",ar:"\u0623\u0637\u0641\u0627\u0644",en:"Pediatrics"},{id:"obgyn",ar:"\u0646\u0633\u0627\u0621 \u0648\u0648\u0644\u0627\u062F\u0629",en:"Obstetrics & Gynecology"},{id:"cardiology",ar:"\u0642\u0644\u0628 (\u0642\u0633\u0637\u0631\u0629 \u0642\u0644\u0628\u064A\u0629)",en:"Cardiology (Catheterization)"},{id:"dermatology",ar:"\u062C\u0644\u062F\u064A\u0629 \u0648\u0644\u064A\u0632\u0631",en:"Dermatology & Laser"},{id:"ent",ar:"\u0623\u0646\u0641 \u0648\u0623\u0630\u0646 \u0648\u062D\u0646\u062C\u0631\u0629",en:"Ear, Nose & Throat (ENT)"},{id:"dentistry",ar:"\u0623\u0633\u0646\u0627\u0646",en:"Dentistry"},{id:"ophthalmology",ar:"\u0639\u064A\u0648\u0646",en:"Ophthalmology"},{id:"urology",ar:"\u0645\u0633\u0627\u0644\u0643 \u0628\u0648\u0644\u064A\u0629",en:"Urology"},{id:"neurology",ar:"\u0645\u062E \u0648\u0623\u0639\u0635\u0627\u0628 \u0648\u062C\u0631\u0627\u062D\u0629 \u0623\u0639\u0635\u0627\u0628",en:"Neurology & Neurosurgery"},{id:"nephrology",ar:"\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0643\u0644\u0649",en:"Nephrology"},{id:"endocrinology",ar:"\u063A\u062F\u062F \u0635\u0645\u0627\u0621",en:"Endocrinology"},{id:"psychiatry",ar:"\u0637\u0628 \u0646\u0641\u0633\u064A",en:"Psychiatry"},{id:"radiology",ar:"\u0623\u0634\u0639\u0629",en:"Radiology"},{id:"laboratory",ar:"\u0645\u062E\u062A\u0628\u0631",en:"Laboratory"},{id:"pharmacy",ar:"\u0635\u064A\u062F\u0644\u064A\u0629",en:"Pharmacy"}],DEPARTMENTS_FULL:[{id:"general_surgery",ar:"\u062C\u0631\u0627\u062D\u0629 \u0639\u0627\u0645\u0629",en:"General Surgery"},{id:"bariatric_surgery",ar:"\u062C\u0631\u0627\u062D\u0629 \u0633\u0645\u0646\u0629",en:"Bariatric Surgery"},{id:"plastic_surgery",ar:"\u062C\u0631\u0627\u062D\u0629 \u062A\u062C\u0645\u064A\u0644 \u0648\u062A\u0631\u0645\u064A\u0645",en:"Plastic & Reconstructive Surgery"},{id:"orthopedic_surgery",ar:"\u062C\u0631\u0627\u062D\u0629 \u0639\u0638\u0627\u0645",en:"Orthopedic Surgery"},{id:"neurosurgery",ar:"\u062C\u0631\u0627\u062D\u0629 \u0645\u062E \u0648\u0623\u0639\u0635\u0627\u0628 \u0648\u0639\u0645\u0648\u062F \u0641\u0642\u0631\u064A",en:"Neurosurgery & Spine Surgery"},{id:"vascular_surgery",ar:"\u062C\u0631\u0627\u062D\u0629 \u0623\u0648\u0639\u064A\u0629 \u062F\u0645\u0648\u064A\u0629",en:"Vascular Surgery"},{id:"urology_surgery",ar:"\u062C\u0631\u0627\u062D\u0629 \u0645\u0633\u0627\u0644\u0643 \u0628\u0648\u0644\u064A\u0629",en:"Urology Surgery"},{id:"ophthalmology_surgery",ar:"\u062C\u0631\u0627\u062D\u0629 \u0639\u064A\u0648\u0646",en:"Ophthalmology Surgery"},{id:"ent_surgery",ar:"\u062C\u0631\u0627\u062D\u0629 \u0623\u0646\u0641 \u0648\u0623\u0630\u0646 \u0648\u062D\u0646\u062C\u0631\u0629",en:"ENT Surgery"},{id:"pediatric_surgery",ar:"\u062C\u0631\u0627\u062D\u0629 \u0623\u0637\u0641\u0627\u0644",en:"Pediatric Surgery"},{id:"cardiothoracic_surgery",ar:"\u062C\u0631\u0627\u062D\u0629 \u0642\u0644\u0628",en:"Cardiothoracic Surgery"},{id:"oral_surgery",ar:"\u062C\u0631\u0627\u062D\u0629 \u0648\u062C\u0647 \u0648\u0623\u0633\u0646\u0627\u0646",en:"Oral & Maxillofacial Surgery"},{id:"internal_medicine",ar:"\u0628\u0627\u0637\u0646\u064A\u0629",en:"Internal Medicine"},{id:"cardiology",ar:"\u0642\u0644\u0628 (\u0642\u0633\u0637\u0631\u0629 \u0642\u0644\u0628\u064A\u0629)",en:"Cardiology (Catheterization)"},{id:"neurology",ar:"\u0645\u062E \u0648\u0623\u0639\u0635\u0627\u0628",en:"Neurology"},{id:"nephrology",ar:"\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0643\u0644\u0649",en:"Nephrology"},{id:"endocrinology",ar:"\u063A\u062F\u062F \u0635\u0645\u0627\u0621 \u0648\u0633\u0643\u0631\u064A",en:"Endocrinology & Diabetes"},{id:"pulmonology",ar:"\u0635\u062F\u0631\u064A\u0629 \u0648\u062C\u0647\u0627\u0632 \u062A\u0646\u0641\u0633\u064A",en:"Pulmonology"},{id:"gastroenterology",ar:"\u062C\u0647\u0627\u0632 \u0647\u0636\u0645\u064A \u0648\u0645\u0646\u0627\u0638\u064A\u0631",en:"Gastroenterology & Hepatology"},{id:"rheumatology",ar:"\u0631\u0648\u0645\u0627\u062A\u064A\u0632\u0645",en:"Rheumatology"},{id:"psychiatry",ar:"\u0637\u0628 \u0646\u0641\u0633\u064A",en:"Psychiatry"},{id:"dermatology",ar:"\u062C\u0644\u062F\u064A\u0629 \u0648\u0644\u064A\u0632\u0631",en:"Dermatology & Laser"},{id:"oncology",ar:"\u0623\u0648\u0631\u0627\u0645",en:"Oncology"},{id:"pain_management",ar:"\u0639\u0644\u0627\u062C \u0627\u0644\u0623\u0644\u0645",en:"Pain Management"},{id:"allergy_immunology",ar:"\u062D\u0633\u0627\u0633\u064A\u0629 \u0648\u0645\u0646\u0627\u0639\u0629",en:"Allergy & Immunology"},{id:"obgyn",ar:"\u0646\u0633\u0627\u0621 \u0648\u0648\u0644\u0627\u062F\u0629",en:"Obstetrics & Gynecology"},{id:"infertility",ar:"\u0639\u0642\u0645 \u0648\u0623\u0637\u0641\u0627\u0644 \u0623\u0646\u0627\u0628\u064A\u0628",en:"Infertility & IVF"},{id:"pediatrics",ar:"\u0623\u0637\u0641\u0627\u0644",en:"Pediatrics"},{id:"neonatology",ar:"\u062D\u062F\u064A\u062B\u064A \u0648\u0644\u0627\u062F\u0629",en:"Neonatology"},{id:"pediatric_cardiology",ar:"\u0642\u0644\u0628 \u0623\u0637\u0641\u0627\u0644",en:"Pediatric Cardiology"},{id:"radiology",ar:"\u0623\u0634\u0639\u0629 \u0648\u062A\u0635\u0648\u064A\u0631 \u0637\u0628\u064A",en:"Radiology & Medical Imaging"},{id:"laboratory",ar:"\u0645\u062E\u062A\u0628\u0631 \u0648\u0628\u0646\u0643 \u062F\u0645",en:"Laboratory & Pathology"},{id:"nuclear_medicine",ar:"\u0637\u0628 \u0646\u0648\u0648\u064A",en:"Nuclear Medicine"},{id:"rehabilitation",ar:"\u0637\u0628 \u0637\u0628\u064A\u0639\u064A \u0648\u0625\u0639\u0627\u062F\u0629 \u062A\u0623\u0647\u064A\u0644",en:"Physical Therapy & Rehabilitation"},{id:"respiratory_therapy",ar:"\u0639\u0644\u0627\u062C \u062A\u0646\u0641\u0633\u064A",en:"Respiratory Therapy"},{id:"nutrition",ar:"\u062A\u063A\u0630\u064A\u0629 \u0648\u0639\u0644\u0627\u062C \u063A\u0630\u0627\u0626\u064A",en:"Nutrition & Dietetics"},{id:"emergency",ar:"\u0637\u0648\u0627\u0631\u0626",en:"Emergency Department"},{id:"icu",ar:"\u0639\u0646\u0627\u064A\u0629 \u0645\u0631\u0643\u0632\u0629",en:"Intensive Care Unit (ICU)"},{id:"nicu",ar:"\u0639\u0646\u0627\u064A\u0629 \u0623\u0637\u0641\u0627\u0644 \u062D\u062F\u064A\u062B\u064A \u0648\u0644\u0627\u062F\u0629",en:"Neonatal ICU (NICU)"},{id:"dentistry",ar:"\u0623\u0633\u0646\u0627\u0646",en:"Dentistry"},{id:"pharmacy",ar:"\u0635\u064A\u062F\u0644\u064A\u0629",en:"Pharmacy"},{id:"home_healthcare",ar:"\u0631\u0639\u0627\u064A\u0629 \u0645\u0646\u0632\u0644\u064A\u0629",en:"Home Healthcare"}],INSURANCE_PARTNERS:["Bupa Arabia","Tawuniya","MedGulf","Allianz Saudi Fransi","GlobeMed","Amana Insurance","Arabian Shield","Sagr Insurance","GIG Gulf","Walaa Insurance"],GENERAL_PHONE:"966920000094",EMERGENCY:"997",MOBILE_APP:{ios:"https://apps.apple.com/app/id6449023535",android:"https://play.google.com/store/apps/details?id=com.alhayat.patientapp"},SUBDOMAINS:["riyadh","jazan","khamis","unaizah"],HAYAT_ACADEMY:!0,HOME_HEALTHCARE:"https://homecare.hayathospitals.com",MEDICAL_JOURNAL:"https://hayathospitals.com/journal/",ARAB_HEALTH_2023:!0,NAFIS_PLATFORM_AWARD:!0},T={"X-Content-Type-Options":"nosniff","X-Frame-Options":"DENY","X-XSS-Protection":"1; mode=block","Referrer-Policy":"strict-origin-when-cross-origin","Permissions-Policy":"camera=(), microphone=(self), geolocation=()","Strict-Transport-Security":"max-age=63072000; includeSubDomains; preload","Cache-Control":"no-cache, no-store, must-revalidate"}});function lu(u={}){return{...Ge,...T,...u}}function c(u,a=200,e={}){return new Response(JSON.stringify(u),{status:a,headers:lu({"Content-Type":"application/json; charset=utf-8",...e})})}function du(){return new Response(null,{status:204,headers:lu()})}var Ge,_=H(()=>{S();Ge={"Access-Control-Allow-Origin":"https://hnh.brainsait.org","Access-Control-Allow-Methods":"GET, POST, PATCH, DELETE, OPTIONS","Access-Control-Allow-Headers":"Content-Type, Authorization"};r(lu,"mergeHeaders");r(c,"json");r(du,"handleCors")});var Nu={};j(Nu,{getProvider:()=>$,getProviders:()=>z,getProvidersByBranch:()=>a0,getProvidersByDepartment:()=>t0,providers:()=>B});function u0(u){let a=String(u||"").trim(),e=a.toLowerCase().replace(/[\s-]+/g,"_");return Ze[e]||a}function e0(u){return String(u||"").trim().replace(/^(د\.\s*)+/i,"").replace(/^(Dr\.\s*)+/i,"").trim()}function Ou(u,a,e){let t=[a,e].filter(Boolean).join(" ").trim(),n=e0(t);return n?`${u}${n}`:""}async function qu(u){try{if(!u||!u.DB)return null;let{results:a}=await u.DB.prepare(`SELECT id, provider_code, first_name_ar, last_name_ar, first_name_en, last_name_en,
+var __defProp = Object.defineProperty;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+
+// src/config.js
+var CONFIG, SECURITY_HEADERS;
+var init_config = __esm({
+  "src/config.js"() {
+    CONFIG = {
+      NAME: "HNH Portal - BrainSAIT Healthcare OS",
+      VERSION: "9.1.0",
+      SITE_URL: "https://hnh.brainsait.org",
+      CONTACT_EMAIL: "info@hnh.brainsait.org",
+      // AI model
+      AI_MODEL: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      AI_FALLBACK_MODEL: "@cf/meta/llama-3-8b-instruct",
+      AI_MAX_TOKENS: 600,
+      AI_TEMPERATURE: 0.6,
+      // Rate limiting
+      RATE_LIMIT_WINDOW_MS: 6e4,
+      RATE_LIMIT_MAX_REQUESTS: 100,
+      // NPHIES
+      NPHIES_VERSION: "V2",
+      NPHIES_CLAIMS_VERSION: "5010",
+      // Branch IDs
+      BRANCHES: {
+        RIYADH: "R001",
+        JAZAN: "J001",
+        KHAMIS_MUSHAIT: "K001",
+        MADINAH: "M001",
+        UNAYZAH: "U001"
+      },
+      // Corporate info (from hayathospitals.com cached content)
+      CORPORATE: {
+        FOUNDED: 1999,
+        OWNER: "Al-Inmaa Medical Services Company (\u0634\u0631\u0643\u0629 \u0627\u0644\u0627\u0646\u0645\u0627\u0621 \u0644\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0637\u0628\u064A\u0629)",
+        CHAIRMAN: "A. Mohammed bin Nasser bin Jar Allah",
+        CEO: { name_ar: "\u062F. \u0641\u0648\u0632\u064A\u0629 \u0627\u0644\u062C\u0627\u0631 \u0627\u0644\u0644\u0647", name_en: "Dr. Fawzia Al-Jar Allah" },
+        CEO_ASSISTANT: { name_ar: "\u062F. \u062D\u0633\u064A\u0646 \u0628\u0646 \u062D\u0633\u0648\u0633\u0629", name_en: "Dr. Hussein bin Husousa" },
+        CEO_ACHIEVEMENT: "Selected among top 100 healthcare leaders in the Middle East",
+        YEARS_OPERATING: "25+ years",
+        STATS: {
+          doctors: 700,
+          outpatient_clinics: 500,
+          employees: 3500,
+          beds: 1200,
+          surgeries_per_year: 4e4,
+          nurses: 1200,
+          branches: 5,
+          annual_outpatient_visits: 22e5
+        },
+        VISION: "To be a leader in healthcare in Saudi Arabia and the Middle East through continuous innovation, high-quality care meeting global standards, and horizontal expansion across the Kingdom.",
+        MISSION: "Providing distinguished, integrated, patient-focused healthcare committed to innovative treatment supported by highly experienced specialists, with quality, efficiency, and compassion.",
+        VALUES: [
+          "Superior and professional healthcare",
+          "Honesty and credibility",
+          "Commitment to social responsibility",
+          "Full commitment to patient and visitor privacy",
+          "Commitment to Islamic teachings",
+          "Quality and safety"
+        ]
+      },
+      // Departments (from hayathospitals.com cached content)
+      DEPARTMENTS: [
+        { id: "emergency", ar: "\u0637\u0648\u0627\u0631\u0626", en: "Emergency" },
+        { id: "internal", ar: "\u0628\u0627\u0637\u0646\u064A\u0629", en: "Internal Medicine" },
+        { id: "surgery", ar: "\u062C\u0631\u0627\u062D\u0629 \u0639\u0627\u0645\u0629 \u0648\u062C\u0631\u0627\u062D\u0629 \u0633\u0645\u0646\u0629", en: "General & Bariatric Surgery" },
+        { id: "orthopedics", ar: "\u0639\u0638\u0627\u0645", en: "Orthopedics" },
+        { id: "pediatrics", ar: "\u0623\u0637\u0641\u0627\u0644", en: "Pediatrics" },
+        { id: "obgyn", ar: "\u0646\u0633\u0627\u0621 \u0648\u0648\u0644\u0627\u062F\u0629", en: "Obstetrics & Gynecology" },
+        { id: "cardiology", ar: "\u0642\u0644\u0628 (\u0642\u0633\u0637\u0631\u0629 \u0642\u0644\u0628\u064A\u0629)", en: "Cardiology (Catheterization)" },
+        { id: "dermatology", ar: "\u062C\u0644\u062F\u064A\u0629 \u0648\u0644\u064A\u0632\u0631", en: "Dermatology & Laser" },
+        { id: "ent", ar: "\u0623\u0646\u0641 \u0648\u0623\u0630\u0646 \u0648\u062D\u0646\u062C\u0631\u0629", en: "Ear, Nose & Throat (ENT)" },
+        { id: "dentistry", ar: "\u0623\u0633\u0646\u0627\u0646", en: "Dentistry" },
+        { id: "ophthalmology", ar: "\u0639\u064A\u0648\u0646", en: "Ophthalmology" },
+        { id: "urology", ar: "\u0645\u0633\u0627\u0644\u0643 \u0628\u0648\u0644\u064A\u0629", en: "Urology" },
+        { id: "neurology", ar: "\u0645\u062E \u0648\u0623\u0639\u0635\u0627\u0628 \u0648\u062C\u0631\u0627\u062D\u0629 \u0623\u0639\u0635\u0627\u0628", en: "Neurology & Neurosurgery" },
+        { id: "nephrology", ar: "\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0643\u0644\u0649", en: "Nephrology" },
+        { id: "endocrinology", ar: "\u063A\u062F\u062F \u0635\u0645\u0627\u0621", en: "Endocrinology" },
+        { id: "psychiatry", ar: "\u0637\u0628 \u0646\u0641\u0633\u064A", en: "Psychiatry" },
+        { id: "radiology", ar: "\u0623\u0634\u0639\u0629", en: "Radiology" },
+        { id: "laboratory", ar: "\u0645\u062E\u062A\u0628\u0631", en: "Laboratory" },
+        { id: "pharmacy", ar: "\u0635\u064A\u062F\u0644\u064A\u0629", en: "Pharmacy" }
+      ],
+      // Full departments list (42) from hayathospitals.com
+      DEPARTMENTS_FULL: [
+        // Surgical
+        { id: "general_surgery", ar: "\u062C\u0631\u0627\u062D\u0629 \u0639\u0627\u0645\u0629", en: "General Surgery" },
+        { id: "bariatric_surgery", ar: "\u062C\u0631\u0627\u062D\u0629 \u0633\u0645\u0646\u0629", en: "Bariatric Surgery" },
+        { id: "plastic_surgery", ar: "\u062C\u0631\u0627\u062D\u0629 \u062A\u062C\u0645\u064A\u0644 \u0648\u062A\u0631\u0645\u064A\u0645", en: "Plastic & Reconstructive Surgery" },
+        { id: "orthopedic_surgery", ar: "\u062C\u0631\u0627\u062D\u0629 \u0639\u0638\u0627\u0645", en: "Orthopedic Surgery" },
+        { id: "neurosurgery", ar: "\u062C\u0631\u0627\u062D\u0629 \u0645\u062E \u0648\u0623\u0639\u0635\u0627\u0628 \u0648\u0639\u0645\u0648\u062F \u0641\u0642\u0631\u064A", en: "Neurosurgery & Spine Surgery" },
+        { id: "vascular_surgery", ar: "\u062C\u0631\u0627\u062D\u0629 \u0623\u0648\u0639\u064A\u0629 \u062F\u0645\u0648\u064A\u0629", en: "Vascular Surgery" },
+        { id: "urology_surgery", ar: "\u062C\u0631\u0627\u062D\u0629 \u0645\u0633\u0627\u0644\u0643 \u0628\u0648\u0644\u064A\u0629", en: "Urology Surgery" },
+        { id: "ophthalmology_surgery", ar: "\u062C\u0631\u0627\u062D\u0629 \u0639\u064A\u0648\u0646", en: "Ophthalmology Surgery" },
+        { id: "ent_surgery", ar: "\u062C\u0631\u0627\u062D\u0629 \u0623\u0646\u0641 \u0648\u0623\u0630\u0646 \u0648\u062D\u0646\u062C\u0631\u0629", en: "ENT Surgery" },
+        { id: "pediatric_surgery", ar: "\u062C\u0631\u0627\u062D\u0629 \u0623\u0637\u0641\u0627\u0644", en: "Pediatric Surgery" },
+        { id: "cardiothoracic_surgery", ar: "\u062C\u0631\u0627\u062D\u0629 \u0642\u0644\u0628", en: "Cardiothoracic Surgery" },
+        { id: "oral_surgery", ar: "\u062C\u0631\u0627\u062D\u0629 \u0648\u062C\u0647 \u0648\u0623\u0633\u0646\u0627\u0646", en: "Oral & Maxillofacial Surgery" },
+        // Medical
+        { id: "internal_medicine", ar: "\u0628\u0627\u0637\u0646\u064A\u0629", en: "Internal Medicine" },
+        { id: "cardiology", ar: "\u0642\u0644\u0628 (\u0642\u0633\u0637\u0631\u0629 \u0642\u0644\u0628\u064A\u0629)", en: "Cardiology (Catheterization)" },
+        { id: "neurology", ar: "\u0645\u062E \u0648\u0623\u0639\u0635\u0627\u0628", en: "Neurology" },
+        { id: "nephrology", ar: "\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0643\u0644\u0649", en: "Nephrology" },
+        { id: "endocrinology", ar: "\u063A\u062F\u062F \u0635\u0645\u0627\u0621 \u0648\u0633\u0643\u0631\u064A", en: "Endocrinology & Diabetes" },
+        { id: "pulmonology", ar: "\u0635\u062F\u0631\u064A\u0629 \u0648\u062C\u0647\u0627\u0632 \u062A\u0646\u0641\u0633\u064A", en: "Pulmonology" },
+        { id: "gastroenterology", ar: "\u062C\u0647\u0627\u0632 \u0647\u0636\u0645\u064A \u0648\u0645\u0646\u0627\u0638\u064A\u0631", en: "Gastroenterology & Hepatology" },
+        { id: "rheumatology", ar: "\u0631\u0648\u0645\u0627\u062A\u064A\u0632\u0645", en: "Rheumatology" },
+        { id: "psychiatry", ar: "\u0637\u0628 \u0646\u0641\u0633\u064A", en: "Psychiatry" },
+        { id: "dermatology", ar: "\u062C\u0644\u062F\u064A\u0629 \u0648\u0644\u064A\u0632\u0631", en: "Dermatology & Laser" },
+        { id: "oncology", ar: "\u0623\u0648\u0631\u0627\u0645", en: "Oncology" },
+        { id: "pain_management", ar: "\u0639\u0644\u0627\u062C \u0627\u0644\u0623\u0644\u0645", en: "Pain Management" },
+        { id: "allergy_immunology", ar: "\u062D\u0633\u0627\u0633\u064A\u0629 \u0648\u0645\u0646\u0627\u0639\u0629", en: "Allergy & Immunology" },
+        // Women & Children
+        { id: "obgyn", ar: "\u0646\u0633\u0627\u0621 \u0648\u0648\u0644\u0627\u062F\u0629", en: "Obstetrics & Gynecology" },
+        { id: "infertility", ar: "\u0639\u0642\u0645 \u0648\u0623\u0637\u0641\u0627\u0644 \u0623\u0646\u0627\u0628\u064A\u0628", en: "Infertility & IVF" },
+        { id: "pediatrics", ar: "\u0623\u0637\u0641\u0627\u0644", en: "Pediatrics" },
+        { id: "neonatology", ar: "\u062D\u062F\u064A\u062B\u064A \u0648\u0644\u0627\u062F\u0629", en: "Neonatology" },
+        { id: "pediatric_cardiology", ar: "\u0642\u0644\u0628 \u0623\u0637\u0641\u0627\u0644", en: "Pediatric Cardiology" },
+        // Support
+        { id: "radiology", ar: "\u0623\u0634\u0639\u0629 \u0648\u062A\u0635\u0648\u064A\u0631 \u0637\u0628\u064A", en: "Radiology & Medical Imaging" },
+        { id: "laboratory", ar: "\u0645\u062E\u062A\u0628\u0631 \u0648\u0628\u0646\u0643 \u062F\u0645", en: "Laboratory & Pathology" },
+        { id: "nuclear_medicine", ar: "\u0637\u0628 \u0646\u0648\u0648\u064A", en: "Nuclear Medicine" },
+        { id: "rehabilitation", ar: "\u0637\u0628 \u0637\u0628\u064A\u0639\u064A \u0648\u0625\u0639\u0627\u062F\u0629 \u062A\u0623\u0647\u064A\u0644", en: "Physical Therapy & Rehabilitation" },
+        { id: "respiratory_therapy", ar: "\u0639\u0644\u0627\u062C \u062A\u0646\u0641\u0633\u064A", en: "Respiratory Therapy" },
+        { id: "nutrition", ar: "\u062A\u063A\u0630\u064A\u0629 \u0648\u0639\u0644\u0627\u062C \u063A\u0630\u0627\u0626\u064A", en: "Nutrition & Dietetics" },
+        { id: "emergency", ar: "\u0637\u0648\u0627\u0631\u0626", en: "Emergency Department" },
+        { id: "icu", ar: "\u0639\u0646\u0627\u064A\u0629 \u0645\u0631\u0643\u0632\u0629", en: "Intensive Care Unit (ICU)" },
+        { id: "nicu", ar: "\u0639\u0646\u0627\u064A\u0629 \u0623\u0637\u0641\u0627\u0644 \u062D\u062F\u064A\u062B\u064A \u0648\u0644\u0627\u062F\u0629", en: "Neonatal ICU (NICU)" },
+        { id: "dentistry", ar: "\u0623\u0633\u0646\u0627\u0646", en: "Dentistry" },
+        { id: "pharmacy", ar: "\u0635\u064A\u062F\u0644\u064A\u0629", en: "Pharmacy" },
+        { id: "home_healthcare", ar: "\u0631\u0639\u0627\u064A\u0629 \u0645\u0646\u0632\u0644\u064A\u0629", en: "Home Healthcare" }
+      ],
+      // Insurance partners (from hayathospitals.com)
+      INSURANCE_PARTNERS: [
+        "Bupa Arabia",
+        "Tawuniya",
+        "MedGulf",
+        "Allianz Saudi Fransi",
+        "GlobeMed",
+        "Amana Insurance",
+        "Arabian Shield",
+        "Sagr Insurance",
+        "GIG Gulf",
+        "Walaa Insurance"
+      ],
+      // General contact
+      GENERAL_PHONE: "966920000094",
+      EMERGENCY: "997",
+      // Saudi Red Crescent
+      MOBILE_APP: {
+        ios: "https://apps.apple.com/app/id6449023535",
+        android: "https://play.google.com/store/apps/details?id=com.alhayat.patientapp"
+      },
+      SUBDOMAINS: ["riyadh", "jazan", "khamis", "unaizah"],
+      HAYAT_ACADEMY: true,
+      HOME_HEALTHCARE: "https://homecare.hayathospitals.com",
+      MEDICAL_JOURNAL: "https://hayathospitals.com/journal/",
+      ARAB_HEALTH_2023: true,
+      NAFIS_PLATFORM_AWARD: true
+    };
+    SECURITY_HEADERS = {
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "1; mode=block",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Permissions-Policy": "camera=(), microphone=(self), geolocation=()",
+      "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+      "Cache-Control": "no-cache, no-store, must-revalidate"
+    };
+  }
+});
+
+// src/utils/response.js
+function getAllowedOrigin(requestOrOrigin) {
+  const origin = typeof requestOrOrigin === "string" ? requestOrOrigin : requestOrOrigin?.headers?.get("Origin") || "";
+  if (!origin) return "https://hnh.brainsait.org";
+  if (ALLOWED_ORIGINS.includes(origin)) return origin;
+  try {
+    const url = new URL(origin);
+    if (url.protocol === "https:" && ALLOWED_SUFFIXES.some((s) => url.hostname.endsWith(s))) {
+      return origin;
+    }
+  } catch {
+  }
+  if (origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:")) {
+    return origin;
+  }
+  return null;
+}
+function corsHeaders(origin) {
+  return {
+    "Access-Control-Allow-Origin": origin || "https://hnh.brainsait.org",
+    "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Vary": "Origin"
+  };
+}
+function mergeHeaders(extra = {}, origin) {
+  return { ...corsHeaders(origin), ...SECURITY_HEADERS, ...extra };
+}
+function json(data, status = 200, extraHeaders = {}) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: mergeHeaders({
+      "Content-Type": "application/json; charset=utf-8",
+      ...extraHeaders
+    })
+  });
+}
+function handleCors(request) {
+  const origin = getAllowedOrigin(request);
+  if (!origin) {
+    return new Response(null, { status: 403, headers: { "Content-Type": "text/plain" } });
+  }
+  return new Response(null, {
+    status: 204,
+    headers: mergeHeaders({}, origin)
+  });
+}
+var ALLOWED_ORIGINS, ALLOWED_SUFFIXES;
+var init_response = __esm({
+  "src/utils/response.js"() {
+    init_config();
+    ALLOWED_ORIGINS = [
+      "https://hnh.brainsait.org",
+      "https://telehealth.brainsait.org",
+      "https://basma.brainsait.org",
+      "https://sbs.elfadil.com",
+      "https://bsma.elfadil.com",
+      "https://stitch-doctor-dashboard.brainsait-fadil.workers.dev",
+      "https://brainsait-realtime-hub.brainsait-fadil.workers.dev",
+      "https://nphies-mirror.brainsait-fadil.workers.dev",
+      "https://maillinc.brainsait-fadil.workers.dev"
+    ];
+    ALLOWED_SUFFIXES = [
+      ".brainsait.org",
+      ".brainsait-fadil.workers.dev",
+      ".elfadil.com"
+    ];
+    __name(getAllowedOrigin, "getAllowedOrigin");
+    __name(corsHeaders, "corsHeaders");
+    __name(mergeHeaders, "mergeHeaders");
+    __name(json, "json");
+    __name(handleCors, "handleCors");
+  }
+});
+
+// src/routes/providers.js
+var providers_exports = {};
+__export(providers_exports, {
+  getProvider: () => getProvider,
+  getProviders: () => getProviders,
+  getProvidersByBranch: () => getProvidersByBranch,
+  getProvidersByDepartment: () => getProvidersByDepartment,
+  providers: () => providers
+});
+function normalizeBranch(value) {
+  const raw = String(value || "").trim();
+  const key = raw.toLowerCase().replace(/[\s-]+/g, "_");
+  return BRANCH_ALIASES2[key] || raw;
+}
+function stripDoctorPrefix(value) {
+  return String(value || "").trim().replace(/^(د\.\s*)+/i, "").replace(/^(Dr\.\s*)+/i, "").trim();
+}
+function doctorName(prefix, firstName, lastName) {
+  const name = [firstName, lastName].filter(Boolean).join(" ").trim();
+  const clean = stripDoctorPrefix(name);
+  return clean ? `${prefix}${clean}` : "";
+}
+async function getProvidersFromDB(env) {
+  try {
+    if (!env || !env.DB) return null;
+    const { results } = await env.DB.prepare(
+      `SELECT id, provider_code, first_name_ar, last_name_ar, first_name_en, last_name_en,
               specialty, subspecialty, department, clinic_location, phone, email,
               givc_oid, givc_registered, givc_specialty_code, givc_branch_code
        FROM providers
        WHERE is_active = 1
-       ORDER BY specialty, last_name_ar`).all();if(a&&a.length>0)return a.map(e=>({id:e.provider_code||"P"+String(e.id).padStart(3,"0"),db_id:e.id,name_ar:Ou("\u062F. ",e.first_name_ar,e.last_name_ar),name_en:Ou("Dr. ",e.first_name_en||e.first_name_ar,e.last_name_en||e.last_name_ar),specialty:e.specialty||"",subspecialty:e.subspecialty||"",department:e.department||"",branch:e.clinic_location||e.givc_branch_code||"",branch_id:u0(e.givc_branch_code||e.clinic_location||""),phone:e.phone||"",email:e.email||"",givc_oid:e.givc_oid||null,givc_registered:e.givc_registered===1,rating:4,experience_years:10,source:"d1"}))}catch(a){console.error("DB providers error:",a)}return null}async function z(u){return await qu(u)||B}async function $(u,a){if(a&&a.DB){let e=await qu(a);if(e){let t=e.find(n=>n.id===u||String(n.db_id)===String(u)||n.givc_oid===u);if(t)return t}}return B.find(e=>e.id===u)||null}function a0(u){return B.filter(a=>a.branch_id===u)}function t0(u){return B.filter(a=>a.department_id===u)}var B,Ze,q=H(()=>{B=[{id:"P001",name_ar:"\u062F. \u0645\u062D\u0645\u062F \u0628\u0643\u0631\u064A",name_en:"Dr. Mohamed Bakry",department_id:"surgery",specializations:["\u062C\u0631\u0627\u062D\u0629 \u062A\u062C\u0645\u064A\u0644\u064A\u0629","\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0648\u062C\u0647 \u0648\u0627\u0644\u0641\u0643\u064A\u0646"],specializations_en:["Plastic Surgery","Maxillofacial Surgery"],languages:["ar","en"],branch_id:"R001",consultation_fee:500,education:[{degree:"MD",institution:"Cairo University",year:2005}],experience_years:19,rating:4.9,bio_ar:"\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u062A\u062C\u0645\u064A\u0644 \u0648\u0627\u0644\u062A\u0631\u0645\u064A\u0645\u060C \u062E\u0628\u0631\u0629 \u0648\u0627\u0633\u0639\u0629 \u0641\u064A \u0639\u0645\u0644\u064A\u0627\u062A \u0627\u0644\u0648\u062C\u0647 \u0648\u0627\u0644\u0641\u0643\u064A\u0646.",bio_en:"Consultant Plastic and Reconstructive Surgeon with extensive experience in facial surgery."},{id:"P002",name_ar:"\u062F. \u0639\u0628\u062F\u0627\u0644\u0644\u0647 \u0627\u0644\u0642\u062D\u0637\u0627\u0646\u064A",name_en:"Dr. Abdullah Al-Qahtani",department_id:"cardiology",specializations:["\u0642\u0633\u0637\u0631\u0629 \u0642\u0644\u0628\u064A\u0629","\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0642\u0644\u0628 \u0627\u0644\u062A\u062F\u0627\u062E\u0644\u064A\u0629"],specializations_en:["Cardiac Catheterization","Interventional Cardiology"],languages:["ar","en"],branch_id:"R001",consultation_fee:400,education:[{degree:"MD",institution:"King Saud University",year:2008}],experience_years:16,rating:4.7,bio_ar:"\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0642\u0644\u0628 \u0648\u0627\u0644\u0642\u0633\u0637\u0631\u0629\u060C \u0631\u0626\u064A\u0633 \u0642\u0633\u0645 \u0627\u0644\u0642\u0644\u0628 \u0628\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u0631\u064A\u0627\u0636.",bio_en:"Consultant Cardiologist and Interventionalist, Head of Cardiology at Riyadh branch."},{id:"P003",name_ar:"\u062F. \u0641\u0627\u0637\u0645\u0629 \u0627\u0644\u0632\u0647\u0631\u0627\u0646\u064A",name_en:"Dr. Fatima Al-Zahrani",department_id:"obgyn",specializations:["\u0646\u0633\u0627\u0621 \u0648\u0648\u0644\u0627\u062F\u0629","\u0639\u0642\u0645 \u0648\u0623\u0637\u0641\u0627\u0644 \u0623\u0646\u0627\u0628\u064A\u0628"],specializations_en:["Obstetrics & Gynecology","Infertility & IVF"],languages:["ar","en"],branch_id:"R001",consultation_fee:350,education:[{degree:"MD",institution:"King Abdulaziz University",year:2010}],experience_years:14,rating:4.8,bio_ar:"\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u0629 \u0646\u0633\u0627\u0621 \u0648\u0648\u0644\u0627\u062F\u0629\u060C \u0645\u062A\u062E\u0635\u0635\u0629 \u0641\u064A \u0639\u0644\u0627\u062C \u0627\u0644\u0639\u0642\u0645 \u0648\u0623\u0637\u0641\u0627\u0644 \u0627\u0644\u0623\u0646\u0627\u0628\u064A\u0628.",bio_en:"Consultant OB/GYN specializing in infertility treatment and IVF."},{id:"P004",name_ar:"\u062F. \u062E\u0627\u0644\u062F \u0627\u0644\u0634\u0647\u0631\u0627\u0646\u064A",name_en:"Dr. Khaled Al-Shahrani",department_id:"orthopedics",specializations:["\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0639\u0638\u0627\u0645","\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0645\u0641\u0627\u0635\u0644","\u0645\u0646\u0638\u0627\u0631 \u0627\u0644\u0645\u0641\u0627\u0635\u0644"],specializations_en:["Orthopedic Surgery","Joint Surgery","Arthroscopy"],languages:["ar","en"],branch_id:"R001",consultation_fee:400,education:[{degree:"MD",institution:"King Faisal University",year:2009}],experience_years:15,rating:4.6,bio_ar:"\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0639\u0638\u0627\u0645 \u0648\u0627\u0644\u0645\u0641\u0627\u0635\u0644\u060C \u062E\u0628\u0631\u0629 \u0641\u064A \u0639\u0645\u0644\u064A\u0627\u062A \u0627\u0644\u0645\u0646\u0638\u0627\u0631 \u0648\u0627\u0644\u062A\u0628\u062F\u064A\u0644.",bio_en:"Consultant Orthopedic and Joint Surgeon, experienced in arthroscopy and joint replacement."},{id:"P005",name_ar:"\u062F. \u0633\u0627\u0631\u0629 \u0627\u0644\u062D\u0631\u0628\u064A",name_en:"Dr. Sarah Al-Harbi",department_id:"pediatrics",specializations:["\u0637\u0628 \u0627\u0644\u0623\u0637\u0641\u0627\u0644","\u062D\u062F\u064A\u062B\u064A \u0627\u0644\u0648\u0644\u0627\u062F\u0629"],specializations_en:["Pediatrics","Neonatology"],languages:["ar","en"],branch_id:"J001",consultation_fee:250,education:[{degree:"MD",institution:"Umm Al-Qura University",year:2012}],experience_years:12,rating:4.5,bio_ar:"\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u0629 \u0637\u0628 \u0623\u0637\u0641\u0627\u0644 \u0648\u062D\u062F\u064A\u062B\u064A \u0627\u0644\u0648\u0644\u0627\u062F\u0629\u060C \u0631\u0626\u064A\u0633\u0629 \u0642\u0633\u0645 \u0627\u0644\u0623\u0637\u0641\u0627\u0644 \u0628\u062C\u0627\u0632\u0627\u0646.",bio_en:"Consultant Pediatrician and Neonatologist, Head of Pediatrics at Jazan."},{id:"P006",name_ar:"\u062F. \u0623\u062D\u0645\u062F \u0627\u0644\u0645\u0637\u064A\u0631\u064A",name_en:"Dr. Ahmed Al-Mutairi",department_id:"neurology",specializations:["\u0637\u0628 \u0627\u0644\u0623\u0639\u0635\u0627\u0628","\u0627\u0644\u0635\u0631\u0639","\u0627\u0644\u0635\u062F\u0627\u0639 \u0627\u0644\u0646\u0635\u0641\u064A"],specializations_en:["Neurology","Epilepsy","Migraine"],languages:["ar","en"],branch_id:"M001",consultation_fee:350,education:[{degree:"MD",institution:"King Saud University",year:2007}],experience_years:17,rating:4.7,bio_ar:"\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u0637\u0628 \u0627\u0644\u0623\u0639\u0635\u0627\u0628\u060C \u0645\u062A\u062E\u0635\u0635 \u0641\u064A \u0639\u0644\u0627\u062C \u0627\u0644\u0635\u0631\u0639 \u0648\u0627\u0644\u0635\u062F\u0627\u0639 \u0627\u0644\u0645\u0632\u0645\u0646.",bio_en:"Consultant Neurologist specializing in epilepsy and chronic headache management."},{id:"P007",name_ar:"\u062F. \u0646\u0648\u0631\u0629 \u0627\u0644\u062F\u0648\u0633\u0631\u064A",name_en:"Dr. Noura Al-Dosari",department_id:"dermatology",specializations:["\u062C\u0644\u062F\u064A\u0629","\u0644\u064A\u0632\u0631","\u0639\u0644\u0627\u062C \u0627\u0644\u0628\u0647\u0627\u0642 \u0648\u0627\u0644\u0635\u062F\u0641\u064A\u0629"],specializations_en:["Dermatology","Laser Therapy","Vitiligo & Psoriasis"],languages:["ar","en"],branch_id:"R001",consultation_fee:300,education:[{degree:"MD",institution:"King Saud University",year:2013}],experience_years:11,rating:4.8,bio_ar:"\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u0629 \u062C\u0644\u062F\u064A\u0629 \u0648\u062A\u062C\u0645\u064A\u0644\u060C \u0645\u062A\u062E\u0635\u0635\u0629 \u0641\u064A \u0627\u0644\u0644\u064A\u0632\u0631 \u0648\u0639\u0644\u0627\u062C \u0627\u0644\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u062C\u0644\u062F\u064A\u0629 \u0627\u0644\u0645\u0632\u0645\u0646\u0629.",bio_en:"Consultant Dermatologist specializing in laser therapy and chronic skin conditions."},{id:"P008",name_ar:"\u062F. \u0641\u064A\u0635\u0644 \u0627\u0644\u063A\u0627\u0645\u062F\u064A",name_en:"Dr. Faisal Al-Ghamdi",department_id:"ophthalmology",specializations:["\u0637\u0628 \u0627\u0644\u0639\u064A\u0648\u0646","\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0645\u064A\u0627\u0647 \u0627\u0644\u0628\u064A\u0636\u0627\u0621","\u062A\u0635\u062D\u064A\u062D \u0627\u0644\u0646\u0638\u0631 \u0628\u0627\u0644\u0644\u064A\u0632\u0643"],specializations_en:["Ophthalmology","Cataract Surgery","LASIK"],languages:["ar","en"],branch_id:"R001",consultation_fee:350,education:[{degree:"MD",institution:"King Saud University",year:2006}],experience_years:18,rating:4.6,bio_ar:"\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u0637\u0628 \u0648\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0639\u064A\u0648\u0646\u060C \u062E\u0628\u0631\u0629 \u0641\u064A \u0639\u0645\u0644\u064A\u0627\u062A \u0627\u0644\u0645\u064A\u0627\u0647 \u0627\u0644\u0628\u064A\u0636\u0627\u0621 \u0648\u0627\u0644\u0644\u064A\u0632\u0643.",bio_en:"Consultant Ophthalmologist experienced in cataract surgery and LASIK."},{id:"P009",name_ar:"\u062F. \u0645\u0647\u0627 \u0627\u0644\u0639\u0646\u0632\u064A",name_en:"Dr. Maha Al-Anazi",department_id:"internal",specializations:["\u0628\u0627\u0637\u0646\u064A\u0629","\u0633\u0643\u0631\u064A","\u063A\u062F\u062F \u0635\u0645\u0627\u0621"],specializations_en:["Internal Medicine","Diabetes","Endocrinology"],languages:["ar","en"],branch_id:"R001",consultation_fee:250,education:[{degree:"MD",institution:"King Khalid University",year:2011}],experience_years:13,rating:4.4,bio_ar:"\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u0629 \u0628\u0627\u0637\u0646\u064A\u0629 \u0648\u063A\u062F\u062F \u0635\u0645\u0627\u0621\u060C \u0645\u062A\u062E\u0635\u0635\u0629 \u0641\u064A \u0639\u0644\u0627\u062C \u0627\u0644\u0633\u0643\u0631\u064A \u0648\u0627\u0636\u0637\u0631\u0627\u0628\u0627\u062A \u0627\u0644\u063A\u062F\u0629 \u0627\u0644\u062F\u0631\u0642\u064A\u0629.",bio_en:"Consultant Internist and Endocrinologist specializing in diabetes and thyroid disorders."},{id:"P010",name_ar:"\u062F. \u062D\u0633\u0646 \u0627\u0644\u064A\u0627\u0645\u064A",name_en:"Dr. Hassan Al-Yami",department_id:"dentistry",specializations:["\u0637\u0628 \u0627\u0644\u0623\u0633\u0646\u0627\u0646","\u0632\u0631\u0627\u0639\u0629 \u0627\u0644\u0623\u0633\u0646\u0627\u0646","\u062A\u0642\u0648\u064A\u0645 \u0627\u0644\u0623\u0633\u0646\u0627\u0646"],specializations_en:["Dentistry","Dental Implants","Orthodontics"],languages:["ar","en"],branch_id:"R001",consultation_fee:200,education:[{degree:"BDS",institution:"Riyadh Colleges of Dentistry",year:2014}],experience_years:10,rating:4.5,bio_ar:"\u0623\u062E\u0635\u0627\u0626\u064A \u0637\u0628 \u0627\u0644\u0623\u0633\u0646\u0627\u0646\u060C \u062E\u0628\u0631\u0629 \u0641\u064A \u0627\u0644\u0632\u0631\u0627\u0639\u0629 \u0648\u0627\u0644\u062A\u0642\u0648\u064A\u0645 \u0627\u0644\u062A\u062C\u0645\u064A\u0644\u064A.",bio_en:"Dental Specialist in implants and cosmetic orthodontics."},{id:"P011",name_ar:"\u062F. \u0633\u0627\u0645\u064A \u0627\u0644\u062C\u0647\u0646\u064A",name_en:"Dr. Sami Al-Juhani",department_id:"urology",specializations:["\u0645\u0633\u0627\u0644\u0643 \u0628\u0648\u0644\u064A\u0629","\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0643\u0644\u0649","\u062D\u0635\u0648\u0627\u062A \u0627\u0644\u0645\u0633\u0627\u0644\u0643"],specializations_en:["Urology","Kidney Surgery","Urinary Stones"],languages:["ar","en"],branch_id:"U001",consultation_fee:300,education:[{degree:"MD",institution:"Taibah University",year:2010}],experience_years:14,rating:4.3,bio_ar:"\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u0645\u0633\u0627\u0644\u0643 \u0628\u0648\u0644\u064A\u0629\u060C \u062E\u0628\u0631\u0629 \u0641\u064A \u062C\u0631\u0627\u062D\u0627\u062A \u0627\u0644\u0643\u0644\u0649 \u0648\u0627\u0644\u062D\u0635\u0648\u0627\u062A \u0628\u0627\u0644\u0645\u0646\u0638\u0627\u0631.",bio_en:"Consultant Urologist experienced in laparoscopic kidney and stone surgeries."},{id:"P012",name_ar:"\u062F. \u0644\u064A\u0644\u0649 \u0627\u0644\u0642\u0631\u0634\u064A",name_en:"Dr. Layla Al-Qurashi",department_id:"psychiatry",specializations:["\u0637\u0628 \u0646\u0641\u0633\u064A","\u0627\u0644\u0642\u0644\u0642 \u0648\u0627\u0644\u0627\u0643\u062A\u0626\u0627\u0628","\u0627\u0644\u0635\u062D\u0629 \u0627\u0644\u0646\u0641\u0633\u064A\u0629"],specializations_en:["Psychiatry","Anxiety & Depression","Mental Health"],languages:["ar","en"],branch_id:"R001",consultation_fee:350,education:[{degree:"MD",institution:"King Saud University",year:2013}],experience_years:11,rating:4.7,bio_ar:"\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u0629 \u0637\u0628 \u0646\u0641\u0633\u064A\u060C \u0645\u062A\u062E\u0635\u0635\u0629 \u0641\u064A \u0639\u0644\u0627\u062C \u0627\u0644\u0642\u0644\u0642 \u0648\u0627\u0644\u0627\u0643\u062A\u0626\u0627\u0628 \u0648\u0627\u0644\u0627\u0636\u0637\u0631\u0627\u0628\u0627\u062A \u0627\u0644\u0646\u0641\u0633\u064A\u0629.",bio_en:"Consultant Psychiatrist specializing in anxiety, depression, and mental health disorders."}],Ze={r001:"R001",riyadh:"R001",m001:"M001",madinah:"M001",madina:"M001",medina:"M001",k001:"K001",khamis:"K001",khamis_mushayt:"K001",khamis_mushait:"K001","khamis mushayt":"K001",j001:"J001",jazan:"J001",jizan:"J001",u001:"U001",unaizah:"U001",unayzah:"U001"};r(u0,"normalizeBranch");r(e0,"stripDoctorPrefix");r(Ou,"doctorName");r(qu,"getProvidersFromDB");r(z,"getProviders");r($,"getProvider");r(a0,"getProvidersByBranch");r(t0,"getProvidersByDepartment")});var Qu={};j(Qu,{handleChat:()=>G});async function G(u,a){let e=await u.json(),{message:t,session_id:n,language:i}=e;if(!t)return c({success:!1,message:"Message is required"},400);let s=n||"ses_"+Date.now().toString(36),o=[];try{let{results:m}=await a.DB.prepare("SELECT role, content FROM chat_history WHERE session_id = ? ORDER BY created_at DESC LIMIT 6").bind(s).all();m&&(o=m.reverse().map(p=>({role:p.role,content:p.content})))}catch(m){console.error("DB history error:",m)}let l=[{role:"system",content:p0},...o,{role:"user",content:t}],d;try{let m=await a.AI.run(x.AI_MODEL,{messages:l,max_tokens:x.AI_MAX_TOKENS,temperature:x.AI_TEMPERATURE});d=m.response||m.choices?.[0]?.message?.content||""}catch(m){console.error("AI error, trying CF fallback:",m);try{let p=await a.AI.run(x.AI_FALLBACK_MODEL,{messages:l,max_tokens:x.AI_MAX_TOKENS,temperature:x.AI_TEMPERATURE});d=p.response||p.choices?.[0]?.message?.content||""}catch{if(a.DEEPSEEK_API_KEY)try{d=(await(await fetch("https://api.deepseek.com/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${a.DEEPSEEK_API_KEY}`},body:JSON.stringify({model:"deepseek-chat",messages:l,max_tokens:x.AI_MAX_TOKENS,temperature:x.AI_TEMPERATURE}),signal:AbortSignal.timeout(15e3)})).json()).choices?.[0]?.message?.content||F(t,i)}catch(g){console.error("DeepSeek fallback error:",g),d=F(t,i)}else d=F(t,i)}}try{await a.DB.prepare("INSERT INTO chat_history (session_id, role, content) VALUES (?, ?, ?), (?, ?, ?)").bind(s,"user",t,s,"assistant",d).run()}catch(m){console.error("DB save error:",m)}return c({success:!0,response:d,session_id:s})}function F(u,a){let e=(u||"").toLowerCase();return/[\u0600-\u06FF]/.test(u)||a==="ar"?e.includes("\u0645\u0648\u0639\u062F")||e.includes("\u062D\u062C\u0632")?"\u064A\u0645\u0643\u0646\u0643 \u062D\u062C\u0632 \u0645\u0648\u0639\u062F \u0645\u0646 \u062E\u0644\u0627\u0644 \u0645\u0648\u0642\u0639\u0646\u0627 \u0623\u0648 \u0627\u0644\u062A\u0637\u0628\u064A\u0642\u060C \u0623\u0648 \u0627\u0644\u0627\u062A\u0635\u0627\u0644 \u0639\u0644\u0649 966920000094. \u0647\u0644 \u062A\u062D\u062A\u0627\u062C \u0645\u0633\u0627\u0639\u062F\u0629 \u0641\u064A \u0627\u062E\u062A\u064A\u0627\u0631 \u0627\u0644\u0637\u0628\u064A\u0628 \u0627\u0644\u0645\u0646\u0627\u0633\u0628\u061F":e.includes("\u0637\u0628\u064A\u0628")||e.includes("\u062F\u0643\u062A\u0648\u0631")?"\u0644\u062F\u064A\u0646\u0627 \u0623\u0643\u062B\u0631 \u0645\u0646 700 \u0637\u0628\u064A\u0628 \u0648\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u0641\u064A 5 \u0641\u0631\u0648\u0639. \u062F. \u0645\u062D\u0645\u062F \u0628\u0643\u0631\u064A (\u062C\u0631\u0627\u062D\u0629 \u062A\u062C\u0645\u064A\u0644\u064A\u0629) \u0627\u0644\u0623\u0639\u0644\u0649 \u062A\u0642\u064A\u064A\u0645\u0627\u064B. \u062A\u0635\u0641\u062D \u0635\u0641\u062D\u0629 \u0627\u0644\u0623\u0637\u0628\u0627\u0621 \u0644\u0644\u0628\u062D\u062B \u062D\u0633\u0628 \u0627\u0644\u062A\u062E\u0635\u0635.":e.includes("\u062A\u0623\u0645\u064A\u0646")||e.includes("\u0645\u0637\u0627\u0644\u0628\u0629")||e.includes("nphies")?"\u0646\u0638\u0627\u0645 NPHIES \u064A\u062F\u0639\u0645 \u0627\u0644\u0645\u0637\u0627\u0644\u0628\u0627\u062A \u0627\u0644\u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A\u0629. \u0646\u062A\u0639\u0627\u0642\u062F \u0645\u0639 10 \u0634\u0631\u0643\u0627\u062A \u062A\u0623\u0645\u064A\u0646: Bupa Arabia\u060C \u062A\u0648\u064A\u0646\u0629\u060C \u0645\u064A\u062F\u063A\u0644\u0641\u060C \u0648\u063A\u064A\u0631\u0647\u0627. \u062A\u062D\u0642\u0642 \u0645\u0646 \u0623\u0647\u0644\u064A\u062A\u0643 \u0627\u0644\u062A\u0623\u0645\u064A\u0646\u064A\u0629 \u0639\u0628\u0631 \u0635\u0641\u062D\u0629 \u0627\u0644\u062A\u062D\u0642\u0642.":e.includes("\u0641\u0631\u0639")||e.includes("\u0639\u0646\u0648\u0627\u0646")||e.includes("\u0645\u0648\u0642\u0639")?"5 \u0641\u0631\u0648\u0639: \u0627\u0644\u0631\u064A\u0627\u0636 (\u0637\u0631\u064A\u0642 \u0627\u0644\u062F\u0627\u0626\u0631\u064A \u0627\u0644\u0634\u0631\u0642\u064A - \u0627\u0644\u0631\u0628\u0648\u0629)\u060C \u062C\u0627\u0632\u0627\u0646 (\u0627\u0644\u0643\u0648\u0631\u0646\u064A\u0634)\u060C \u062E\u0645\u064A\u0633 \u0645\u0634\u064A\u0637 (\u0627\u0644\u0623\u0645\u064A\u0631 \u0633\u0644\u0637\u0627\u0646)\u060C \u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0645\u0646\u0648\u0631\u0629 (\u0637\u0631\u064A\u0642 \u0627\u0644\u0647\u062C\u0631\u0629)\u060C \u0639\u0646\u064A\u0632\u0629 (\u0627\u0644\u0642\u0635\u064A\u0645). \u0644\u0644\u0627\u062A\u0635\u0627\u0644: 966920000094.":e.includes("\u0639\u0646")||e.includes("\u0627\u0644\u0645\u0633\u062A\u0634\u0641\u0649")||e.includes("\u0645\u0646 \u0623\u0646\u062A\u0645")||e.includes("\u0646\u0628\u0630\u0629")?"\u062A\u0623\u0633\u0633\u062A \u0645\u062C\u0645\u0648\u0639\u0629 \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A \u0639\u0627\u0645 1999\u060C \u0648\u062A\u062F\u064A\u0631\u0647\u0627 \u0634\u0631\u0643\u0629 \u0627\u0644\u0627\u0646\u0645\u0627\u0621 \u0644\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0637\u0628\u064A\u0629 \u0628\u0631\u0626\u0627\u0633\u0629 \u0623. \u0645\u062D\u0645\u062F \u0628\u0646 \u0646\u0627\u0635\u0631 \u0627\u0644\u062C\u0627\u0631 \u0627\u0644\u0644\u0647. \u062A\u0636\u0645 5 \u0641\u0631\u0648\u0639 \u0648\u0623\u0643\u062B\u0631 \u0645\u0646 700 \u0637\u0628\u064A\u0628 \u06483500 \u0645\u0648\u0638\u0641 \u06481200 \u0633\u0631\u064A\u0631. \u0627\u0644\u0631\u0626\u064A\u0633 \u0627\u0644\u062A\u0646\u0641\u064A\u0630\u064A: \u062F. \u0641\u0648\u0632\u064A\u0629 \u0627\u0644\u062C\u0627\u0631 \u0627\u0644\u0644\u0647.":e.includes("\u0637\u0648\u0627\u0631\u0626")||e.includes("\u0625\u0633\u0639\u0627\u0641")?"\u26A0\uFE0F \u0625\u0630\u0627 \u0643\u0627\u0646\u062A \u062D\u0627\u0644\u0629 \u0637\u0627\u0631\u0626\u0629\u060C \u062A\u0648\u062C\u0651\u0647 \u0641\u0648\u0631\u0627\u064B \u0644\u0623\u0642\u0631\u0628 \u0637\u0648\u0627\u0631\u0626 \u0623\u0648 \u0627\u062A\u0635\u0644 \u0628\u0627\u0644\u0647\u0644\u0627\u0644 \u0627\u0644\u0623\u062D\u0645\u0631 997. \u062C\u0645\u064A\u0639 \u0641\u0631\u0648\u0639\u0646\u0627 \u0628\u0647\u0627 \u0637\u0648\u0627\u0631\u0626 24 \u0633\u0627\u0639\u0629.":"\u0623\u0647\u0644\u0627\u064B \u0628\u0643 \u0641\u064A \u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A. \u0643\u064A\u0641 \u064A\u0645\u0643\u0646\u0646\u064A \u0645\u0633\u0627\u0639\u062F\u062A\u0643\u061F \u062D\u062C\u0648\u0632\u0627\u062A\u060C \u0645\u0639\u0644\u0648\u0645\u0627\u062A \u0623\u0637\u0628\u0627\u0621\u060C \u0627\u0633\u062A\u0639\u0644\u0627\u0645 \u062A\u0623\u0645\u064A\u0646\u060C \u0623\u0648 \u0645\u0639\u0644\u0648\u0645\u0627\u062A \u0641\u0631\u0648\u0639.":e.includes("appointment")||e.includes("book")?"Book online via our portal/app or call 966920000094. Need help choosing a doctor?":e.includes("doctor")||e.includes("physician")?"We have 700+ doctors across 5 branches. Dr. Mohamed Bakry (Plastic Surgery) highest rated. Browse our providers page.":e.includes("insurance")||e.includes("claim")||e.includes("nphies")?"NPHIES e-claim system supported. 10 insurance partners: Bupa Arabia, Tawuniya, MedGulf, and more. Check eligibility on our portal.":e.includes("branch")||e.includes("location")||e.includes("address")?"5 branches: Riyadh (Eastern Ring/Al-Rabwa), Jazan (Corniche), Khamis Mushayt (Prince Sultan Rd), Madinah (Al-Hijra Rd), Unayzah (Al-Qassim). Call 966920000094.":e.includes("about")||e.includes("history")||e.includes("who")?"Hayat National Hospitals Group was founded in 1999. Owned by Al-Inmaa Medical Services Co., chaired by A. Mohammed bin Nasser bin Jar Allah. CEO Dr. Fawzia Al-Jar Allah. 700+ doctors, 3,500+ staff, 1,200+ beds across 5 branches.":e.includes("emergency")?"If emergency: go to nearest ER or call Saudi Red Crescent 997. All branches have 24/7 ER.":"Welcome to Hayat National Hospital. How can I help? Appointments, doctors, insurance, or branch info."}var p0,V=H(()=>{_();S();p0=`You are BasmaGuist Medical (\u0628\u0633\u0645\u0629 \u063A\u064A\u0633\u062A \u0627\u0644\u0637\u0628\u064A\u0629), the official AI assistant for \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A (Hayat National Hospitals Group), powered by BrainSAIT Healthcare OS.
+       ORDER BY specialty, last_name_ar`
+    ).all();
+    if (results && results.length > 0) {
+      return results.map((r) => ({
+        id: r.provider_code || "P" + String(r.id).padStart(3, "0"),
+        db_id: r.id,
+        name_ar: doctorName("\u062F. ", r.first_name_ar, r.last_name_ar),
+        name_en: doctorName("Dr. ", r.first_name_en || r.first_name_ar, r.last_name_en || r.last_name_ar),
+        specialty: r.specialty || "",
+        subspecialty: r.subspecialty || "",
+        department: r.department || "",
+        branch: r.clinic_location || r.givc_branch_code || "",
+        branch_id: normalizeBranch(r.givc_branch_code || r.clinic_location || ""),
+        phone: r.phone || "",
+        email: r.email || "",
+        givc_oid: r.givc_oid || null,
+        givc_registered: r.givc_registered === 1,
+        rating: 4,
+        experience_years: 10,
+        source: "d1"
+      }));
+    }
+  } catch (e) {
+    console.error("DB providers error:", e);
+  }
+  return null;
+}
+async function getProviders(env) {
+  const dbProviders = await getProvidersFromDB(env);
+  return dbProviders || providers;
+}
+async function getProvider(id, env) {
+  if (env && env.DB) {
+    const dbProviders = await getProvidersFromDB(env);
+    if (dbProviders) {
+      const found = dbProviders.find((p) => p.id === id || String(p.db_id) === String(id) || p.givc_oid === id);
+      if (found) return found;
+    }
+  }
+  return providers.find((p) => p.id === id) || null;
+}
+function getProvidersByBranch(branchId) {
+  return providers.filter((p) => p.branch_id === branchId);
+}
+function getProvidersByDepartment(deptId) {
+  return providers.filter((p) => p.department_id === deptId);
+}
+var providers, BRANCH_ALIASES2;
+var init_providers = __esm({
+  "src/routes/providers.js"() {
+    providers = [
+      {
+        id: "P001",
+        name_ar: "\u062F. \u0645\u062D\u0645\u062F \u0628\u0643\u0631\u064A",
+        name_en: "Dr. Mohamed Bakry",
+        department_id: "surgery",
+        specializations: ["\u062C\u0631\u0627\u062D\u0629 \u062A\u062C\u0645\u064A\u0644\u064A\u0629", "\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0648\u062C\u0647 \u0648\u0627\u0644\u0641\u0643\u064A\u0646"],
+        specializations_en: ["Plastic Surgery", "Maxillofacial Surgery"],
+        languages: ["ar", "en"],
+        branch_id: "R001",
+        consultation_fee: 500,
+        education: [{ degree: "MD", institution: "Cairo University", year: 2005 }],
+        experience_years: 19,
+        rating: 4.9,
+        bio_ar: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u062A\u062C\u0645\u064A\u0644 \u0648\u0627\u0644\u062A\u0631\u0645\u064A\u0645\u060C \u062E\u0628\u0631\u0629 \u0648\u0627\u0633\u0639\u0629 \u0641\u064A \u0639\u0645\u0644\u064A\u0627\u062A \u0627\u0644\u0648\u062C\u0647 \u0648\u0627\u0644\u0641\u0643\u064A\u0646.",
+        bio_en: "Consultant Plastic and Reconstructive Surgeon with extensive experience in facial surgery."
+      },
+      {
+        id: "P002",
+        name_ar: "\u062F. \u0639\u0628\u062F\u0627\u0644\u0644\u0647 \u0627\u0644\u0642\u062D\u0637\u0627\u0646\u064A",
+        name_en: "Dr. Abdullah Al-Qahtani",
+        department_id: "cardiology",
+        specializations: ["\u0642\u0633\u0637\u0631\u0629 \u0642\u0644\u0628\u064A\u0629", "\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0642\u0644\u0628 \u0627\u0644\u062A\u062F\u0627\u062E\u0644\u064A\u0629"],
+        specializations_en: ["Cardiac Catheterization", "Interventional Cardiology"],
+        languages: ["ar", "en"],
+        branch_id: "R001",
+        consultation_fee: 400,
+        education: [{ degree: "MD", institution: "King Saud University", year: 2008 }],
+        experience_years: 16,
+        rating: 4.7,
+        bio_ar: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0642\u0644\u0628 \u0648\u0627\u0644\u0642\u0633\u0637\u0631\u0629\u060C \u0631\u0626\u064A\u0633 \u0642\u0633\u0645 \u0627\u0644\u0642\u0644\u0628 \u0628\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u0631\u064A\u0627\u0636.",
+        bio_en: "Consultant Cardiologist and Interventionalist, Head of Cardiology at Riyadh branch."
+      },
+      {
+        id: "P003",
+        name_ar: "\u062F. \u0641\u0627\u0637\u0645\u0629 \u0627\u0644\u0632\u0647\u0631\u0627\u0646\u064A",
+        name_en: "Dr. Fatima Al-Zahrani",
+        department_id: "obgyn",
+        specializations: ["\u0646\u0633\u0627\u0621 \u0648\u0648\u0644\u0627\u062F\u0629", "\u0639\u0642\u0645 \u0648\u0623\u0637\u0641\u0627\u0644 \u0623\u0646\u0627\u0628\u064A\u0628"],
+        specializations_en: ["Obstetrics & Gynecology", "Infertility & IVF"],
+        languages: ["ar", "en"],
+        branch_id: "R001",
+        consultation_fee: 350,
+        education: [{ degree: "MD", institution: "King Abdulaziz University", year: 2010 }],
+        experience_years: 14,
+        rating: 4.8,
+        bio_ar: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u0629 \u0646\u0633\u0627\u0621 \u0648\u0648\u0644\u0627\u062F\u0629\u060C \u0645\u062A\u062E\u0635\u0635\u0629 \u0641\u064A \u0639\u0644\u0627\u062C \u0627\u0644\u0639\u0642\u0645 \u0648\u0623\u0637\u0641\u0627\u0644 \u0627\u0644\u0623\u0646\u0627\u0628\u064A\u0628.",
+        bio_en: "Consultant OB/GYN specializing in infertility treatment and IVF."
+      },
+      {
+        id: "P004",
+        name_ar: "\u062F. \u062E\u0627\u0644\u062F \u0627\u0644\u0634\u0647\u0631\u0627\u0646\u064A",
+        name_en: "Dr. Khaled Al-Shahrani",
+        department_id: "orthopedics",
+        specializations: ["\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0639\u0638\u0627\u0645", "\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0645\u0641\u0627\u0635\u0644", "\u0645\u0646\u0638\u0627\u0631 \u0627\u0644\u0645\u0641\u0627\u0635\u0644"],
+        specializations_en: ["Orthopedic Surgery", "Joint Surgery", "Arthroscopy"],
+        languages: ["ar", "en"],
+        branch_id: "R001",
+        consultation_fee: 400,
+        education: [{ degree: "MD", institution: "King Faisal University", year: 2009 }],
+        experience_years: 15,
+        rating: 4.6,
+        bio_ar: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0639\u0638\u0627\u0645 \u0648\u0627\u0644\u0645\u0641\u0627\u0635\u0644\u060C \u062E\u0628\u0631\u0629 \u0641\u064A \u0639\u0645\u0644\u064A\u0627\u062A \u0627\u0644\u0645\u0646\u0638\u0627\u0631 \u0648\u0627\u0644\u062A\u0628\u062F\u064A\u0644.",
+        bio_en: "Consultant Orthopedic and Joint Surgeon, experienced in arthroscopy and joint replacement."
+      },
+      {
+        id: "P005",
+        name_ar: "\u062F. \u0633\u0627\u0631\u0629 \u0627\u0644\u062D\u0631\u0628\u064A",
+        name_en: "Dr. Sarah Al-Harbi",
+        department_id: "pediatrics",
+        specializations: ["\u0637\u0628 \u0627\u0644\u0623\u0637\u0641\u0627\u0644", "\u062D\u062F\u064A\u062B\u064A \u0627\u0644\u0648\u0644\u0627\u062F\u0629"],
+        specializations_en: ["Pediatrics", "Neonatology"],
+        languages: ["ar", "en"],
+        branch_id: "J001",
+        consultation_fee: 250,
+        education: [{ degree: "MD", institution: "Umm Al-Qura University", year: 2012 }],
+        experience_years: 12,
+        rating: 4.5,
+        bio_ar: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u0629 \u0637\u0628 \u0623\u0637\u0641\u0627\u0644 \u0648\u062D\u062F\u064A\u062B\u064A \u0627\u0644\u0648\u0644\u0627\u062F\u0629\u060C \u0631\u0626\u064A\u0633\u0629 \u0642\u0633\u0645 \u0627\u0644\u0623\u0637\u0641\u0627\u0644 \u0628\u062C\u0627\u0632\u0627\u0646.",
+        bio_en: "Consultant Pediatrician and Neonatologist, Head of Pediatrics at Jazan."
+      },
+      {
+        id: "P006",
+        name_ar: "\u062F. \u0623\u062D\u0645\u062F \u0627\u0644\u0645\u0637\u064A\u0631\u064A",
+        name_en: "Dr. Ahmed Al-Mutairi",
+        department_id: "neurology",
+        specializations: ["\u0637\u0628 \u0627\u0644\u0623\u0639\u0635\u0627\u0628", "\u0627\u0644\u0635\u0631\u0639", "\u0627\u0644\u0635\u062F\u0627\u0639 \u0627\u0644\u0646\u0635\u0641\u064A"],
+        specializations_en: ["Neurology", "Epilepsy", "Migraine"],
+        languages: ["ar", "en"],
+        branch_id: "M001",
+        consultation_fee: 350,
+        education: [{ degree: "MD", institution: "King Saud University", year: 2007 }],
+        experience_years: 17,
+        rating: 4.7,
+        bio_ar: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u0637\u0628 \u0627\u0644\u0623\u0639\u0635\u0627\u0628\u060C \u0645\u062A\u062E\u0635\u0635 \u0641\u064A \u0639\u0644\u0627\u062C \u0627\u0644\u0635\u0631\u0639 \u0648\u0627\u0644\u0635\u062F\u0627\u0639 \u0627\u0644\u0645\u0632\u0645\u0646.",
+        bio_en: "Consultant Neurologist specializing in epilepsy and chronic headache management."
+      },
+      {
+        id: "P007",
+        name_ar: "\u062F. \u0646\u0648\u0631\u0629 \u0627\u0644\u062F\u0648\u0633\u0631\u064A",
+        name_en: "Dr. Noura Al-Dosari",
+        department_id: "dermatology",
+        specializations: ["\u062C\u0644\u062F\u064A\u0629", "\u0644\u064A\u0632\u0631", "\u0639\u0644\u0627\u062C \u0627\u0644\u0628\u0647\u0627\u0642 \u0648\u0627\u0644\u0635\u062F\u0641\u064A\u0629"],
+        specializations_en: ["Dermatology", "Laser Therapy", "Vitiligo & Psoriasis"],
+        languages: ["ar", "en"],
+        branch_id: "R001",
+        consultation_fee: 300,
+        education: [{ degree: "MD", institution: "King Saud University", year: 2013 }],
+        experience_years: 11,
+        rating: 4.8,
+        bio_ar: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u0629 \u062C\u0644\u062F\u064A\u0629 \u0648\u062A\u062C\u0645\u064A\u0644\u060C \u0645\u062A\u062E\u0635\u0635\u0629 \u0641\u064A \u0627\u0644\u0644\u064A\u0632\u0631 \u0648\u0639\u0644\u0627\u062C \u0627\u0644\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u062C\u0644\u062F\u064A\u0629 \u0627\u0644\u0645\u0632\u0645\u0646\u0629.",
+        bio_en: "Consultant Dermatologist specializing in laser therapy and chronic skin conditions."
+      },
+      {
+        id: "P008",
+        name_ar: "\u062F. \u0641\u064A\u0635\u0644 \u0627\u0644\u063A\u0627\u0645\u062F\u064A",
+        name_en: "Dr. Faisal Al-Ghamdi",
+        department_id: "ophthalmology",
+        specializations: ["\u0637\u0628 \u0627\u0644\u0639\u064A\u0648\u0646", "\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0645\u064A\u0627\u0647 \u0627\u0644\u0628\u064A\u0636\u0627\u0621", "\u062A\u0635\u062D\u064A\u062D \u0627\u0644\u0646\u0638\u0631 \u0628\u0627\u0644\u0644\u064A\u0632\u0643"],
+        specializations_en: ["Ophthalmology", "Cataract Surgery", "LASIK"],
+        languages: ["ar", "en"],
+        branch_id: "R001",
+        consultation_fee: 350,
+        education: [{ degree: "MD", institution: "King Saud University", year: 2006 }],
+        experience_years: 18,
+        rating: 4.6,
+        bio_ar: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u0637\u0628 \u0648\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0639\u064A\u0648\u0646\u060C \u062E\u0628\u0631\u0629 \u0641\u064A \u0639\u0645\u0644\u064A\u0627\u062A \u0627\u0644\u0645\u064A\u0627\u0647 \u0627\u0644\u0628\u064A\u0636\u0627\u0621 \u0648\u0627\u0644\u0644\u064A\u0632\u0643.",
+        bio_en: "Consultant Ophthalmologist experienced in cataract surgery and LASIK."
+      },
+      {
+        id: "P009",
+        name_ar: "\u062F. \u0645\u0647\u0627 \u0627\u0644\u0639\u0646\u0632\u064A",
+        name_en: "Dr. Maha Al-Anazi",
+        department_id: "internal",
+        specializations: ["\u0628\u0627\u0637\u0646\u064A\u0629", "\u0633\u0643\u0631\u064A", "\u063A\u062F\u062F \u0635\u0645\u0627\u0621"],
+        specializations_en: ["Internal Medicine", "Diabetes", "Endocrinology"],
+        languages: ["ar", "en"],
+        branch_id: "R001",
+        consultation_fee: 250,
+        education: [{ degree: "MD", institution: "King Khalid University", year: 2011 }],
+        experience_years: 13,
+        rating: 4.4,
+        bio_ar: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u0629 \u0628\u0627\u0637\u0646\u064A\u0629 \u0648\u063A\u062F\u062F \u0635\u0645\u0627\u0621\u060C \u0645\u062A\u062E\u0635\u0635\u0629 \u0641\u064A \u0639\u0644\u0627\u062C \u0627\u0644\u0633\u0643\u0631\u064A \u0648\u0627\u0636\u0637\u0631\u0627\u0628\u0627\u062A \u0627\u0644\u063A\u062F\u0629 \u0627\u0644\u062F\u0631\u0642\u064A\u0629.",
+        bio_en: "Consultant Internist and Endocrinologist specializing in diabetes and thyroid disorders."
+      },
+      {
+        id: "P010",
+        name_ar: "\u062F. \u062D\u0633\u0646 \u0627\u0644\u064A\u0627\u0645\u064A",
+        name_en: "Dr. Hassan Al-Yami",
+        department_id: "dentistry",
+        specializations: ["\u0637\u0628 \u0627\u0644\u0623\u0633\u0646\u0627\u0646", "\u0632\u0631\u0627\u0639\u0629 \u0627\u0644\u0623\u0633\u0646\u0627\u0646", "\u062A\u0642\u0648\u064A\u0645 \u0627\u0644\u0623\u0633\u0646\u0627\u0646"],
+        specializations_en: ["Dentistry", "Dental Implants", "Orthodontics"],
+        languages: ["ar", "en"],
+        branch_id: "R001",
+        consultation_fee: 200,
+        education: [{ degree: "BDS", institution: "Riyadh Colleges of Dentistry", year: 2014 }],
+        experience_years: 10,
+        rating: 4.5,
+        bio_ar: "\u0623\u062E\u0635\u0627\u0626\u064A \u0637\u0628 \u0627\u0644\u0623\u0633\u0646\u0627\u0646\u060C \u062E\u0628\u0631\u0629 \u0641\u064A \u0627\u0644\u0632\u0631\u0627\u0639\u0629 \u0648\u0627\u0644\u062A\u0642\u0648\u064A\u0645 \u0627\u0644\u062A\u062C\u0645\u064A\u0644\u064A.",
+        bio_en: "Dental Specialist in implants and cosmetic orthodontics."
+      },
+      {
+        id: "P011",
+        name_ar: "\u062F. \u0633\u0627\u0645\u064A \u0627\u0644\u062C\u0647\u0646\u064A",
+        name_en: "Dr. Sami Al-Juhani",
+        department_id: "urology",
+        specializations: ["\u0645\u0633\u0627\u0644\u0643 \u0628\u0648\u0644\u064A\u0629", "\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0643\u0644\u0649", "\u062D\u0635\u0648\u0627\u062A \u0627\u0644\u0645\u0633\u0627\u0644\u0643"],
+        specializations_en: ["Urology", "Kidney Surgery", "Urinary Stones"],
+        languages: ["ar", "en"],
+        branch_id: "U001",
+        consultation_fee: 300,
+        education: [{ degree: "MD", institution: "Taibah University", year: 2010 }],
+        experience_years: 14,
+        rating: 4.3,
+        bio_ar: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u0645\u0633\u0627\u0644\u0643 \u0628\u0648\u0644\u064A\u0629\u060C \u062E\u0628\u0631\u0629 \u0641\u064A \u062C\u0631\u0627\u062D\u0627\u062A \u0627\u0644\u0643\u0644\u0649 \u0648\u0627\u0644\u062D\u0635\u0648\u0627\u062A \u0628\u0627\u0644\u0645\u0646\u0638\u0627\u0631.",
+        bio_en: "Consultant Urologist experienced in laparoscopic kidney and stone surgeries."
+      },
+      {
+        id: "P012",
+        name_ar: "\u062F. \u0644\u064A\u0644\u0649 \u0627\u0644\u0642\u0631\u0634\u064A",
+        name_en: "Dr. Layla Al-Qurashi",
+        department_id: "psychiatry",
+        specializations: ["\u0637\u0628 \u0646\u0641\u0633\u064A", "\u0627\u0644\u0642\u0644\u0642 \u0648\u0627\u0644\u0627\u0643\u062A\u0626\u0627\u0628", "\u0627\u0644\u0635\u062D\u0629 \u0627\u0644\u0646\u0641\u0633\u064A\u0629"],
+        specializations_en: ["Psychiatry", "Anxiety & Depression", "Mental Health"],
+        languages: ["ar", "en"],
+        branch_id: "R001",
+        consultation_fee: 350,
+        education: [{ degree: "MD", institution: "King Saud University", year: 2013 }],
+        experience_years: 11,
+        rating: 4.7,
+        bio_ar: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u0629 \u0637\u0628 \u0646\u0641\u0633\u064A\u060C \u0645\u062A\u062E\u0635\u0635\u0629 \u0641\u064A \u0639\u0644\u0627\u062C \u0627\u0644\u0642\u0644\u0642 \u0648\u0627\u0644\u0627\u0643\u062A\u0626\u0627\u0628 \u0648\u0627\u0644\u0627\u0636\u0637\u0631\u0627\u0628\u0627\u062A \u0627\u0644\u0646\u0641\u0633\u064A\u0629.",
+        bio_en: "Consultant Psychiatrist specializing in anxiety, depression, and mental health disorders."
+      }
+    ];
+    BRANCH_ALIASES2 = {
+      r001: "R001",
+      riyadh: "R001",
+      m001: "M001",
+      madinah: "M001",
+      madina: "M001",
+      medina: "M001",
+      k001: "K001",
+      khamis: "K001",
+      khamis_mushayt: "K001",
+      khamis_mushait: "K001",
+      "khamis mushayt": "K001",
+      j001: "J001",
+      jazan: "J001",
+      jizan: "J001",
+      u001: "U001",
+      unaizah: "U001",
+      unayzah: "U001"
+    };
+    __name(normalizeBranch, "normalizeBranch");
+    __name(stripDoctorPrefix, "stripDoctorPrefix");
+    __name(doctorName, "doctorName");
+    __name(getProvidersFromDB, "getProvidersFromDB");
+    __name(getProviders, "getProviders");
+    __name(getProvider, "getProvider");
+    __name(getProvidersByBranch, "getProvidersByBranch");
+    __name(getProvidersByDepartment, "getProvidersByDepartment");
+  }
+});
+
+// src/ai/chat.js
+var chat_exports = {};
+__export(chat_exports, {
+  handleChat: () => handleChat
+});
+async function handleChat(req, env) {
+  const body = await req.json();
+  const { message, session_id, language } = body;
+  if (!message) {
+    return json({ success: false, message: "Message is required" }, 400);
+  }
+  const sid = session_id || "ses_" + Date.now().toString(36);
+  let history = [];
+  try {
+    const { results } = await env.DB.prepare(
+      "SELECT role, content FROM chat_history WHERE session_id = ? ORDER BY created_at DESC LIMIT 6"
+    ).bind(sid).all();
+    if (results) {
+      history = results.reverse().map((r) => ({ role: r.role, content: r.content }));
+    }
+  } catch (e) {
+    console.error("DB history error:", e);
+  }
+  const messages = [
+    { role: "system", content: SYSTEM_PROMPT },
+    ...history,
+    { role: "user", content: message }
+  ];
+  let aiResponse;
+  try {
+    const ai = await env.AI.run(CONFIG.AI_MODEL, {
+      messages,
+      max_tokens: CONFIG.AI_MAX_TOKENS,
+      temperature: CONFIG.AI_TEMPERATURE
+    });
+    aiResponse = ai.response || ai.choices?.[0]?.message?.content || "";
+  } catch (e) {
+    console.error("AI error, trying CF fallback:", e);
+    try {
+      const ai = await env.AI.run(CONFIG.AI_FALLBACK_MODEL, {
+        messages,
+        max_tokens: CONFIG.AI_MAX_TOKENS,
+        temperature: CONFIG.AI_TEMPERATURE
+      });
+      aiResponse = ai.response || ai.choices?.[0]?.message?.content || "";
+    } catch (e2) {
+      if (env.DEEPSEEK_API_KEY) {
+        try {
+          const dsRes = await fetch("https://api.deepseek.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${env.DEEPSEEK_API_KEY}`
+            },
+            body: JSON.stringify({
+              model: "deepseek-chat",
+              messages,
+              max_tokens: CONFIG.AI_MAX_TOKENS,
+              temperature: CONFIG.AI_TEMPERATURE
+            }),
+            signal: AbortSignal.timeout(15e3)
+          });
+          const dsData = await dsRes.json();
+          aiResponse = dsData.choices?.[0]?.message?.content || getFallbackResponse(message, language);
+        } catch (e3) {
+          console.error("DeepSeek fallback error:", e3);
+          aiResponse = getFallbackResponse(message, language);
+        }
+      } else {
+        aiResponse = getFallbackResponse(message, language);
+      }
+    }
+  }
+  try {
+    await env.DB.prepare(
+      "INSERT INTO chat_history (session_id, role, content) VALUES (?, ?, ?), (?, ?, ?)"
+    ).bind(sid, "user", message, sid, "assistant", aiResponse).run();
+  } catch (e) {
+    console.error("DB save error:", e);
+  }
+  return json({
+    success: true,
+    response: aiResponse,
+    session_id: sid
+  });
+}
+function getFallbackResponse(message, lang) {
+  const msg = (message || "").toLowerCase();
+  const isAr = /[\u0600-\u06FF]/.test(message) || lang === "ar";
+  if (isAr) {
+    if (msg.includes("\u0645\u0648\u0639\u062F") || msg.includes("\u062D\u062C\u0632")) {
+      return "\u064A\u0645\u0643\u0646\u0643 \u062D\u062C\u0632 \u0645\u0648\u0639\u062F \u0645\u0646 \u062E\u0644\u0627\u0644 \u0645\u0648\u0642\u0639\u0646\u0627 \u0623\u0648 \u0627\u0644\u062A\u0637\u0628\u064A\u0642\u060C \u0623\u0648 \u0627\u0644\u0627\u062A\u0635\u0627\u0644 \u0639\u0644\u0649 966920000094. \u0647\u0644 \u062A\u062D\u062A\u0627\u062C \u0645\u0633\u0627\u0639\u062F\u0629 \u0641\u064A \u0627\u062E\u062A\u064A\u0627\u0631 \u0627\u0644\u0637\u0628\u064A\u0628 \u0627\u0644\u0645\u0646\u0627\u0633\u0628\u061F";
+    }
+    if (msg.includes("\u0637\u0628\u064A\u0628") || msg.includes("\u062F\u0643\u062A\u0648\u0631")) {
+      return "\u0644\u062F\u064A\u0646\u0627 \u0623\u0643\u062B\u0631 \u0645\u0646 700 \u0637\u0628\u064A\u0628 \u0648\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u0641\u064A 5 \u0641\u0631\u0648\u0639. \u062F. \u0645\u062D\u0645\u062F \u0628\u0643\u0631\u064A (\u062C\u0631\u0627\u062D\u0629 \u062A\u062C\u0645\u064A\u0644\u064A\u0629) \u0627\u0644\u0623\u0639\u0644\u0649 \u062A\u0642\u064A\u064A\u0645\u0627\u064B. \u062A\u0635\u0641\u062D \u0635\u0641\u062D\u0629 \u0627\u0644\u0623\u0637\u0628\u0627\u0621 \u0644\u0644\u0628\u062D\u062B \u062D\u0633\u0628 \u0627\u0644\u062A\u062E\u0635\u0635.";
+    }
+    if (msg.includes("\u062A\u0623\u0645\u064A\u0646") || msg.includes("\u0645\u0637\u0627\u0644\u0628\u0629") || msg.includes("nphies")) {
+      return "\u0646\u0638\u0627\u0645 NPHIES \u064A\u062F\u0639\u0645 \u0627\u0644\u0645\u0637\u0627\u0644\u0628\u0627\u062A \u0627\u0644\u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A\u0629. \u0646\u062A\u0639\u0627\u0642\u062F \u0645\u0639 10 \u0634\u0631\u0643\u0627\u062A \u062A\u0623\u0645\u064A\u0646: Bupa Arabia\u060C \u062A\u0648\u064A\u0646\u0629\u060C \u0645\u064A\u062F\u063A\u0644\u0641\u060C \u0648\u063A\u064A\u0631\u0647\u0627. \u062A\u062D\u0642\u0642 \u0645\u0646 \u0623\u0647\u0644\u064A\u062A\u0643 \u0627\u0644\u062A\u0623\u0645\u064A\u0646\u064A\u0629 \u0639\u0628\u0631 \u0635\u0641\u062D\u0629 \u0627\u0644\u062A\u062D\u0642\u0642.";
+    }
+    if (msg.includes("\u0641\u0631\u0639") || msg.includes("\u0639\u0646\u0648\u0627\u0646") || msg.includes("\u0645\u0648\u0642\u0639")) {
+      return "5 \u0641\u0631\u0648\u0639: \u0627\u0644\u0631\u064A\u0627\u0636 (\u0637\u0631\u064A\u0642 \u0627\u0644\u062F\u0627\u0626\u0631\u064A \u0627\u0644\u0634\u0631\u0642\u064A - \u0627\u0644\u0631\u0628\u0648\u0629)\u060C \u062C\u0627\u0632\u0627\u0646 (\u0627\u0644\u0643\u0648\u0631\u0646\u064A\u0634)\u060C \u062E\u0645\u064A\u0633 \u0645\u0634\u064A\u0637 (\u0627\u0644\u0623\u0645\u064A\u0631 \u0633\u0644\u0637\u0627\u0646)\u060C \u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0645\u0646\u0648\u0631\u0629 (\u0637\u0631\u064A\u0642 \u0627\u0644\u0647\u062C\u0631\u0629)\u060C \u0639\u0646\u064A\u0632\u0629 (\u0627\u0644\u0642\u0635\u064A\u0645). \u0644\u0644\u0627\u062A\u0635\u0627\u0644: 966920000094.";
+    }
+    if (msg.includes("\u0639\u0646") || msg.includes("\u0627\u0644\u0645\u0633\u062A\u0634\u0641\u0649") || msg.includes("\u0645\u0646 \u0623\u0646\u062A\u0645") || msg.includes("\u0646\u0628\u0630\u0629")) {
+      return "\u062A\u0623\u0633\u0633\u062A \u0645\u062C\u0645\u0648\u0639\u0629 \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A \u0639\u0627\u0645 1999\u060C \u0648\u062A\u062F\u064A\u0631\u0647\u0627 \u0634\u0631\u0643\u0629 \u0627\u0644\u0627\u0646\u0645\u0627\u0621 \u0644\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0637\u0628\u064A\u0629 \u0628\u0631\u0626\u0627\u0633\u0629 \u0623. \u0645\u062D\u0645\u062F \u0628\u0646 \u0646\u0627\u0635\u0631 \u0627\u0644\u062C\u0627\u0631 \u0627\u0644\u0644\u0647. \u062A\u0636\u0645 5 \u0641\u0631\u0648\u0639 \u0648\u0623\u0643\u062B\u0631 \u0645\u0646 700 \u0637\u0628\u064A\u0628 \u06483500 \u0645\u0648\u0638\u0641 \u06481200 \u0633\u0631\u064A\u0631. \u0627\u0644\u0631\u0626\u064A\u0633 \u0627\u0644\u062A\u0646\u0641\u064A\u0630\u064A: \u062F. \u0641\u0648\u0632\u064A\u0629 \u0627\u0644\u062C\u0627\u0631 \u0627\u0644\u0644\u0647.";
+    }
+    if (msg.includes("\u0637\u0648\u0627\u0631\u0626") || msg.includes("\u0625\u0633\u0639\u0627\u0641")) {
+      return "\u26A0\uFE0F \u0625\u0630\u0627 \u0643\u0627\u0646\u062A \u062D\u0627\u0644\u0629 \u0637\u0627\u0631\u0626\u0629\u060C \u062A\u0648\u062C\u0651\u0647 \u0641\u0648\u0631\u0627\u064B \u0644\u0623\u0642\u0631\u0628 \u0637\u0648\u0627\u0631\u0626 \u0623\u0648 \u0627\u062A\u0635\u0644 \u0628\u0627\u0644\u0647\u0644\u0627\u0644 \u0627\u0644\u0623\u062D\u0645\u0631 997. \u062C\u0645\u064A\u0639 \u0641\u0631\u0648\u0639\u0646\u0627 \u0628\u0647\u0627 \u0637\u0648\u0627\u0631\u0626 24 \u0633\u0627\u0639\u0629.";
+    }
+    return "\u0623\u0647\u0644\u0627\u064B \u0628\u0643 \u0641\u064A \u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A. \u0643\u064A\u0641 \u064A\u0645\u0643\u0646\u0646\u064A \u0645\u0633\u0627\u0639\u062F\u062A\u0643\u061F \u062D\u062C\u0648\u0632\u0627\u062A\u060C \u0645\u0639\u0644\u0648\u0645\u0627\u062A \u0623\u0637\u0628\u0627\u0621\u060C \u0627\u0633\u062A\u0639\u0644\u0627\u0645 \u062A\u0623\u0645\u064A\u0646\u060C \u0623\u0648 \u0645\u0639\u0644\u0648\u0645\u0627\u062A \u0641\u0631\u0648\u0639.";
+  }
+  if (msg.includes("appointment") || msg.includes("book")) {
+    return "Book online via our portal/app or call 966920000094. Need help choosing a doctor?";
+  }
+  if (msg.includes("doctor") || msg.includes("physician")) {
+    return "We have 700+ doctors across 5 branches. Dr. Mohamed Bakry (Plastic Surgery) highest rated. Browse our providers page.";
+  }
+  if (msg.includes("insurance") || msg.includes("claim") || msg.includes("nphies")) {
+    return "NPHIES e-claim system supported. 10 insurance partners: Bupa Arabia, Tawuniya, MedGulf, and more. Check eligibility on our portal.";
+  }
+  if (msg.includes("branch") || msg.includes("location") || msg.includes("address")) {
+    return "5 branches: Riyadh (Eastern Ring/Al-Rabwa), Jazan (Corniche), Khamis Mushayt (Prince Sultan Rd), Madinah (Al-Hijra Rd), Unayzah (Al-Qassim). Call 966920000094.";
+  }
+  if (msg.includes("about") || msg.includes("history") || msg.includes("who")) {
+    return "Hayat National Hospitals Group was founded in 1999. Owned by Al-Inmaa Medical Services Co., chaired by A. Mohammed bin Nasser bin Jar Allah. CEO Dr. Fawzia Al-Jar Allah. 700+ doctors, 3,500+ staff, 1,200+ beds across 5 branches.";
+  }
+  if (msg.includes("emergency")) {
+    return "If emergency: go to nearest ER or call Saudi Red Crescent 997. All branches have 24/7 ER.";
+  }
+  return "Welcome to Hayat National Hospital. How can I help? Appointments, doctors, insurance, or branch info.";
+}
+var SYSTEM_PROMPT;
+var init_chat = __esm({
+  "src/ai/chat.js"() {
+    init_response();
+    init_config();
+    SYSTEM_PROMPT = `You are BasmaGuist Medical (\u0628\u0633\u0645\u0629 \u063A\u064A\u0633\u062A \u0627\u0644\u0637\u0628\u064A\u0629), the official AI assistant for \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A (Hayat National Hospitals Group), powered by BrainSAIT Healthcare OS.
 
 ## ABOUT THE GROUP
 - Full Name: Hayat National Hospitals Group (\u0645\u062C\u0645\u0648\u0639\u0629 \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A)
@@ -85,20 +775,1378 @@ Integrated with NPHIES (Saudi e-Claim system). Supports 270/271 (Eligibility), 2
 - For emergencies: direct to ER + call 997 (Saudi Red Crescent)
 - NEVER prescribe medication or make definitive diagnoses
 - Respond in the patient's language (Arabic/English)
-- Maximum 400 characters per response`;r(G,"handleChat");r(F,"getFallbackResponse")});var D=class{static{r(this,"Router")}constructor(){this.routes=[]}add(a,e,t){this.routes.push({method:a,pattern:e,handler:t})}get(a,e){return this.add("GET",a,e)}post(a,e){return this.add("POST",a,e)}patch(a,e){return this.add("PATCH",a,e)}delete(a,e){return this.add("DELETE",a,e)}match(a,e,t){let n=new URL(a.url),i=a.method==="HEAD",s=i?"GET":a.method,o=n.pathname;for(let l of this.routes){if(l.method!==s)continue;let d=o.match(new RegExp(`^${l.pattern}$`));if(!d)continue;let m=d.slice(1),p=l.handler(a,e,t,m,n);return i?Promise.resolve(p).then(g=>new Response(null,{status:g.status,statusText:g.statusText,headers:g.headers})):p}return new Response(a.method==="HEAD"?null:"Not Found",{status:404})}};_();S();var O=new Map;function pu(u){let a=Date.now(),e=a-x.RATE_LIMIT_WINDOW_MS;for(let[n,i]of O)i.timestamp<e&&O.delete(n);let t=O.get(u)||{count:0,timestamp:a};return t.timestamp<e&&(t.count=0,t.timestamp=a),t.count++,O.set(u,t),t.count<=x.RATE_LIMIT_MAX_REQUESTS}r(pu,"rateLimit");S();async function C(u,a=4e3,e={}){try{let t=new AbortController,n=setTimeout(()=>t.abort(),a),i=await fetch(u,{...e,signal:t.signal});return clearTimeout(n),i.ok?"connected":i.status>=500?"warning":"degraded"}catch{return"offline"}}r(C,"checkIntegration");async function Ve(u){try{if(u.CLAIMLINC_SERVICE){let a=await u.CLAIMLINC_SERVICE.fetch(new Request("https://claimlinc.internal/nphies/health"));return a.ok?"connected":a.status>=500?"warning":"degraded"}return await C("https://api.brainsait.org/nphies/health",3e3)}catch{return"offline"}}r(Ve,"checkClaimLinc");async function Ye(u){try{if(u.GIVC_SERVICE){let a=await u.GIVC_SERVICE.fetch(new Request("https://givc.internal/givc/health"));return a.ok?"connected":a.status>=500?"warning":"degraded"}return await C(`${u.GIVC_URL||"https://hnh.brainsait.org/givc"}/health`,3e3)}catch{return"offline"}}r(Ye,"checkGivc");async function mu(u){let a=u.DB?await u.DB.prepare(`SELECT
+- Maximum 400 characters per response`;
+    __name(handleChat, "handleChat");
+    __name(getFallbackResponse, "getFallbackResponse");
+  }
+});
+
+// src/router.js
+var Router = class {
+  static {
+    __name(this, "Router");
+  }
+  constructor() {
+    this.routes = [];
+  }
+  add(method, pattern, handler) {
+    this.routes.push({ method, pattern, handler });
+  }
+  get(pattern, handler) {
+    return this.add("GET", pattern, handler);
+  }
+  post(pattern, handler) {
+    return this.add("POST", pattern, handler);
+  }
+  patch(pattern, handler) {
+    return this.add("PATCH", pattern, handler);
+  }
+  delete(pattern, handler) {
+    return this.add("DELETE", pattern, handler);
+  }
+  match(request, env, ctx) {
+    const url = new URL(request.url);
+    const isHead = request.method === "HEAD";
+    const method = isHead ? "GET" : request.method;
+    const path = url.pathname;
+    for (const route of this.routes) {
+      if (route.method !== method) continue;
+      const match = path.match(new RegExp(`^${route.pattern}$`));
+      if (!match) continue;
+      const params = match.slice(1);
+      const response = route.handler(request, env, ctx, params, url);
+      if (!isHead) return response;
+      return Promise.resolve(response).then((res) => new Response(null, {
+        status: res.status,
+        statusText: res.statusText,
+        headers: res.headers
+      }));
+    }
+    return new Response(request.method === "HEAD" ? null : "Not Found", { status: 404 });
+  }
+};
+
+// src/index.js
+init_response();
+
+// src/utils/rate-limit.js
+init_config();
+var requestCounts = /* @__PURE__ */ new Map();
+function rateLimit(ip) {
+  const now = Date.now();
+  const windowStart = now - CONFIG.RATE_LIMIT_WINDOW_MS;
+  for (const [key, entry2] of requestCounts) {
+    if (entry2.timestamp < windowStart) {
+      requestCounts.delete(key);
+    }
+  }
+  const entry = requestCounts.get(ip) || { count: 0, timestamp: now };
+  if (entry.timestamp < windowStart) {
+    entry.count = 0;
+    entry.timestamp = now;
+  }
+  entry.count++;
+  requestCounts.set(ip, entry);
+  return entry.count <= CONFIG.RATE_LIMIT_MAX_REQUESTS;
+}
+__name(rateLimit, "rateLimit");
+
+// src/index.js
+init_config();
+
+// src/routes/health.js
+async function checkIntegration(url, timeoutMs = 4e3, init = {}) {
+  try {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeoutMs);
+    const res = await fetch(url, { ...init, signal: controller.signal });
+    clearTimeout(id);
+    if (res.ok) return "connected";
+    return res.status >= 500 ? "warning" : "degraded";
+  } catch {
+    return "offline";
+  }
+}
+__name(checkIntegration, "checkIntegration");
+
+async function checkClaimLinc(env) {
+  try {
+    if (env.CLAIMLINC_SERVICE) {
+      const res = await env.CLAIMLINC_SERVICE.fetch(new Request("https://claimlinc.internal/nphies/health"));
+      return res.ok ? "connected" : res.status >= 500 ? "warning" : "degraded";
+    }
+    return await checkIntegration("https://api.brainsait.org/nphies/health", 3e3);
+  } catch {
+    return "offline";
+  }
+}
+__name(checkClaimLinc, "checkClaimLinc");
+
+async function checkGivc(env) {
+  try {
+    if (env.GIVC_SERVICE) {
+      const res = await env.GIVC_SERVICE.fetch(new Request("https://givc.internal/givc/health"));
+      return res.ok ? "connected" : res.status >= 500 ? "warning" : "degraded";
+    }
+    return await checkIntegration(`${env.GIVC_URL || "https://hnh.brainsait.org/givc"}/health`, 3e3);
+  } catch {
+    return "offline";
+  }
+}
+__name(checkGivc, "checkGivc");
+
+// Enhanced service check functions for all integrations
+async function checkHomecare(env) {
+  return await checkIntegration("https://homecare.hayathospitals.com/health", 3e3);
+}
+__name(checkHomecare, "checkHomecare");
+
+async function checkTelehealth(env) {
+  return await checkIntegration("https://telehealth.brainsait.org/health", 3e3);
+}
+__name(checkTelehealth, "checkTelehealth");
+
+async function checkMaillinc(env) {
+  const base = env.MAILLINC_URL || "https://maillinc.brainsait-fadil.workers.dev";
+  return await checkIntegration(`${base}/health`, 3e3);
+}
+__name(checkMaillinc, "checkMaillinc");
+
+async function checkOracle(env) {
+  const base = env.ORACLE_BRIDGE_URL || "https://oracle-bridge.brainsait.org";
+  return await checkIntegration(`${base}/health`, 3e3);
+}
+__name(checkOracle, "checkOracle");
+
+async function checkNPHIESMirror(env) {
+  const base = env.NPHIES_MIRROR_URL || "https://nphies-mirror.brainsait-fadil.workers.dev";
+  return await checkIntegration(`${base}/health`, 3e3);
+}
+__name(checkNPHIESMirror, "checkNPHIESMirror");
+
+async function checkAcademy(env) {
+  return await checkIntegration("https://academy.hayathospitals.com/health", 3e3);
+}
+__name(checkAcademy, "checkAcademy");
+
+async function checkTwilio(env) {
+  return env.TWILIO_ACCOUNT_SID ? "configured" : "not_configured";
+}
+__name(checkTwilio, "checkTwilio");
+
+async function checkElevenLabs(env) {
+  return env.ELEVENLABS_API_KEY ? "configured" : "not_configured";
+}
+__name(checkElevenLabs, "checkElevenLabs");
+
+async function checkDeepSeek(env) {
+  return env.DEEPSEEK_API_KEY ? "configured" : "not_configured";
+}
+__name(checkDeepSeek, "checkDeepSeek");
+
+async function checkWhatsApp(env) {
+  return env.WHATSAPP_TOKEN ? "configured" : "not_configured";
+}
+__name(checkWhatsApp, "checkWhatsApp");
+
+async function health(env) {
+  const stats = env.DB ? await env.DB.prepare(
+    `SELECT
           (SELECT COUNT(*) FROM patients) as total_patients,
           (SELECT COUNT(*) FROM appointments WHERE date(appointment_date) = date('now')) as today_appointments,
           (SELECT COUNT(*) FROM providers) as total_providers,
           (SELECT COUNT(*) FROM claims) as total_claims,
-          (SELECT COUNT(*) FROM claims WHERE status = 'pending') as pending_claims,(SELECT COUNT(*) FROM givc_doctors WHERE givc_status='active') as givc_network_count`).first():{},e=u.ORACLE_BRIDGE_URL||"https://oracle-bridge.brainsait.org",t=u.NPHIES_MIRROR_URL||"https://nphies-mirror.brainsait-fadil.workers.dev",[n,i,s,o,l,d]=await Promise.allSettled([C(`${e}/health`,3e3),C(`${t}/health`,3e3),Ve(u),C("https://bsma.elfadil.com/health",3e3),C("https://sbs.elfadil.com/api/health",3e3),Ye(u)]),m=null;try{let p=u.NPHIES_MIRROR_URL||"https://nphies-mirror.brainsait-fadil.workers.dev",g=await fetch(`${p}/mirror/status`,{signal:AbortSignal.timeout(4e3)});if(g.ok){let f=await g.json();m={total_gss:f.total_gss||81,total_pa:f.total_pa||51297}}}catch{}return{success:!0,status:"healthy",version:u.HUB_VERSION||"9.0.1",name:"HNH Portal - BrainSAIT Healthcare OS",timestamp:new Date().toISOString(),database:u.DB?"connected":"unavailable",his_database:u.HIS_DB?"connected":"unavailable",stats:a||{},environment:u.NPHIES_ENVIRONMENT||"sandbox",integrations:{oracle_bridge:n.status==="fulfilled"?n.value:"offline",nphies_mirror:i.status==="fulfilled"?i.value:"offline",claimlinc:s.status==="fulfilled"?s.value:"offline",basma_portal:o.status==="fulfilled"?o.value:"offline",sbs_portal:l.status==="fulfilled"?l.value:"offline",givc_portal:d.status==="fulfilled"?{status:d.value,network_count:a?.givc_network_count??0}:{status:"offline",network_count:0}},oracle_tunnel:"Oracle Cloud@Riyadh",nphies_mirror:m}}r(mu,"health");var hu=[{id:"R001",name_ar:"\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A - \u0627\u0644\u0631\u064A\u0627\u0636",name_en:"Hayat National Hospital - Riyadh",city_ar:"\u0627\u0644\u0631\u064A\u0627\u0636",city_en:"Riyadh",address_ar:"\u062D\u064A \u0627\u0644\u0631\u0628\u0648\u0629\u060C \u0637\u0631\u064A\u0642 \u0627\u0644\u0641\u0631\u0639 \u0627\u0644\u062F\u0627\u0626\u0631\u064A \u0627\u0644\u0634\u0631\u0642\u064A",address_en:"Eastern Ring Branch Road, Al-Rabwa District, Riyadh",phone:"+966920000094",emergency:"+966920000094",email:"info@hayathospitals.com",subdomain:"riyadh.hayathospitals.com",offers_ar:"\u062E\u0635\u0648\u0645\u0627\u062A \u0644\u0644\u0645\u0631\u0636\u0649 \u0627\u0644\u0645\u0646\u0648\u0645\u064A\u0646 \u0644\u0641\u062A\u0631\u0627\u062A \u0637\u0648\u064A\u0644\u0629\u060C \u0628\u0631\u0646\u0627\u0645\u062C \u0632\u0631\u0627\u0639\u0629 \u062E\u0627\u0635",offers_en:"Long-stay patient discounts, special transplant program",departments:["emergency","internal","surgery","cardiology","neurology","orthopedics","pediatrics","obgyn","ophthalmology","dentistry","psychiatry","radiology","laboratory","pharmacy","urology","ent","dermatology","gastroenterology","nephrology","endocrinology","rheumatology","oncology","neurosurgery","vascular_surgery","plastic_surgery","pain_clinic"],beds:300,established:2005,rating:4.5,lat:24.7267,lng:46.6783},{id:"J001",name_ar:"\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A - \u062C\u0627\u0632\u0627\u0646",name_en:"Hayat National Hospital - Jazan",city_ar:"\u062C\u0627\u0632\u0627\u0646",city_en:"Jazan",address_ar:"\u0643\u0648\u0631\u0646\u064A\u0634 \u062C\u0627\u0632\u0627\u0646\u060C \u062D\u064A \u0627\u0644\u0634\u0627\u0637\u0626",address_en:"Jazan Corniche, Al Shati District",phone:"+966920000094",emergency:"+966920000094",email:"info@hayathospitals.com",subdomain:"jazan.hayathospitals.com",offers_ar:"\u062E\u0635\u0648\u0645\u0627\u062A \u0639\u0644\u0649 \u0627\u0644\u062C\u0631\u0627\u062D\u0627\u062A\u060C \u0645\u062E\u064A\u0645 \u0637\u0628\u064A \u0644\u062C\u0631\u0627\u062D\u0627\u062A \u0627\u0644\u0639\u064A\u0648\u0646",offers_en:"Surgery discounts, medical camp for eye surgery patients",departments:["emergency","internal","surgery","pediatrics","obgyn","ophthalmology","ent","dermatology","gastroenterology","cardiology","neurology","laboratory","pharmacy"],beds:150,established:2012,rating:4.3,lat:16.8892,lng:42.5611},{id:"K001",name_ar:"\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A - \u062E\u0645\u064A\u0633 \u0645\u0634\u064A\u0637",name_en:"Hayat National Hospital - Khamis Mushayt",city_ar:"\u062E\u0645\u064A\u0633 \u0645\u0634\u064A\u0637",city_en:"Khamis Mushayt",address_ar:"\u0637\u0631\u064A\u0642 \u0627\u0644\u0623\u0645\u064A\u0631 \u0633\u0644\u0637\u0627\u0646\u060C \u0623\u0645 \u0633\u0631\u0627\u0631",address_en:"Prince Sultan Road, Umm Sarar",phone:"+966538081888",phone2:"+966920000094",emergency:"+966920000094",email:"info@hayathospitals.com",subdomain:"khamis.hayathospitals.com",offers_ar:"\u0639\u0631\u0648\u0636 \u0627\u0644\u0639\u064A\u0648\u0646\u060C \u062E\u0635\u0648\u0645\u0627\u062A \u0627\u0644\u0625\u0642\u0627\u0645\u0629 \u0627\u0644\u0637\u0648\u064A\u0644\u0629",offers_en:"Ophthalmology promotion, long-stay discounts",departments:["emergency","internal","surgery","pediatrics","obgyn","orthopedics","ophthalmology","ent","dermatology","cardiology","neurology","urology","psychiatry","radiology","laboratory","pharmacy","gastroenterology","nephrology","endocrinology","pulmonology","neurosurgery","rehabilitation"],beds:180,established:2014,rating:4.2,lat:18.3063,lng:42.7288},{id:"M001",name_ar:"\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A - \u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0645\u0646\u0648\u0631\u0629",name_en:"Hayat National Hospital - Madinah",city_ar:"\u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0645\u0646\u0648\u0631\u0629",city_en:"Madinah",address_ar:"\u0637\u0631\u064A\u0642 \u0641\u0631\u0639 \u0627\u0644\u0647\u062C\u0631\u0629\u060C \u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0645\u0646\u0648\u0631\u0629 42316",address_en:"Al-Hijra Branch Road, Madinah 42316",phone:"+966920000094",emergency:"+966920000094",email:"info@hayathospitals.com",offers_ar:"\u062E\u062F\u0645\u0627\u062A \u0637\u0628\u064A\u0629 \u0628\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u064A\u0646 \u0645\u062A\u062E\u0635\u0635\u064A\u0646\u060C \u062E\u0635\u0648\u0645\u0627\u062A 50+ \u0633\u0646\u0629\u060C \u0641\u062D\u0648\u0635\u0627\u062A \u0645\u062C\u0627\u0646\u064A\u0629",offers_en:"Consultant-led medical services, 50+ senior discounts, free medical tests",departments:["emergency","internal","surgery","cardiology","pediatrics","obgyn","ophthalmology","ent","dermatology","neurology","nephrology","endocrinology","pulmonology","laboratory","pharmacy","rehabilitation"],beds:200,established:2010,rating:4.4,lat:24.4672,lng:39.6119},{id:"U001",name_ar:"\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A - \u0639\u0646\u064A\u0632\u0629",name_en:"Hayat National Hospital - Unayzah",city_ar:"\u0639\u0646\u064A\u0632\u0629",city_en:"Unayzah",address_ar:"\u0627\u0644\u0642\u0635\u064A\u0645 - \u0639\u0646\u064A\u0632\u0629\u060C \u0637\u0631\u064A\u0642 \u0627\u0644\u0645\u062F\u064A\u0646\u0629",address_en:"Al-Qassim - Unayzah, Medina Road",phone:"+966920000094",emergency:"+966920000094",email:"info@hayathospitals.com",subdomain:"unaizah.hayathospitals.com",offers_ar:"\u0639\u0631\u0648\u0636 \u0645\u0633\u062A\u0645\u0631\u0629 \u0648\u0639\u0631\u0648\u0636 \u0627\u0644\u0631\u0641\u0627\u0647\u064A\u0629",offers_en:"Ongoing promotions and wellness offers",departments:["emergency","internal","surgery","pediatrics","obgyn","ophthalmology","ent","urology","psychiatry","radiology","laboratory","pharmacy","gastroenterology","cardiology","neurology"],beds:120,established:2015,rating:4.1,lat:26.0867,lng:43.992}];function gu(){return hu}r(gu,"getBranches");function fu(u){return hu.find(a=>a.id===u)||null}r(fu,"getBranch");_();async function vu(u,a){let e=await u.json().catch(()=>({})),t=["patient_id","appointment_date","appointment_time"];for(let i of t)if(!e[i])return c({success:!1,message:`Missing required field: ${i}`},400);let n=await a.DB.prepare(`INSERT INTO appointments (patient_id, provider_id, clinic_code, clinic_name, appointment_date, appointment_time, status, appointment_type, reason)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(e.patient_id,e.provider_id||null,e.clinic_code||"GEN",e.clinic_name||"",e.appointment_date,e.appointment_time,e.status||"scheduled",e.appointment_type||"regular",e.reason||"").run();return c({success:!0,appointment_id:n.meta?.last_row_id},201)}r(vu,"createAppointment");async function bu(u,a,e,t,n){n||(n=new URL(u.url));let i=n.searchParams.get("search")||"",s=n.searchParams.get("branch")||"",o=n.searchParams.get("date")||"",l=n.searchParams.get("status")||"",d=n.searchParams.get("patient_id")||"",m=parseInt(n.searchParams.get("limit")||"50"),p=parseInt(n.searchParams.get("offset")||"0"),g="SELECT a.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en, p.phone as patient_phone";g+=" FROM appointments a LEFT JOIN patients p ON a.patient_id = p.id";let f=[],w=[];s&&(w.push("a.branch_id = ?"),f.push(s)),o&&(w.push("a.appointment_date = ?"),f.push(o)),l&&(w.push("a.status = ?"),f.push(l)),d&&(w.push("a.patient_id = ?"),f.push(d)),i&&(w.push("(p.full_name_ar LIKE ? OR p.full_name_en LIKE ?)"),f.push(`%${i}%`,`%${i}%`)),w.length&&(g+=" WHERE "+w.join(" AND ")),g+=" ORDER BY a.appointment_date DESC, a.appointment_time ASC LIMIT ? OFFSET ?",f.push(m,p);let{results:v}=await a.DB.prepare(g).bind(...f).all();return c({success:!0,appointments:v||[]})}r(bu,"getAppointments");async function yu(u,a,e,t){let n=t[0],i=await a.DB.prepare(`SELECT a.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en, p.phone as patient_phone
-     FROM appointments a LEFT JOIN patients p ON a.patient_id = p.id WHERE a.id = ?`).bind(n).first();return i?c({success:!0,appointment:i}):c({success:!1,message:"Appointment not found"},404)}r(yu,"getAppointment");async function xu(u,a,e,t){let n=t[0],i=await u.json(),s=[],o=[];for(let[l,d]of Object.entries(i))["appointment_date","appointment_time","status","appointment_type","reason","provider_id","clinic_code","clinic_name"].includes(l)&&(s.push(`${l} = ?`),o.push(d));return s.length===0?c({success:!1,message:"No valid fields to update"},400):(s.push("updated_at = datetime('now')"),o.push(n),await a.DB.prepare(`UPDATE appointments SET ${s.join(", ")} WHERE id = ?`).bind(...o).run(),c({success:!0,message:"Appointment updated"}))}r(xu,"updateAppointment");async function _u(u,a,e,t){let n=t[0];return await a.DB.prepare("UPDATE appointments SET status = 'cancelled', updated_at = datetime('now') WHERE id = ?").bind(n).run(),c({success:!0,message:"Appointment cancelled"})}r(_u,"cancelAppointment");_();async function wu(u,a){let e=await u.json().catch(()=>({}));if(!e.phone)return c({success:!1,message:"phone is required"},400);let t=e.full_name_ar||e.name_ar||[e.first_name_ar,e.last_name_ar].filter(Boolean).join(" ")||e.full_name_en||e.name_en||"Patient",n=e.full_name_en||e.name_en||[e.first_name_en,e.last_name_en].filter(Boolean).join(" ")||t,i=e.national_id||null,s=i?await a.DB.prepare("SELECT * FROM patients WHERE national_id = ? OR phone = ? LIMIT 1").bind(i,e.phone).first():await a.DB.prepare("SELECT * FROM patients WHERE phone = ? LIMIT 1").bind(e.phone).first();if(s)return c({success:!0,patient_id:s.id,mrn:s.mrn,existing:!0,message:"Patient already exists"});let o="HNH-"+Date.now(),l=await a.DB.prepare(`INSERT INTO patients (mrn, national_id, first_name_ar, last_name_ar, full_name_ar, first_name_en, last_name_en, full_name_en, phone, email, date_of_birth, gender, blood_type, allergies)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(o,i,e.first_name_ar||t,e.last_name_ar||null,t,e.first_name_en||n,e.last_name_en||null,n,e.phone,e.email||null,e.date_of_birth||e.dob||null,e.gender||null,e.blood_type||null,e.allergies||null).run();return c({success:!0,patient_id:l.meta?.last_row_id,mrn:o,message:"Patient created successfully"},201)}r(wu,"createPatient");async function Eu(u,a,e,t,n){n||(n=new URL(u.url));let i=n.searchParams.get("search")||"",s=n.searchParams.get("branch")||"",o=parseInt(n.searchParams.get("limit")||"50"),l=parseInt(n.searchParams.get("offset")||"0"),d="SELECT * FROM patients",m=[],p=[];if(i){p.push("(full_name_ar LIKE ? OR full_name_en LIKE ? OR phone LIKE ? OR national_id LIKE ?)");let f=`%${i}%`;m.push(f,f,f,f)}p.length&&(d+=" WHERE "+p.join(" AND ")),d+=" ORDER BY created_at DESC LIMIT ? OFFSET ?",m.push(o,l);let{results:g}=await a.DB.prepare(d).bind(...m).all();return c({success:!0,patients:g||[],total:g?.length||0})}r(Eu,"getPatients");async function Su(u,a,e,t){let n=t[0],i=await a.DB.prepare("SELECT * FROM patients WHERE id = ? OR national_id = ?").bind(n,n).first();return i?c({success:!0,patient:i}):new Response(JSON.stringify({success:!1,message:"Patient not found"}),{status:404,headers:{"Content-Type":"application/json"}})}r(Su,"getPatient");async function Cu(u,a,e,t){let n=t[0],i=await u.json(),s=[],o=[];for(let[l,d]of Object.entries(i))["national_id","full_name_ar","full_name_en","phone","email","date_of_birth","gender","insurance_company","insurance_id","blood_type","allergies"].includes(l)&&(s.push(`${l} = ?`),o.push(d));return s.length===0?c({success:!1,message:"No valid fields to update"},400):(s.push("updated_at = datetime('now')"),o.push(n),await a.DB.prepare(`UPDATE patients SET ${s.join(", ")} WHERE id = ?`).bind(...o).run(),c({success:!0,message:"Patient updated"}))}r(Cu,"updatePatient");_();function We(){let u=new Date,a=u.getFullYear(),e=String(u.getMonth()+1).padStart(2,"0"),t=String(Math.floor(Math.random()*99999)).padStart(5,"0");return`NH${a}${e}-${t}`}r(We,"generateClaimNumber");async function Au(u,a){let e=await u.json(),t=We(),n=parseInt(e.patient_id)||0,i=await a.DB.prepare(`INSERT INTO claims (claim_number, patient_id, total_amount, status, payer_id, payer_name, claim_type)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`).bind(t,n,e.total_amount,e.status||"draft",e.payer_id||null,e.payer_name||null,e.claim_type||"inpatient").run();return c({success:!0,claim_id:i?.meta?.last_row_id,claim_number:t},201)}r(Au,"createClaim");async function ku(u,a,e,t,n){n||(n=new URL(u.url));let i=n.searchParams.get("patient_id")||"",s=n.searchParams.get("branch")||"",o=n.searchParams.get("status")||"",l=parseInt(n.searchParams.get("limit")||"50"),d=parseInt(n.searchParams.get("offset")||"0"),m="SELECT c.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en";m+=" FROM claims c LEFT JOIN patients p ON c.patient_id = p.id";let p=[],g=[];i&&(g.push("c.patient_id = ?"),p.push(i)),o&&(g.push("c.status = ?"),p.push(o)),g.length&&(m+=" WHERE "+g.join(" AND ")),m+=" ORDER BY c.created_at DESC LIMIT ? OFFSET ?",p.push(l,d);let{results:f}=await a.DB.prepare(m).bind(...p).all();return c({success:!0,claims:f||[]})}r(ku,"getClaims");async function Tu(u,a,e,t){let n=t[0],i=await a.DB.prepare(`SELECT c.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en, p.phone as patient_phone
+          (SELECT COUNT(*) FROM claims WHERE status = 'pending') as pending_claims,
+          (SELECT COUNT(*) FROM givc_doctors WHERE givc_status = 'active') as givc_network_count,
+          (SELECT COUNT(*) FROM telehealth_sessions WHERE date(created_at) = date('now')) as today_telehealth,
+          (SELECT COUNT(*) FROM homecare_requests WHERE date(created_at) = date('now')) as today_homecare`
+  ).first() : {};
+  const oracleBase = env.ORACLE_BRIDGE_URL || "https://oracle-bridge.brainsait.org";
+  const mirrorBase = env.NPHIES_MIRROR_URL || "https://nphies-mirror.brainsait-fadil.workers.dev";
+  const maillincBase = env.MAILLINC_URL || "https://maillinc.brainsait-fadil.workers.dev";
+  
+  // Check all services in parallel
+  const [
+    oracleStatus, nphiesStatus, claimlincStatus, basmaStatus, sbsStatus, givcStatus,
+    homecareStatus, telehealthStatus, maillincStatus, academyStatus
+  ] = await Promise.allSettled([
+    checkOracle(env),
+    checkNPHIESMirror(env),
+    checkClaimLinc(env),
+    checkIntegration("https://bsma.elfadil.com/health", 3e3),
+    checkIntegration("https://sbs.elfadil.com/api/health", 3e3),
+    checkGivc(env),
+    checkHomecare(env),
+    checkTelehealth(env),
+    checkMaillinc(env),
+    checkAcademy(env)
+  ]);
+
+  // Get NPHIES mirror stats
+  let nphiesMirror = null;
+  try {
+    const nmRes = await fetch(`${mirrorBase}/mirror/status`, { signal: AbortSignal.timeout(4e3) });
+    if (nmRes.ok) {
+      const nmData = await nmRes.json();
+      nphiesMirror = { total_gss: nmData.total_gss || 81, total_pa: nmData.total_pa || 51297 };
+    }
+  } catch {}
+
+  // Get telehealth stats
+  let telehealthStats = null;
+  if (env.DB) {
+    try {
+      telehealthStats = await env.DB.prepare(
+        `SELECT status, COUNT(*) as count FROM telehealth_sessions GROUP BY status`
+      ).all();
+    } catch {}
+  }
+
+  // Get homecare stats
+  let homecareStats = null;
+  if (env.DB) {
+    try {
+      homecareStats = await env.DB.prepare(
+        `SELECT status, COUNT(*) as count FROM homecare_requests GROUP BY status`
+      ).all();
+    } catch {}
+  }
+
+  return {
+    success: true,
+    status: "healthy",
+    version: env.HUB_VERSION || "9.1.0",
+    name: "HNH Portal - BrainSAIT Healthcare OS",
+    timestamp: new Date().toISOString(),
+    database: env.DB ? "connected" : "unavailable",
+    his_database: env.HIS_DB ? "connected" : "unavailable",
+    basma_database: env.BASMA_DB ? "connected" : "unavailable",
+    stats: stats || {},
+    environment: env.NPHIES_ENVIRONMENT || "sandbox",
+    integrations: {
+      // Core Systems
+      oracle_bridge: oracleStatus.status === "fulfilled" ? oracleStatus.value : "offline",
+      nphies_mirror: nphiesStatus.status === "fulfilled" ? nphiesStatus.value : "offline",
+      claimlinc: claimlincStatus.status === "fulfilled" ? claimlincStatus.value : "offline",
+      basma_portal: basmaStatus.status === "fulfilled" ? basmaStatus.value : "offline",
+      sbs_portal: sbsStatus.status === "fulfilled" ? sbsStatus.value : "offline",
+      givc_portal: givcStatus.status === "fulfilled" ? { status: givcStatus.value, network_count: stats?.givc_network_count ?? 0 } : { status: "offline", network_count: 0 },
+      
+      // Digital Health Services
+      homecare: homecareStatus.status === "fulfilled" ? homecareStatus.value : "offline",
+      telehealth: telehealthStatus.status === "fulfilled" ? telehealthStatus.value : "offline",
+      maillinc: maillincStatus.status === "fulfilled" ? maillincStatus.value : "offline",
+      academy: academyStatus.status === "fulfilled" ? academyStatus.value : "offline",
+      
+      // AI & Communication Services (configuration status)
+      elevenlabs: checkElevenLabs(env),
+      deepseek: checkDeepSeek(env),
+      twilio: checkTwilio(env),
+      whatsapp: checkWhatsApp(env)
+    },
+    oracle_tunnel: "Oracle Cloud@Riyadh",
+    nphies_mirror: nphiesMirror,
+    telehealth_stats: telehealthStats?.results || [],
+    homecare_stats: homecareStats?.results || [],
+    services: {
+      basma_ai: "Voice-activated multilingual AI assistant",
+      givc: "Revenue Cycle Management",
+      nphies: "National Health Insurance Exchange",
+      oracle: "Enterprise Cloud Infrastructure",
+      sbs: "Saudi Billing System",
+      claimlinc: "Claims Processing & Adjudication",
+      homecare: "Home Healthcare Services",
+      telehealth: "Virtual Consultations",
+      maillinc: "Email Communications",
+      academy: "Healthcare Training Academy"
+    }
+  };
+}
+__name(health, "health");
+
+// src/routes/branches.js
+var branches = [
+  {
+    id: "R001",
+    name_ar: "\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A - \u0627\u0644\u0631\u064A\u0627\u0636",
+    name_en: "Hayat National Hospital - Riyadh",
+    city_ar: "\u0627\u0644\u0631\u064A\u0627\u0636",
+    city_en: "Riyadh",
+    address_ar: "\u062D\u064A \u0627\u0644\u0631\u0628\u0648\u0629\u060C \u0637\u0631\u064A\u0642 \u0627\u0644\u0641\u0631\u0639 \u0627\u0644\u062F\u0627\u0626\u0631\u064A \u0627\u0644\u0634\u0631\u0642\u064A",
+    address_en: "Eastern Ring Branch Road, Al-Rabwa District, Riyadh",
+    phone: "+966920000094",
+    emergency: "+966920000094",
+    email: "info@hayathospitals.com",
+    subdomain: "riyadh.hayathospitals.com",
+    offers_ar: "\u062E\u0635\u0648\u0645\u0627\u062A \u0644\u0644\u0645\u0631\u0636\u0649 \u0627\u0644\u0645\u0646\u0648\u0645\u064A\u0646 \u0644\u0641\u062A\u0631\u0627\u062A \u0637\u0648\u064A\u0644\u0629\u060C \u0628\u0631\u0646\u0627\u0645\u062C \u0632\u0631\u0627\u0639\u0629 \u062E\u0627\u0635",
+    offers_en: "Long-stay patient discounts, special transplant program",
+    departments: ["emergency", "internal", "surgery", "cardiology", "neurology", "orthopedics", "pediatrics", "obgyn", "ophthalmology", "dentistry", "psychiatry", "radiology", "laboratory", "pharmacy", "urology", "ent", "dermatology", "gastroenterology", "nephrology", "endocrinology", "rheumatology", "oncology", "neurosurgery", "vascular_surgery", "plastic_surgery", "pain_clinic"],
+    beds: 300,
+    established: 2005,
+    rating: 4.5,
+    lat: 24.7267,
+    lng: 46.6783
+  },
+  {
+    id: "J001",
+    name_ar: "\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A - \u062C\u0627\u0632\u0627\u0646",
+    name_en: "Hayat National Hospital - Jazan",
+    city_ar: "\u062C\u0627\u0632\u0627\u0646",
+    city_en: "Jazan",
+    address_ar: "\u0643\u0648\u0631\u0646\u064A\u0634 \u062C\u0627\u0632\u0627\u0646\u060C \u062D\u064A \u0627\u0644\u0634\u0627\u0637\u0626",
+    address_en: "Jazan Corniche, Al Shati District",
+    phone: "+966920000094",
+    emergency: "+966920000094",
+    email: "info@hayathospitals.com",
+    subdomain: "jazan.hayathospitals.com",
+    offers_ar: "\u062E\u0635\u0648\u0645\u0627\u062A \u0639\u0644\u0649 \u0627\u0644\u062C\u0631\u0627\u062D\u0627\u062A\u060C \u0645\u062E\u064A\u0645 \u0637\u0628\u064A \u0644\u062C\u0631\u0627\u062D\u0627\u062A \u0627\u0644\u0639\u064A\u0648\u0646",
+    offers_en: "Surgery discounts, medical camp for eye surgery patients",
+    departments: ["emergency", "internal", "surgery", "pediatrics", "obgyn", "ophthalmology", "ent", "dermatology", "gastroenterology", "cardiology", "neurology", "laboratory", "pharmacy"],
+    beds: 150,
+    established: 2012,
+    rating: 4.3,
+    lat: 16.8892,
+    lng: 42.5611
+  },
+  {
+    id: "K001",
+    name_ar: "\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A - \u062E\u0645\u064A\u0633 \u0645\u0634\u064A\u0637",
+    name_en: "Hayat National Hospital - Khamis Mushayt",
+    city_ar: "\u062E\u0645\u064A\u0633 \u0645\u0634\u064A\u0637",
+    city_en: "Khamis Mushayt",
+    address_ar: "\u0637\u0631\u064A\u0642 \u0627\u0644\u0623\u0645\u064A\u0631 \u0633\u0644\u0637\u0627\u0646\u060C \u0623\u0645 \u0633\u0631\u0627\u0631",
+    address_en: "Prince Sultan Road, Umm Sarar",
+    phone: "+966538081888",
+    phone2: "+966920000094",
+    emergency: "+966920000094",
+    email: "info@hayathospitals.com",
+    subdomain: "khamis.hayathospitals.com",
+    offers_ar: "\u0639\u0631\u0648\u0636 \u0627\u0644\u0639\u064A\u0648\u0646\u060C \u062E\u0635\u0648\u0645\u0627\u062A \u0627\u0644\u0625\u0642\u0627\u0645\u0629 \u0627\u0644\u0637\u0648\u064A\u0644\u0629",
+    offers_en: "Ophthalmology promotion, long-stay discounts",
+    departments: ["emergency", "internal", "surgery", "pediatrics", "obgyn", "orthopedics", "ophthalmology", "ent", "dermatology", "cardiology", "neurology", "urology", "psychiatry", "radiology", "laboratory", "pharmacy", "gastroenterology", "nephrology", "endocrinology", "pulmonology", "neurosurgery", "rehabilitation"],
+    beds: 180,
+    established: 2014,
+    rating: 4.2,
+    lat: 18.3063,
+    lng: 42.7288
+  },
+  {
+    id: "M001",
+    name_ar: "\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A - \u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0645\u0646\u0648\u0631\u0629",
+    name_en: "Hayat National Hospital - Madinah",
+    city_ar: "\u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0645\u0646\u0648\u0631\u0629",
+    city_en: "Madinah",
+    address_ar: "\u0637\u0631\u064A\u0642 \u0641\u0631\u0639 \u0627\u0644\u0647\u062C\u0631\u0629\u060C \u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0645\u0646\u0648\u0631\u0629 42316",
+    address_en: "Al-Hijra Branch Road, Madinah 42316",
+    phone: "+966920000094",
+    emergency: "+966920000094",
+    email: "info@hayathospitals.com",
+    offers_ar: "\u062E\u062F\u0645\u0627\u062A \u0637\u0628\u064A\u0629 \u0628\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u064A\u0646 \u0645\u062A\u062E\u0635\u0635\u064A\u0646\u060C \u062E\u0635\u0648\u0645\u0627\u062A 50+ \u0633\u0646\u0629\u060C \u0641\u062D\u0648\u0635\u0627\u062A \u0645\u062C\u0627\u0646\u064A\u0629",
+    offers_en: "Consultant-led medical services, 50+ senior discounts, free medical tests",
+    departments: ["emergency", "internal", "surgery", "cardiology", "pediatrics", "obgyn", "ophthalmology", "ent", "dermatology", "neurology", "nephrology", "endocrinology", "pulmonology", "laboratory", "pharmacy", "rehabilitation"],
+    beds: 200,
+    established: 2010,
+    rating: 4.4,
+    lat: 24.4672,
+    lng: 39.6119
+  },
+  {
+    id: "U001",
+    name_ar: "\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A - \u0639\u0646\u064A\u0632\u0629",
+    name_en: "Hayat National Hospital - Unayzah",
+    city_ar: "\u0639\u0646\u064A\u0632\u0629",
+    city_en: "Unayzah",
+    address_ar: "\u0627\u0644\u0642\u0635\u064A\u0645 - \u0639\u0646\u064A\u0632\u0629\u060C \u0637\u0631\u064A\u0642 \u0627\u0644\u0645\u062F\u064A\u0646\u0629",
+    address_en: "Al-Qassim - Unayzah, Medina Road",
+    phone: "+966920000094",
+    emergency: "+966920000094",
+    email: "info@hayathospitals.com",
+    subdomain: "unaizah.hayathospitals.com",
+    offers_ar: "\u0639\u0631\u0648\u0636 \u0645\u0633\u062A\u0645\u0631\u0629 \u0648\u0639\u0631\u0648\u0636 \u0627\u0644\u0631\u0641\u0627\u0647\u064A\u0629",
+    offers_en: "Ongoing promotions and wellness offers",
+    departments: ["emergency", "internal", "surgery", "pediatrics", "obgyn", "ophthalmology", "ent", "urology", "psychiatry", "radiology", "laboratory", "pharmacy", "gastroenterology", "cardiology", "neurology"],
+    beds: 120,
+    established: 2015,
+    rating: 4.1,
+    lat: 26.0867,
+    lng: 43.992
+  }
+];
+function getBranches() {
+  return branches;
+}
+__name(getBranches, "getBranches");
+function getBranch(id) {
+  return branches.find((b) => b.id === id) || null;
+}
+__name(getBranch, "getBranch");
+
+// src/routes/appointments.js
+init_response();
+async function createAppointment(req, env) {
+  const body = await req.json().catch(() => ({}));
+  const required = ["patient_id", "appointment_date", "appointment_time"];
+  for (const f of required) {
+    if (!body[f]) return json({ success: false, message: `Missing required field: ${f}` }, 400);
+  }
+  const result = await env.DB.prepare(
+    `INSERT INTO appointments (patient_id, provider_id, clinic_code, clinic_name, appointment_date, appointment_time, status, appointment_type, reason)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  ).bind(
+    body.patient_id,
+    body.provider_id || null,
+    body.clinic_code || "GEN",
+    body.clinic_name || "",
+    body.appointment_date,
+    body.appointment_time,
+    body.status || "scheduled",
+    body.appointment_type || "regular",
+    body.reason || ""
+  ).run();
+  return json({ success: true, appointment_id: result.meta?.last_row_id }, 201);
+}
+__name(createAppointment, "createAppointment");
+async function getAppointments(req, env, ctx, params, url) {
+  if (!url) url = new URL(req.url);
+  const search = url.searchParams.get("search") || "";
+  const branch = url.searchParams.get("branch") || "";
+  const date = url.searchParams.get("date") || "";
+  const status = url.searchParams.get("status") || "";
+  const patient = url.searchParams.get("patient_id") || "";
+  const limit = parseInt(url.searchParams.get("limit") || "50");
+  const offset = parseInt(url.searchParams.get("offset") || "0");
+  let query = `SELECT a.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en, p.phone as patient_phone`;
+  query += ` FROM appointments a LEFT JOIN patients p ON a.patient_id = p.id`;
+  const binds = [];
+  const conditions = [];
+  if (branch) {
+    conditions.push("a.branch_id = ?");
+    binds.push(branch);
+  }
+  if (date) {
+    conditions.push("a.appointment_date = ?");
+    binds.push(date);
+  }
+  if (status) {
+    conditions.push("a.status = ?");
+    binds.push(status);
+  }
+  if (patient) {
+    conditions.push("a.patient_id = ?");
+    binds.push(patient);
+  }
+  if (search) {
+    conditions.push("(p.full_name_ar LIKE ? OR p.full_name_en LIKE ?)");
+    binds.push(`%${search}%`, `%${search}%`);
+  }
+  if (conditions.length) query += " WHERE " + conditions.join(" AND ");
+  query += " ORDER BY a.appointment_date DESC, a.appointment_time ASC LIMIT ? OFFSET ?";
+  binds.push(limit, offset);
+  const { results } = await env.DB.prepare(query).bind(...binds).all();
+  return json({ success: true, appointments: results || [] });
+}
+__name(getAppointments, "getAppointments");
+async function getAppointment(req, env, ctx, params) {
+  const id = params[0];
+  const appt = await env.DB.prepare(
+    `SELECT a.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en, p.phone as patient_phone
+     FROM appointments a LEFT JOIN patients p ON a.patient_id = p.id WHERE a.id = ?`
+  ).bind(id).first();
+  if (!appt) {
+    return json({ success: false, message: "Appointment not found" }, 404);
+  }
+  return json({ success: true, appointment: appt });
+}
+__name(getAppointment, "getAppointment");
+async function updateAppointment(req, env, ctx, params) {
+  const id = params[0];
+  const body = await req.json();
+  const fields = [];
+  const binds = [];
+  for (const [key, value] of Object.entries(body)) {
+    const allowed = ["appointment_date", "appointment_time", "status", "appointment_type", "reason", "provider_id", "clinic_code", "clinic_name"];
+    if (allowed.includes(key)) {
+      fields.push(`${key} = ?`);
+      binds.push(value);
+    }
+  }
+  if (fields.length === 0) {
+    return json({ success: false, message: "No valid fields to update" }, 400);
+  }
+  fields.push("updated_at = datetime('now')");
+  binds.push(id);
+  await env.DB.prepare(`UPDATE appointments SET ${fields.join(", ")} WHERE id = ?`).bind(...binds).run();
+  return json({ success: true, message: "Appointment updated" });
+}
+__name(updateAppointment, "updateAppointment");
+async function cancelAppointment(req, env, ctx, params) {
+  const id = params[0];
+  await env.DB.prepare(`UPDATE appointments SET status = 'cancelled', updated_at = datetime('now') WHERE id = ?`).bind(id).run();
+  return json({ success: true, message: "Appointment cancelled" });
+}
+__name(cancelAppointment, "cancelAppointment");
+
+// src/routes/patients.js
+init_response();
+async function createPatient(req, env) {
+  const body = await req.json().catch(() => ({}));
+  if (!body.phone) return json({ success: false, message: "phone is required" }, 400);
+  const nameAr = body.full_name_ar || body.name_ar || [body.first_name_ar, body.last_name_ar].filter(Boolean).join(" ") || body.full_name_en || body.name_en || "Patient";
+  const nameEn = body.full_name_en || body.name_en || [body.first_name_en, body.last_name_en].filter(Boolean).join(" ") || nameAr;
+  const nationalId = body.national_id || null;
+  const existing = nationalId ? await env.DB.prepare("SELECT * FROM patients WHERE national_id = ? OR phone = ? LIMIT 1").bind(nationalId, body.phone).first() : await env.DB.prepare("SELECT * FROM patients WHERE phone = ? LIMIT 1").bind(body.phone).first();
+  if (existing) {
+    return json({
+      success: true,
+      patient_id: existing.id,
+      mrn: existing.mrn,
+      existing: true,
+      message: "Patient already exists"
+    });
+  }
+  const mrn = "HNH-" + Date.now();
+  const result = await env.DB.prepare(
+    `INSERT INTO patients (mrn, national_id, first_name_ar, last_name_ar, full_name_ar, first_name_en, last_name_en, full_name_en, phone, email, date_of_birth, gender, blood_type, allergies)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  ).bind(
+    mrn,
+    nationalId,
+    body.first_name_ar || nameAr,
+    body.last_name_ar || null,
+    nameAr,
+    body.first_name_en || nameEn,
+    body.last_name_en || null,
+    nameEn,
+    body.phone,
+    body.email || null,
+    body.date_of_birth || body.dob || null,
+    body.gender || null,
+    body.blood_type || null,
+    body.allergies || null
+  ).run();
+  return json({ success: true, patient_id: result.meta?.last_row_id, mrn, message: "Patient created successfully" }, 201);
+}
+__name(createPatient, "createPatient");
+async function getPatients(req, env, ctx, params, url) {
+  if (!url) url = new URL(req.url);
+  const search = url.searchParams.get("search") || "";
+  const branch = url.searchParams.get("branch") || "";
+  const limit = parseInt(url.searchParams.get("limit") || "50");
+  const offset = parseInt(url.searchParams.get("offset") || "0");
+  let query = "SELECT * FROM patients";
+  let binds = [];
+  const conditions = [];
+  if (search) {
+    conditions.push("(full_name_ar LIKE ? OR full_name_en LIKE ? OR phone LIKE ? OR national_id LIKE ?)");
+    const s = `%${search}%`;
+    binds.push(s, s, s, s);
+  }
+  if (conditions.length) {
+    query += " WHERE " + conditions.join(" AND ");
+  }
+  query += " ORDER BY created_at DESC LIMIT ? OFFSET ?";
+  binds.push(limit, offset);
+  const { results } = await env.DB.prepare(query).bind(...binds).all();
+  return json({ success: true, patients: results || [], total: results?.length || 0 });
+}
+__name(getPatients, "getPatients");
+async function getPatient(req, env, ctx, params) {
+  const id = params[0];
+  const patient = await env.DB.prepare("SELECT * FROM patients WHERE id = ? OR national_id = ?").bind(id, id).first();
+  if (!patient) {
+    return new Response(JSON.stringify({ success: false, message: "Patient not found" }), {
+      status: 404,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+  return json({ success: true, patient });
+}
+__name(getPatient, "getPatient");
+async function updatePatient(req, env, ctx, params) {
+  const id = params[0];
+  const body = await req.json();
+  const fields = [];
+  const binds = [];
+  for (const [key, value] of Object.entries(body)) {
+    const allowed = ["national_id", "full_name_ar", "full_name_en", "phone", "email", "date_of_birth", "gender", "insurance_company", "insurance_id", "blood_type", "allergies"];
+    if (allowed.includes(key)) {
+      fields.push(`${key} = ?`);
+      binds.push(value);
+    }
+  }
+  if (fields.length === 0) {
+    return json({ success: false, message: "No valid fields to update" }, 400);
+  }
+  fields.push("updated_at = datetime('now')");
+  binds.push(id);
+  await env.DB.prepare(`UPDATE patients SET ${fields.join(", ")} WHERE id = ?`).bind(...binds).run();
+  return json({ success: true, message: "Patient updated" });
+}
+__name(updatePatient, "updatePatient");
+
+// src/routes/claims.js
+init_response();
+function generateClaimNumber() {
+  const date = /* @__PURE__ */ new Date();
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const seq = String(Math.floor(Math.random() * 99999)).padStart(5, "0");
+  return `NH${y}${m}-${seq}`;
+}
+__name(generateClaimNumber, "generateClaimNumber");
+async function createClaim(req, env) {
+  const body = await req.json();
+  const claimNumber = generateClaimNumber();
+  const patientId = parseInt(body.patient_id) || 0;
+  const result = await env.DB.prepare(
+    `INSERT INTO claims (claim_number, patient_id, total_amount, status, payer_id, payer_name, claim_type)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`
+  ).bind(
+    claimNumber,
+    patientId,
+    body.total_amount,
+    body.status || "draft",
+    body.payer_id || null,
+    body.payer_name || null,
+    body.claim_type || "inpatient"
+  ).run();
+  return json({ success: true, claim_id: result?.meta?.last_row_id, claim_number: claimNumber }, 201);
+}
+__name(createClaim, "createClaim");
+async function getClaims(req, env, ctx, params, url) {
+  if (!url) url = new URL(req.url);
+  const patient = url.searchParams.get("patient_id") || "";
+  const branch = url.searchParams.get("branch") || "";
+  const status = url.searchParams.get("status") || "";
+  const limit = parseInt(url.searchParams.get("limit") || "50");
+  const offset = parseInt(url.searchParams.get("offset") || "0");
+  let query = `SELECT c.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en`;
+  query += ` FROM claims c LEFT JOIN patients p ON c.patient_id = p.id`;
+  const binds = [];
+  const conditions = [];
+  if (patient) {
+    conditions.push("c.patient_id = ?");
+    binds.push(patient);
+  }
+  if (status) {
+    conditions.push("c.status = ?");
+    binds.push(status);
+  }
+  if (conditions.length) query += " WHERE " + conditions.join(" AND ");
+  query += " ORDER BY c.created_at DESC LIMIT ? OFFSET ?";
+  binds.push(limit, offset);
+  const { results } = await env.DB.prepare(query).bind(...binds).all();
+  return json({ success: true, claims: results || [] });
+}
+__name(getClaims, "getClaims");
+async function getClaim(req, env, ctx, params) {
+  const id = params[0];
+  const claim = await env.DB.prepare(
+    `SELECT c.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en, p.phone as patient_phone
      FROM claims c LEFT JOIN patients p ON c.patient_id = p.id
-     WHERE c.id = ? OR c.claim_number = ?`).bind(n,n).first();return i?c({success:!0,claim:i}):c({success:!1,message:"Claim not found"},404)}r(Tu,"getClaim");async function Iu(u,a,e,t){let n=t[0],i=await a.DB.prepare("SELECT * FROM claims WHERE id = ? OR claim_number = ?").bind(n,n).first();if(!i)return c({success:!1,message:"Claim not found"},404);if(i.status!=="draft")return c({success:!1,message:"Claim already submitted"},400);let s="NPH"+Date.now().toString(36).toUpperCase(),o=new Date().toISOString();return await a.DB.prepare(`UPDATE claims SET status = ?, nphies_claim_id = ?, submission_date = ?, approval_date = datetime('now')
-     WHERE id = ?`).bind("submitted",s,o,i.id).run(),c({success:!0,message:"Claim submitted to NPHIES successfully",nphies_transaction_id:s,nphies_status:"acknowledged",claim_id:i.id,claim_number:i.claim_number})}r(Iu,"submitClaimToNPHIES");async function Bu(u,a,e,t){let n=t[0],i=await a.DB.prepare("SELECT * FROM claims WHERE id = ? OR claim_number = ?").bind(n,n).first();if(!i)return c({success:!1,message:"Claim not found"},404);let s=["acknowledged","accepted","in_review","partially_paid","paid"],o=s[Math.floor(Math.random()*s.length)];return c({success:!0,claim_id:i.id,claim_number:i.claim_number,nphies_status:o,nphies_transaction_id:i.nphies_claim_id,last_checked:new Date().toISOString()})}r(Bu,"getClaimNPHIESStatus");_();var Je="https://api.brainsait.org/nphies",Ke={r001:"riyadh",riyadh:"riyadh",j001:"jizan",jazan:"jizan",jizan:"jizan",k001:"khamis",khamis:"khamis",khamis_mushayt:"khamis",khamis_mushait:"khamis",khamismushayt:"khamis",khamismushait:"khamis",m001:"madinah",madinah:"madinah",madina:"madinah",medina:"madinah",u001:"unaizah",unaizah:"unaizah",unayzah:"unaizah",abha:"abha"};function Qe(u){return u.CLAIMLINC_KEY||""}r(Qe,"claimlincKey");function Xe(u){let a=String(u||"riyadh").trim().toLowerCase().replace(/[\s-]+/g,"_");return Ke[a]||"riyadh"}r(Xe,"claimlincBranch");function A(...u){for(let a of u){let e=String(a||"").trim();if(e)return e}return""}r(A,"firstIdentifier");async function I(u,a={}){let e=Qe(u),t=A(a.identifier);if(!e||!t)return null;let n=Xe(a.branch||u.NPHIES_BRANCH),i=new URL(`${Je}/eligibility/${n}`);i.searchParams.set("identifier",t),i.searchParams.set("page",String(a.page||"0")),i.searchParams.set("size",String(a.size||"10"));try{let s=u.CLAIMLINC_SERVICE?await u.CLAIMLINC_SERVICE.fetch(new Request(`https://claimlinc.internal/nphies/eligibility/${n}${i.search}`,{headers:{"X-API-Key":e,Accept:"application/json"}})):await fetch(i.toString(),{headers:{"X-API-Key":e,Accept:"application/json"},signal:AbortSignal.timeout(a.timeoutMs||8e3)});return s.ok?s.json():null}catch(s){return console.error("ClaimLinc eligibility error:",s?.message?.slice(0,100)),null}}r(I,"claimlincEligibility");async function Lu(u,a){let e=await u.json(),{patient_id:t,insurance_id:n,insurance_company:i,service_type:s,provider_npi:o,national_id:l,branch:d}=e;if(!n)return c({success:!1,message:"Insurance ID required"},400);let m=null;t&&(m=await a.DB.prepare("SELECT * FROM patients WHERE id = ?").bind(t).first());let p="NPH-EB-"+Date.now().toString(36).toUpperCase(),g=null,f=await I(a,{branch:d,identifier:A(l,m?.national_id,n)});f&&(g={...f,transaction_id:p,subscriber_id:n,insurance_company:i||null,service_type:s||"medical",provider_npi:o||null,source:"claimlinc-live"}),g||(g={transaction_id:p,source:"fallback",warning:"ClaimLinc unavailable \u2014 response is estimated, not live",subscriber:{insurance_id:n,name:m&&(m.full_name_en||m.full_name_ar)||"Patient",relationship:"Self"},payer:{company:i||"Unknown",payer_id:null},status:"unknown",coverage:{inpatient:{covered:null,deductible:null,co_pay_percentage:null,max_benefit:null},outpatient:{covered:null,deductible:null,co_pay_percentage:null},pharmacy:{covered:null,co_pay_percentage:null},dental:{covered:null,co_pay_percentage:null}},exclusions:[],effective_date:null,expiry_date:null,network:null});try{a.DB&&await a.DB.prepare(`INSERT INTO eligibility_checks (id, patient_id, insurance_company, service_type, response_json, status)
-         VALUES (?, ?, ?, ?, ?, ?)`).bind("ELG"+Date.now().toString(36).toUpperCase(),t||null,i||null,s||"medical",JSON.stringify(g),g.source==="claimlinc-live"?"completed":"fallback").run()}catch{}return c({success:!0,eligibility:g})}r(Lu,"checkEligibility");async function Hu(u,a){let e=await u.json(),{insurance_id:t,insurance_company:n,national_id:i,branch:s}=e;if(!t)return c({success:!1,message:"Insurance ID required"},400);if(!(t.length>=8&&/^\d+$/.test(t.replace(/-/g,""))))return c({success:!0,verified:!1,message:"Insurance ID format invalid \u2014 must be numeric, minimum 8 digits"});let l=await I(a,{branch:s,identifier:A(i,t),timeoutMs:6e3});return l?c({success:!0,verified:l.status==="active"||l.verified===!0||Number(l.totalElements||l.total||0)>0,details:l,source:"claimlinc-live"}):c({success:!0,verified:!0,source:"format-only",warning:"Live verification unavailable \u2014 format only checked",details:{company:n||"Unknown",insurance_id:t},message:"Insurance ID format valid. Live network verification unavailable."})}r(Hu,"verifyInsurance");async function Du(u,a,e,t){let n=t[0],{results:i}=await a.DB.prepare("SELECT * FROM eligibility_checks WHERE patient_id = ? ORDER BY check_date DESC LIMIT 20").bind(n).all();if(i)for(let s of i)try{s.response_json=JSON.parse(s.response_json)}catch{}return c({success:!0,checks:i||[]})}r(Du,"getEligibilityHistory");q();_();var n0="https://api.brainsait.org/nphies",Mu="1.3.6.1.4.1.61026";function i0(u){return u.CLAIMLINC_KEY||""}r(i0,"clKey");async function N(u,a,e,t="POST"){let n=i0(u);if(!n)return null;try{let i=await fetch(`${n0}${a}`,{method:t,headers:{"Content-Type":"application/json","X-API-Key":n},body:e?JSON.stringify(e):void 0,signal:AbortSignal.timeout(8e3)});return i.ok?i.json():null}catch(i){return console.error(`ClaimLinc ${a} error:`,i?.message?.slice(0,80)),null}}r(N,"claimlinc");async function Ru(u,a){let e=await u.json(),t="NPH270-"+Date.now().toString(36).toUpperCase(),n=await I(a,{branch:e.branch,identifier:A(e.national_id,e.identifier,e.subscriber_id)});return n?c({success:!0,nphies_version:"V2",transaction_type:"270",source:"claimlinc-live",ack:{transaction_id:t,status:"accepted",timestamp:new Date().toISOString()},response_271:n}):c({success:!0,nphies_version:"V2",transaction_type:"270",source:"fallback",warning:"ClaimLinc unavailable \u2014 eligibility not verified",ack:{transaction_id:t,status:"pending",timestamp:new Date().toISOString()},response_271:{subscriber:{id:e.subscriber_id||"Unknown",name:e.subscriber_name||"Patient",eligibility_status:"Unknown",effective_date:null,benefits_end_date:null},benefits:null,rejection_info:"Live NPHIES endpoint unavailable \u2014 resubmit when restored"}})}r(Ru,"submit270");async function Pu(u,a){let e=await u.json(),t="NPH278-"+Date.now().toString(36).toUpperCase(),n=await N(a,"/authorization",{transaction_id:t,nphies_version:"V2",facility_oid:Mu,facility_license:a.FACILITY_LICENSE||"10000000000988",subscriber_id:e.subscriber_id,patient_id:e.patient_id,diagnosis_code:e.diagnosis_code,procedure_code:e.procedure_code,service_type:e.service_type,insurance_company:e.insurance_company,provider_npi:e.provider_npi,clinical_notes:e.clinical_notes});return n?c({success:!0,nphies_version:"V2",transaction_type:"278",source:"claimlinc-live",ack:{transaction_id:t,status:"accepted",timestamp:new Date().toISOString()},authorization:n}):c({success:!0,nphies_version:"V2",transaction_type:"278",source:"fallback",warning:"ClaimLinc unavailable \u2014 PA not confirmed with payer",ack:{transaction_id:t,status:"pending",timestamp:new Date().toISOString()},authorization:{reference_number:null,status:"Pending",service_type:e.service_type||"Medical Care",diagnosis_code:e.diagnosis_code||null,procedure_code:e.procedure_code||null,authorized_units:null,effective_date:null,expiration_date:null,provider_notes:"Authorization pending \u2014 ClaimLinc endpoint unavailable. Resubmit or obtain manual PA."}})}r(Pu,"submit278");async function ju(u,a){let e=await u.json(),t="NPH837-"+Date.now().toString(36).toUpperCase(),n="CLM"+Date.now().toString(36).toUpperCase(),i=await N(a,"/claims/submit",{transaction_id:t,claim_reference:n,nphies_version:"V2",facility_oid:Mu,facility_license:a.FACILITY_LICENSE||"10000000000988",subscriber_id:e.subscriber_id,patient_id:e.patient_id,insurance_company:e.insurance_company,total_amount:e.total_amount,patient_share:e.patient_share,diagnosis_codes:e.diagnosis_codes,procedure_codes:e.procedure_codes,service_date:e.service_date,provider_npi:e.provider_npi,prior_auth_number:e.prior_auth_number});return i?c({success:!0,nphies_version:"V2",transaction_type:"837P",source:"claimlinc-live",ack:{transaction_id:t,claim_reference:n,status:"Accepted",timestamp:new Date().toISOString(),edi_ack_code:"TA1"},claim:i}):c({success:!0,nphies_version:"V2",transaction_type:"837P",source:"fallback",warning:"ClaimLinc unavailable \u2014 claim queued locally, not submitted to payer",ack:{transaction_id:t,claim_reference:n,status:"Queued",timestamp:new Date().toISOString(),edi_ack_code:null,ack_detail:"Claim saved locally. Resubmit when ClaimLinc endpoint is restored."},claim:{claim_reference:n,submitted_amount:e.total_amount||null,patient_responsibility:e.patient_share||null,payer:e.insurance_company||null,status:"queued"}})}r(ju,"submit837");async function zu(u,a,e,t){let n=t[0],i="NPH276-"+Date.now().toString(36).toUpperCase(),s=await N(a,`/claims/${n}/status`,null,"GET");if(s)return c({success:!0,nphies_version:"V2",transaction_type:"276/277",source:"claimlinc-live",ack:{transaction_id:i,timestamp:new Date().toISOString()},claim_status:{claim_id:n,...s}});let o=null;try{o=await a.DB.prepare("SELECT * FROM claims WHERE id = ? OR claim_reference = ?").bind(n,n).first()}catch{}return c({success:!0,nphies_version:"V2",transaction_type:"276/277",source:o?"local-db":"fallback",warning:"ClaimLinc unavailable \u2014 showing local record only",ack:{transaction_id:i,timestamp:new Date().toISOString()},claim_status:{claim_id:n,status:o?o.status||"Unknown":"Not Found",payer_claim_number:o?o.payer_claim_number:null,last_updated:o?o.updated_at:null}})}r(zu,"getClaimStatus276");async function $u(u,a){let e=await u.json(),t="NPH835-"+Date.now().toString(36).toUpperCase(),n=await N(a,"/remittance",{transaction_id:t,payer:e.payer,check_number:e.check_number,payment_date:e.payment_date,claims:e.claims});return n?c({success:!0,nphies_version:"V2",transaction_type:"835",source:"claimlinc-live",ack:{transaction_id:t,status:"Processed",timestamp:new Date().toISOString()},payment:n}):c({success:!0,nphies_version:"V2",transaction_type:"835",source:"fallback",warning:"ClaimLinc unavailable \u2014 remittance recorded locally only",ack:{transaction_id:t,status:"Stored",timestamp:new Date().toISOString()},payment:{payer:e.payer||null,total_paid:e.total_paid||null,check_number:e.check_number||"CHK"+Date.now().toString(36).toUpperCase(),payment_date:e.payment_date||new Date().toISOString().split("T")[0],claims_covered:e.claims?.length||0,note:"Reprocess via ClaimLinc when endpoint is restored."}})}r($u,"receive835");_();q();function Uu(u){if(!u)return null;let a=[],e=u.full_name_ar||u.name_ar||"",t=u.full_name_en||u.name_en||"";if(e||t){let n={use:"official"};t&&(n.text=t),e&&(n.text_ar=e),a.push(n)}return{resourceType:"Patient",id:u.id,identifier:[{system:"https://hnh.brainsait.org/identifier/patient",value:u.id},...u.national_id?[{system:"https://nphies.sa/identifier/national-id",value:u.national_id}]:[],...u.insurance_id?[{system:"https://nphies.sa/identifier/insurance",value:u.insurance_id,assigner:{display:u.insurance_company}}]:[]],active:!0,name:a,telecom:[...u.phone?[{system:"phone",value:u.phone,use:"mobile"}]:[],...u.email?[{system:"email",value:u.email,use:"work"}]:[]],gender:u.gender||"unknown",birthDate:u.date_of_birth||u.dob||null,managingOrganization:{reference:"Organization/HNH-R001",display:"Hayat National Hospital - Gharnata"},generalPractitioner:[],communication:[{language:{coding:[{system:"urn:ietf:bcp:47",code:"ar"}],text:"Arabic"},preferred:!0},{language:{coding:[{system:"urn:ietf:bcp:47",code:"en"}],text:"English"}}],extension:[...u.blood_type?[{url:"http://hl7.org/fhir/StructureDefinition/patient-bloodType",valueString:u.blood_type}]:[],...u.allergies?[{url:"http://hl7.org/fhir/StructureDefinition/patient-allergies",valueString:u.allergies}]:[]]}}r(Uu,"fhirPatient");function s0(u){if(!u)return null;let a=u.education&&u.education.length?u.education.map(t=>({identifier:[],code:{coding:[{system:"http://terminology.hl7.org/CodeSystem/v2-0360",code:"MD",display:t.degree}]},period:{start:t.year?`${t.year}-01-01`:"2000-01-01"},issuer:{display:t.institution}})):u.specialty?[{code:{text:u.specialty}}]:[],e=u.languages&&u.languages.length?u.languages:["ar","en"];return{resourceType:"Practitioner",id:u.id,identifier:[{system:"https://hnh.brainsait.org/identifier/provider",value:u.id},...u.givc_oid?[{system:"urn:ietf:rfc:3986",value:`urn:oid:${u.givc_oid}`}]:[]],active:!0,name:[{use:"official",text:u.name_en||u.name_ar||"",text_en:u.name_en||"",text_ar:u.name_ar||""}],qualification:a,communication:e.map(t=>({coding:[{system:"urn:ietf:bcp:47",code:t}]})),extension:[...u.givc_registered?[{url:"https://hnh.brainsait.org/fhir/StructureDefinition/givc-registered",valueBoolean:!0}]:[],...u.branch_id?[{url:"https://hnh.brainsait.org/fhir/StructureDefinition/provider-branch",valueString:u.branch_id}]:[]]}}r(s0,"fhirPractitioner");function o0(u){return u?{resourceType:"Appointment",id:u.id,status:u.status==="scheduled"?"booked":u.status,start:`${u.appointment_date}T${u.appointment_time}:00`,participant:[...u.patient_id?[{actor:{reference:`Patient/${u.patient_id}`},status:"accepted"}]:[],...u.provider_id?[{actor:{reference:`Practitioner/${u.provider_id}`},status:"accepted"}]:[]],description:u.notes||"",serviceType:[{coding:[{system:"http://snomed.info/sct",display:u.department_id}]}]}:null}r(o0,"fhirAppointment");function r0(u){return u?{resourceType:"Claim",id:u.id,identifier:[{system:"https://hnh.brainsait.org/identifier/claim",value:u.claim_number}],status:(u.status==="draft"||u.status==="submitted","active"),type:{coding:[{system:"http://terminology.hl7.org/CodeSystem/claim-type",code:"professional"}]},use:"claim",patient:{reference:`Patient/${u.patient_id}`},created:u.created_at||new Date().toISOString(),insurer:{display:u.insurance_company||"Unknown"},provider:u.provider_id?{reference:`Practitioner/${u.provider_id}`}:{},priority:{coding:[{code:"normal"}]},total:{value:u.total_amount,currency:"SAR"}}:null}r(r0,"fhirClaim");async function Fu(u,a,e,t){let n=t[0],i=await a.DB.prepare("SELECT * FROM patients WHERE id = ? OR national_id = ?").bind(n,n).first();return i?c(Uu(i)):c({success:!1,message:"Patient not found"},404)}r(Fu,"getFHIRPatient");async function Gu(u,a,e,t,n){let i=n.searchParams.get("name")||"",s=n.searchParams.get("identifier")||"",o=n.searchParams.get("phone")||"",l="SELECT * FROM patients WHERE 1=1",d=[];i&&(l+=" AND (full_name_ar LIKE ? OR full_name_en LIKE ?)",d.push(`%${i}%`,`%${i}%`)),s&&(l+=" AND (id LIKE ? OR national_id LIKE ?)",d.push(`%${s}%`,`%${s}%`)),o&&(l+=" AND phone LIKE ?",d.push(`%${o}%`));let{results:m}=await a.DB.prepare(l+" LIMIT 50").bind(...d).all();return c({resourceType:"Bundle",type:"searchset",total:m?.length||0,entry:(m||[]).map(p=>({resource:Uu(p),search:{mode:"match"}}))})}r(Gu,"searchFHIRPatients");async function Vu(u,a,e,t){let n=t[0],{getProvider:i}=await Promise.resolve().then(()=>(q(),Nu)),s=await i(n,a);return s?c(s0(s)):c({success:!1,message:"Provider not found"},404)}r(Vu,"getFHIRPractitioner");async function Yu(u,a,e,t){let n=t[0],i=await a.DB.prepare("SELECT * FROM appointments WHERE id = ?").bind(n).first();return i?c(o0(i)):c({success:!1,message:"Appointment not found"},404)}r(Yu,"getFHIRAppointment");async function Wu(u,a,e,t){let n=t[0],i=await a.DB.prepare("SELECT * FROM claims WHERE id = ? OR claim_number = ?").bind(n,n).first();return i?c(r0(i)):c({success:!1,message:"Claim not found"},404)}r(Wu,"getFHIRClaim");async function Ju(u,a,e,t){let n=t[0],i=await a.DB.prepare("SELECT * FROM patients WHERE id = ? OR national_id = ?").bind(n,n).first();return i?c({resourceType:"Coverage",id:`COV-${i.id}`,status:"active",kind:"insurance",subscriber:{reference:`Patient/${i.id}`},subscriberId:i.insurance_id||"N/A",beneficiary:{reference:`Patient/${i.id}`},relationship:{coding:[{system:"http://terminology.hl7.org/CodeSystem/subscriber-relationship",code:"self"}]},payor:[{display:i.insurance_company||"Self-Pay"}],period:{start:"2026-01-01",end:"2026-12-31"}}):c({success:!1,message:"Patient not found"},404)}r(Ju,"getFHIRCoverage");_();S();var c0=x.DEPARTMENTS||[],l0=x.CORPORATE||{},U=l0.STATS||{},d0=x.DEPARTMENTS_FULL||[];async function Ku(u){let a=U.doctors||700;try{let t=await u.DB.prepare("SELECT COUNT(*) as c FROM providers WHERE is_active = 1").first();t&&t.c&&(a=t.c)}catch{}let e=u.DB?await u.DB.prepare(`SELECT
+     WHERE c.id = ? OR c.claim_number = ?`
+  ).bind(id, id).first();
+  if (!claim) return json({ success: false, message: "Claim not found" }, 404);
+  return json({ success: true, claim });
+}
+__name(getClaim, "getClaim");
+async function submitClaimToNPHIES(req, env, ctx, params) {
+  const id = params[0];
+  const claim = await env.DB.prepare("SELECT * FROM claims WHERE id = ? OR claim_number = ?").bind(id, id).first();
+  if (!claim) return json({ success: false, message: "Claim not found" }, 404);
+  if (claim.status !== "draft") return json({ success: false, message: "Claim already submitted" }, 400);
+  const nphiesId = "NPH" + Date.now().toString(36).toUpperCase();
+  const now = (/* @__PURE__ */ new Date()).toISOString();
+  await env.DB.prepare(
+    `UPDATE claims SET status = ?, nphies_claim_id = ?, submission_date = ?, approval_date = datetime('now')
+     WHERE id = ?`
+  ).bind("submitted", nphiesId, now, claim.id).run();
+  return json({
+    success: true,
+    message: "Claim submitted to NPHIES successfully",
+    nphies_transaction_id: nphiesId,
+    nphies_status: "acknowledged",
+    claim_id: claim.id,
+    claim_number: claim.claim_number
+  });
+}
+__name(submitClaimToNPHIES, "submitClaimToNPHIES");
+async function getClaimNPHIESStatus(req, env, ctx, params) {
+  const id = params[0];
+  const claim = await env.DB.prepare("SELECT * FROM claims WHERE id = ? OR claim_number = ?").bind(id, id).first();
+  if (!claim) return json({ success: false, message: "Claim not found" }, 404);
+  const statuses = ["acknowledged", "accepted", "in_review", "partially_paid", "paid"];
+  const mockStatus = statuses[Math.floor(Math.random() * statuses.length)];
+  return json({
+    success: true,
+    claim_id: claim.id,
+    claim_number: claim.claim_number,
+    nphies_status: mockStatus,
+    nphies_transaction_id: claim.nphies_claim_id,
+    last_checked: (/* @__PURE__ */ new Date()).toISOString()
+  });
+}
+__name(getClaimNPHIESStatus, "getClaimNPHIESStatus");
+
+// src/routes/eligibility.js
+init_response();
+
+// src/utils/claimlinc.js
+var CLAIMLINC_BASE = "https://api.brainsait.org/nphies";
+var BRANCH_ALIASES = {
+  r001: "riyadh",
+  riyadh: "riyadh",
+  j001: "jizan",
+  jazan: "jizan",
+  jizan: "jizan",
+  k001: "khamis",
+  khamis: "khamis",
+  khamis_mushayt: "khamis",
+  khamis_mushait: "khamis",
+  khamismushayt: "khamis",
+  khamismushait: "khamis",
+  m001: "madinah",
+  madinah: "madinah",
+  madina: "madinah",
+  medina: "madinah",
+  u001: "unaizah",
+  unaizah: "unaizah",
+  unayzah: "unaizah",
+  abha: "abha"
+};
+function claimlincKey(env) {
+  return env.CLAIMLINC_KEY || "";
+}
+__name(claimlincKey, "claimlincKey");
+function claimlincBranch(value) {
+  const key = String(value || "riyadh").trim().toLowerCase().replace(/[\s-]+/g, "_");
+  return BRANCH_ALIASES[key] || "riyadh";
+}
+__name(claimlincBranch, "claimlincBranch");
+function firstIdentifier(...values) {
+  for (const value of values) {
+    const identifier = String(value || "").trim();
+    if (identifier) return identifier;
+  }
+  return "";
+}
+__name(firstIdentifier, "firstIdentifier");
+async function claimlincEligibility(env, options = {}) {
+  const key = claimlincKey(env);
+  const identifier = firstIdentifier(options.identifier);
+  if (!key || !identifier) return null;
+  const branch = claimlincBranch(options.branch || env.NPHIES_BRANCH);
+  const url = new URL(`${CLAIMLINC_BASE}/eligibility/${branch}`);
+  url.searchParams.set("identifier", identifier);
+  url.searchParams.set("page", String(options.page || "0"));
+  url.searchParams.set("size", String(options.size || "10"));
+  try {
+    const res = env.CLAIMLINC_SERVICE ? await env.CLAIMLINC_SERVICE.fetch(new Request(`https://claimlinc.internal/nphies/eligibility/${branch}${url.search}`, {
+      headers: { "X-API-Key": key, Accept: "application/json" }
+    })) : await fetch(url.toString(), {
+      headers: { "X-API-Key": key, Accept: "application/json" },
+      signal: AbortSignal.timeout(options.timeoutMs || 8e3)
+    });
+    if (res.ok) return res.json();
+    return null;
+  } catch (e) {
+    console.error("ClaimLinc eligibility error:", e?.message?.slice(0, 100));
+    return null;
+  }
+}
+__name(claimlincEligibility, "claimlincEligibility");
+
+// src/routes/eligibility.js
+async function checkEligibility(req, env) {
+  const body = await req.json();
+  const {
+    patient_id,
+    insurance_id,
+    insurance_company,
+    service_type,
+    // medical, dental, pharmacy, hospital
+    provider_npi,
+    national_id,
+    branch
+  } = body;
+  if (!insurance_id) {
+    return json({ success: false, message: "Insurance ID required" }, 400);
+  }
+  let patient = null;
+  if (patient_id) {
+    patient = await env.DB.prepare("SELECT * FROM patients WHERE id = ?").bind(patient_id).first();
+  }
+  const transactionId = "NPH-EB-" + Date.now().toString(36).toUpperCase();
+  let eligibilityResponse = null;
+  const clData = await claimlincEligibility(env, {
+    branch,
+    identifier: firstIdentifier(national_id, patient?.national_id, insurance_id)
+  });
+  if (clData) {
+    eligibilityResponse = {
+      ...clData,
+      transaction_id: transactionId,
+      subscriber_id: insurance_id,
+      insurance_company: insurance_company || null,
+      service_type: service_type || "medical",
+      provider_npi: provider_npi || null,
+      source: "claimlinc-live"
+    };
+  }
+  if (!eligibilityResponse) {
+    eligibilityResponse = {
+      transaction_id: transactionId,
+      source: "fallback",
+      warning: "ClaimLinc unavailable \u2014 response is estimated, not live",
+      subscriber: {
+        insurance_id,
+        name: patient ? patient.full_name_en || patient.full_name_ar || "Patient" : "Patient",
+        relationship: "Self"
+      },
+      payer: {
+        company: insurance_company || "Unknown",
+        payer_id: null
+      },
+      status: "unknown",
+      coverage: {
+        inpatient: { covered: null, deductible: null, co_pay_percentage: null, max_benefit: null },
+        outpatient: { covered: null, deductible: null, co_pay_percentage: null },
+        pharmacy: { covered: null, co_pay_percentage: null },
+        dental: { covered: null, co_pay_percentage: null }
+      },
+      exclusions: [],
+      effective_date: null,
+      expiry_date: null,
+      network: null
+    };
+  }
+  try {
+    if (env.DB) {
+      await env.DB.prepare(
+        `INSERT INTO eligibility_checks (id, patient_id, insurance_company, service_type, response_json, status)
+         VALUES (?, ?, ?, ?, ?, ?)`
+      ).bind(
+        "ELG" + Date.now().toString(36).toUpperCase(),
+        patient_id || null,
+        insurance_company || null,
+        service_type || "medical",
+        JSON.stringify(eligibilityResponse),
+        eligibilityResponse.source === "claimlinc-live" ? "completed" : "fallback"
+      ).run();
+    }
+  } catch (e) {
+  }
+  return json({ success: true, eligibility: eligibilityResponse });
+}
+__name(checkEligibility, "checkEligibility");
+async function verifyInsurance(req, env) {
+  const body = await req.json();
+  const { insurance_id, insurance_company, national_id, branch } = body;
+  if (!insurance_id) {
+    return json({ success: false, message: "Insurance ID required" }, 400);
+  }
+  const isValidFormat = insurance_id.length >= 8 && /^\d+$/.test(insurance_id.replace(/-/g, ""));
+  if (!isValidFormat) {
+    return json({
+      success: true,
+      verified: false,
+      message: "Insurance ID format invalid \u2014 must be numeric, minimum 8 digits"
+    });
+  }
+  const clData = await claimlincEligibility(env, {
+    branch,
+    identifier: firstIdentifier(national_id, insurance_id),
+    timeoutMs: 6e3
+  });
+  if (clData) {
+    return json({
+      success: true,
+      verified: clData.status === "active" || clData.verified === true || Number(clData.totalElements || clData.total || 0) > 0,
+      details: clData,
+      source: "claimlinc-live"
+    });
+  }
+  return json({
+    success: true,
+    verified: true,
+    source: "format-only",
+    warning: "Live verification unavailable \u2014 format only checked",
+    details: {
+      company: insurance_company || "Unknown",
+      insurance_id
+    },
+    message: "Insurance ID format valid. Live network verification unavailable."
+  });
+}
+__name(verifyInsurance, "verifyInsurance");
+async function getEligibilityHistory(req, env, ctx, params) {
+  const patientId = params[0];
+  const { results } = await env.DB.prepare(
+    "SELECT * FROM eligibility_checks WHERE patient_id = ? ORDER BY check_date DESC LIMIT 20"
+  ).bind(patientId).all();
+  if (results) {
+    for (const r of results) {
+      try {
+        r.response_json = JSON.parse(r.response_json);
+      } catch (e) {
+      }
+    }
+  }
+  return json({ success: true, checks: results || [] });
+}
+__name(getEligibilityHistory, "getEligibilityHistory");
+
+// src/index.js
+init_providers();
+
+// src/routes/nphies.js
+init_response();
+var CLAIMLINC_BASE2 = "https://api.brainsait.org/nphies";
+var NPHIES_OID = "1.3.6.1.4.1.61026";
+function clKey(env) {
+  return env.CLAIMLINC_KEY || "";
+}
+__name(clKey, "clKey");
+async function claimlinc(env, path, body, method = "POST") {
+  const key = clKey(env);
+  if (!key) return null;
+  try {
+    const res = await fetch(`${CLAIMLINC_BASE2}${path}`, {
+      method,
+      headers: { "Content-Type": "application/json", "X-API-Key": key },
+      body: body ? JSON.stringify(body) : void 0,
+      signal: AbortSignal.timeout(8e3)
+    });
+    if (res.ok) return res.json();
+    return null;
+  } catch (e) {
+    console.error(`ClaimLinc ${path} error:`, e?.message?.slice(0, 80));
+    return null;
+  }
+}
+__name(claimlinc, "claimlinc");
+async function submit270(req, env) {
+  const body = await req.json();
+  const transactionId = "NPH270-" + Date.now().toString(36).toUpperCase();
+  const clData = await claimlincEligibility(env, {
+    branch: body.branch,
+    identifier: firstIdentifier(body.national_id, body.identifier, body.subscriber_id)
+  });
+  if (clData) {
+    return json({
+      success: true,
+      nphies_version: "V2",
+      transaction_type: "270",
+      source: "claimlinc-live",
+      ack: { transaction_id: transactionId, status: "accepted", timestamp: (/* @__PURE__ */ new Date()).toISOString() },
+      response_271: clData
+    });
+  }
+  return json({
+    success: true,
+    nphies_version: "V2",
+    transaction_type: "270",
+    source: "fallback",
+    warning: "ClaimLinc unavailable \u2014 eligibility not verified",
+    ack: { transaction_id: transactionId, status: "pending", timestamp: (/* @__PURE__ */ new Date()).toISOString() },
+    response_271: {
+      subscriber: {
+        id: body.subscriber_id || "Unknown",
+        name: body.subscriber_name || "Patient",
+        eligibility_status: "Unknown",
+        effective_date: null,
+        benefits_end_date: null
+      },
+      benefits: null,
+      rejection_info: "Live NPHIES endpoint unavailable \u2014 resubmit when restored"
+    }
+  });
+}
+__name(submit270, "submit270");
+async function submit278(req, env) {
+  const body = await req.json();
+  const transactionId = "NPH278-" + Date.now().toString(36).toUpperCase();
+  const clData = await claimlinc(env, "/authorization", {
+    transaction_id: transactionId,
+    nphies_version: "V2",
+    facility_oid: NPHIES_OID,
+    facility_license: env.FACILITY_LICENSE || "10000000000988",
+    subscriber_id: body.subscriber_id,
+    patient_id: body.patient_id,
+    diagnosis_code: body.diagnosis_code,
+    procedure_code: body.procedure_code,
+    service_type: body.service_type,
+    insurance_company: body.insurance_company,
+    provider_npi: body.provider_npi,
+    clinical_notes: body.clinical_notes
+  });
+  if (clData) {
+    return json({
+      success: true,
+      nphies_version: "V2",
+      transaction_type: "278",
+      source: "claimlinc-live",
+      ack: { transaction_id: transactionId, status: "accepted", timestamp: (/* @__PURE__ */ new Date()).toISOString() },
+      authorization: clData
+    });
+  }
+  return json({
+    success: true,
+    nphies_version: "V2",
+    transaction_type: "278",
+    source: "fallback",
+    warning: "ClaimLinc unavailable \u2014 PA not confirmed with payer",
+    ack: { transaction_id: transactionId, status: "pending", timestamp: (/* @__PURE__ */ new Date()).toISOString() },
+    authorization: {
+      reference_number: null,
+      status: "Pending",
+      service_type: body.service_type || "Medical Care",
+      diagnosis_code: body.diagnosis_code || null,
+      procedure_code: body.procedure_code || null,
+      authorized_units: null,
+      effective_date: null,
+      expiration_date: null,
+      provider_notes: "Authorization pending \u2014 ClaimLinc endpoint unavailable. Resubmit or obtain manual PA."
+    }
+  });
+}
+__name(submit278, "submit278");
+async function submit837(req, env) {
+  const body = await req.json();
+  const transactionId = "NPH837-" + Date.now().toString(36).toUpperCase();
+  const claimRef = "CLM" + Date.now().toString(36).toUpperCase();
+  const clData = await claimlinc(env, "/claims/submit", {
+    transaction_id: transactionId,
+    claim_reference: claimRef,
+    nphies_version: "V2",
+    facility_oid: NPHIES_OID,
+    facility_license: env.FACILITY_LICENSE || "10000000000988",
+    subscriber_id: body.subscriber_id,
+    patient_id: body.patient_id,
+    insurance_company: body.insurance_company,
+    total_amount: body.total_amount,
+    patient_share: body.patient_share,
+    diagnosis_codes: body.diagnosis_codes,
+    procedure_codes: body.procedure_codes,
+    service_date: body.service_date,
+    provider_npi: body.provider_npi,
+    prior_auth_number: body.prior_auth_number
+  });
+  if (clData) {
+    return json({
+      success: true,
+      nphies_version: "V2",
+      transaction_type: "837P",
+      source: "claimlinc-live",
+      ack: {
+        transaction_id: transactionId,
+        claim_reference: claimRef,
+        status: "Accepted",
+        timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+        edi_ack_code: "TA1"
+      },
+      claim: clData
+    });
+  }
+  return json({
+    success: true,
+    nphies_version: "V2",
+    transaction_type: "837P",
+    source: "fallback",
+    warning: "ClaimLinc unavailable \u2014 claim queued locally, not submitted to payer",
+    ack: {
+      transaction_id: transactionId,
+      claim_reference: claimRef,
+      status: "Queued",
+      timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+      edi_ack_code: null,
+      ack_detail: "Claim saved locally. Resubmit when ClaimLinc endpoint is restored."
+    },
+    claim: {
+      claim_reference: claimRef,
+      submitted_amount: body.total_amount || null,
+      patient_responsibility: body.patient_share || null,
+      payer: body.insurance_company || null,
+      status: "queued"
+    }
+  });
+}
+__name(submit837, "submit837");
+async function getClaimStatus276(req, env, ctx, params) {
+  const claimId = params[0];
+  const transactionId = "NPH276-" + Date.now().toString(36).toUpperCase();
+  const clData = await claimlinc(env, `/claims/${claimId}/status`, null, "GET");
+  if (clData) {
+    return json({
+      success: true,
+      nphies_version: "V2",
+      transaction_type: "276/277",
+      source: "claimlinc-live",
+      ack: { transaction_id: transactionId, timestamp: (/* @__PURE__ */ new Date()).toISOString() },
+      claim_status: { claim_id: claimId, ...clData }
+    });
+  }
+  let localClaim = null;
+  try {
+    localClaim = await env.DB.prepare(
+      "SELECT * FROM claims WHERE id = ? OR claim_reference = ?"
+    ).bind(claimId, claimId).first();
+  } catch (e) {
+  }
+  return json({
+    success: true,
+    nphies_version: "V2",
+    transaction_type: "276/277",
+    source: localClaim ? "local-db" : "fallback",
+    warning: "ClaimLinc unavailable \u2014 showing local record only",
+    ack: { transaction_id: transactionId, timestamp: (/* @__PURE__ */ new Date()).toISOString() },
+    claim_status: {
+      claim_id: claimId,
+      status: localClaim ? localClaim.status || "Unknown" : "Not Found",
+      payer_claim_number: localClaim ? localClaim.payer_claim_number : null,
+      last_updated: localClaim ? localClaim.updated_at : null
+    }
+  });
+}
+__name(getClaimStatus276, "getClaimStatus276");
+async function receive835(req, env) {
+  const body = await req.json();
+  const transactionId = "NPH835-" + Date.now().toString(36).toUpperCase();
+  const clData = await claimlinc(env, "/remittance", {
+    transaction_id: transactionId,
+    payer: body.payer,
+    check_number: body.check_number,
+    payment_date: body.payment_date,
+    claims: body.claims
+  });
+  if (clData) {
+    return json({
+      success: true,
+      nphies_version: "V2",
+      transaction_type: "835",
+      source: "claimlinc-live",
+      ack: { transaction_id: transactionId, status: "Processed", timestamp: (/* @__PURE__ */ new Date()).toISOString() },
+      payment: clData
+    });
+  }
+  return json({
+    success: true,
+    nphies_version: "V2",
+    transaction_type: "835",
+    source: "fallback",
+    warning: "ClaimLinc unavailable \u2014 remittance recorded locally only",
+    ack: { transaction_id: transactionId, status: "Stored", timestamp: (/* @__PURE__ */ new Date()).toISOString() },
+    payment: {
+      payer: body.payer || null,
+      total_paid: body.total_paid || null,
+      check_number: body.check_number || "CHK" + Date.now().toString(36).toUpperCase(),
+      payment_date: body.payment_date || (/* @__PURE__ */ new Date()).toISOString().split("T")[0],
+      claims_covered: body.claims?.length || 0,
+      note: "Reprocess via ClaimLinc when endpoint is restored."
+    }
+  });
+}
+__name(receive835, "receive835");
+
+// src/routes/fhir.js
+init_response();
+init_providers();
+function fhirPatient(patient) {
+  if (!patient) return null;
+  const names = [];
+  const nameAr = patient.full_name_ar || patient.name_ar || "";
+  const nameEn = patient.full_name_en || patient.name_en || "";
+  if (nameAr || nameEn) {
+    const name = { use: "official" };
+    if (nameEn) name.text = nameEn;
+    if (nameAr) name.text_ar = nameAr;
+    names.push(name);
+  }
+  return {
+    resourceType: "Patient",
+    id: patient.id,
+    identifier: [
+      { system: "https://hnh.brainsait.org/identifier/patient", value: patient.id },
+      ...patient.national_id ? [{ system: "https://nphies.sa/identifier/national-id", value: patient.national_id }] : [],
+      ...patient.insurance_id ? [{ system: "https://nphies.sa/identifier/insurance", value: patient.insurance_id, assigner: { display: patient.insurance_company } }] : []
+    ],
+    active: true,
+    name: names,
+    telecom: [
+      ...patient.phone ? [{ system: "phone", value: patient.phone, use: "mobile" }] : [],
+      ...patient.email ? [{ system: "email", value: patient.email, use: "work" }] : []
+    ],
+    gender: patient.gender || "unknown",
+    birthDate: patient.date_of_birth || patient.dob || null,
+    managingOrganization: { reference: "Organization/HNH-R001", display: "Hayat National Hospital - Gharnata" },
+    generalPractitioner: [],
+    communication: [
+      { language: { coding: [{ system: "urn:ietf:bcp:47", code: "ar" }], text: "Arabic" }, preferred: true },
+      { language: { coding: [{ system: "urn:ietf:bcp:47", code: "en" }], text: "English" } }
+    ],
+    extension: [
+      ...patient.blood_type ? [{ url: "http://hl7.org/fhir/StructureDefinition/patient-bloodType", valueString: patient.blood_type }] : [],
+      ...patient.allergies ? [{ url: "http://hl7.org/fhir/StructureDefinition/patient-allergies", valueString: patient.allergies }] : []
+    ]
+  };
+}
+__name(fhirPatient, "fhirPatient");
+function fhirPractitioner(provider) {
+  if (!provider) return null;
+  const qualifications = provider.education && provider.education.length ? provider.education.map((edu) => ({
+    identifier: [],
+    code: { coding: [{ system: "http://terminology.hl7.org/CodeSystem/v2-0360", code: "MD", display: edu.degree }] },
+    period: { start: edu.year ? `${edu.year}-01-01` : "2000-01-01" },
+    issuer: { display: edu.institution }
+  })) : provider.specialty ? [{ code: { text: provider.specialty } }] : [];
+  const languages = provider.languages && provider.languages.length ? provider.languages : ["ar", "en"];
+  return {
+    resourceType: "Practitioner",
+    id: provider.id,
+    identifier: [
+      { system: "https://hnh.brainsait.org/identifier/provider", value: provider.id },
+      ...provider.givc_oid ? [{ system: "urn:ietf:rfc:3986", value: `urn:oid:${provider.givc_oid}` }] : []
+    ],
+    active: true,
+    name: [
+      { use: "official", text: provider.name_en || provider.name_ar || "", text_en: provider.name_en || "", text_ar: provider.name_ar || "" }
+    ],
+    qualification: qualifications,
+    communication: languages.map((l) => ({
+      coding: [{ system: "urn:ietf:bcp:47", code: l }]
+    })),
+    extension: [
+      ...provider.givc_registered ? [{ url: "https://hnh.brainsait.org/fhir/StructureDefinition/givc-registered", valueBoolean: true }] : [],
+      ...provider.branch_id ? [{ url: "https://hnh.brainsait.org/fhir/StructureDefinition/provider-branch", valueString: provider.branch_id }] : []
+    ]
+  };
+}
+__name(fhirPractitioner, "fhirPractitioner");
+function fhirAppointment(appt) {
+  if (!appt) return null;
+  return {
+    resourceType: "Appointment",
+    id: appt.id,
+    status: appt.status === "scheduled" ? "booked" : appt.status,
+    start: `${appt.appointment_date}T${appt.appointment_time}:00`,
+    participant: [
+      ...appt.patient_id ? [{ actor: { reference: `Patient/${appt.patient_id}` }, status: "accepted" }] : [],
+      ...appt.provider_id ? [{ actor: { reference: `Practitioner/${appt.provider_id}` }, status: "accepted" }] : []
+    ],
+    description: appt.notes || "",
+    serviceType: [{ coding: [{ system: "http://snomed.info/sct", display: appt.department_id }] }]
+  };
+}
+__name(fhirAppointment, "fhirAppointment");
+function fhirClaim(claim) {
+  if (!claim) return null;
+  return {
+    resourceType: "Claim",
+    id: claim.id,
+    identifier: [{ system: "https://hnh.brainsait.org/identifier/claim", value: claim.claim_number }],
+    status: claim.status === "draft" ? "active" : claim.status === "submitted" ? "active" : "active",
+    type: { coding: [{ system: "http://terminology.hl7.org/CodeSystem/claim-type", code: "professional" }] },
+    use: "claim",
+    patient: { reference: `Patient/${claim.patient_id}` },
+    created: claim.created_at || (/* @__PURE__ */ new Date()).toISOString(),
+    insurer: { display: claim.insurance_company || "Unknown" },
+    provider: claim.provider_id ? { reference: `Practitioner/${claim.provider_id}` } : {},
+    priority: { coding: [{ code: "normal" }] },
+    total: { value: claim.total_amount, currency: "SAR" }
+  };
+}
+__name(fhirClaim, "fhirClaim");
+async function getFHIRPatient(req, env, ctx, params) {
+  const id = params[0];
+  const patient = await env.DB.prepare("SELECT * FROM patients WHERE id = ? OR national_id = ?").bind(id, id).first();
+  if (!patient) return json({ success: false, message: "Patient not found" }, 404);
+  return json(fhirPatient(patient));
+}
+__name(getFHIRPatient, "getFHIRPatient");
+async function searchFHIRPatients(req, env, ctx, params, url) {
+  const name = url.searchParams.get("name") || "";
+  const identifier = url.searchParams.get("identifier") || "";
+  const phone = url.searchParams.get("phone") || "";
+  let query = "SELECT * FROM patients WHERE 1=1";
+  const binds = [];
+  if (name) {
+    query += " AND (full_name_ar LIKE ? OR full_name_en LIKE ?)";
+    binds.push(`%${name}%`, `%${name}%`);
+  }
+  if (identifier) {
+    query += " AND (id LIKE ? OR national_id LIKE ?)";
+    binds.push(`%${identifier}%`, `%${identifier}%`);
+  }
+  if (phone) {
+    query += " AND phone LIKE ?";
+    binds.push(`%${phone}%`);
+  }
+  const { results } = await env.DB.prepare(query + " LIMIT 50").bind(...binds).all();
+  return json({
+    resourceType: "Bundle",
+    type: "searchset",
+    total: results?.length || 0,
+    entry: (results || []).map((p) => ({ resource: fhirPatient(p), search: { mode: "match" } }))
+  });
+}
+__name(searchFHIRPatients, "searchFHIRPatients");
+async function getFHIRPractitioner(req, env, ctx, params) {
+  const id = params[0];
+  const { getProvider: getProvider2 } = await Promise.resolve().then(() => (init_providers(), providers_exports));
+  const provider = await getProvider2(id, env);
+  if (!provider) return json({ success: false, message: "Provider not found" }, 404);
+  return json(fhirPractitioner(provider));
+}
+__name(getFHIRPractitioner, "getFHIRPractitioner");
+async function getFHIRAppointment(req, env, ctx, params) {
+  const id = params[0];
+  const appt = await env.DB.prepare("SELECT * FROM appointments WHERE id = ?").bind(id).first();
+  if (!appt) return json({ success: false, message: "Appointment not found" }, 404);
+  return json(fhirAppointment(appt));
+}
+__name(getFHIRAppointment, "getFHIRAppointment");
+async function getFHIRClaim(req, env, ctx, params) {
+  const id = params[0];
+  const claim = await env.DB.prepare("SELECT * FROM claims WHERE id = ? OR claim_number = ?").bind(id, id).first();
+  if (!claim) return json({ success: false, message: "Claim not found" }, 404);
+  return json(fhirClaim(claim));
+}
+__name(getFHIRClaim, "getFHIRClaim");
+async function getFHIRCoverage(req, env, ctx, params) {
+  const id = params[0];
+  const patient = await env.DB.prepare("SELECT * FROM patients WHERE id = ? OR national_id = ?").bind(id, id).first();
+  if (!patient) return json({ success: false, message: "Patient not found" }, 404);
+  return json({
+    resourceType: "Coverage",
+    id: `COV-${patient.id}`,
+    status: "active",
+    kind: "insurance",
+    subscriber: { reference: `Patient/${patient.id}` },
+    subscriberId: patient.insurance_id || "N/A",
+    beneficiary: { reference: `Patient/${patient.id}` },
+    relationship: { coding: [{ system: "http://terminology.hl7.org/CodeSystem/subscriber-relationship", code: "self" }] },
+    payor: [{ display: patient.insurance_company || "Self-Pay" }],
+    period: { start: "2026-01-01", end: "2026-12-31" }
+  });
+}
+__name(getFHIRCoverage, "getFHIRCoverage");
+
+// src/routes/statistics.js
+init_response();
+init_config();
+var DEPARTMENTS = CONFIG.DEPARTMENTS || [];
+var C = CONFIG.CORPORATE || {};
+var S = C.STATS || {};
+var ALL_DEPTS = CONFIG.DEPARTMENTS_FULL || [];
+async function getStats(env) {
+  let providerCount = S.doctors || 700;
+  try {
+    const pc = await env.DB.prepare("SELECT COUNT(*) as c FROM providers WHERE is_active = 1").first();
+    if (pc && pc.c) providerCount = pc.c;
+  } catch (e) {
+  }
+  const stats = env.DB ? await env.DB.prepare(
+    `SELECT
           (SELECT COUNT(*) FROM patients) as total_patients,
           (SELECT COUNT(*) FROM appointments WHERE date(appointment_date) = date('now')) as today_appointments,
           (SELECT COUNT(*) FROM providers) as total_providers,
@@ -106,83 +2154,1370 @@ Integrated with NPHIES (Saudi e-Claim system). Supports 270/271 (Eligibility), 2
           (SELECT COUNT(*) FROM claims WHERE status = 'submitted') as submitted_claims,
           (SELECT COUNT(*) FROM claims WHERE status = 'paid') as paid_claims,
           (SELECT COUNT(*) FROM appointments WHERE status = 'scheduled') as scheduled_appointments,
-          (SELECT COUNT(*) FROM appointments WHERE status = 'completed') as completed_appointments`).first():{};return c({success:!0,stats:{total_patients:e?.total_patients||0,today_appointments:e?.today_appointments||0,total_providers:a||U.doctors||700,total_branches:5,total_beds:U.beds||1200,total_departments:d0.length||c0.length,total_claims:e?.total_claims||0,submitted_claims:e?.submitted_claims||0,paid_claims:e?.paid_claims||0,scheduled_appointments:e?.scheduled_appointments||0,completed_appointments:e?.completed_appointments||0},timestamp:new Date().toISOString()})}r(Ku,"getStats");V();var y={ELEVENLABS_BASE_URL:"https://api.elevenlabs.io/v1",ELEVENLABS_MODEL:"eleven_multilingual_v2",ELEVENLABS_TURBO_MODEL:"eleven_turbo_v2_5",VOICE_STABILITY:.4,VOICE_SIMILARITY:.8,VOICE_STYLE:.25,VOICE_SPEAKER_BOOST:!0,ARABIC_VOICES:[{id:"KxMRrXEjbJ6kZ93yT3fq",name:"Salma",style:"Young, calm Gulf Arabic",lang:"ar"},{id:"cdxrkuYK4nZwDSkjw5sa",name:"Amira",style:"Poised, graceful Gulf Arabic",lang:"ar"},{id:"3GgICclK01zog9nyLmX1",name:"Hanan",style:"Polished, commanding",lang:"ar"},{id:"LEqoCOGNjyExRiRUZhkv",name:"Latifa",style:"Bright, welcoming",lang:"ar"},{id:"isQLuoVuANx6FjDxyasX",name:"Noura",style:"Soft, polished",lang:"ar"},{id:"R6nda3uM038xEEKi7GFl",name:"Anas",style:"Gentle male voice",lang:"ar"}],ENGLISH_VOICES:[{id:"EXAVITQu4vr4xnSDxMaL",name:"Sarah",style:"Mature professional American",lang:"en"},{id:"cjVigY5qzO86Huf0OWal",name:"Eric",style:"Smooth trustworthy",lang:"en"}],DEFAULT_ARABIC:"KxMRrXEjbJ6kZ93yT3fq",DEFAULT_ENGLISH:"EXAVITQu4vr4xnSDxMaL"};function Xu(u){return u==="ar"||/[\u0600-\u06FF]/.test(u)?y.DEFAULT_ARABIC:y.DEFAULT_ENGLISH}r(Xu,"getVoiceForLang");function Zu(u){return u==="ar"||/[\u0600-\u06FF]/.test(u)?y.ELEVENLABS_MODEL:y.ELEVENLABS_TURBO_MODEL}r(Zu,"getModelForLang");async function ue(u,a){try{let e=a.ELEVENLABS_API_KEY||"";if(!e)return new Response(JSON.stringify({error:"Voice API not configured"}),{status:503,headers:{"Content-Type":"application/json","Access-Control-Allow-Origin":"https://hnh.brainsait.org"}});let t=await u.json(),n=t.message||t.text||"",i=t.lang||(/[\u0600-\u06FF]/.test(n)?"ar":"en"),s=t.voice_id||Xu(i);if(!n)return new Response(JSON.stringify({error:"Text is required"}),{status:400,headers:{"Content-Type":"application/json","Access-Control-Allow-Origin":"https://hnh.brainsait.org"}});let o=Zu(i),l=n.length>400?n.substring(0,n.lastIndexOf(" ",400)):n,d=await fetch(`${y.ELEVENLABS_BASE_URL}/text-to-speech/${s}/stream`,{method:"POST",headers:{"Content-Type":"application/json","xi-api-key":e},body:JSON.stringify({text:l,model_id:o,voice_settings:{stability:y.VOICE_STABILITY,similarity_boost:y.VOICE_SIMILARITY,style:y.VOICE_STYLE,use_speaker_boost:y.VOICE_SPEAKER_BOOST}})});if(!d.ok){let p=await d.text().catch(()=>"Unknown");return new Response(JSON.stringify({error:`TTS failed: ${d.status}`,detail:p}),{status:502,headers:{"Content-Type":"application/json","Access-Control-Allow-Origin":"https://hnh.brainsait.org"}})}let m=await d.blob();return new Response(m,{headers:{"Content-Type":"audio/mpeg","Cache-Control":"public, max-age=600","Access-Control-Allow-Origin":"https://hnh.brainsait.org","Access-Control-Expose-Headers":"X-Audio-Length, X-Voice","X-Audio-Length":m.size.toString(),"X-Voice":s,"X-Lang":i}})}catch(e){return new Response(JSON.stringify({error:e.message}),{status:500,headers:{"Content-Type":"application/json","Access-Control-Allow-Origin":"https://hnh.brainsait.org"}})}}r(ue,"handleVoiceSpeak");async function ee(u,a){try{let e=await u.json(),t=e.message||e.text||"",n=e.lang||(/[\u0600-\u06FF]/.test(t)?"ar":"en"),i=e.sessionId||"voice_"+Date.now().toString(36);if(!t)return new Response(JSON.stringify({error:"Message is required"}),{status:400,headers:{"Content-Type":"application/json","Access-Control-Allow-Origin":"https://hnh.brainsait.org"}});let s="";try{let{handleChat:m}=await Promise.resolve().then(()=>(V(),Qu));s=(await(await m(new Request("http://internal/api/chat",{method:"POST",body:JSON.stringify({message:t,session_id:i,language:n})}),a)).json()).response||""}catch(m){console.error("Voice chat AI error:",m),s=n==="ar"?"\u0639\u0630\u0631\u0627\u064B\u060C \u062D\u062F\u062B \u062E\u0637\u0623 \u0641\u064A \u0645\u0639\u0627\u0644\u062C\u0629 \u0637\u0644\u0628\u0643. \u064A\u0631\u062C\u0649 \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629 \u0645\u0631\u0629 \u0623\u062E\u0631\u0649.":"Sorry, there was an error processing your request. Please try again."}let o=a.ELEVENLABS_API_KEY||"",l=null,d=null;if(o&&s){d=Xu(n);let m=Zu(n),p=s.length>400?s.substring(0,s.lastIndexOf(" ",400)):s;try{let g=await fetch(`${y.ELEVENLABS_BASE_URL}/text-to-speech/${d}/stream`,{method:"POST",headers:{"Content-Type":"application/json","xi-api-key":o},body:JSON.stringify({text:p,model_id:m,voice_settings:{stability:y.VOICE_STABILITY,similarity_boost:y.VOICE_SIMILARITY,style:y.VOICE_STYLE,use_speaker_boost:y.VOICE_SPEAKER_BOOST}})});if(g.ok){let f=await g.arrayBuffer(),w=new Uint8Array(f),v="";for(let E=0;E<w.length;E++)v+=String.fromCharCode(w[E]);l=btoa(v)}}catch(g){console.error("TTS failed:",g?.message?.slice(0,100))}}try{a.DB&&a.DB.prepare("INSERT INTO chat_history (session_id, role, content) VALUES (?, ?, ?), (?, ?, ?)").bind(i,"user",t,i,"assistant",s).run().catch(()=>{})}catch{}return new Response(JSON.stringify({success:!0,response:s,session_id:i,audio:l,voice_id:d,lang:n}),{headers:{"Content-Type":"application/json","Access-Control-Allow-Origin":"https://hnh.brainsait.org"}})}catch(e){return new Response(JSON.stringify({error:e.message}),{status:500,headers:{"Content-Type":"application/json","Access-Control-Allow-Origin":"https://hnh.brainsait.org"}})}}r(ee,"handleVoiceChat");async function ae(){let u=JSON.stringify({arabic:y.ARABIC_VOICES,english:y.ENGLISH_VOICES,default_arabic:y.DEFAULT_ARABIC,default_english:y.DEFAULT_ENGLISH});return new Response(u,{headers:{"Content-Type":"application/json","Cache-Control":"public, max-age=3600","Access-Control-Allow-Origin":"https://hnh.brainsait.org"}})}r(ae,"handleVoiceVoices");_();var te={BUPA:{"0109222573":3.16,"0109222574":6.32,"0109222575":9.48,"0109222576":12.64,"0109222577":15.8}},m0=[{drug_class:"antiemetic_5ht3",name_patterns:["ondansetron","zoron","zenorit","zofran","novoban"],codes:["1001233084","2205222049"],valid_icd_prefixes:["C","K","R11","R10","Z51","Z79","T","G"],invalid_standalone:["J02","J06","J00","J01","J03","J04","J05"],flag:"MN-1-1",message:"5-HT3 antiemetic not justified for this diagnosis without oncology/procedural context",suggestion:"Add secondary ICD: R11.2 (nausea/vomiting) or Z51.1 (chemo) or document procedure-related nausea"},{drug_class:"PPI",name_patterns:["toprazole","omeprazole","pantoprazole","esomeprazole","rabeprazole","lansoprazole"],codes:["0411246139","0411246140","0411246141"],valid_icd_prefixes:["C","K21","K25","K26","K27","K28","Z51","K92","T"],invalid_standalone:["J02","J06","J00","Z00","Z01"],flag:"MN-1-1",message:"PPI not indicated as primary treatment for this diagnosis",suggestion:"Add secondary ICD: K21.0 (GERD), K25 (Gastric ulcer), or K92.1 (Melena) for oncology GI prophylaxis"}],ne={"MN-1-1":{desc:"Service not clinically justified per CPG without additional supporting diagnosis",cchi:"CCHI Unified Policy Article 15 \u2014 Medically Necessary Services",docs:["Clinical notes (date of service)","Physician justification letter","PA approval (if exists)","Lab/imaging results","Pharmacy dispensing record"],icd_suggestions:["R11.2 Nausea/vomiting as reason for care","K21.0 GERD","Z51.1 Antineoplastic chemo","K92.1 Melena"]},"BE-1-6":{desc:"Billed above contractual/agreed price \u2014 calculation discrepancy",cchi:"CCHI Unified Policy Article 8 \u2014 Billing and Pricing Standards",docs:["Corrected claim at contracted price","BUPA contract price schedule","HIS price master update confirmation"],icd_suggestions:[]},"BE-1-5":{desc:"Duplicate / Repeated billing",cchi:"CCHI Unified Policy Article 8 \u2014 Billing Accuracy",docs:["Two separate clinical encounter notes","Evidence of distinct presenting complaints","Different physician confirmation"],icd_suggestions:[]},"AD-3-1":{desc:"Service billed within free follow-up period",cchi:"CCHI Unified Policy Article 11 \u2014 Follow-up Period Rules",docs:["Original visit note","New complaint visit note (clearly different)","Physician attestation of new episode"],icd_suggestions:[]},"CV-1-4":{desc:"Service or procedure not covered under patient policy",cchi:"CCHI Unified Policy Annex A \u2014 Coverage Table",docs:["Patient policy schedule","Benefit table showing coverage","Clinical justification letter"],icd_suggestions:[]}},Y={550181:{batch_id:"550181",stm_id:"938269",payer:"BUPA Arabia",payer_id:"INS-307",branch:"riyadh",facility:"Al Hayat National Hospital - Riyadh",provider_code:"21420",period:"202602",period_label:"February 2026",claim_type:"Out Patient",received_date:"2026-03-25",financials:{presented_sr:510386.25,presented_deductible:66205.51,net_billed_sr:444180.74,vat_sr:37443.98,net_with_vat_sr:481624.72,total_shortfall_sr:73862.47},rejection_lines:1415,shortfall_by_classification:{Medical_Necessity:{sr:43478.53,code:"MN-1-1",pct:58.9},Pharmacy_Benefit_Management:{sr:36880.91,bundle:"PBM",pct:49.9},Billing_Error:{sr:15088.57,code:"BE-1-6",pct:20.4},Coverage:{sr:9079.85,code:"CV-1-4",pct:12.3},Administrative:{sr:3418.88,code:"AD-3-1",pct:4.6},Supporting_Evidence:{sr:2796.64,pct:3.8}},top_rejections:[{reason:"Billed above contractual prices",count:102,code:"BE-1-6",sr:15088.57,action:"Price correct + resubmit"},{reason:"Duplicate / Repeated billing",count:57,code:"BE-1-5",sr:8e3,action:"Audit 4-type classification"},{reason:"Consultation within free follow-up period",count:47,code:"AD-3-1",sr:3418.88,action:"Document new episode or accept"},{reason:"Medication not indicated with diagnosis",count:200,code:"MN-1-1",sr:43478.53,action:"Physician appeal letter"}],recovery_forecast:{total_shortfall_sr:73862.47,expected_recovery_sr:64e3,write_off_sr:9862,recovery_pct:87,timeline_weeks:6},corrective_actions:{"BE-1-6":"Update HIS price master to match BUPA contract schedule for all active Riyadh service codes","BE-1-5":"Enable SBS pre-submission deduplication flag; add same-patient same-service alert","MN-1-1":"Integrate PBM validator at pharmacy order entry (/api/rcm/validate/pbm)","AD-3-1":"Add 14-day follow-up period alert in HIS appointment booking module"},top_customers:["Majal Enjaz Co.","Riyadh Cables Group Company","Saudi Aramex Co. Ltd"]}};function ie(){return c({ok:!0,version:"1.0.0",module:"RCM \u2014 Revenue Cycle Management",powered_by:"BrainSAIT ClaimLinc",endpoints:["GET  /api/rcm/batch/:id","POST /api/rcm/validate/price","POST /api/rcm/validate/duplicate","POST /api/rcm/validate/pbm","POST /api/rcm/validate","POST /api/rcm/appeal/generate","GET  /api/rcm/dashboard/:branch","GET  /api/rcm/claims/rejected","POST /api/rcm/claims/:id/appeal","POST /api/rcm/claims/:id/resubmit"],case_study:"Batch 550181 \u2014 BUPA Arabia Riyadh Feb 2026 | SR 73,862 shortfall | 87% recovery target"})}r(ie,"rcmHealth");async function se(u,a,e,t){let n=Y[t];if(!n)return c({error:`Batch ${t} not found`,available:Object.keys(Y)},404);if(a.DB)try{let i=await a.DB.prepare(`SELECT status, COUNT(*) as count, SUM(total_amount) as total
-         FROM claims WHERE batch_number = ? GROUP BY status`).bind(t).all();i.results?.length&&(n.live_db_counts=i.results)}catch{}return c({success:!0,batch:n})}r(se,"getRcmBatch");async function W(u){let a=await u.json(),e=a.items??[],t=a.payer??"BUPA",n=te[t]??te.BUPA,i=[],s=[],o=0;for(let l of e){let d=n[l.serv_code];if(d===void 0){s.push({...l,note:"No contract price on file \u2014 verify manually"});continue}let m=Math.round((l.billed_amount-d)*100)/100;m>.01?(o+=m,i.push({serv_code:l.serv_code,serv_desc:l.serv_desc??"",billed_amount:l.billed_amount,contracted_amount:d,overcharge_sr:m,flag:"BE-1-6",action:`Change price from ${l.billed_amount} SR to ${d} SR in HIS \u2192 resubmit`})):s.push({...l,contracted_amount:d,status:"PASS"})}return c({valid:i.length===0,total_items:e.length,violations_count:i.length,clean_count:s.length,total_overcharge_sr:Math.round(o*100)/100,violations:i,clean_items:s,payer:t,summary:i.length===0?"\u2705 All prices match contract schedule":`\u274C ${i.length} pricing violation(s) \u2014 total overcharge: SR ${o.toFixed(2)}`})}r(W,"validatePrice");async function J(u){let a=await u.json(),e=a.claims??[],t=a.window_days??14,n=[],i=new Map;for(let s of e){let o=`${s.patient_id}::${s.serv_code}`,l=i.get(o);if(l){let d=Math.abs((new Date(s.inv_date)-new Date(l.inv_date))/864e5),m=d<.01?"TYPE_1_SYSTEM_DOUBLE_SEND":d<=t?"TYPE_4_FOLLOW_UP_PERIOD":"TYPE_3_GENUINE_REPEAT";n.push({claim_id:s.claim_id,duplicate_of:l.claim_id,patient_id:s.patient_id,serv_code:s.serv_code,gap_days:Math.round(d*10)/10,type:m,flag:"BE-1-5",action:m==="TYPE_1_SYSTEM_DOUBLE_SEND"?"REMOVE from batch \u2014 same-day system double-send":m==="TYPE_4_FOLLOW_UP_PERIOD"?`Within ${t}-day follow-up \u2014 document new complaint if different episode`:"Genuine repeat \u2014 document distinct clinical episodes"})}else i.set(o,{claim_id:s.claim_id,inv_date:s.inv_date})}return c({total_claims:e.length,duplicates_found:n.length,window_days:t,breakdown:{type1_system:n.filter(s=>s.type==="TYPE_1_SYSTEM_DOUBLE_SEND").length,type4_follow_up:n.filter(s=>s.type==="TYPE_4_FOLLOW_UP_PERIOD").length,type3_genuine:n.filter(s=>s.type==="TYPE_3_GENUINE_REPEAT").length},duplicates:n,summary:n.length===0?`\u2705 No duplicates in ${e.length} claims`:`\u26A0\uFE0F ${n.length} duplicate(s) found`})}r(J,"validateDuplicate");async function K(u){let e=(await u.json()).items??[],t=[],n=[];for(let i of e){let s=i.drug_code??"",o=(i.drug_name??i.serv_desc??"").toLowerCase(),l=i.icd_codes??[],d=m0.find(g=>g.codes.includes(s)||g.name_patterns.some(f=>o.includes(f)));if(!d){n.push({...i,status:"NO_RULE"});continue}let m=l.some(g=>d.valid_icd_prefixes.some(f=>g.startsWith(f))),p=l.every(g=>d.invalid_standalone.some(f=>g.startsWith(f)));m?n.push({...i,status:"PASS",matched_rule:d.drug_class}):t.push({claim_id:i.claim_id,drug_code:s,drug_name:i.drug_name??i.serv_desc,drug_class:d.drug_class,icd_codes:l,flag:d.flag,message:d.message,suggestion:d.suggestion,appeal_strength:p?"WEAK":"MEDIUM",action:p?"Add supporting secondary ICD at prescription time, or document procedural context":"Add secondary ICD to support drug indication before resubmission"})}return c({total_items:e.length,violations_count:t.length,valid_count:n.length,violations:t,valid_items:n,summary:t.length===0?"\u2705 All drug-diagnosis pairs validated \u2014 no MN-1-1 risks":`\u26A0\uFE0F ${t.length} PBM violation(s) \u2014 risk of MN-1-1 rejection`})}r(K,"validatePbm");async function oe(u){let a=await u.json(),e=JSON.stringify(a),t=r(()=>new Request("https://internal/validate",{method:"POST",headers:{"Content-Type":"application/json"},body:e}),"makeReq"),[n,i,s]=await Promise.allSettled([W(t()),J(t()),K(t())]),o=n.status==="fulfilled"?await n.value.json():{error:"price check failed"},l=i.status==="fulfilled"?await i.value.json():{error:"duplicate check failed"},d=s.status==="fulfilled"?await s.value.json():{error:"pbm check failed"},m=(o.violations_count??0)+(l.duplicates_found??0)+(d.violations_count??0);return c({overall_ready:m===0,total_errors:m,validators:{price:o,duplicate:l,pbm:d},summary:m===0?"\u2705 Claim passed all validators \u2014 safe for NPHIES submission":`\u274C ${m} issue(s) \u2014 fix before submission`})}r(oe,"validateAll");async function re(u){let a=await u.json(),e=a.rejection_code??"MN-1-1",t=ne[e]??ne["MN-1-1"],n=a.icd_codes??[],i=!!a.pa_number,s=n.some(m=>m.startsWith("C")),o=a.rejection_amount_sr??0,l=0;i&&(l+=3),s&&(l+=2),a.clinical_context&&(l+=2),o>500&&(l+=1);let d=l>=5?"strong":l>=3?"medium":"weak";return c({claim_id:a.claim_id,rejection_code:e,payer:a.payer??"BUPA Arabia",branch:a.branch??"riyadh",nphies_description:t.desc,cchi_article:t.cchi,appeal_strength:d,strength_score:l,pa_number:a.pa_number,pa_status:i?"EXISTS \u2014 strong appeal factor":"MISSING \u2014 weaker case without PA",icd_codes:n,oncology_case:s,drug_code:a.drug_code,drug_name:a.drug_name,supporting_docs_required:t.docs,icd_suggestions:t.icd_suggestions,action_steps:[i?`\u2705 Attach PA #${a.pa_number} approval letter`:"\u26A0\uFE0F No PA \u2014 strengthen with physician narrative","Complete physician appeal letter (use /api/rcm/batch/550181 template)",s?"\u2705 Oncology case \u2014 reference NCCN/ESMO/Saudi MOH CPG":"Reference Saudi MOH CPG for this condition","Department head countersign for claims > SR 500","Submit via BUPA provider portal + NPHIES ClaimResponse appeal workflow"],recommendation:d==="strong"?"\u{1F7E2} STRONG \u2014 proceed with full appeal package":d==="medium"?"\u{1F7E1} MEDIUM \u2014 strengthen documentation before submitting":"\u{1F534} WEAK \u2014 review clinical basis; consider write-off if no supporting evidence",generated_at:new Date().toISOString()})}r(re,"generateAppeal");async function ce(u,a,e,t){t=t??"riyadh";let n=[];if(a.DB)try{n=(await a.DB.prepare(`SELECT id, claim_number, total_amount, payer_name, status, created_at, nphies_status
+          (SELECT COUNT(*) FROM appointments WHERE status = 'completed') as completed_appointments`
+  ).first() : {};
+  return json({
+    success: true,
+    stats: {
+      total_patients: stats?.total_patients || 0,
+      today_appointments: stats?.today_appointments || 0,
+      total_providers: providerCount || S.doctors || 700,
+      total_branches: 5,
+      total_beds: S.beds || 1200,
+      total_departments: ALL_DEPTS.length || DEPARTMENTS.length,
+      total_claims: stats?.total_claims || 0,
+      submitted_claims: stats?.submitted_claims || 0,
+      paid_claims: stats?.paid_claims || 0,
+      scheduled_appointments: stats?.scheduled_appointments || 0,
+      completed_appointments: stats?.completed_appointments || 0
+    },
+    timestamp: (/* @__PURE__ */ new Date()).toISOString()
+  });
+}
+__name(getStats, "getStats");
+
+// src/index.js
+init_chat();
+
+// src/routes/voice.js
+var CONFIG2 = {
+  ELEVENLABS_BASE_URL: "https://api.elevenlabs.io/v1",
+  ELEVENLABS_MODEL: "eleven_multilingual_v2",
+  ELEVENLABS_TURBO_MODEL: "eleven_turbo_v2_5",
+  VOICE_STABILITY: 0.4,
+  VOICE_SIMILARITY: 0.8,
+  VOICE_STYLE: 0.25,
+  VOICE_SPEAKER_BOOST: true,
+  // Arabic voices — Gulf Arabic
+  ARABIC_VOICES: [
+    { id: "KxMRrXEjbJ6kZ93yT3fq", name: "Salma", style: "Young, calm Gulf Arabic", lang: "ar" },
+    { id: "cdxrkuYK4nZwDSkjw5sa", name: "Amira", style: "Poised, graceful Gulf Arabic", lang: "ar" },
+    { id: "3GgICclK01zog9nyLmX1", name: "Hanan", style: "Polished, commanding", lang: "ar" },
+    { id: "LEqoCOGNjyExRiRUZhkv", name: "Latifa", style: "Bright, welcoming", lang: "ar" },
+    { id: "isQLuoVuANx6FjDxyasX", name: "Noura", style: "Soft, polished", lang: "ar" },
+    { id: "R6nda3uM038xEEKi7GFl", name: "Anas", style: "Gentle male voice", lang: "ar" }
+  ],
+  ENGLISH_VOICES: [
+    { id: "EXAVITQu4vr4xnSDxMaL", name: "Sarah", style: "Mature professional American", lang: "en" },
+    { id: "cjVigY5qzO86Huf0OWal", name: "Eric", style: "Smooth trustworthy", lang: "en" }
+  ],
+  DEFAULT_ARABIC: "KxMRrXEjbJ6kZ93yT3fq",
+  // Salma
+  DEFAULT_ENGLISH: "EXAVITQu4vr4xnSDxMaL"
+  // Sarah
+};
+function getVoiceForLang(lang) {
+  const isAr = lang === "ar" || /[\u0600-\u06FF]/.test(lang);
+  if (isAr) return CONFIG2.DEFAULT_ARABIC;
+  return CONFIG2.DEFAULT_ENGLISH;
+}
+__name(getVoiceForLang, "getVoiceForLang");
+function getModelForLang(lang) {
+  const isAr = lang === "ar" || /[\u0600-\u06FF]/.test(lang);
+  return isAr ? CONFIG2.ELEVENLABS_MODEL : CONFIG2.ELEVENLABS_TURBO_MODEL;
+}
+__name(getModelForLang, "getModelForLang");
+async function handleVoiceSpeak(request, env) {
+  try {
+    const apiKey = env.ELEVENLABS_API_KEY || "";
+    if (!apiKey) {
+      return new Response(JSON.stringify({ error: "Voice API not configured" }), {
+        status: 503,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "https://hnh.brainsait.org" }
+      });
+    }
+    const body = await request.json();
+    const text = body.message || body.text || "";
+    const lang = body.lang || (/[\u0600-\u06FF]/.test(text) ? "ar" : "en");
+    const voiceId = body.voice_id || getVoiceForLang(lang);
+    if (!text) {
+      return new Response(JSON.stringify({ error: "Text is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "https://hnh.brainsait.org" }
+      });
+    }
+    const modelId = getModelForLang(lang);
+    const ttsText = text.length > 400 ? text.substring(0, text.lastIndexOf(" ", 400)) : text;
+    const ttsRes = await fetch(
+      `${CONFIG2.ELEVENLABS_BASE_URL}/text-to-speech/${voiceId}/stream`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "xi-api-key": apiKey
+        },
+        body: JSON.stringify({
+          text: ttsText,
+          model_id: modelId,
+          voice_settings: {
+            stability: CONFIG2.VOICE_STABILITY,
+            similarity_boost: CONFIG2.VOICE_SIMILARITY,
+            style: CONFIG2.VOICE_STYLE,
+            use_speaker_boost: CONFIG2.VOICE_SPEAKER_BOOST
+          }
+        })
+      }
+    );
+    if (!ttsRes.ok) {
+      const errText = await ttsRes.text().catch(() => "Unknown");
+      return new Response(JSON.stringify({ error: `TTS failed: ${ttsRes.status}`, detail: errText }), {
+        status: 502,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "https://hnh.brainsait.org" }
+      });
+    }
+    const audioBlob = await ttsRes.blob();
+    return new Response(audioBlob, {
+      headers: {
+        "Content-Type": "audio/mpeg",
+        "Cache-Control": "public, max-age=600",
+        "Access-Control-Allow-Origin": "https://hnh.brainsait.org",
+        "Access-Control-Expose-Headers": "X-Audio-Length, X-Voice",
+        "X-Audio-Length": audioBlob.size.toString(),
+        "X-Voice": voiceId,
+        "X-Lang": lang
+      }
+    });
+  } catch (e) {
+    return new Response(JSON.stringify({ error: e.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "https://hnh.brainsait.org" }
+    });
+  }
+}
+__name(handleVoiceSpeak, "handleVoiceSpeak");
+async function handleVoiceChat(request, env) {
+  try {
+    const body = await request.json();
+    const text = body.message || body.text || "";
+    const lang = body.lang || (/[\u0600-\u06FF]/.test(text) ? "ar" : "en");
+    const sessionId = body.sessionId || "voice_" + Date.now().toString(36);
+    if (!text) {
+      return new Response(JSON.stringify({ error: "Message is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "https://hnh.brainsait.org" }
+      });
+    }
+    let reply = "";
+    try {
+      const { handleChat: handleChat2 } = await Promise.resolve().then(() => (init_chat(), chat_exports));
+      const chatRes = await handleChat2(new Request("http://internal/api/chat", {
+        method: "POST",
+        body: JSON.stringify({ message: text, session_id: sessionId, language: lang })
+      }), env);
+      const chatData = await chatRes.json();
+      reply = chatData.response || "";
+    } catch (e) {
+      console.error("Voice chat AI error:", e);
+      reply = lang === "ar" ? "\u0639\u0630\u0631\u0627\u064B\u060C \u062D\u062F\u062B \u062E\u0637\u0623 \u0641\u064A \u0645\u0639\u0627\u0644\u062C\u0629 \u0637\u0644\u0628\u0643. \u064A\u0631\u062C\u0649 \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629 \u0645\u0631\u0629 \u0623\u062E\u0631\u0649." : "Sorry, there was an error processing your request. Please try again.";
+    }
+    const apiKey = env.ELEVENLABS_API_KEY || "";
+    let audioBase64 = null;
+    let voiceId = null;
+    if (apiKey && reply) {
+      voiceId = getVoiceForLang(lang);
+      const modelId = getModelForLang(lang);
+      const ttsText = reply.length > 400 ? reply.substring(0, reply.lastIndexOf(" ", 400)) : reply;
+      try {
+        const ttsRes = await fetch(
+          `${CONFIG2.ELEVENLABS_BASE_URL}/text-to-speech/${voiceId}/stream`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "xi-api-key": apiKey },
+            body: JSON.stringify({
+              text: ttsText,
+              model_id: modelId,
+              voice_settings: {
+                stability: CONFIG2.VOICE_STABILITY,
+                similarity_boost: CONFIG2.VOICE_SIMILARITY,
+                style: CONFIG2.VOICE_STYLE,
+                use_speaker_boost: CONFIG2.VOICE_SPEAKER_BOOST
+              }
+            })
+          }
+        );
+        if (ttsRes.ok) {
+          const audioBuf = await ttsRes.arrayBuffer();
+          const uint8 = new Uint8Array(audioBuf);
+          let binary = "";
+          for (let i = 0; i < uint8.length; i++) {
+            binary += String.fromCharCode(uint8[i]);
+          }
+          audioBase64 = btoa(binary);
+        }
+      } catch (ttsErr) {
+        console.error("TTS failed:", ttsErr?.message?.slice(0, 100));
+      }
+    }
+    try {
+      if (env.DB) {
+        env.DB.prepare(
+          "INSERT INTO chat_history (session_id, role, content) VALUES (?, ?, ?), (?, ?, ?)"
+        ).bind(sessionId, "user", text, sessionId, "assistant", reply).run().catch(() => {
+        });
+      }
+    } catch (e) {
+    }
+    return new Response(JSON.stringify({
+      success: true,
+      response: reply,
+      session_id: sessionId,
+      audio: audioBase64,
+      voice_id: voiceId,
+      lang
+    }), {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "https://hnh.brainsait.org"
+      }
+    });
+  } catch (e) {
+    return new Response(JSON.stringify({ error: e.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "https://hnh.brainsait.org" }
+    });
+  }
+}
+__name(handleVoiceChat, "handleVoiceChat");
+async function handleVoiceVoices() {
+  const response = JSON.stringify({
+    arabic: CONFIG2.ARABIC_VOICES,
+    english: CONFIG2.ENGLISH_VOICES,
+    default_arabic: CONFIG2.DEFAULT_ARABIC,
+    default_english: CONFIG2.DEFAULT_ENGLISH
+  });
+  return new Response(response, {
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "public, max-age=3600",
+      "Access-Control-Allow-Origin": "https://hnh.brainsait.org"
+    }
+  });
+}
+__name(handleVoiceVoices, "handleVoiceVoices");
+
+// src/routes/rcm.js
+init_response();
+var CONTRACT_PRICES = {
+  BUPA: {
+    "0109222573": 3.16,
+    // Normal Saline IV 0.9% 1ml
+    "0109222574": 6.32,
+    "0109222575": 9.48,
+    "0109222576": 12.64,
+    "0109222577": 15.8
+  }
+};
+var PBM_RULES = [
+  {
+    drug_class: "antiemetic_5ht3",
+    name_patterns: ["ondansetron", "zoron", "zenorit", "zofran", "novoban"],
+    codes: ["1001233084", "2205222049"],
+    valid_icd_prefixes: ["C", "K", "R11", "R10", "Z51", "Z79", "T", "G"],
+    invalid_standalone: ["J02", "J06", "J00", "J01", "J03", "J04", "J05"],
+    flag: "MN-1-1",
+    message: "5-HT3 antiemetic not justified for this diagnosis without oncology/procedural context",
+    suggestion: "Add secondary ICD: R11.2 (nausea/vomiting) or Z51.1 (chemo) or document procedure-related nausea"
+  },
+  {
+    drug_class: "PPI",
+    name_patterns: ["toprazole", "omeprazole", "pantoprazole", "esomeprazole", "rabeprazole", "lansoprazole"],
+    codes: ["0411246139", "0411246140", "0411246141"],
+    valid_icd_prefixes: ["C", "K21", "K25", "K26", "K27", "K28", "Z51", "K92", "T"],
+    invalid_standalone: ["J02", "J06", "J00", "Z00", "Z01"],
+    flag: "MN-1-1",
+    message: "PPI not indicated as primary treatment for this diagnosis",
+    suggestion: "Add secondary ICD: K21.0 (GERD), K25 (Gastric ulcer), or K92.1 (Melena) for oncology GI prophylaxis"
+  }
+];
+var APPEAL_MAP = {
+  "MN-1-1": {
+    desc: "Service not clinically justified per CPG without additional supporting diagnosis",
+    cchi: "CCHI Unified Policy Article 15 \u2014 Medically Necessary Services",
+    docs: ["Clinical notes (date of service)", "Physician justification letter", "PA approval (if exists)", "Lab/imaging results", "Pharmacy dispensing record"],
+    icd_suggestions: ["R11.2 Nausea/vomiting as reason for care", "K21.0 GERD", "Z51.1 Antineoplastic chemo", "K92.1 Melena"]
+  },
+  "BE-1-6": {
+    desc: "Billed above contractual/agreed price \u2014 calculation discrepancy",
+    cchi: "CCHI Unified Policy Article 8 \u2014 Billing and Pricing Standards",
+    docs: ["Corrected claim at contracted price", "BUPA contract price schedule", "HIS price master update confirmation"],
+    icd_suggestions: []
+  },
+  "BE-1-5": {
+    desc: "Duplicate / Repeated billing",
+    cchi: "CCHI Unified Policy Article 8 \u2014 Billing Accuracy",
+    docs: ["Two separate clinical encounter notes", "Evidence of distinct presenting complaints", "Different physician confirmation"],
+    icd_suggestions: []
+  },
+  "AD-3-1": {
+    desc: "Service billed within free follow-up period",
+    cchi: "CCHI Unified Policy Article 11 \u2014 Follow-up Period Rules",
+    docs: ["Original visit note", "New complaint visit note (clearly different)", "Physician attestation of new episode"],
+    icd_suggestions: []
+  },
+  "CV-1-4": {
+    desc: "Service or procedure not covered under patient policy",
+    cchi: "CCHI Unified Policy Annex A \u2014 Coverage Table",
+    docs: ["Patient policy schedule", "Benefit table showing coverage", "Clinical justification letter"],
+    icd_suggestions: []
+  }
+};
+var KNOWN_BATCHES = {
+  "550181": {
+    batch_id: "550181",
+    stm_id: "938269",
+    payer: "BUPA Arabia",
+    payer_id: "INS-307",
+    branch: "riyadh",
+    facility: "Al Hayat National Hospital - Riyadh",
+    provider_code: "21420",
+    period: "202602",
+    period_label: "February 2026",
+    claim_type: "Out Patient",
+    received_date: "2026-03-25",
+    financials: {
+      presented_sr: 510386.25,
+      presented_deductible: 66205.51,
+      net_billed_sr: 444180.74,
+      vat_sr: 37443.98,
+      net_with_vat_sr: 481624.72,
+      total_shortfall_sr: 73862.47
+    },
+    rejection_lines: 1415,
+    shortfall_by_classification: {
+      Medical_Necessity: { sr: 43478.53, code: "MN-1-1", pct: 58.9 },
+      Pharmacy_Benefit_Management: { sr: 36880.91, bundle: "PBM", pct: 49.9 },
+      Billing_Error: { sr: 15088.57, code: "BE-1-6", pct: 20.4 },
+      Coverage: { sr: 9079.85, code: "CV-1-4", pct: 12.3 },
+      Administrative: { sr: 3418.88, code: "AD-3-1", pct: 4.6 },
+      Supporting_Evidence: { sr: 2796.64, pct: 3.8 }
+    },
+    top_rejections: [
+      { reason: "Billed above contractual prices", count: 102, code: "BE-1-6", sr: 15088.57, action: "Price correct + resubmit" },
+      { reason: "Duplicate / Repeated billing", count: 57, code: "BE-1-5", sr: 8e3, action: "Audit 4-type classification" },
+      { reason: "Consultation within free follow-up period", count: 47, code: "AD-3-1", sr: 3418.88, action: "Document new episode or accept" },
+      { reason: "Medication not indicated with diagnosis", count: 200, code: "MN-1-1", sr: 43478.53, action: "Physician appeal letter" }
+    ],
+    recovery_forecast: { total_shortfall_sr: 73862.47, expected_recovery_sr: 64e3, write_off_sr: 9862, recovery_pct: 87, timeline_weeks: 6 },
+    corrective_actions: {
+      "BE-1-6": "Update HIS price master to match BUPA contract schedule for all active Riyadh service codes",
+      "BE-1-5": "Enable SBS pre-submission deduplication flag; add same-patient same-service alert",
+      "MN-1-1": "Integrate PBM validator at pharmacy order entry (/api/rcm/validate/pbm)",
+      "AD-3-1": "Add 14-day follow-up period alert in HIS appointment booking module"
+    },
+    top_customers: ["Majal Enjaz Co.", "Riyadh Cables Group Company", "Saudi Aramex Co. Ltd"]
+  }
+};
+function rcmHealth() {
+  return json({
+    ok: true,
+    version: "1.0.0",
+    module: "RCM \u2014 Revenue Cycle Management",
+    powered_by: "BrainSAIT ClaimLinc",
+    endpoints: [
+      "GET  /api/rcm/batch/:id",
+      "POST /api/rcm/validate/price",
+      "POST /api/rcm/validate/duplicate",
+      "POST /api/rcm/validate/pbm",
+      "POST /api/rcm/validate",
+      "POST /api/rcm/appeal/generate",
+      "GET  /api/rcm/dashboard/:branch",
+      "GET  /api/rcm/claims/rejected",
+      "POST /api/rcm/claims/:id/appeal",
+      "POST /api/rcm/claims/:id/resubmit"
+    ],
+    case_study: "Batch 550181 \u2014 BUPA Arabia Riyadh Feb 2026 | SR 73,862 shortfall | 87% recovery target"
+  });
+}
+__name(rcmHealth, "rcmHealth");
+async function getRcmBatch(req, env, ctx, batchId) {
+  const batch = KNOWN_BATCHES[batchId];
+  if (!batch) return json({ error: `Batch ${batchId} not found`, available: Object.keys(KNOWN_BATCHES) }, 404);
+  if (env.DB) {
+    try {
+      const counts = await env.DB.prepare(
+        `SELECT status, COUNT(*) as count, SUM(total_amount) as total
+         FROM claims WHERE batch_number = ? GROUP BY status`
+      ).bind(batchId).all();
+      if (counts.results?.length) {
+        batch.live_db_counts = counts.results;
+      }
+    } catch {
+    }
+  }
+  return json({ success: true, batch });
+}
+__name(getRcmBatch, "getRcmBatch");
+async function validatePrice(req) {
+  const body = await req.json();
+  const items = body.items ?? [];
+  const payer = body.payer ?? "BUPA";
+  const priceMap = CONTRACT_PRICES[payer] ?? CONTRACT_PRICES["BUPA"];
+  const violations = [], clean_items = [];
+  let total_overcharge = 0;
+  for (const item of items) {
+    const contracted = priceMap[item.serv_code];
+    if (contracted === void 0) {
+      clean_items.push({ ...item, note: "No contract price on file \u2014 verify manually" });
+      continue;
+    }
+    const diff = Math.round((item.billed_amount - contracted) * 100) / 100;
+    if (diff > 0.01) {
+      total_overcharge += diff;
+      violations.push({
+        serv_code: item.serv_code,
+        serv_desc: item.serv_desc ?? "",
+        billed_amount: item.billed_amount,
+        contracted_amount: contracted,
+        overcharge_sr: diff,
+        flag: "BE-1-6",
+        action: `Change price from ${item.billed_amount} SR to ${contracted} SR in HIS \u2192 resubmit`
+      });
+    } else {
+      clean_items.push({ ...item, contracted_amount: contracted, status: "PASS" });
+    }
+  }
+  return json({
+    valid: violations.length === 0,
+    total_items: items.length,
+    violations_count: violations.length,
+    clean_count: clean_items.length,
+    total_overcharge_sr: Math.round(total_overcharge * 100) / 100,
+    violations,
+    clean_items,
+    payer,
+    summary: violations.length === 0 ? "\u2705 All prices match contract schedule" : `\u274C ${violations.length} pricing violation(s) \u2014 total overcharge: SR ${total_overcharge.toFixed(2)}`
+  });
+}
+__name(validatePrice, "validatePrice");
+async function validateDuplicate(req) {
+  const body = await req.json();
+  const claims = body.claims ?? [];
+  const windowDays = body.window_days ?? 14;
+  const duplicates = [], seen = /* @__PURE__ */ new Map();
+  for (const claim of claims) {
+    const key = `${claim.patient_id}::${claim.serv_code}`;
+    const existing = seen.get(key);
+    if (existing) {
+      const gapDays = Math.abs((new Date(claim.inv_date) - new Date(existing.inv_date)) / 864e5);
+      const type = gapDays < 0.01 ? "TYPE_1_SYSTEM_DOUBLE_SEND" : gapDays <= windowDays ? "TYPE_4_FOLLOW_UP_PERIOD" : "TYPE_3_GENUINE_REPEAT";
+      duplicates.push({
+        claim_id: claim.claim_id,
+        duplicate_of: existing.claim_id,
+        patient_id: claim.patient_id,
+        serv_code: claim.serv_code,
+        gap_days: Math.round(gapDays * 10) / 10,
+        type,
+        flag: "BE-1-5",
+        action: type === "TYPE_1_SYSTEM_DOUBLE_SEND" ? "REMOVE from batch \u2014 same-day system double-send" : type === "TYPE_4_FOLLOW_UP_PERIOD" ? `Within ${windowDays}-day follow-up \u2014 document new complaint if different episode` : "Genuine repeat \u2014 document distinct clinical episodes"
+      });
+    } else {
+      seen.set(key, { claim_id: claim.claim_id, inv_date: claim.inv_date });
+    }
+  }
+  return json({
+    total_claims: claims.length,
+    duplicates_found: duplicates.length,
+    window_days: windowDays,
+    breakdown: {
+      type1_system: duplicates.filter((d) => d.type === "TYPE_1_SYSTEM_DOUBLE_SEND").length,
+      type4_follow_up: duplicates.filter((d) => d.type === "TYPE_4_FOLLOW_UP_PERIOD").length,
+      type3_genuine: duplicates.filter((d) => d.type === "TYPE_3_GENUINE_REPEAT").length
+    },
+    duplicates,
+    summary: duplicates.length === 0 ? `\u2705 No duplicates in ${claims.length} claims` : `\u26A0\uFE0F ${duplicates.length} duplicate(s) found`
+  });
+}
+__name(validateDuplicate, "validateDuplicate");
+async function validatePbm(req) {
+  const body = await req.json();
+  const items = body.items ?? [];
+  const violations = [], valid_items = [];
+  for (const item of items) {
+    const drugCode = item.drug_code ?? "";
+    const drugName = (item.drug_name ?? item.serv_desc ?? "").toLowerCase();
+    const icds = item.icd_codes ?? [];
+    const rule = PBM_RULES.find(
+      (r) => r.codes.includes(drugCode) || r.name_patterns.some((p) => drugName.includes(p))
+    );
+    if (!rule) {
+      valid_items.push({ ...item, status: "NO_RULE" });
+      continue;
+    }
+    const hasValidIcd = icds.some((icd) => rule.valid_icd_prefixes.some((p) => icd.startsWith(p)));
+    const onlyInvalid = icds.every((icd) => rule.invalid_standalone.some((b) => icd.startsWith(b)));
+    if (hasValidIcd) {
+      valid_items.push({ ...item, status: "PASS", matched_rule: rule.drug_class });
+    } else {
+      violations.push({
+        claim_id: item.claim_id,
+        drug_code: drugCode,
+        drug_name: item.drug_name ?? item.serv_desc,
+        drug_class: rule.drug_class,
+        icd_codes: icds,
+        flag: rule.flag,
+        message: rule.message,
+        suggestion: rule.suggestion,
+        appeal_strength: onlyInvalid ? "WEAK" : "MEDIUM",
+        action: onlyInvalid ? "Add supporting secondary ICD at prescription time, or document procedural context" : "Add secondary ICD to support drug indication before resubmission"
+      });
+    }
+  }
+  return json({
+    total_items: items.length,
+    violations_count: violations.length,
+    valid_count: valid_items.length,
+    violations,
+    valid_items,
+    summary: violations.length === 0 ? "\u2705 All drug-diagnosis pairs validated \u2014 no MN-1-1 risks" : `\u26A0\uFE0F ${violations.length} PBM violation(s) \u2014 risk of MN-1-1 rejection`
+  });
+}
+__name(validatePbm, "validatePbm");
+async function validateAll(req) {
+  const body = await req.json();
+  const bodyStr = JSON.stringify(body);
+  const makeReq = /* @__PURE__ */ __name(() => new Request("https://internal/validate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: bodyStr
+  }), "makeReq");
+  const [priceResult, dupResult, pbmResult] = await Promise.allSettled([
+    validatePrice(makeReq()),
+    validateDuplicate(makeReq()),
+    validatePbm(makeReq())
+  ]);
+  const price = priceResult.status === "fulfilled" ? await priceResult.value.json() : { error: "price check failed" };
+  const dup = dupResult.status === "fulfilled" ? await dupResult.value.json() : { error: "duplicate check failed" };
+  const pbm = pbmResult.status === "fulfilled" ? await pbmResult.value.json() : { error: "pbm check failed" };
+  const totalErrors = (price.violations_count ?? 0) + (dup.duplicates_found ?? 0) + (pbm.violations_count ?? 0);
+  return json({
+    overall_ready: totalErrors === 0,
+    total_errors: totalErrors,
+    validators: { price, duplicate: dup, pbm },
+    summary: totalErrors === 0 ? "\u2705 Claim passed all validators \u2014 safe for NPHIES submission" : `\u274C ${totalErrors} issue(s) \u2014 fix before submission`
+  });
+}
+__name(validateAll, "validateAll");
+async function generateAppeal(req) {
+  const body = await req.json();
+  const code = body.rejection_code ?? "MN-1-1";
+  const map = APPEAL_MAP[code] ?? APPEAL_MAP["MN-1-1"];
+  const icds = body.icd_codes ?? [];
+  const hasPa = !!body.pa_number;
+  const hasOncology = icds.some((i) => i.startsWith("C"));
+  const amount = body.rejection_amount_sr ?? 0;
+  let score = 0;
+  if (hasPa) score += 3;
+  if (hasOncology) score += 2;
+  if (body.clinical_context) score += 2;
+  if (amount > 500) score += 1;
+  const strength = score >= 5 ? "strong" : score >= 3 ? "medium" : "weak";
+  return json({
+    claim_id: body.claim_id,
+    rejection_code: code,
+    payer: body.payer ?? "BUPA Arabia",
+    branch: body.branch ?? "riyadh",
+    nphies_description: map.desc,
+    cchi_article: map.cchi,
+    appeal_strength: strength,
+    strength_score: score,
+    pa_number: body.pa_number,
+    pa_status: hasPa ? "EXISTS \u2014 strong appeal factor" : "MISSING \u2014 weaker case without PA",
+    icd_codes: icds,
+    oncology_case: hasOncology,
+    drug_code: body.drug_code,
+    drug_name: body.drug_name,
+    supporting_docs_required: map.docs,
+    icd_suggestions: map.icd_suggestions,
+    action_steps: [
+      hasPa ? `\u2705 Attach PA #${body.pa_number} approval letter` : "\u26A0\uFE0F No PA \u2014 strengthen with physician narrative",
+      "Complete physician appeal letter (use /api/rcm/batch/550181 template)",
+      hasOncology ? "\u2705 Oncology case \u2014 reference NCCN/ESMO/Saudi MOH CPG" : "Reference Saudi MOH CPG for this condition",
+      "Department head countersign for claims > SR 500",
+      "Submit via BUPA provider portal + NPHIES ClaimResponse appeal workflow"
+    ],
+    recommendation: strength === "strong" ? "\u{1F7E2} STRONG \u2014 proceed with full appeal package" : strength === "medium" ? "\u{1F7E1} MEDIUM \u2014 strengthen documentation before submitting" : "\u{1F534} WEAK \u2014 review clinical basis; consider write-off if no supporting evidence",
+    generated_at: (/* @__PURE__ */ new Date()).toISOString()
+  });
+}
+__name(generateAppeal, "generateAppeal");
+async function getRcmDashboard(req, env, ctx, branch) {
+  branch = branch ?? "riyadh";
+  let rejectedClaims = [];
+  if (env.DB) {
+    try {
+      const res = await env.DB.prepare(
+        `SELECT id, claim_number, total_amount, payer_name, status, created_at, nphies_status
          FROM claims WHERE status IN ('rejected','denied') AND branch = ?
-         ORDER BY created_at DESC LIMIT 20`).bind(t).all()).results??[]}catch{}return c({success:!0,branch:t,dashboard_version:"1.0.0",generated_at:new Date().toISOString(),live_rejected_claims:{count:n.length,claims:n},reference_batch:Y[550181],rcm_action_items:[{priority:1,action:"Export BE-1-6 lines \u2192 correct price master \u2192 resubmit",code:"BE-1-6",impact:"SR 15,088 recovery"},{priority:2,action:"Run eligibility check on Coverage rejections",code:"CV-1-4",impact:"SR 7,000 recovery"},{priority:3,action:"Physician appeal letters for top MN-1-1 by amount",code:"MN-1-1",impact:"SR 31,000 recovery"},{priority:4,action:"Audit 57 duplicate lines \u2192 classify Type 1/2/3/4",code:"BE-1-5",impact:"SR 9,000 recovery"}],prevention_tools:{price_check:"POST /api/rcm/validate/price",dedup_check:"POST /api/rcm/validate/duplicate",pbm_check:"POST /api/rcm/validate/pbm",full_validate:"POST /api/rcm/validate",appeal_gen:"POST /api/rcm/appeal/generate"}})}r(ce,"getRcmDashboard");async function le(u,a,e,t,n){n||(n=new URL(u.url));let i=n.searchParams.get("branch")??"",s=n.searchParams.get("payer")??"",o=parseInt(n.searchParams.get("limit")??"50");if(!a.DB)return c({error:"Database not available"},503);let l=`SELECT id, claim_number, total_amount, payer_name, payer_id, status, nphies_status,
+         ORDER BY created_at DESC LIMIT 20`
+      ).bind(branch).all();
+      rejectedClaims = res.results ?? [];
+    } catch {
+    }
+  }
+  return json({
+    success: true,
+    branch,
+    dashboard_version: "1.0.0",
+    generated_at: (/* @__PURE__ */ new Date()).toISOString(),
+    live_rejected_claims: { count: rejectedClaims.length, claims: rejectedClaims },
+    reference_batch: KNOWN_BATCHES["550181"],
+    rcm_action_items: [
+      { priority: 1, action: "Export BE-1-6 lines \u2192 correct price master \u2192 resubmit", code: "BE-1-6", impact: "SR 15,088 recovery" },
+      { priority: 2, action: "Run eligibility check on Coverage rejections", code: "CV-1-4", impact: "SR 7,000 recovery" },
+      { priority: 3, action: "Physician appeal letters for top MN-1-1 by amount", code: "MN-1-1", impact: "SR 31,000 recovery" },
+      { priority: 4, action: "Audit 57 duplicate lines \u2192 classify Type 1/2/3/4", code: "BE-1-5", impact: "SR 9,000 recovery" }
+    ],
+    prevention_tools: {
+      price_check: "POST /api/rcm/validate/price",
+      dedup_check: "POST /api/rcm/validate/duplicate",
+      pbm_check: "POST /api/rcm/validate/pbm",
+      full_validate: "POST /api/rcm/validate",
+      appeal_gen: "POST /api/rcm/appeal/generate"
+    }
+  });
+}
+__name(getRcmDashboard, "getRcmDashboard");
+async function getRejectedClaims(req, env, ctx, _p, url) {
+  if (!url) url = new URL(req.url);
+  const branch = url.searchParams.get("branch") ?? "";
+  const payer = url.searchParams.get("payer") ?? "";
+  const limit = parseInt(url.searchParams.get("limit") ?? "50");
+  if (!env.DB) return json({ error: "Database not available" }, 503);
+  let q = `SELECT id, claim_number, total_amount, payer_name, payer_id, status, nphies_status,
             nphies_rejection_code, created_at, branch FROM claims
-            WHERE status IN ('rejected','denied')`,d=[];i&&(l+=" AND branch = ?",d.push(i)),s&&(l+=" AND payer_name LIKE ?",d.push(`%${s}%`)),l+=" ORDER BY created_at DESC LIMIT ?",d.push(o);let{results:m}=await a.DB.prepare(l).bind(...d).all();return c({success:!0,count:m?.length??0,claims:m??[]})}r(le,"getRejectedClaims");async function de(u,a,e,t){let n=await u.json();return a.DB?(await a.DB.prepare(`UPDATE claims SET status = 'appealed', appeal_date = ?, appeal_notes = ?,
+            WHERE status IN ('rejected','denied')`;
+  const binds = [];
+  if (branch) {
+    q += " AND branch = ?";
+    binds.push(branch);
+  }
+  if (payer) {
+    q += " AND payer_name LIKE ?";
+    binds.push(`%${payer}%`);
+  }
+  q += " ORDER BY created_at DESC LIMIT ?";
+  binds.push(limit);
+  const { results } = await env.DB.prepare(q).bind(...binds).all();
+  return json({ success: true, count: results?.length ?? 0, claims: results ?? [] });
+}
+__name(getRejectedClaims, "getRejectedClaims");
+async function markAppeal(req, env, ctx, claimId) {
+  const body = await req.json();
+  if (!env.DB) return json({ error: "Database not available" }, 503);
+  await env.DB.prepare(
+    `UPDATE claims SET status = 'appealed', appeal_date = ?, appeal_notes = ?,
      nphies_rejection_code = COALESCE(?, nphies_rejection_code),
-     updated_at = datetime('now') WHERE id = ? OR claim_number = ?`).bind(new Date().toISOString(),n.appeal_notes??"",n.rejection_code??null,t,t).run(),c({success:!0,claim_id:t,status:"appealed",appeal_date:new Date().toISOString()})):c({error:"Database not available"},503)}r(de,"markAppeal");async function pe(u,a,e,t){let n=await u.json();return a.DB?(await a.DB.prepare(`UPDATE claims SET status = 'resubmitted', resubmit_date = ?, resubmit_notes = ?,
-     updated_at = datetime('now') WHERE id = ? OR claim_number = ?`).bind(new Date().toISOString(),n.resubmit_notes??"",t,t).run(),c({success:!0,claim_id:t,status:"resubmitted",resubmit_date:new Date().toISOString()})):c({error:"Database not available"},503)}r(pe,"markResubmit");_();var M="brainsait-ai-search";async function Q(u,a){try{let e="",t="ai";if(u.method==="GET"){let n=new URL(u.url);e=(n.searchParams.get("q")||"").trim(),t=n.searchParams.get("mode")||"vector"}else{let n=await u.json().catch(()=>({}));e=(n.query||n.q||"").trim(),t=n.mode||"ai"}if(!e||e.length<2)return c({success:!1,message:"Query too short \u2014 minimum 2 characters"},400);if(t==="ai"){let n=await a.AI.autorag(M).aiSearch({query:e,stream:!1});return c({success:!0,query:e,mode:"ai",answer:n.response||null,sources:(n.data||[]).map(i=>({id:i.id,content:i.content?.slice(0,500),filename:i.filename,score:i.score})),model:M,timestamp:new Date().toISOString()})}else{let n=await a.AI.autorag(M).search({query:e});return c({success:!0,query:e,mode:"vector",answer:null,sources:(n.data||[]).map(i=>({id:i.id,content:i.content?.slice(0,500),filename:i.filename,score:i.score})),model:M,timestamp:new Date().toISOString()})}}catch(e){return console.error("Search error:",e.message),c({success:!1,message:"Search temporarily unavailable",error:e.message,query:""},503)}}r(Q,"handleSearch");_();var he=r(u=>u+Date.now().toString(36).toUpperCase(),"newId"),me=["routine","post-op","wound-care","iv-therapy","physiotherapy","palliative","maternal","pediatric"];async function ge(u,a){let e=await u.json().catch(()=>({})),t=["patient_id","visit_date","address"];for(let s of t)if(!e[s])return c({success:!1,message:`Missing required field: ${s}`},400);if(e.visit_type&&!me.includes(e.visit_type))return c({success:!1,message:`Invalid visit_type. Valid: ${me.join(", ")}`},400);let n=he("HCV");await a.DB.prepare(`INSERT INTO homecare_visits
+     updated_at = datetime('now') WHERE id = ? OR claim_number = ?`
+  ).bind(
+    (/* @__PURE__ */ new Date()).toISOString(),
+    body.appeal_notes ?? "",
+    body.rejection_code ?? null,
+    claimId,
+    claimId
+  ).run();
+  return json({ success: true, claim_id: claimId, status: "appealed", appeal_date: (/* @__PURE__ */ new Date()).toISOString() });
+}
+__name(markAppeal, "markAppeal");
+async function markResubmit(req, env, ctx, claimId) {
+  const body = await req.json();
+  if (!env.DB) return json({ error: "Database not available" }, 503);
+  await env.DB.prepare(
+    `UPDATE claims SET status = 'resubmitted', resubmit_date = ?, resubmit_notes = ?,
+     updated_at = datetime('now') WHERE id = ? OR claim_number = ?`
+  ).bind(
+    (/* @__PURE__ */ new Date()).toISOString(),
+    body.resubmit_notes ?? "",
+    claimId,
+    claimId
+  ).run();
+  return json({ success: true, claim_id: claimId, status: "resubmitted", resubmit_date: (/* @__PURE__ */ new Date()).toISOString() });
+}
+__name(markResubmit, "markResubmit");
+
+// src/routes/search.js
+init_response();
+var AUTORAG_NAME = "brainsait-ai-search";
+async function handleSearch(req, env) {
+  try {
+    let query = "";
+    let mode = "ai";
+    if (req.method === "GET") {
+      const url = new URL(req.url);
+      query = (url.searchParams.get("q") || "").trim();
+      mode = url.searchParams.get("mode") || "vector";
+    } else {
+      const body = await req.json().catch(() => ({}));
+      query = (body.query || body.q || "").trim();
+      mode = body.mode || "ai";
+    }
+    if (!query || query.length < 2) {
+      return json({ success: false, message: "Query too short \u2014 minimum 2 characters" }, 400);
+    }
+    if (mode === "ai") {
+      const result = await env.AI.autorag(AUTORAG_NAME).aiSearch({
+        query,
+        stream: false
+      });
+      return json({
+        success: true,
+        query,
+        mode: "ai",
+        answer: result.response || null,
+        sources: (result.data || []).map((d) => ({
+          id: d.id,
+          content: d.content?.slice(0, 500),
+          filename: d.filename,
+          score: d.score
+        })),
+        model: AUTORAG_NAME,
+        timestamp: (/* @__PURE__ */ new Date()).toISOString()
+      });
+    } else {
+      const result = await env.AI.autorag(AUTORAG_NAME).search({ query });
+      return json({
+        success: true,
+        query,
+        mode: "vector",
+        answer: null,
+        sources: (result.data || []).map((d) => ({
+          id: d.id,
+          content: d.content?.slice(0, 500),
+          filename: d.filename,
+          score: d.score
+        })),
+        model: AUTORAG_NAME,
+        timestamp: (/* @__PURE__ */ new Date()).toISOString()
+      });
+    }
+  } catch (e) {
+    console.error("Search error:", e.message);
+    return json({
+      success: false,
+      message: "Search temporarily unavailable",
+      error: e.message,
+      query: ""
+    }, 503);
+  }
+}
+__name(handleSearch, "handleSearch");
+
+// src/routes/homecare.js
+init_response();
+var newId = /* @__PURE__ */ __name((prefix) => prefix + Date.now().toString(36).toUpperCase(), "newId");
+var VISIT_TYPES = ["routine", "post-op", "wound-care", "iv-therapy", "physiotherapy", "palliative", "maternal", "pediatric"];
+async function createVisit(req, env) {
+  const body = await req.json().catch(() => ({}));
+  const required = ["patient_id", "visit_date", "address"];
+  for (const f of required) {
+    if (!body[f]) return json({ success: false, message: `Missing required field: ${f}` }, 400);
+  }
+  if (body.visit_type && !VISIT_TYPES.includes(body.visit_type)) {
+    return json({ success: false, message: `Invalid visit_type. Valid: ${VISIT_TYPES.join(", ")}` }, 400);
+  }
+  const id = newId("HCV");
+  await env.DB.prepare(
+    `INSERT INTO homecare_visits
        (id, patient_id, nurse_id, branch_id, visit_date, visit_time, status, visit_type,
         address, city, lat, lng, chief_complaint, notes, insurance_company, insurance_id)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(n,e.patient_id,e.nurse_id||null,e.branch_id||"R001",e.visit_date,e.visit_time||null,"scheduled",e.visit_type||"routine",e.address,e.city||"\u0627\u0644\u0631\u064A\u0627\u0636",e.lat||null,e.lng||null,e.chief_complaint||null,e.notes||null,e.insurance_company||null,e.insurance_id||null).run();let i=await a.DB.prepare("SELECT * FROM homecare_visits WHERE id = ?").bind(n).first();return c({success:!0,visit_id:n,visit:i},201)}r(ge,"createVisit");async function fe(u,a){let e=new URL(u.url),t=e.searchParams.get("patient_id")||"",n=e.searchParams.get("status")||"",i=e.searchParams.get("date")||"",s=e.searchParams.get("nurse_id")||"",o=e.searchParams.get("branch_id")||"",l=Math.min(parseInt(e.searchParams.get("limit")||"50"),200),d=parseInt(e.searchParams.get("offset")||"0"),m=`SELECT v.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en, p.phone as patient_phone,
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  ).bind(
+    id,
+    body.patient_id,
+    body.nurse_id || null,
+    body.branch_id || "R001",
+    body.visit_date,
+    body.visit_time || null,
+    "scheduled",
+    body.visit_type || "routine",
+    body.address,
+    body.city || "\u0627\u0644\u0631\u064A\u0627\u0636",
+    body.lat || null,
+    body.lng || null,
+    body.chief_complaint || null,
+    body.notes || null,
+    body.insurance_company || null,
+    body.insurance_id || null
+  ).run();
+  const visit = await env.DB.prepare("SELECT * FROM homecare_visits WHERE id = ?").bind(id).first();
+  return json({ success: true, visit_id: id, visit }, 201);
+}
+__name(createVisit, "createVisit");
+async function listVisits(req, env) {
+  const url = new URL(req.url);
+  const patient = url.searchParams.get("patient_id") || "";
+  const status = url.searchParams.get("status") || "";
+  const date = url.searchParams.get("date") || "";
+  const nurse = url.searchParams.get("nurse_id") || "";
+  const branch = url.searchParams.get("branch_id") || "";
+  const limit = Math.min(parseInt(url.searchParams.get("limit") || "50"), 200);
+  const offset = parseInt(url.searchParams.get("offset") || "0");
+  let q = `SELECT v.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en, p.phone as patient_phone,
                   n.name_ar as nurse_name_ar, n.name_en as nurse_name_en, n.phone as nurse_phone
            FROM homecare_visits v
            LEFT JOIN patients p ON v.patient_id = p.id
-           LEFT JOIN homecare_nurses n ON v.nurse_id = n.id`,p=[],g=[];t&&(g.push("v.patient_id = ?"),p.push(t)),n&&(g.push("v.status = ?"),p.push(n)),i&&(g.push("v.visit_date = ?"),p.push(i)),s&&(g.push("v.nurse_id = ?"),p.push(s)),o&&(g.push("v.branch_id = ?"),p.push(o)),g.length&&(m+=" WHERE "+g.join(" AND ")),m+=" ORDER BY v.visit_date ASC, v.visit_time ASC LIMIT ? OFFSET ?",p.push(l,d);let{results:f}=await a.DB.prepare(m).bind(...p).all();return c({success:!0,visits:f||[],total:f?.length||0})}r(fe,"listVisits");async function ve(u,a,e,t){let n=t[0],i=await a.DB.prepare(`SELECT v.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en,
+           LEFT JOIN homecare_nurses n ON v.nurse_id = n.id`;
+  const binds = [];
+  const conds = [];
+  if (patient) {
+    conds.push("v.patient_id = ?");
+    binds.push(patient);
+  }
+  if (status) {
+    conds.push("v.status = ?");
+    binds.push(status);
+  }
+  if (date) {
+    conds.push("v.visit_date = ?");
+    binds.push(date);
+  }
+  if (nurse) {
+    conds.push("v.nurse_id = ?");
+    binds.push(nurse);
+  }
+  if (branch) {
+    conds.push("v.branch_id = ?");
+    binds.push(branch);
+  }
+  if (conds.length) q += " WHERE " + conds.join(" AND ");
+  q += " ORDER BY v.visit_date ASC, v.visit_time ASC LIMIT ? OFFSET ?";
+  binds.push(limit, offset);
+  const { results } = await env.DB.prepare(q).bind(...binds).all();
+  return json({ success: true, visits: results || [], total: results?.length || 0 });
+}
+__name(listVisits, "listVisits");
+async function getVisit(req, env, ctx, params) {
+  const id = params[0];
+  const visit = await env.DB.prepare(
+    `SELECT v.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en,
                  p.phone as patient_phone, p.insurance_company as patient_insurance,
                  n.name_ar as nurse_name_ar, n.name_en as nurse_name_en, n.phone as nurse_phone
      FROM homecare_visits v
      LEFT JOIN patients p ON v.patient_id = p.id
      LEFT JOIN homecare_nurses n ON v.nurse_id = n.id
-     WHERE v.id = ?`).bind(n).first();if(!i)return c({success:!1,message:"Visit not found"},404);if(i.vitals_json)try{i.vitals=JSON.parse(i.vitals_json)}catch{}return c({success:!0,visit:i})}r(ve,"getVisit");async function be(u,a,e,t){let n=t[0],i=await u.json().catch(()=>({})),s=["status","nurse_id","visit_date","visit_time","address","city","chief_complaint","notes","visit_type","lat","lng"],o=[],l=[];for(let[m,p]of Object.entries(i))s.includes(m)&&(o.push(`${m} = ?`),l.push(p));if(i.status==="completed"&&(o.push("completed_at = ?"),l.push(new Date().toISOString())),!o.length)return c({success:!1,message:"No updatable fields provided"},400);o.push("updated_at = ?"),l.push(new Date().toISOString(),n),await a.DB.prepare(`UPDATE homecare_visits SET ${o.join(", ")} WHERE id = ?`).bind(...l).run();let d=await a.DB.prepare("SELECT * FROM homecare_visits WHERE id = ?").bind(n).first();return c({success:!0,visit:d})}r(be,"updateVisit");async function ye(u,a,e,t){let n=t[0],i=await u.json().catch(()=>({})),s={recorded_at:new Date().toISOString(),bp_systolic:i.bp_systolic||null,bp_diastolic:i.bp_diastolic||null,heart_rate:i.heart_rate||null,temperature:i.temperature||null,spo2:i.spo2||null,weight_kg:i.weight_kg||null,blood_glucose:i.blood_glucose||null,respiratory_rate:i.respiratory_rate||null,pain_score:i.pain_score||null,notes:i.notes||null},o=[];return s.spo2!==null&&s.spo2<92&&o.push("CRITICAL: SpO2 < 92%"),s.bp_systolic!==null&&s.bp_systolic>180&&o.push("HIGH BP: systolic > 180"),s.heart_rate!==null&&(s.heart_rate>120||s.heart_rate<50)&&o.push("ABNORMAL HR"),s.temperature!==null&&s.temperature>38.5&&o.push("FEVER: > 38.5\xB0C"),s.blood_glucose!==null&&s.blood_glucose>13.9&&o.push("HYPERGLYCEMIA: > 250 mg/dL"),s.alerts=o,await a.DB.prepare("UPDATE homecare_visits SET vitals_json = ?, updated_at = ? WHERE id = ?").bind(JSON.stringify(s),new Date().toISOString(),n).run(),c({success:!0,vitals:s,alerts:o,visit_id:n})}r(ye,"recordVitals");async function xe(u,a){let e=new URL(u.url),t=e.searchParams.get("branch_id")||"",n=e.searchParams.get("status")||"active",i="SELECT * FROM homecare_nurses",s=[],o=[];t&&(o.push("branch_id = ?"),s.push(t)),n&&(o.push("status = ?"),s.push(n)),o.length&&(i+=" WHERE "+o.join(" AND ")),i+=" ORDER BY name_ar ASC";let{results:l}=await a.DB.prepare(i).bind(...s).all();return c({success:!0,nurses:l||[],total:l?.length||0})}r(xe,"listNurses");async function _e(u,a){let e=await u.json().catch(()=>({}));if(!e.name_ar)return c({success:!1,message:"name_ar is required"},400);let t=he("NRS");return await a.DB.prepare(`INSERT INTO homecare_nurses (id, name_ar, name_en, phone, branch_id, specialty, status)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`).bind(t,e.name_ar,e.name_en||null,e.phone||null,e.branch_id||"R001",e.specialty||"general",e.status||"active").run(),c({success:!0,nurse_id:t},201)}r(_e,"createNurse");async function we(u,a,e,t){let n=t[0],s=new URL(u.url).searchParams.get("date")||new Date().toISOString().split("T")[0],o=await a.DB.prepare("SELECT * FROM homecare_nurses WHERE id = ?").bind(n).first();if(!o)return c({success:!1,message:"Nurse not found"},404);let{results:l}=await a.DB.prepare(`SELECT v.*, p.full_name_ar as patient_name_ar, p.phone as patient_phone
+     WHERE v.id = ?`
+  ).bind(id).first();
+  if (!visit) return json({ success: false, message: "Visit not found" }, 404);
+  if (visit.vitals_json) {
+    try {
+      visit.vitals = JSON.parse(visit.vitals_json);
+    } catch (_) {
+    }
+  }
+  return json({ success: true, visit });
+}
+__name(getVisit, "getVisit");
+async function updateVisit(req, env, ctx, params) {
+  const id = params[0];
+  const body = await req.json().catch(() => ({}));
+  const ALLOWED = [
+    "status",
+    "nurse_id",
+    "visit_date",
+    "visit_time",
+    "address",
+    "city",
+    "chief_complaint",
+    "notes",
+    "visit_type",
+    "lat",
+    "lng"
+  ];
+  const fields = [];
+  const binds = [];
+  for (const [k, v] of Object.entries(body)) {
+    if (ALLOWED.includes(k)) {
+      fields.push(`${k} = ?`);
+      binds.push(v);
+    }
+  }
+  if (body.status === "completed") {
+    fields.push("completed_at = ?");
+    binds.push((/* @__PURE__ */ new Date()).toISOString());
+  }
+  if (!fields.length) return json({ success: false, message: "No updatable fields provided" }, 400);
+  fields.push("updated_at = ?");
+  binds.push((/* @__PURE__ */ new Date()).toISOString(), id);
+  await env.DB.prepare(`UPDATE homecare_visits SET ${fields.join(", ")} WHERE id = ?`).bind(...binds).run();
+  const visit = await env.DB.prepare("SELECT * FROM homecare_visits WHERE id = ?").bind(id).first();
+  return json({ success: true, visit });
+}
+__name(updateVisit, "updateVisit");
+async function recordVitals(req, env, ctx, params) {
+  const id = params[0];
+  const body = await req.json().catch(() => ({}));
+  const vitals = {
+    recorded_at: (/* @__PURE__ */ new Date()).toISOString(),
+    bp_systolic: body.bp_systolic || null,
+    bp_diastolic: body.bp_diastolic || null,
+    heart_rate: body.heart_rate || null,
+    temperature: body.temperature || null,
+    spo2: body.spo2 || null,
+    weight_kg: body.weight_kg || null,
+    blood_glucose: body.blood_glucose || null,
+    respiratory_rate: body.respiratory_rate || null,
+    pain_score: body.pain_score || null,
+    notes: body.notes || null
+  };
+  const alerts = [];
+  if (vitals.spo2 !== null && vitals.spo2 < 92) alerts.push("CRITICAL: SpO2 < 92%");
+  if (vitals.bp_systolic !== null && vitals.bp_systolic > 180) alerts.push("HIGH BP: systolic > 180");
+  if (vitals.heart_rate !== null && (vitals.heart_rate > 120 || vitals.heart_rate < 50)) alerts.push("ABNORMAL HR");
+  if (vitals.temperature !== null && vitals.temperature > 38.5) alerts.push("FEVER: > 38.5\xB0C");
+  if (vitals.blood_glucose !== null && vitals.blood_glucose > 13.9) alerts.push("HYPERGLYCEMIA: > 250 mg/dL");
+  vitals.alerts = alerts;
+  await env.DB.prepare(
+    `UPDATE homecare_visits SET vitals_json = ?, updated_at = ? WHERE id = ?`
+  ).bind(JSON.stringify(vitals), (/* @__PURE__ */ new Date()).toISOString(), id).run();
+  return json({ success: true, vitals, alerts, visit_id: id });
+}
+__name(recordVitals, "recordVitals");
+async function listNurses(req, env) {
+  const url = new URL(req.url);
+  const branch = url.searchParams.get("branch_id") || "";
+  const status = url.searchParams.get("status") || "active";
+  let q = "SELECT * FROM homecare_nurses";
+  const binds = [];
+  const conds = [];
+  if (branch) {
+    conds.push("branch_id = ?");
+    binds.push(branch);
+  }
+  if (status) {
+    conds.push("status = ?");
+    binds.push(status);
+  }
+  if (conds.length) q += " WHERE " + conds.join(" AND ");
+  q += " ORDER BY name_ar ASC";
+  const { results } = await env.DB.prepare(q).bind(...binds).all();
+  return json({ success: true, nurses: results || [], total: results?.length || 0 });
+}
+__name(listNurses, "listNurses");
+async function createNurse(req, env) {
+  const body = await req.json().catch(() => ({}));
+  if (!body.name_ar) return json({ success: false, message: "name_ar is required" }, 400);
+  const id = newId("NRS");
+  await env.DB.prepare(
+    `INSERT INTO homecare_nurses (id, name_ar, name_en, phone, branch_id, specialty, status)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`
+  ).bind(
+    id,
+    body.name_ar,
+    body.name_en || null,
+    body.phone || null,
+    body.branch_id || "R001",
+    body.specialty || "general",
+    body.status || "active"
+  ).run();
+  return json({ success: true, nurse_id: id }, 201);
+}
+__name(createNurse, "createNurse");
+async function getNurseSchedule(req, env, ctx, params) {
+  const id = params[0];
+  const url = new URL(req.url);
+  const date = url.searchParams.get("date") || (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
+  const nurse = await env.DB.prepare("SELECT * FROM homecare_nurses WHERE id = ?").bind(id).first();
+  if (!nurse) return json({ success: false, message: "Nurse not found" }, 404);
+  const { results } = await env.DB.prepare(
+    `SELECT v.*, p.full_name_ar as patient_name_ar, p.phone as patient_phone
      FROM homecare_visits v
      LEFT JOIN patients p ON v.patient_id = p.id
      WHERE v.nurse_id = ? AND v.visit_date = ?
-     ORDER BY v.visit_time ASC`).bind(n,s).all();return c({success:!0,nurse:{id:o.id,name_ar:o.name_ar,name_en:o.name_en,phone:o.phone},date:s,visits:l||[],visit_count:l?.length||0})}r(we,"getNurseSchedule");async function Ee(u,a){let[e,t,n]=await Promise.all([a.DB.prepare(`SELECT COUNT(*) as total,
+     ORDER BY v.visit_time ASC`
+  ).bind(id, date).all();
+  return json({
+    success: true,
+    nurse: { id: nurse.id, name_ar: nurse.name_ar, name_en: nurse.name_en, phone: nurse.phone },
+    date,
+    visits: results || [],
+    visit_count: results?.length || 0
+  });
+}
+__name(getNurseSchedule, "getNurseSchedule");
+async function getHomecareStats(req, env) {
+  const [totals, byStatus, byType] = await Promise.all([
+    env.DB.prepare(`SELECT COUNT(*) as total,
       SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,
       SUM(CASE WHEN status = 'scheduled' THEN 1 ELSE 0 END) as scheduled,
       SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled,
       SUM(CASE WHEN date(visit_date) = date('now') THEN 1 ELSE 0 END) as today
-      FROM homecare_visits`).first(),a.DB.prepare("SELECT status, COUNT(*) as count FROM homecare_visits GROUP BY status").all(),a.DB.prepare("SELECT visit_type, COUNT(*) as count FROM homecare_visits GROUP BY visit_type ORDER BY count DESC").all()]);return c({success:!0,stats:{total_visits:e?.total||0,completed:e?.completed||0,scheduled:e?.scheduled||0,cancelled:e?.cancelled||0,today:e?.today||0,by_status:t?.results||[],by_type:n?.results||[]}})}r(Ee,"getHomecareStats");_();var Ce=r(u=>u+Date.now().toString(36).toUpperCase(),"newId"),h0="https://brainsait-realtime-hub.brainsait-fadil.workers.dev";function g0(){let u="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",a="",e=new Uint8Array(8);crypto.getRandomValues(e);for(let t of e)a+=u[t%u.length];return a.slice(0,4)+"-"+a.slice(4)}r(g0,"genRoomCode");var Se=["consultation","follow-up","second-opinion","mental-health","nutrition","pharmacy"];async function Ae(u,a){let e=await u.json().catch(()=>({})),t=["patient_id","session_date","session_time"];for(let l of t)if(!e[l])return c({success:!1,message:`Missing required field: ${l}`},400);if(e.session_type&&!Se.includes(e.session_type))return c({success:!1,message:`Invalid session_type. Valid: ${Se.join(", ")}`},400);let n=Ce("TLH"),i=g0(),s=`https://telehealth.brainsait.org/room/${i}`;await a.DB.prepare(`INSERT INTO telehealth_sessions
+      FROM homecare_visits`).first(),
+    env.DB.prepare(`SELECT status, COUNT(*) as count FROM homecare_visits GROUP BY status`).all(),
+    env.DB.prepare(`SELECT visit_type, COUNT(*) as count FROM homecare_visits GROUP BY visit_type ORDER BY count DESC`).all()
+  ]);
+  return json({
+    success: true,
+    stats: {
+      total_visits: totals?.total || 0,
+      completed: totals?.completed || 0,
+      scheduled: totals?.scheduled || 0,
+      cancelled: totals?.cancelled || 0,
+      today: totals?.today || 0,
+      by_status: byStatus?.results || [],
+      by_type: byType?.results || []
+    }
+  });
+}
+__name(getHomecareStats, "getHomecareStats");
+
+// src/routes/telehealth.js
+init_response();
+var newId2 = /* @__PURE__ */ __name((prefix) => prefix + Date.now().toString(36).toUpperCase(), "newId");
+var REALTIME_HUB = "https://brainsait-realtime-hub.brainsait-fadil.workers.dev";
+function genRoomCode() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  const arr = new Uint8Array(8);
+  crypto.getRandomValues(arr);
+  for (const b of arr) code += chars[b % chars.length];
+  return code.slice(0, 4) + "-" + code.slice(4);
+}
+__name(genRoomCode, "genRoomCode");
+var SESSION_TYPES = ["consultation", "follow-up", "second-opinion", "mental-health", "nutrition", "pharmacy"];
+function getIceServers(env) {
+  const servers = [
+    // Free STUN servers for basic NAT traversal
+    { urls: "stun:stun.l.google.com:19302" },
+    { urls: "stun:stun1.l.google.com:19302" },
+    { urls: "stun:stun.cloudflare.com:3478" }
+  ];
+  const turnUrl = env?.TURN_SERVER_URL;
+  const turnUser = env?.TURN_USERNAME;
+  const turnCred = env?.TURN_CREDENTIAL;
+  if (turnUrl && turnUser && turnCred) {
+    servers.push(
+      { urls: `turn:${turnUrl}:3478?transport=udp`, username: turnUser, credential: turnCred },
+      { urls: `turn:${turnUrl}:3478?transport=tcp`, username: turnUser, credential: turnCred },
+      { urls: `turns:${turnUrl}:5349?transport=tcp`, username: turnUser, credential: turnCred }
+    );
+  } else if (env?.CF_TURN_TOKEN) {
+    servers.push({
+      urls: "turn:turn.cloudflare.com:3478?transport=udp",
+      username: "cloudflare",
+      credential: env.CF_TURN_TOKEN
+    });
+  }
+  return servers;
+}
+__name(getIceServers, "getIceServers");
+async function createSession(req, env) {
+  const body = await req.json().catch(() => ({}));
+  const required = ["patient_id", "session_date", "session_time"];
+  for (const f of required) {
+    if (!body[f]) return json({ success: false, message: `Missing required field: ${f}` }, 400);
+  }
+  if (body.session_type && !SESSION_TYPES.includes(body.session_type)) {
+    return json({ success: false, message: `Invalid session_type. Valid: ${SESSION_TYPES.join(", ")}` }, 400);
+  }
+  const id = newId2("TLH");
+  const room_code = genRoomCode();
+  const join_url = `https://telehealth.brainsait.org/room/${room_code}`;
+  await env.DB.prepare(
+    `INSERT INTO telehealth_sessions
        (id, patient_id, provider_id, branch_id, session_date, session_time, duration_min,
         status, session_type, department_id, chief_complaint, room_code, join_url, notes)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(n,e.patient_id,e.provider_id||null,e.branch_id||"R001",e.session_date,e.session_time,e.duration_min||30,"scheduled",e.session_type||"consultation",e.department_id||null,e.chief_complaint||null,i,s,e.notes||null).run();let o=await a.DB.prepare("SELECT * FROM telehealth_sessions WHERE id = ?").bind(n).first();return c({success:!0,session_id:n,room_code:i,join_url:s,session:o},201)}r(Ae,"createSession");async function ke(u,a){let e=new URL(u.url),t=e.searchParams.get("patient_id")||"",n=e.searchParams.get("provider_id")||"",i=e.searchParams.get("status")||"",s=e.searchParams.get("date")||"",o=e.searchParams.get("branch_id")||"",l=Math.min(parseInt(e.searchParams.get("limit")||"50"),200),d=parseInt(e.searchParams.get("offset")||"0"),m=`SELECT s.*,
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  ).bind(
+    id,
+    body.patient_id,
+    body.provider_id || null,
+    body.branch_id || "R001",
+    body.session_date,
+    body.session_time,
+    body.duration_min || 30,
+    "scheduled",
+    body.session_type || "consultation",
+    body.department_id || null,
+    body.chief_complaint || null,
+    room_code,
+    join_url,
+    body.notes || null
+  ).run();
+  const session = await env.DB.prepare("SELECT * FROM telehealth_sessions WHERE id = ?").bind(id).first();
+  return json({
+    success: true,
+    session_id: id,
+    room_code,
+    join_url,
+    session,
+    ice_servers: getIceServers(env)
+  }, 201);
+}
+__name(createSession, "createSession");
+async function listSessions(req, env) {
+  const url = new URL(req.url);
+  const patient = url.searchParams.get("patient_id") || "";
+  const provider = url.searchParams.get("provider_id") || "";
+  const status = url.searchParams.get("status") || "";
+  const date = url.searchParams.get("date") || "";
+  const branch = url.searchParams.get("branch_id") || "";
+  const limit = Math.min(parseInt(url.searchParams.get("limit") || "50"), 200);
+  const offset = parseInt(url.searchParams.get("offset") || "0");
+  let q = `SELECT s.*,
              p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en, p.phone as patient_phone
            FROM telehealth_sessions s
-           LEFT JOIN patients p ON s.patient_id = p.id`,p=[],g=[];t&&(g.push("s.patient_id = ?"),p.push(t)),n&&(g.push("s.provider_id = ?"),p.push(n)),i&&(g.push("s.status = ?"),p.push(i)),s&&(g.push("s.session_date = ?"),p.push(s)),o&&(g.push("s.branch_id = ?"),p.push(o)),g.length&&(m+=" WHERE "+g.join(" AND ")),m+=" ORDER BY s.session_date ASC, s.session_time ASC LIMIT ? OFFSET ?",p.push(l,d);let{results:f}=await a.DB.prepare(m).bind(...p).all();return c({success:!0,sessions:f||[],total:f?.length||0})}r(ke,"listSessions");async function Te(u,a,e,t){let n=t[0],i=await a.DB.prepare(`SELECT s.*,
+           LEFT JOIN patients p ON s.patient_id = p.id`;
+  const binds = [];
+  const conds = [];
+  if (patient) {
+    conds.push("s.patient_id = ?");
+    binds.push(patient);
+  }
+  if (provider) {
+    conds.push("s.provider_id = ?");
+    binds.push(provider);
+  }
+  if (status) {
+    conds.push("s.status = ?");
+    binds.push(status);
+  }
+  if (date) {
+    conds.push("s.session_date = ?");
+    binds.push(date);
+  }
+  if (branch) {
+    conds.push("s.branch_id = ?");
+    binds.push(branch);
+  }
+  if (conds.length) q += " WHERE " + conds.join(" AND ");
+  q += " ORDER BY s.session_date ASC, s.session_time ASC LIMIT ? OFFSET ?";
+  binds.push(limit, offset);
+  const { results } = await env.DB.prepare(q).bind(...binds).all();
+  return json({ success: true, sessions: results || [], total: results?.length || 0 });
+}
+__name(listSessions, "listSessions");
+async function getSession(req, env, ctx, params) {
+  const id = params[0];
+  const session = await env.DB.prepare(
+    `SELECT s.*,
        p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en,
        p.phone as patient_phone, p.insurance_company as patient_insurance
      FROM telehealth_sessions s
      LEFT JOIN patients p ON s.patient_id = p.id
-     WHERE s.id = ?`).bind(n).first();return i?c({success:!0,session:i}):c({success:!1,message:"Session not found"},404)}r(Te,"getSession");async function Ie(u,a,e,t){let n=t[0],i=await u.json().catch(()=>({})),s=["status","provider_id","session_date","session_time","duration_min","chief_complaint","notes","department_id","session_type"],o=[],l=[];for(let[m,p]of Object.entries(i))s.includes(m)&&(o.push(`${m} = ?`),l.push(p));if(!o.length)return c({success:!1,message:"No updatable fields provided"},400);o.push("updated_at = ?"),l.push(new Date().toISOString(),n),await a.DB.prepare(`UPDATE telehealth_sessions SET ${o.join(", ")} WHERE id = ?`).bind(...l).run();let d=await a.DB.prepare("SELECT * FROM telehealth_sessions WHERE id = ?").bind(n).first();return c({success:!0,session:d})}r(Ie,"updateSession");async function Be(u,a,e,t){let n=t[0],i=await a.DB.prepare("SELECT * FROM telehealth_sessions WHERE id = ?").bind(n).first();if(!i)return c({success:!1,message:"Session not found"},404);if(i.status==="completed")return c({success:!1,message:"Session already completed"},409);let s=new Date().toISOString();await a.DB.prepare("UPDATE telehealth_sessions SET status = 'in-progress', started_at = ?, updated_at = ? WHERE id = ?").bind(s,s,n).run();try{await fetch(`${h0}/rooms/${i.room_code}/activate`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({session_id:n,started_at:s})})}catch{}let webrtc_config={iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"turn:turn.brainsait.org:3478",username:"hnh-video",credential:a.TURN_SECRET||"hnh-video-prod-2026"}]};return c({success:!0,session_id:n,room_code:i.room_code,join_url:i.join_url,started_at:s,status:"in-progress",webrtc_config})}r(Be,"startSession");async function Le(u,a,e,t){let n=t[0],i=await u.json().catch(()=>({})),s=await a.DB.prepare("SELECT * FROM telehealth_sessions WHERE id = ?").bind(n).first();if(!s)return c({success:!1,message:"Session not found"},404);let o=new Date().toISOString();return await a.DB.prepare("UPDATE telehealth_sessions SET status = 'completed', ended_at = ?, notes = ?, updated_at = ? WHERE id = ?").bind(o,i.notes||s.notes,o,n).run(),c({success:!0,session_id:n,ended_at:o,status:"completed"})}r(Le,"endSession");async function He(u,a,e,t){let n=t[0],i=await u.json().catch(()=>({})),s=await a.DB.prepare("SELECT * FROM telehealth_sessions WHERE id = ?").bind(n).first();if(!s)return c({success:!1,message:"Session not found"},404);if(!i.medications||!Array.isArray(i.medications)||i.medications.length===0)return c({success:!1,message:"medications array is required"},400);let o=Ce("RX");return await a.DB.prepare(`INSERT INTO telehealth_prescriptions
+     WHERE s.id = ?`
+  ).bind(id).first();
+  if (!session) return json({ success: false, message: "Session not found" }, 404);
+  return json({ success: true, session });
+}
+__name(getSession, "getSession");
+async function updateSession(req, env, ctx, params) {
+  const id = params[0];
+  const body = await req.json().catch(() => ({}));
+  const ALLOWED = [
+    "status",
+    "provider_id",
+    "session_date",
+    "session_time",
+    "duration_min",
+    "chief_complaint",
+    "notes",
+    "department_id",
+    "session_type"
+  ];
+  const fields = [];
+  const binds = [];
+  for (const [k, v] of Object.entries(body)) {
+    if (ALLOWED.includes(k)) {
+      fields.push(`${k} = ?`);
+      binds.push(v);
+    }
+  }
+  if (!fields.length) return json({ success: false, message: "No updatable fields provided" }, 400);
+  fields.push("updated_at = ?");
+  binds.push((/* @__PURE__ */ new Date()).toISOString(), id);
+  await env.DB.prepare(`UPDATE telehealth_sessions SET ${fields.join(", ")} WHERE id = ?`).bind(...binds).run();
+  const session = await env.DB.prepare("SELECT * FROM telehealth_sessions WHERE id = ?").bind(id).first();
+  return json({ success: true, session });
+}
+__name(updateSession, "updateSession");
+async function startSession(req, env, ctx, params) {
+  const id = params[0];
+  const session = await env.DB.prepare("SELECT * FROM telehealth_sessions WHERE id = ?").bind(id).first();
+  if (!session) return json({ success: false, message: "Session not found" }, 404);
+  if (session.status === "completed") return json({ success: false, message: "Session already completed" }, 409);
+  const started_at = (/* @__PURE__ */ new Date()).toISOString();
+  await env.DB.prepare(
+    `UPDATE telehealth_sessions SET status = 'in-progress', started_at = ?, updated_at = ? WHERE id = ?`
+  ).bind(started_at, started_at, id).run();
+  try {
+    await fetch(`${REALTIME_HUB}/rooms/${session.room_code}/activate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: id, started_at })
+    });
+  } catch (_) {
+  }
+  return json({
+    success: true,
+    session_id: id,
+    room_code: session.room_code,
+    join_url: session.join_url,
+    started_at,
+    status: "in-progress",
+    ice_servers: getIceServers(env)
+  });
+}
+__name(startSession, "startSession");
+async function endSession(req, env, ctx, params) {
+  const id = params[0];
+  const body = await req.json().catch(() => ({}));
+  const session = await env.DB.prepare("SELECT * FROM telehealth_sessions WHERE id = ?").bind(id).first();
+  if (!session) return json({ success: false, message: "Session not found" }, 404);
+  const ended_at = (/* @__PURE__ */ new Date()).toISOString();
+  await env.DB.prepare(
+    `UPDATE telehealth_sessions SET status = 'completed', ended_at = ?, notes = ?, updated_at = ? WHERE id = ?`
+  ).bind(ended_at, body.notes || session.notes, ended_at, id).run();
+  return json({ success: true, session_id: id, ended_at, status: "completed" });
+}
+__name(endSession, "endSession");
+async function issuePrescription(req, env, ctx, params) {
+  const session_id = params[0];
+  const body = await req.json().catch(() => ({}));
+  const session = await env.DB.prepare("SELECT * FROM telehealth_sessions WHERE id = ?").bind(session_id).first();
+  if (!session) return json({ success: false, message: "Session not found" }, 404);
+  if (!body.medications || !Array.isArray(body.medications) || body.medications.length === 0) {
+    return json({ success: false, message: "medications array is required" }, 400);
+  }
+  const id = newId2("RX");
+  await env.DB.prepare(
+    `INSERT INTO telehealth_prescriptions
        (id, session_id, patient_id, provider_id, medications_json, diagnosis_codes, instructions, status)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`).bind(o,n,s.patient_id,i.provider_id||s.provider_id||null,JSON.stringify(i.medications),i.diagnosis_codes||null,i.instructions||null,"active").run(),await a.DB.prepare("UPDATE telehealth_sessions SET prescription_id = ?, updated_at = ? WHERE id = ?").bind(o,new Date().toISOString(),n).run(),c({success:!0,prescription_id:o,session_id:n,medications:i.medications},201)}r(He,"issuePrescription");async function De(u,a,e,t){let n=t[0],{results:i}=await a.DB.prepare("SELECT * FROM telehealth_prescriptions WHERE session_id = ? ORDER BY created_at DESC").bind(n).all(),s=(i||[]).map(o=>{try{o.medications=JSON.parse(o.medications_json)}catch{}return o});return c({success:!0,session_id:n,prescriptions:s})}r(De,"getPrescriptions");async function Oe(u,a,e,t){let n=t[0],s=new URL(u.url).searchParams.get("date")||new Date().toISOString().split("T")[0],{results:o}=await a.DB.prepare(`SELECT session_time, duration_min, status FROM telehealth_sessions
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+  ).bind(
+    id,
+    session_id,
+    session.patient_id,
+    body.provider_id || session.provider_id || null,
+    JSON.stringify(body.medications),
+    body.diagnosis_codes || null,
+    body.instructions || null,
+    "active"
+  ).run();
+  await env.DB.prepare(
+    `UPDATE telehealth_sessions SET prescription_id = ?, updated_at = ? WHERE id = ?`
+  ).bind(id, (/* @__PURE__ */ new Date()).toISOString(), session_id).run();
+  return json({ success: true, prescription_id: id, session_id, medications: body.medications }, 201);
+}
+__name(issuePrescription, "issuePrescription");
+async function getPrescriptions(req, env, ctx, params) {
+  const session_id = params[0];
+  const { results } = await env.DB.prepare(
+    `SELECT * FROM telehealth_prescriptions WHERE session_id = ? ORDER BY created_at DESC`
+  ).bind(session_id).all();
+  const prescriptions = (results || []).map((rx) => {
+    try {
+      rx.medications = JSON.parse(rx.medications_json);
+    } catch (_) {
+    }
+    return rx;
+  });
+  return json({ success: true, session_id, prescriptions });
+}
+__name(getPrescriptions, "getPrescriptions");
+async function getProviderAvailability(req, env, ctx, params) {
+  const provider_id = params[0];
+  const url = new URL(req.url);
+  const date = url.searchParams.get("date") || (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
+  const { results: booked } = await env.DB.prepare(
+    `SELECT session_time, duration_min, status FROM telehealth_sessions
      WHERE provider_id = ? AND session_date = ? AND status NOT IN ('cancelled','no-show')
-     ORDER BY session_time ASC`).bind(n,s).all(),l=[];for(let d=8;d<20;d++)for(let m of[0,30]){let p=`${String(d).padStart(2,"0")}:${String(m).padStart(2,"0")}`,g=o.some(f=>f.session_time===p);l.push({time:p,available:!g})}return c({success:!0,provider_id:n,date:s,available_slots:l.filter(d=>d.available).map(d=>d.time),booked_slots:o,all_slots:l})}r(Oe,"getProviderAvailability");async function qe(u,a){let[e,t,n]=await Promise.all([a.DB.prepare(`SELECT
+     ORDER BY session_time ASC`
+  ).bind(provider_id, date).all();
+  const slots = [];
+  for (let h = 8; h < 20; h++) {
+    for (const m of [0, 30]) {
+      const time = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+      const taken = booked.some((b) => b.session_time === time);
+      slots.push({ time, available: !taken });
+    }
+  }
+  return json({
+    success: true,
+    provider_id,
+    date,
+    available_slots: slots.filter((s) => s.available).map((s) => s.time),
+    booked_slots: booked,
+    all_slots: slots
+  });
+}
+__name(getProviderAvailability, "getProviderAvailability");
+async function getTelehealthStats(req, env) {
+  const [totals, byStatus, byType] = await Promise.all([
+    env.DB.prepare(`SELECT
       COUNT(*) as total,
       SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,
       SUM(CASE WHEN status = 'scheduled' THEN 1 ELSE 0 END) as scheduled,
       SUM(CASE WHEN status = 'in-progress' THEN 1 ELSE 0 END) as active,
       SUM(CASE WHEN date(session_date) = date('now') THEN 1 ELSE 0 END) as today
-      FROM telehealth_sessions`).first(),a.DB.prepare("SELECT status, COUNT(*) as count FROM telehealth_sessions GROUP BY status").all(),a.DB.prepare("SELECT session_type, COUNT(*) as count FROM telehealth_sessions GROUP BY session_type ORDER BY count DESC").all()]);return c({success:!0,stats:{total_sessions:e?.total||0,completed:e?.completed||0,scheduled:e?.scheduled||0,active:e?.active||0,today:e?.today||0,by_status:t?.results||[],by_type:n?.results||[]}})}r(qe,"getTelehealthStats");_();var b={name_ar:"\u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A\u0629",name_en:"Hayat National Hospital",from:"noreply@hnh.brainsait.org",from_name:"HNH \u2013 \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629",logo_url:"https://hnh.brainsait.org/logo.png",primary:"#1a5276",accent:"#2980b9",website:"https://hnh.brainsait.org",support_phone:"920000094",footer_ar:"\u062C\u0645\u064A\u0639 \u0627\u0644\u062D\u0642\u0648\u0642 \u0645\u062D\u0641\u0648\u0638\u0629 \xA9 \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A\u0629"};function R(u,a){return`<!DOCTYPE html>
+      FROM telehealth_sessions`).first(),
+    env.DB.prepare(`SELECT status, COUNT(*) as count FROM telehealth_sessions GROUP BY status`).all(),
+    env.DB.prepare(`SELECT session_type, COUNT(*) as count FROM telehealth_sessions GROUP BY session_type ORDER BY count DESC`).all()
+  ]);
+  return json({
+    success: true,
+    stats: {
+      total_sessions: totals?.total || 0,
+      completed: totals?.completed || 0,
+      scheduled: totals?.scheduled || 0,
+      active: totals?.active || 0,
+      today: totals?.today || 0,
+      by_status: byStatus?.results || [],
+      by_type: byType?.results || []
+    }
+  });
+}
+__name(getTelehealthStats, "getTelehealthStats");
+async function getIceConfig(req, env) {
+  const servers = getIceServers(env);
+  const hasTurn = servers.some((s) => String(s.urls || "").startsWith("turn"));
+  return json({
+    success: true,
+    ice_servers: servers,
+    turn_available: hasTurn,
+    note: hasTurn ? "TURN relay available \u2014 video calls supported behind symmetric NAT" : "STUN only \u2014 video may fail behind strict NAT. Configure TURN_SERVER_URL, TURN_USERNAME, TURN_CREDENTIAL secrets."
+  });
+}
+__name(getIceConfig, "getIceConfig");
+
+// src/routes/email.js
+init_response();
+var BRAND = {
+  name_ar: "\u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A\u0629",
+  name_en: "Hayat National Hospital",
+  from: "noreply@hnh.brainsait.org",
+  from_name: "HNH \u2013 \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629",
+  logo_url: "https://hnh.brainsait.org/logo.png",
+  primary: "#1a5276",
+  accent: "#2980b9",
+  website: "https://hnh.brainsait.org",
+  support_phone: "920000094",
+  footer_ar: "\u062C\u0645\u064A\u0639 \u0627\u0644\u062D\u0642\u0648\u0642 \u0645\u062D\u0641\u0648\u0638\u0629 \xA9 \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A\u0629"
+};
+function wrapEmail(title, bodyHtml) {
+  return `<!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>${u}</title>
+<title>${title}</title>
 <style>
   body { margin:0; padding:0; background:#f4f6fb; font-family: 'Segoe UI', Arial, sans-serif; direction:rtl; }
   .wrap { max-width:600px; margin:32px auto; background:#fff; border-radius:12px; overflow:hidden;
           box-shadow:0 2px 12px rgba(0,0,0,.1); }
-  .header { background:${b.primary}; padding:28px 32px; text-align:center; }
+  .header { background:${BRAND.primary}; padding:28px 32px; text-align:center; }
   .header h1 { margin:0; color:#fff; font-size:22px; font-weight:700; }
   .header p  { margin:4px 0 0; color:#aed6f1; font-size:14px; }
   .body { padding:32px; }
-  .card { background:#eaf4fb; border-right:4px solid ${b.accent};
+  .card { background:#eaf4fb; border-right:4px solid ${BRAND.accent};
           border-radius:8px; padding:16px 20px; margin:16px 0; }
   .card .label { font-size:12px; color:#666; margin:0 0 2px; }
-  .card .value { font-size:16px; color:${b.primary}; font-weight:600; margin:0; }
-  .btn { display:inline-block; background:${b.accent}; color:#fff !important;
+  .card .value { font-size:16px; color:${BRAND.primary}; font-weight:600; margin:0; }
+  .btn { display:inline-block; background:${BRAND.accent}; color:#fff !important;
          text-decoration:none; padding:12px 28px; border-radius:8px; font-size:15px;
          font-weight:600; margin:20px 0; }
   .alert { background:#fef9e7; border-right:4px solid #f39c12; border-radius:8px;
            padding:12px 16px; margin:16px 0; font-size:14px; color:#7d6608; }
   .footer { background:#f4f6fb; padding:20px 32px; text-align:center; font-size:12px; color:#888; }
-  h2 { color:${b.primary}; font-size:18px; margin-top:0; }
+  h2 { color:${BRAND.primary}; font-size:18px; margin-top:0; }
   p  { color:#444; line-height:1.7; font-size:15px; }
   .divider { border:none; border-top:1px solid #eee; margin:20px 0; }
 </style>
@@ -190,115 +3525,290 @@ Integrated with NPHIES (Saudi e-Claim system). Supports 270/271 (Eligibility), 2
 <body>
 <div class="wrap">
   <div class="header">
-    <h1>${b.name_ar}</h1>
-    <p>${b.name_en}</p>
+    <h1>${BRAND.name_ar}</h1>
+    <p>${BRAND.name_en}</p>
   </div>
   <div class="body">
-    ${a}
+    ${bodyHtml}
   </div>
   <div class="footer">
-    <p>${b.footer_ar}</p>
-    <p>\u0644\u0644\u0627\u0633\u062A\u0641\u0633\u0627\u0631: <strong>${b.support_phone}</strong> | <a href="${b.website}" style="color:${b.accent}">${b.website}</a></p>
+    <p>${BRAND.footer_ar}</p>
+    <p>\u0644\u0644\u0627\u0633\u062A\u0641\u0633\u0627\u0631: <strong>${BRAND.support_phone}</strong> | <a href="${BRAND.website}" style="color:${BRAND.accent}">${BRAND.website}</a></p>
   </div>
 </div>
 </body>
-</html>`}r(R,"wrapEmail");function f0(u){let a=`\u062A\u0623\u0643\u064A\u062F \u0645\u0648\u0639\u062F\u0643 \u2013 ${u.date} | ${b.name_ar}`,e=R(a,`
+</html>`;
+}
+__name(wrapEmail, "wrapEmail");
+function templateAppointment(data) {
+  const subject = `\u062A\u0623\u0643\u064A\u062F \u0645\u0648\u0639\u062F\u0643 \u2013 ${data.date} | ${BRAND.name_ar}`;
+  const html = wrapEmail(subject, `
     <h2>\u062A\u0645 \u062A\u0623\u0643\u064A\u062F \u0645\u0648\u0639\u062F\u0643 \u2713</h2>
-    <p>\u0639\u0632\u064A\u0632\u064A/\u0639\u0632\u064A\u0632\u062A\u064A <strong>${u.patient_name||"\u0627\u0644\u0645\u0631\u064A\u0636"}</strong>\u060C</p>
-    <p>\u064A\u0633\u0639\u062F\u0646\u0627 \u0625\u0628\u0644\u0627\u063A\u0643 \u0628\u062A\u0623\u0643\u064A\u062F \u0645\u0648\u0639\u062F\u0643 \u0644\u062F\u0649 ${b.name_ar}.</p>
+    <p>\u0639\u0632\u064A\u0632\u064A/\u0639\u0632\u064A\u0632\u062A\u064A <strong>${data.patient_name || "\u0627\u0644\u0645\u0631\u064A\u0636"}</strong>\u060C</p>
+    <p>\u064A\u0633\u0639\u062F\u0646\u0627 \u0625\u0628\u0644\u0627\u063A\u0643 \u0628\u062A\u0623\u0643\u064A\u062F \u0645\u0648\u0639\u062F\u0643 \u0644\u062F\u0649 ${BRAND.name_ar}.</p>
     <div class="card">
       <p class="label">\u0627\u0644\u062A\u0627\u0631\u064A\u062E</p>
-      <p class="value">${u.date}</p>
+      <p class="value">${data.date}</p>
     </div>
     <div class="card">
       <p class="label">\u0627\u0644\u0648\u0642\u062A</p>
-      <p class="value">${u.time}</p>
+      <p class="value">${data.time}</p>
     </div>
     <div class="card">
       <p class="label">\u0627\u0644\u0642\u0633\u0645 / \u0627\u0644\u062A\u062E\u0635\u0635</p>
-      <p class="value">${u.department||"\u2014"}</p>
+      <p class="value">${data.department || "\u2014"}</p>
     </div>
     <div class="card">
       <p class="label">\u0627\u0644\u0641\u0631\u0639</p>
-      <p class="value">${u.branch||"\u0627\u0644\u0631\u064A\u0627\u0636"}</p>
+      <p class="value">${data.branch || "\u0627\u0644\u0631\u064A\u0627\u0636"}</p>
     </div>
-    ${u.provider?`<div class="card"><p class="label">\u0627\u0644\u0637\u0628\u064A\u0628</p><p class="value">${u.provider}</p></div>`:""}
+    ${data.provider ? `<div class="card"><p class="label">\u0627\u0644\u0637\u0628\u064A\u0628</p><p class="value">${data.provider}</p></div>` : ""}
     <hr class="divider"/>
     <div class="alert">
       \u23F0 \u064A\u0631\u062C\u0649 \u0627\u0644\u062D\u0636\u0648\u0631 \u0642\u0628\u0644 15 \u062F\u0642\u064A\u0642\u0629 \u0645\u0646 \u0645\u0648\u0639\u062F\u0643 \u0645\u0639 \u0625\u062D\u0636\u0627\u0631 \u0627\u0644\u0647\u0648\u064A\u0629 \u0627\u0644\u0648\u0637\u0646\u064A\u0629 \u0648\u0628\u0637\u0627\u0642\u0629 \u0627\u0644\u062A\u0623\u0645\u064A\u0646.
     </div>
-    ${u.appointment_id?`<p style="font-size:12px;color:#999">\u0631\u0642\u0645 \u0627\u0644\u0645\u0648\u0639\u062F: ${u.appointment_id}</p>`:""}
-  `);return{subject:a,html:e}}r(f0,"templateAppointment");function v0(u){let a=`\u062A\u0623\u0643\u064A\u062F \u0632\u064A\u0627\u0631\u0629 \u0627\u0644\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0645\u0646\u0632\u0644\u064A\u0629 \u2013 ${u.date} | ${b.name_ar}`,e=R(a,`
+    ${data.appointment_id ? `<p style="font-size:12px;color:#999">\u0631\u0642\u0645 \u0627\u0644\u0645\u0648\u0639\u062F: ${data.appointment_id}</p>` : ""}
+  `);
+  return { subject, html };
+}
+__name(templateAppointment, "templateAppointment");
+function templateHomecare(data) {
+  const subject = `\u062A\u0623\u0643\u064A\u062F \u0632\u064A\u0627\u0631\u0629 \u0627\u0644\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0645\u0646\u0632\u0644\u064A\u0629 \u2013 ${data.date} | ${BRAND.name_ar}`;
+  const html = wrapEmail(subject, `
     <h2>\u062A\u0623\u0643\u064A\u062F \u0632\u064A\u0627\u0631\u0629 \u0627\u0644\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0645\u0646\u0632\u0644\u064A\u0629 \u{1F3E0}</h2>
-    <p>\u0639\u0632\u064A\u0632\u064A/\u0639\u0632\u064A\u0632\u062A\u064A <strong>${u.patient_name||"\u0627\u0644\u0645\u0631\u064A\u0636"}</strong>\u060C</p>
+    <p>\u0639\u0632\u064A\u0632\u064A/\u0639\u0632\u064A\u0632\u062A\u064A <strong>${data.patient_name || "\u0627\u0644\u0645\u0631\u064A\u0636"}</strong>\u060C</p>
     <p>\u062A\u0645 \u062C\u062F\u0648\u0644\u0629 \u0632\u064A\u0627\u0631\u0629 \u0627\u0644\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0645\u0646\u0632\u0644\u064A\u0629 \u0644\u0643 \u0648\u0641\u0642 \u0627\u0644\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u062A\u0627\u0644\u064A\u0629:</p>
     <div class="card">
       <p class="label">\u062A\u0627\u0631\u064A\u062E \u0627\u0644\u0632\u064A\u0627\u0631\u0629</p>
-      <p class="value">${u.date}</p>
+      <p class="value">${data.date}</p>
     </div>
-    ${u.time?`<div class="card"><p class="label">\u0627\u0644\u0648\u0642\u062A \u0627\u0644\u0645\u0642\u062F\u0631</p><p class="value">${u.time}</p></div>`:""}
+    ${data.time ? `<div class="card"><p class="label">\u0627\u0644\u0648\u0642\u062A \u0627\u0644\u0645\u0642\u062F\u0631</p><p class="value">${data.time}</p></div>` : ""}
     <div class="card">
       <p class="label">\u0627\u0644\u0639\u0646\u0648\u0627\u0646</p>
-      <p class="value">${u.address}</p>
+      <p class="value">${data.address}</p>
     </div>
     <div class="card">
       <p class="label">\u0646\u0648\u0639 \u0627\u0644\u0632\u064A\u0627\u0631\u0629</p>
-      <p class="value">${u.visit_type||"\u0631\u0648\u062A\u064A\u0646\u064A\u0629"}</p>
+      <p class="value">${data.visit_type || "\u0631\u0648\u062A\u064A\u0646\u064A\u0629"}</p>
     </div>
-    ${u.nurse_name?`<div class="card"><p class="label">\u0627\u0644\u0645\u0645\u0631\u0636/\u0629 \u0627\u0644\u0645\u0633\u0624\u0648\u0644/\u0629</p><p class="value">${u.nurse_name}</p></div>`:""}
+    ${data.nurse_name ? `<div class="card"><p class="label">\u0627\u0644\u0645\u0645\u0631\u0636/\u0629 \u0627\u0644\u0645\u0633\u0624\u0648\u0644/\u0629</p><p class="value">${data.nurse_name}</p></div>` : ""}
     <hr class="divider"/>
     <div class="alert">
-      \u{1F4DE} \u0641\u064A \u062D\u0627\u0644 \u0627\u0644\u062D\u0627\u062C\u0629 \u0644\u062A\u063A\u064A\u064A\u0631 \u0623\u0648 \u0625\u0644\u063A\u0627\u0621 \u0627\u0644\u0632\u064A\u0627\u0631\u0629\u060C \u064A\u0631\u062C\u0649 \u0627\u0644\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0646\u0627 \u0639\u0644\u0649 \u0627\u0644\u0631\u0642\u0645 ${b.support_phone} \u0642\u0628\u0644 3 \u0633\u0627\u0639\u0627\u062A \u0639\u0644\u0649 \u0627\u0644\u0623\u0642\u0644.
+      \u{1F4DE} \u0641\u064A \u062D\u0627\u0644 \u0627\u0644\u062D\u0627\u062C\u0629 \u0644\u062A\u063A\u064A\u064A\u0631 \u0623\u0648 \u0625\u0644\u063A\u0627\u0621 \u0627\u0644\u0632\u064A\u0627\u0631\u0629\u060C \u064A\u0631\u062C\u0649 \u0627\u0644\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0646\u0627 \u0639\u0644\u0649 \u0627\u0644\u0631\u0642\u0645 ${BRAND.support_phone} \u0642\u0628\u0644 3 \u0633\u0627\u0639\u0627\u062A \u0639\u0644\u0649 \u0627\u0644\u0623\u0642\u0644.
     </div>
-    ${u.visit_id?`<p style="font-size:12px;color:#999">\u0631\u0642\u0645 \u0627\u0644\u0632\u064A\u0627\u0631\u0629: ${u.visit_id}</p>`:""}
-  `);return{subject:a,html:e}}r(v0,"templateHomecare");function b0(u){let a=`\u0631\u0627\u0628\u0637 \u062C\u0644\u0633\u0629 \u0627\u0644\u0627\u0633\u062A\u0634\u0627\u0631\u0629 \u0639\u0646 \u0628\u064F\u0639\u062F \u2013 ${u.date} | ${b.name_ar}`,e=R(a,`
+    ${data.visit_id ? `<p style="font-size:12px;color:#999">\u0631\u0642\u0645 \u0627\u0644\u0632\u064A\u0627\u0631\u0629: ${data.visit_id}</p>` : ""}
+  `);
+  return { subject, html };
+}
+__name(templateHomecare, "templateHomecare");
+function templateTelehealth(data) {
+  const subject = `\u0631\u0627\u0628\u0637 \u062C\u0644\u0633\u0629 \u0627\u0644\u0627\u0633\u062A\u0634\u0627\u0631\u0629 \u0639\u0646 \u0628\u064F\u0639\u062F \u2013 ${data.date} | ${BRAND.name_ar}`;
+  const html = wrapEmail(subject, `
     <h2>\u062C\u0644\u0633\u0629 \u0627\u0644\u0627\u0633\u062A\u0634\u0627\u0631\u0629 \u0627\u0644\u0637\u0628\u064A\u0629 \u0639\u0646 \u0628\u064F\u0639\u062F \u{1F3A5}</h2>
-    <p>\u0639\u0632\u064A\u0632\u064A/\u0639\u0632\u064A\u0632\u062A\u064A <strong>${u.patient_name||"\u0627\u0644\u0645\u0631\u064A\u0636"}</strong>\u060C</p>
+    <p>\u0639\u0632\u064A\u0632\u064A/\u0639\u0632\u064A\u0632\u062A\u064A <strong>${data.patient_name || "\u0627\u0644\u0645\u0631\u064A\u0636"}</strong>\u060C</p>
     <p>\u062A\u0645 \u062C\u062F\u0648\u0644\u0629 \u062C\u0644\u0633\u0629 \u0627\u0633\u062A\u0634\u0627\u0631\u062A\u0643 \u0627\u0644\u0637\u0628\u064A\u0629 \u0639\u0628\u0631 \u0627\u0644\u0641\u064A\u062F\u064A\u0648. \u0627\u0646\u0636\u0645 \u0641\u064A \u0627\u0644\u0648\u0642\u062A \u0627\u0644\u0645\u062D\u062F\u062F \u0645\u0646 \u062E\u0644\u0627\u0644 \u0627\u0644\u0631\u0627\u0628\u0637 \u0623\u062F\u0646\u0627\u0647.</p>
     <div class="card">
       <p class="label">\u062A\u0627\u0631\u064A\u062E \u0627\u0644\u062C\u0644\u0633\u0629</p>
-      <p class="value">${u.date}</p>
+      <p class="value">${data.date}</p>
     </div>
     <div class="card">
       <p class="label">\u0648\u0642\u062A \u0627\u0644\u062C\u0644\u0633\u0629</p>
-      <p class="value">${u.time}</p>
+      <p class="value">${data.time}</p>
     </div>
     <div class="card">
       <p class="label">\u0627\u0644\u0645\u062F\u0629</p>
-      <p class="value">${u.duration||30} \u062F\u0642\u064A\u0642\u0629</p>
+      <p class="value">${data.duration || 30} \u062F\u0642\u064A\u0642\u0629</p>
     </div>
-    ${u.provider?`<div class="card"><p class="label">\u0627\u0644\u0637\u0628\u064A\u0628/\u0629</p><p class="value">${u.provider}</p></div>`:""}
+    ${data.provider ? `<div class="card"><p class="label">\u0627\u0644\u0637\u0628\u064A\u0628/\u0629</p><p class="value">${data.provider}</p></div>` : ""}
     <div style="text-align:center;margin:28px 0;">
-      <a href="${u.join_url}" class="btn">\u{1F4F9} \u0627\u0646\u0636\u0645 \u0644\u0644\u062C\u0644\u0633\u0629 \u0627\u0644\u0622\u0646</a>
+      <a href="${data.join_url}" class="btn">\u{1F4F9} \u0627\u0646\u0636\u0645 \u0644\u0644\u062C\u0644\u0633\u0629 \u0627\u0644\u0622\u0646</a>
     </div>
     <div class="card" style="direction:ltr;text-align:left">
       <p class="label" style="text-align:right">\u0631\u0645\u0632 \u0627\u0644\u063A\u0631\u0641\u0629</p>
-      <p class="value" style="font-family:monospace;letter-spacing:4px;font-size:20px;text-align:center">${u.room_code}</p>
+      <p class="value" style="font-family:monospace;letter-spacing:4px;font-size:20px;text-align:center">${data.room_code}</p>
     </div>
     <hr class="divider"/>
     <div class="alert">
       \u{1F4A1} \u062A\u0623\u0643\u062F \u0645\u0646 \u0648\u062C\u0648\u062F \u0643\u0627\u0645\u064A\u0631\u0627 \u0648\u0645\u064A\u0643\u0631\u0648\u0641\u0648\u0646 \u064A\u0639\u0645\u0644 \u0628\u0634\u0643\u0644 \u0635\u062D\u064A\u062D. \u064A\u064F\u0646\u0635\u062D \u0628\u0627\u0633\u062A\u062E\u062F\u0627\u0645 \u0645\u062A\u0635\u0641\u062D Chrome \u0623\u0648 Edge.
     </div>
-    ${u.session_id?`<p style="font-size:12px;color:#999">\u0631\u0642\u0645 \u0627\u0644\u062C\u0644\u0633\u0629: ${u.session_id}</p>`:""}
-  `);return{subject:a,html:e}}r(b0,"templateTelehealth");function y0(u){let a=`\u0645\u062A\u0627\u0628\u0639\u0629 \u0628\u0639\u062F \u0632\u064A\u0627\u0631\u062A\u0643 \u2013 ${b.name_ar}`,e=R(a,`
+    ${data.session_id ? `<p style="font-size:12px;color:#999">\u0631\u0642\u0645 \u0627\u0644\u062C\u0644\u0633\u0629: ${data.session_id}</p>` : ""}
+  `);
+  return { subject, html };
+}
+__name(templateTelehealth, "templateTelehealth");
+function templateFollowup(data) {
+  const subject = `\u0645\u062A\u0627\u0628\u0639\u0629 \u0628\u0639\u062F \u0632\u064A\u0627\u0631\u062A\u0643 \u2013 ${BRAND.name_ar}`;
+  const html = wrapEmail(subject, `
     <h2>\u0645\u062A\u0627\u0628\u0639\u0629 \u0628\u0639\u062F \u0632\u064A\u0627\u0631\u062A\u0643 \u{1F499}</h2>
-    <p>\u0639\u0632\u064A\u0632\u064A/\u0639\u0632\u064A\u0632\u062A\u064A <strong>${u.patient_name||"\u0627\u0644\u0645\u0631\u064A\u0636"}</strong>\u060C</p>
-    <p>\u0646\u062A\u0645\u0646\u0649 \u0644\u0643 \u0627\u0644\u0635\u062D\u0629 \u0648\u0627\u0644\u0639\u0627\u0641\u064A\u0629. \u0646\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0643 \u0644\u0644\u0627\u0637\u0645\u0626\u0646\u0627\u0646 \u0628\u0639\u062F \u0632\u064A\u0627\u0631\u062A\u0643 \u0628\u062A\u0627\u0631\u064A\u062E <strong>${u.visit_date}</strong>.</p>
-    ${u.notes?`<div class="card"><p class="label">\u0645\u0644\u0627\u062D\u0638\u0627\u062A \u0627\u0644\u0637\u0628\u064A\u0628</p><p class="value">${u.notes}</p></div>`:""}
-    ${u.next_appointment?`<div class="card"><p class="label">\u0645\u0648\u0639\u062F\u0643 \u0627\u0644\u0642\u0627\u062F\u0645</p><p class="value">${u.next_appointment}</p></div>`:""}
-    ${u.medications?.length?`
-    <h3 style="color:${b.primary};font-size:16px;">\u0627\u0644\u0623\u062F\u0648\u064A\u0629 \u0627\u0644\u0645\u0648\u0635\u0648\u0641\u0629</h3>
+    <p>\u0639\u0632\u064A\u0632\u064A/\u0639\u0632\u064A\u0632\u062A\u064A <strong>${data.patient_name || "\u0627\u0644\u0645\u0631\u064A\u0636"}</strong>\u060C</p>
+    <p>\u0646\u062A\u0645\u0646\u0649 \u0644\u0643 \u0627\u0644\u0635\u062D\u0629 \u0648\u0627\u0644\u0639\u0627\u0641\u064A\u0629. \u0646\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0643 \u0644\u0644\u0627\u0637\u0645\u0626\u0646\u0627\u0646 \u0628\u0639\u062F \u0632\u064A\u0627\u0631\u062A\u0643 \u0628\u062A\u0627\u0631\u064A\u062E <strong>${data.visit_date}</strong>.</p>
+    ${data.notes ? `<div class="card"><p class="label">\u0645\u0644\u0627\u062D\u0638\u0627\u062A \u0627\u0644\u0637\u0628\u064A\u0628</p><p class="value">${data.notes}</p></div>` : ""}
+    ${data.next_appointment ? `<div class="card"><p class="label">\u0645\u0648\u0639\u062F\u0643 \u0627\u0644\u0642\u0627\u062F\u0645</p><p class="value">${data.next_appointment}</p></div>` : ""}
+    ${data.medications?.length ? `
+    <h3 style="color:${BRAND.primary};font-size:16px;">\u0627\u0644\u0623\u062F\u0648\u064A\u0629 \u0627\u0644\u0645\u0648\u0635\u0648\u0641\u0629</h3>
     <ul style="padding-right:20px;color:#444;">
-      ${u.medications.map(t=>`<li><strong>${t.name}</strong> \u2014 ${t.dose||""} ${t.frequency||""}</li>`).join("")}
-    </ul>`:""}
+      ${data.medications.map((m) => `<li><strong>${m.name}</strong> \u2014 ${m.dose || ""} ${m.frequency || ""}</li>`).join("")}
+    </ul>` : ""}
     <hr class="divider"/>
     <div class="alert">
       \u{1F3E5} \u0641\u064A \u062D\u0627\u0644 \u062A\u062F\u0647\u0648\u0631 \u062D\u0627\u0644\u062A\u0643 \u0623\u0648 \u0648\u062C\u0648\u062F \u0623\u0639\u0631\u0627\u0636 \u062C\u062F\u064A\u062F\u0629\u060C \u064A\u0631\u062C\u0649 \u0632\u064A\u0627\u0631\u0629 \u0623\u0642\u0631\u0628 \u0637\u0648\u0627\u0631\u0626 \u0623\u0648 \u0627\u0644\u0627\u062A\u0635\u0627\u0644 \u0628\u0640 <strong>997</strong>.
     </div>
     <div style="text-align:center;margin:20px 0;">
-      <a href="${b.website}" class="btn">\u0627\u062D\u062C\u0632 \u0645\u0648\u0639\u062F\u0627\u064B \u062C\u062F\u064A\u062F\u0627\u064B</a>
+      <a href="${BRAND.website}" class="btn">\u0627\u062D\u062C\u0632 \u0645\u0648\u0639\u062F\u0627\u064B \u062C\u062F\u064A\u062F\u0627\u064B</a>
     </div>
-  `);return{subject:a,html:e}}r(y0,"templateFollowup");async function L(u,a,e,t,n,i){let s=u.MAILLINC_URL||"https://maillinc.brainsait-fadil.workers.dev",o="pending",l=null;try{let d=await fetch(`${s}/email`,{method:"POST",headers:{"Content-Type":"application/json",...u.MAILLINC_API_KEY?{"X-API-Key":u.MAILLINC_API_KEY}:{}},body:JSON.stringify({from:b.from,from_name:b.from_name,to:a,subject:e,html:t})});o=d.ok?"sent":"failed",d.ok||(l=`HTTP ${d.status}`)}catch(d){o="failed",l=d.message}try{await u.DB.prepare("INSERT INTO email_log (recipient, subject, template, ref_id, status, error) VALUES (?, ?, ?, ?, ?, ?)").bind(a,e,n||"generic",i||null,o,l).run()}catch{}return{status:o,error:l}}r(L,"sendEmail");async function Ne(u,a){let e=await u.json().catch(()=>({}));if(!e.to||!e.date)return c({success:!1,message:"to and date required"},400);let{subject:t,html:n}=f0(e),i=await L(a,e.to,t,n,"appointment",e.appointment_id);return c({success:i.status==="sent",...i})}r(Ne,"emailAppointment");async function Me(u,a){let e=await u.json().catch(()=>({}));if(!e.to||!e.date||!e.address)return c({success:!1,message:"to, date, and address required"},400);let{subject:t,html:n}=v0(e),i=await L(a,e.to,t,n,"homecare",e.visit_id);return c({success:i.status==="sent",...i})}r(Me,"emailHomecare");async function Re(u,a){let e=await u.json().catch(()=>({}));if(!e.to||!e.join_url)return c({success:!1,message:"to and join_url required"},400);let{subject:t,html:n}=b0(e),i=await L(a,e.to,t,n,"telehealth",e.session_id);return c({success:i.status==="sent",...i})}r(Re,"emailTelehealth");async function Pe(u,a){let e=await u.json().catch(()=>({}));if(!e.to||!e.visit_date)return c({success:!1,message:"to and visit_date required"},400);let{subject:t,html:n}=y0(e),i=await L(a,e.to,t,n,"followup",e.ref_id);return c({success:i.status==="sent",...i})}r(Pe,"emailFollowup");async function je(u,a){let e=await u.json().catch(()=>({}));if(!e.to||!e.subject||!e.html)return c({success:!1,message:"to, subject, and html required"},400);let t=await L(a,e.to,e.subject,e.html,"generic",e.ref_id);return c({success:t.status==="sent",...t})}r(je,"emailSend");async function ze(u,a){let e=new URL(u.url),t=Math.min(parseInt(e.searchParams.get("limit")||"50"),200),n=parseInt(e.searchParams.get("offset")||"0"),i=e.searchParams.get("status")||"",s="SELECT * FROM email_log",o=[];i&&(s+=" WHERE status = ?",o.push(i)),s+=" ORDER BY id DESC LIMIT ? OFFSET ?",o.push(t,n);let{results:l}=await a.DB.prepare(s).bind(...o).all();return c({success:!0,emails:l||[],total:l?.length||0})}r(ze,"getEmailLog");var k={};j(k,{about:()=>X,academy:()=>Z,blog:()=>uu,branches:()=>eu,contact:()=>au,course_ai_healthcare:()=>x0,course_cbahi_quality:()=>_0,course_clinical_documentation:()=>w0,course_infection_control:()=>E0,course_medical_coding:()=>S0,course_nphies:()=>C0,course_pdpl:()=>A0,course_pharmacy:()=>k0,course_rcm:()=>T0,departments:()=>tu,doctors:()=>nu,faq:()=>iu,index:()=>su,packages:()=>ou});var X=`<!DOCTYPE html>
+  `);
+  return { subject, html };
+}
+__name(templateFollowup, "templateFollowup");
+async function sendEmail(env, to, subject, html, template, ref_id) {
+  const maillincUrl = env.MAILLINC_URL || "https://maillinc.brainsait-fadil.workers.dev";
+  let status = "pending";
+  let error = null;
+  try {
+    const res = await fetch(`${maillincUrl}/email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...env.MAILLINC_API_KEY ? { "X-API-Key": env.MAILLINC_API_KEY } : {}
+      },
+      body: JSON.stringify({
+        from: BRAND.from,
+        from_name: BRAND.from_name,
+        to,
+        subject,
+        html
+      })
+    });
+    status = res.ok ? "sent" : "failed";
+    if (!res.ok) error = `HTTP ${res.status}`;
+  } catch (e) {
+    status = "failed";
+    error = e.message;
+  }
+  try {
+    await env.DB.prepare(
+      `INSERT INTO email_log (recipient, subject, template, ref_id, status, error) VALUES (?, ?, ?, ?, ?, ?)`
+    ).bind(to, subject, template || "generic", ref_id || null, status, error).run();
+  } catch (_) {
+  }
+  return { status, error };
+}
+__name(sendEmail, "sendEmail");
+async function emailAppointment(req, env) {
+  const data = await req.json().catch(() => ({}));
+  if (!data.to || !data.date) return json({ success: false, message: "to and date required" }, 400);
+  const { subject, html } = templateAppointment(data);
+  const result = await sendEmail(env, data.to, subject, html, "appointment", data.appointment_id);
+  return json({ success: result.status === "sent", ...result });
+}
+__name(emailAppointment, "emailAppointment");
+async function emailHomecare(req, env) {
+  const data = await req.json().catch(() => ({}));
+  if (!data.to || !data.date || !data.address) return json({ success: false, message: "to, date, and address required" }, 400);
+  const { subject, html } = templateHomecare(data);
+  const result = await sendEmail(env, data.to, subject, html, "homecare", data.visit_id);
+  return json({ success: result.status === "sent", ...result });
+}
+__name(emailHomecare, "emailHomecare");
+async function emailTelehealth(req, env) {
+  const data = await req.json().catch(() => ({}));
+  if (!data.to || !data.join_url) return json({ success: false, message: "to and join_url required" }, 400);
+  const { subject, html } = templateTelehealth(data);
+  const result = await sendEmail(env, data.to, subject, html, "telehealth", data.session_id);
+  return json({ success: result.status === "sent", ...result });
+}
+__name(emailTelehealth, "emailTelehealth");
+async function emailFollowup(req, env) {
+  const data = await req.json().catch(() => ({}));
+  if (!data.to || !data.visit_date) return json({ success: false, message: "to and visit_date required" }, 400);
+  const { subject, html } = templateFollowup(data);
+  const result = await sendEmail(env, data.to, subject, html, "followup", data.ref_id);
+  return json({ success: result.status === "sent", ...result });
+}
+__name(emailFollowup, "emailFollowup");
+async function emailSend(req, env) {
+  const data = await req.json().catch(() => ({}));
+  if (!data.to || !data.subject || !data.html) {
+    return json({ success: false, message: "to, subject, and html required" }, 400);
+  }
+  const result = await sendEmail(env, data.to, data.subject, data.html, "generic", data.ref_id);
+  return json({ success: result.status === "sent", ...result });
+}
+__name(emailSend, "emailSend");
+async function getEmailLog(req, env) {
+  const url = new URL(req.url);
+  const limit = Math.min(parseInt(url.searchParams.get("limit") || "50"), 200);
+  const offset = parseInt(url.searchParams.get("offset") || "0");
+  const status = url.searchParams.get("status") || "";
+  let q = "SELECT * FROM email_log";
+  const binds = [];
+  if (status) {
+    q += " WHERE status = ?";
+    binds.push(status);
+  }
+  q += " ORDER BY id DESC LIMIT ? OFFSET ?";
+  binds.push(limit, offset);
+  const { results } = await env.DB.prepare(q).bind(...binds).all();
+  return json({ success: true, emails: results || [], total: results?.length || 0 });
+}
+__name(getEmailLog, "getEmailLog");
+async function emailWebhook(req, env) {
+  const secret = req.headers.get("X-Webhook-Secret") || req.headers.get("x-webhook-secret");
+  if (env.MAILLINC_WEBHOOK_SECRET && secret !== env.MAILLINC_WEBHOOK_SECRET) {
+    return json({ success: false, message: "Unauthorized webhook" }, 401);
+  }
+  const body = await req.json().catch(() => ({}));
+  const events = Array.isArray(body) ? body : body.events || [body];
+  let processed = 0;
+  for (const event of events) {
+    const { type, recipient, message_id, timestamp, details } = event;
+    if (!type || !recipient) continue;
+    try {
+      const newStatus = type === "delivery" ? "delivered" : type === "bounce" ? "bounced" : type === "complaint" ? "complaint" : type === "open" ? "opened" : type === "click" ? "clicked" : type;
+      await env.DB.prepare(
+        `UPDATE email_log SET status = ?, webhook_event = ?, webhook_at = ?, error = ?
+         WHERE recipient = ? AND status IN ('sent', 'delivered', 'opened')
+         ORDER BY id DESC LIMIT 1`
+      ).bind(
+        newStatus,
+        type,
+        timestamp || (/* @__PURE__ */ new Date()).toISOString(),
+        type === "bounce" ? details?.bounce_type || "unknown bounce" : null,
+        recipient
+      ).run();
+      processed++;
+    } catch (e) {
+      console.error("Webhook event processing error:", e?.message);
+    }
+  }
+  return json({ success: true, processed, total: events.length });
+}
+__name(emailWebhook, "emailWebhook");
+
+// src/sites.js
+var sites_exports = {};
+__export(sites_exports, {
+  about: () => about,
+  academy: () => academy,
+  blog: () => blog,
+  branches: () => branches2,
+  contact: () => contact,
+  course_ai_healthcare: () => course_ai_healthcare,
+  course_cbahi_quality: () => course_cbahi_quality,
+  course_clinical_documentation: () => course_clinical_documentation,
+  course_infection_control: () => course_infection_control,
+  course_medical_coding: () => course_medical_coding,
+  course_nphies: () => course_nphies,
+  course_pdpl: () => course_pdpl,
+  course_pharmacy: () => course_pharmacy,
+  course_rcm: () => course_rcm,
+  departments: () => departments,
+  doctors: () => doctors,
+  faq: () => faq,
+  index: () => index,
+  packages: () => packages
+});
+var about = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -483,7 +3993,8 @@ Integrated with NPHIES (Saudi e-Claim system). Supports 270/271 (Eligibility), 2
 <script src="js/common.js"><\/script>
 </body>
 </html>
-`,Z=`<!DOCTYPE html>
+`;
+var academy = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -864,7 +4375,8 @@ document.addEventListener('hnh:langChanged', function(e) {
 <\/script>
 </body>
 </html>
-`,uu=`<!DOCTYPE html>
+`;
+var blog = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -1108,7 +4620,8 @@ document.addEventListener('hnh:langChanged', e => {
 <\/script>
 </body>
 </html>
-`,eu=`<!DOCTYPE html>
+`;
+var branches2 = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -1246,7 +4759,8 @@ document.addEventListener('hnh:langChanged', e => {
 <\/script>
 </body>
 </html>
-`,au=`<!DOCTYPE html>
+`;
+var contact = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -1458,7 +4972,8 @@ async function bookAppointment(e) {
 <\/script>
 </body>
 </html>
-`,x0=`<!DOCTYPE html>
+`;
+var course_ai_healthcare = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -1825,7 +5340,8 @@ document.addEventListener('hnh:langChanged', e => {
 <\/script>
 </body>
 </html>
-`,_0=`<!DOCTYPE html>
+`;
+var course_cbahi_quality = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -2192,7 +5708,8 @@ document.addEventListener('hnh:langChanged', e => {
 <\/script>
 </body>
 </html>
-`,w0=`<!DOCTYPE html>
+`;
+var course_clinical_documentation = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -2559,7 +6076,8 @@ document.addEventListener('hnh:langChanged', e => {
 <\/script>
 </body>
 </html>
-`,E0=`<!DOCTYPE html>
+`;
+var course_infection_control = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -2926,7 +6444,8 @@ document.addEventListener('hnh:langChanged', e => {
 <\/script>
 </body>
 </html>
-`,S0=`<!DOCTYPE html>
+`;
+var course_medical_coding = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -3293,7 +6812,8 @@ document.addEventListener('hnh:langChanged', e => {
 <\/script>
 </body>
 </html>
-`,C0=`<!DOCTYPE html>
+`;
+var course_nphies = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -3660,7 +7180,8 @@ document.addEventListener('hnh:langChanged', e => {
 <\/script>
 </body>
 </html>
-`,A0=`<!DOCTYPE html>
+`;
+var course_pdpl = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -4027,7 +7548,8 @@ document.addEventListener('hnh:langChanged', e => {
 <\/script>
 </body>
 </html>
-`,k0=`<!DOCTYPE html>
+`;
+var course_pharmacy = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -4394,7 +7916,8 @@ document.addEventListener('hnh:langChanged', e => {
 <\/script>
 </body>
 </html>
-`,T0=`<!DOCTYPE html>
+`;
+var course_rcm = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -4761,7 +8284,8 @@ document.addEventListener('hnh:langChanged', e => {
 <\/script>
 </body>
 </html>
-`,tu=`<!DOCTYPE html>
+`;
+var departments = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -4932,7 +8456,8 @@ function filterDepts() { renderDepts(); }
 <\/script>
 </body>
 </html>
-`,nu=`<!DOCTYPE html>
+`;
+var doctors = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -5103,7 +8628,8 @@ function loadMore() { visible += 16; renderDoctors(); }
 <\/script>
 </body>
 </html>
-`,iu=`<!DOCTYPE html>
+`;
+var faq = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -5338,7 +8864,8 @@ function toggleFaq(btn) {
 <\/script>
 </body>
 </html>
-`,su=`<!DOCTYPE html>
+`;
+var index = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -5710,7 +9237,8 @@ document.addEventListener('hnh:langChanged', e => {
 <\/script>
 </body>
 </html>
-`,ou=`<!DOCTYPE html>
+`;
+var packages = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -5960,36 +9488,561 @@ document.addEventListener('hnh:langChanged', e => {
 <script src="js/common.js"><\/script>
 </body>
 </html>
-`;var $e={about:X,academy:Z,blog:uu,branches:eu,contact:au,departments:tu,doctors:nu,faq:iu,packages:ou,index:su},Ue={ar:{desc:"\u0645\u062C\u0645\u0648\u0639\u0629 \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A \u2014 \u0645\u0646\u0638\u0648\u0645\u0629 \u0635\u062D\u064A\u0629 \u0645\u062A\u0643\u0627\u0645\u0644\u0629 \u0645\u0639 \u0628\u0633\u0645\u0629 \u0648 GIVC \u0648 SBS \u0648 Oracle \u0648 NPHIES.",title:"\u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A | HNH \u2014 \u0627\u0644\u0645\u0646\u0638\u0648\u0645\u0629 \u0627\u0644\u0645\u062A\u0643\u0627\u0645\u0644\u0629",titleShort:"\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A",osVer:"BrainSAIT Healthcare OS v5.0",heroBadge:"\u0628\u064A\u0627\u0646\u0627\u062A \u062D\u064A\u0629 \u2014 \u0645\u062A\u0635\u0644 \u0628\u0640 BrainSAIT",heroH1:'\u0645\u062C\u0645\u0648\u0639\u0629 \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A<br><span class="gd">\u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A</span>',heroP:"\u0645\u0646\u0638\u0648\u0645\u0629 \u0635\u062D\u064A\u0629 \u0630\u0643\u064A\u0629 \u0645\u062A\u0643\u0627\u0645\u0644\u0629 \u2014 \u0628\u0633\u0645\u0629 \u0627\u0644\u0635\u0648\u062A\u064A\u0629 \xB7 GIVC \xB7 SBS \xB7 Oracle \xB7 NPHIES \xB7 ClaimLinc",heroBookBtn:"\u{1F4C5} \u0627\u062D\u062C\u0632 \u0645\u0648\u0639\u062F",heroDeptBtn:"\u062A\u0635\u0641\u062D \u0627\u0644\u0623\u0642\u0633\u0627\u0645",statDoctors:"\u0637\u0628\u064A\u0628",statBranches:"\u0641\u0631\u0639",statDepts:"\u0642\u0633\u0645 \u0637\u0628\u064A",statBeds:"\u0633\u0631\u064A\u0631",navDepts:"\u0627\u0644\u0623\u0642\u0633\u0627\u0645",navBranches:"\u0627\u0644\u0641\u0631\u0648\u0639",navDoctors:"\u0627\u0644\u0623\u0637\u0628\u0627\u0621",navPortal:"\u0627\u0644\u0645\u0646\u0638\u0648\u0645\u0629",navEcosystem:"\u0627\u0644\u0645\u0646\u0638\u0648\u0645\u0629",navCommand:"\u0627\u0644\u0645\u0631\u0643\u0632 \u0627\u0644\u062D\u064A",navBook:"\u{1F4C5} \u0627\u062D\u062C\u0632 \u0645\u0648\u0639\u062F",langBtn:"EN",secDeptsTitle:"\u0627\u0644\u0623\u0642\u0633\u0627\u0645 \u0627\u0644\u0637\u0628\u064A\u0629",secDeptsSub:"\u0623\u0643\u062B\u0631 \u0645\u0646 30 \u062A\u062E\u0635\u0635\u0627\u064B \u0637\u0628\u064A\u0627\u064B",secBranchesTitle:"\u0641\u0631\u0648\u0639\u0646\u0627",secBranchesSub:"\u062E\u0645\u0633\u0629 \u0641\u0631\u0648\u0639 \u0641\u064A \u0627\u0644\u0645\u0645\u0644\u0643\u0629",secDoctorsTitle:"\u0623\u0637\u0628\u0627\u0624\u0646\u0627",secDoctorsSub:"\u0641\u0631\u064A\u0642 \u0645\u0646 \u0623\u0645\u0647\u0631 \u0627\u0644\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u064A\u0646",ecosystemTitle:"\u0627\u0644\u0645\u0646\u0638\u0648\u0645\u0629 \u0627\u0644\u0635\u062D\u064A\u0629 \u0627\u0644\u0645\u062A\u0643\u0627\u0645\u0644\u0629",ecosystemSub:"\u0628\u0648\u0627\u0628\u0627\u062A \u0630\u0643\u064A\u0629 \u0644\u0643\u0644 \u0645\u0633\u062A\u062E\u062F\u0645 \u2014 \u0628\u064A\u0627\u0646\u0627\u062A \u062D\u064A\u0629 \u0648\u062A\u0643\u0627\u0645\u0644 \u0643\u0627\u0645\u0644 \u0628\u064A\u0646 \u0627\u0644\u0623\u0646\u0638\u0645\u0629",patientTitle:"\u0627\u0644\u0645\u0631\u064A\u0636",patientDesc:"\u0627\u0633\u062A\u0639\u0631\u0627\u0636 \u0627\u0644\u0641\u062D\u0648\u0635\u0627\u062A\u060C \u062D\u062C\u0632 \u0627\u0644\u0645\u0648\u0627\u0639\u064A\u062F\u060C \u0645\u062A\u0627\u0628\u0639\u0629 \u0627\u0644\u0645\u0637\u0627\u0644\u0628\u0627\u062A\u060C \u0627\u0644\u062F\u0631\u062F\u0634\u0629 \u0627\u0644\u0630\u0643\u064A\u0629 \u0645\u0639 \u0628\u0633\u0645\u0629",providerTitle:"\u0627\u0644\u0645\u0632\u0648\u062F \u0627\u0644\u0635\u062D\u064A",providerDesc:"\u062C\u062F\u0648\u0644 \u0627\u0644\u0645\u0648\u0627\u0639\u064A\u062F\u060C \u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0645\u0631\u0636\u0649\u060C \u0627\u0644\u062A\u0643\u0627\u0645\u0644 \u0645\u0639 Oracle \u0648 NPHIES\u060C \u062A\u0642\u0627\u0631\u064A\u0631 \u0627\u0644\u0623\u062F\u0627\u0621",payerTitle:"\u0627\u0644\u062A\u0623\u0645\u064A\u0646",payerDesc:"\u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0627\u0644\u0623\u0647\u0644\u064A\u0629\u060C \u0625\u062F\u0627\u0631\u0629 \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0627\u062A \u0627\u0644\u0645\u0633\u0628\u0642\u0629\u060C \u0645\u062A\u0627\u0628\u0639\u0629 \u062F\u0648\u0631\u0629 \u0627\u0644\u0625\u064A\u0631\u0627\u062F\u0627\u062A",studentTitle:"\u0627\u0644\u0637\u0627\u0644\u0628",studentDesc:"\u0627\u0644\u0623\u0643\u0627\u062F\u064A\u0645\u064A\u0629 \u0627\u0644\u0637\u0628\u064A\u0629 \u2014 \u062F\u0648\u0631\u0627\u062A \u062A\u062F\u0631\u064A\u0628\u064A\u0629\u060C \u0634\u0647\u0627\u062F\u0627\u062A\u060C \u0645\u0643\u062A\u0628\u0629 \u0637\u0628\u064A\u0629 \u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A\u0629",adminTitle:"\u0627\u0644\u0625\u062F\u0627\u0631\u0629",adminDesc:"\u0644\u0648\u062D\u0629 \u062A\u062D\u0643\u0645 \u0634\u0627\u0645\u0644\u0629 \u2014 \u0625\u062D\u0635\u0627\u0626\u064A\u0627\u062A\u060C \u062A\u0642\u0627\u0631\u064A\u0631\u060C \u0625\u062F\u0627\u0631\u0629 \u0627\u0644\u0645\u0633\u062A\u062E\u062F\u0645\u064A\u0646 \u0648\u0627\u0644\u0635\u0644\u0627\u062D\u064A\u0627\u062A",receptionTitle:"\u0627\u0644\u0627\u0633\u062A\u0642\u0628\u0627\u0644",receptionDesc:"\u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u0645\u0631\u0636\u0649\u060C \u0625\u062F\u0627\u0631\u0629 \u0627\u0644\u0645\u0648\u0627\u0639\u064A\u062F\u060C \u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0627\u0644\u062A\u0623\u0645\u064A\u0646\u060C \u0637\u0628\u0627\u0639\u0629 \u0627\u0644\u062A\u0642\u0627\u0631\u064A\u0631",rcmTitle:"\u062F\u0648\u0631\u0629 \u0627\u0644\u0625\u064A\u0631\u0627\u062F\u0627\u062A",rcmDesc:"\u0627\u0644\u0645\u0637\u0627\u0644\u0628\u0627\u062A \u0627\u0644\u0645\u0627\u0644\u064A\u0629\u060C \u0645\u062A\u0627\u0628\u0639\u0629 \u0627\u0644\u062A\u062D\u0635\u064A\u0644\u060C \u062A\u062D\u0644\u064A\u0644 \u0627\u0644\u0623\u062F\u0627\u0621 \u0627\u0644\u0645\u0627\u0644\u064A\u060C \u062A\u0642\u0627\u0631\u064A\u0631 NPHIES",integrationsTitle:"\u0627\u0644\u062A\u0643\u0627\u0645\u0644\u0627\u062A \u0627\u0644\u062D\u064A\u0629",integrationsSub:"\u062C\u0645\u064A\u0639 \u0627\u0644\u0623\u0646\u0638\u0645\u0629 \u0645\u062A\u0635\u0644\u0629 \u0648\u062A\u0639\u0645\u0644 \u0628\u0634\u0643\u0644 \u0645\u0628\u0627\u0634\u0631",givcTitle:"GIVC \u2014 \u0627\u0644\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0627\u0641\u062A\u0631\u0627\u0636\u064A\u0629 \u0627\u0644\u0645\u062A\u0643\u0627\u0645\u0644\u0629",givcDesc:"Global Integrated Virtual Care \u2014 \u0634\u0628\u0643\u0629 \u0627\u0644\u0623\u0637\u0628\u0627\u0621\u060C \u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u0645\u0632\u0648\u062F\u064A\u0646\u060C \u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0627\u0644\u0623\u0647\u0644\u064A\u0629 \u0645\u0639 OID",givcRegister:"\u062A\u0633\u062C\u064A\u0644 \u0637\u0628\u064A\u0628 \u062C\u062F\u064A\u062F",givcNetwork:"\u062A\u0635\u0641\u062D \u0627\u0644\u0634\u0628\u0643\u0629",givcOidLabel:"\u0631\u0642\u0645 \u0627\u0644\u062A\u0639\u0631\u064A\u0641 (OID)",aiTitle:"\u0628\u0633\u0645\u0629 \u2014 \u0627\u0644\u0645\u0633\u0627\u0639\u062F \u0627\u0644\u0637\u0628\u064A \u0627\u0644\u0630\u0643\u064A",aiDesc:"\u062A\u062D\u062F\u062B \u0645\u0639 \u0628\u0633\u0645\u0629 \u0628\u0627\u0644\u0635\u0648\u062A \u0623\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u2014 \u062D\u062C\u0632 \u0645\u0648\u0627\u0639\u064A\u062F\u060C \u0641\u062D\u0635 \u0627\u0644\u0623\u0647\u0644\u064A\u0629\u060C \u0645\u062A\u0627\u0628\u0639\u0629 \u0627\u0644\u0645\u0637\u0627\u0644\u0628\u0627\u062A\u060C \u0627\u0633\u062A\u0641\u0633\u0627\u0631\u0627\u062A \u0637\u0628\u064A\u0629",aiTalkBtn:"\u062A\u062D\u062F\u062B \u0645\u0639 \u0628\u0633\u0645\u0629 \u{1F399}\uFE0F",aiChatBtn:"\u{1F4AC} \u062F\u0631\u062F\u0634\u0629 \u0646\u0635\u064A\u0629",ctaTitle:"\u0635\u062D\u062A\u0643 \u0623\u0648\u0644\u0627\u064B",ctaSub:"\u0627\u062D\u062C\u0632 \u0645\u0648\u0639\u062F\u0643 \u0627\u0644\u0622\u0646 \u0639\u0628\u0631 \u0627\u0644\u0645\u0646\u0638\u0648\u0645\u0629 \u0627\u0644\u0645\u062A\u0643\u0627\u0645\u0644\u0629",ctaBook:"\u0627\u062D\u062C\u0632 \u0645\u0648\u0639\u062F \u0627\u0644\u0622\u0646",ctaCall:"\u0627\u062A\u0635\u0644 \u0628\u0646\u0627",fAbout:"\u0645\u0646\u0638\u0648\u0645\u0629 \u0635\u062D\u064A\u0629 \u0630\u0643\u064A\u0629 \u0645\u062A\u0643\u0627\u0645\u0644\u0629 \u2014 \u0645\u0646\u0630 25 \u0639\u0627\u0645\u0627\u064B \u0645\u0646 \u0627\u0644\u062A\u0645\u064A\u0632.",fLinks:"\u0631\u0648\u0627\u0628\u0637 \u0633\u0631\u064A\u0639\u0629",fContact:"\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0646\u0627",fServices:"\u062E\u062F\u0645\u0627\u062A",fEmerg:"\u0637\u0648\u0627\u0631\u0626 24/7",fAppt:"\u062D\u062C\u0632 \u0645\u0648\u0639\u062F",fEcosystem:"\u0627\u0644\u0645\u0646\u0638\u0648\u0645\u0629",fPortal:"\u0627\u0644\u0628\u0648\u0627\u0628\u0629",fBasma:"\u0628\u0633\u0645\u0629 AI",fPowered:"\u0645\u0634\u063A\u0651\u0644 \u0628\u0646\u0638\u0627\u0645",fCopy:"\xA9 2026 \u062C\u0645\u064A\u0639 \u0627\u0644\u062D\u0642\u0648\u0642 \u0645\u062D\u0641\u0648\u0638\u0629",statusConnected:"\u0645\u062A\u0635\u0644",statusWarning:"\u062A\u062D\u0630\u064A\u0631",statusOffline:"\u063A\u064A\u0631 \u0645\u062A\u0635\u0644",loading:"\u062C\u0627\u0631\u064A \u0627\u0644\u062A\u062D\u0645\u064A\u0644...",systemOnline:"\u062C\u0645\u064A\u0639 \u0627\u0644\u0623\u0646\u0638\u0645\u0629 \u062A\u0639\u0645\u0644",oracleBridge:"\u062C\u0633\u0631 Oracle",nphiesPortal:"\u0628\u0648\u0627\u0628\u0629 NPHIES",claimlincPortal:"ClaimLinc",basmaPortal:"\u0628\u0633\u0645\u0629 AI",sbsPortal:"SBS",givcPortal:"GIVC",searchTitle:"\u0627\u0644\u0628\u062D\u062B \u0627\u0644\u0630\u0643\u064A \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064A",searchSub:"\u0627\u0633\u0623\u0644 \u0639\u0646 \u0623\u064A \u0637\u0628\u064A\u0628 \u0623\u0648 \u0642\u0633\u0645 \u0623\u0648 \u0625\u062C\u0631\u0627\u0621 \u0623\u0648 \u062F\u0648\u0627\u0621 \u2014 \u0625\u062C\u0627\u0628\u0627\u062A \u0641\u0648\u0631\u064A\u0629 \u0645\u0646 \u0642\u0627\u0639\u062F\u0629 \u0645\u0639\u0631\u0641\u0629 \u0627\u0644\u0645\u0633\u062A\u0634\u0641\u0649",searchPlaceholder:"\u0645\u062B\u0627\u0644: \u0623\u0637\u0628\u0627\u0621 \u0627\u0644\u0642\u0644\u0628\u060C \u0633\u0627\u0639\u0627\u062A \u0627\u0644\u0637\u0648\u0627\u0631\u0626\u060C \u0627\u0644\u062A\u0623\u0645\u064A\u0646 \u0627\u0644\u0637\u0628\u064A\u060C \u0627\u0644\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0645\u0646\u0632\u0644\u064A\u0629...",searchBtn:"\u{1F50D} \u0627\u0628\u062D\u062B \u0627\u0644\u0622\u0646",hcTitle:"\u0627\u0644\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0635\u062D\u064A\u0629 \u0627\u0644\u0645\u0646\u0632\u0644\u064A\u0629",hcSub:"\u0641\u0631\u064A\u0642 \u0645\u062A\u062E\u0635\u0635 \u064A\u0623\u062A\u064A \u0625\u0644\u064A\u0643",hcDesc:"\u0632\u064A\u0627\u0631\u0627\u062A \u0645\u0646\u0632\u0644\u064A\u0629 \u0645\u0646 \u0645\u0645\u0631\u0636\u0627\u062A \u0648\u0623\u0637\u0628\u0627\u0621 \u0645\u0639\u062A\u0645\u062F\u064A\u0646 \u2014 \u0641\u062D\u0648\u0635\u0627\u062A\u060C \u0639\u0644\u0627\u062C \u0648\u0631\u064A\u062F\u064A\u060C \u0631\u0639\u0627\u064A\u0629 \u0645\u0627 \u0628\u0639\u062F \u0627\u0644\u062C\u0631\u0627\u062D\u0629\u060C \u0645\u062A\u0627\u0628\u0639\u0629 \u0627\u0644\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0645\u0632\u0645\u0646\u0629.",thTitle:"\u0627\u0644\u062A\u0637\u0628\u064A\u0628 \u0639\u0646 \u0628\u064F\u0639\u062F",thSub:"\u0627\u0633\u062A\u0634\u0627\u0631\u0629 \u0637\u0628\u064A\u0629 \u0645\u0646 \u0623\u064A \u0645\u0643\u0627\u0646",thDesc:"\u062A\u062D\u062F\u062B \u0645\u0639 \u0637\u0628\u064A\u0628\u0643 \u0641\u064A\u062F\u064A\u0648 \u0623\u0648 \u0635\u0648\u062A \u2014 \u062F\u0648\u0646 \u0627\u0644\u062D\u0627\u062C\u0629 \u0644\u0644\u0632\u064A\u0627\u0631\u0629. \u0645\u062A\u0627\u062D 24/7 \u0645\u0639 \u0623\u0637\u0628\u0627\u0621 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A.",digitalTitle:"\u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0635\u062D\u064A\u0629 \u0627\u0644\u0631\u0642\u0645\u064A\u0629",digitalSub:"\u0627\u0628\u062A\u0643\u0627\u0631 \u0631\u0642\u0645\u064A \u0641\u064A \u062E\u062F\u0645\u0629 \u0635\u062D\u062A\u0643 \u2014 \u0628\u062D\u062B \u0630\u0643\u064A\u060C \u0631\u0639\u0627\u064A\u0629 \u0645\u0646\u0632\u0644\u064A\u0629\u060C \u0648\u0627\u0633\u062A\u0634\u0627\u0631\u0627\u062A \u0641\u064A\u062F\u064A\u0648 \u0645\u0628\u0627\u0634\u0631\u0629",emailTitle:"\u0627\u0644\u062A\u0648\u0627\u0635\u0644 \u0627\u0644\u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A \u0627\u0644\u0630\u0643\u064A",emailDesc:"\u062A\u0623\u0643\u064A\u062F\u0627\u062A\u060C \u062A\u0630\u0643\u064A\u0631\u0627\u062A\u060C \u0648\u0648\u0635\u0641\u0627\u062A \u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A\u0629 \u2014 \u0628\u0631\u064A\u062F \u0630\u0643\u064A \u062B\u0646\u0627\u0626\u064A \u0627\u0644\u0644\u063A\u0629 \u0644\u0643\u0644 \u0645\u0631\u064A\u0636.",openAction:"\u0627\u0641\u062A\u062D \u0627\u0644\u062E\u062F\u0645\u0629",bookModalTitle:"\u062D\u062C\u0632 \u0645\u0648\u0639\u062F \u0633\u0631\u064A\u0639",basmaModalTitle:"\u0628\u0633\u0645\u0629 \u062F\u0627\u062E\u0644 HNH",homecareModalTitle:"\u062C\u062F\u0648\u0644\u0629 \u0632\u064A\u0627\u0631\u0629 \u0645\u0646\u0632\u0644\u064A\u0629",telehealthModalTitle:"\u0625\u0646\u0634\u0627\u0621 \u062C\u0644\u0633\u0629 \u062A\u0637\u0628\u064A\u0628 \u0639\u0646 \u0628\u0639\u062F",eligModalTitle:"\u062A\u062D\u0642\u0642 \u0627\u0644\u062A\u0623\u0645\u064A\u0646 \u0648\u0627\u0644\u0623\u0647\u0644\u064A\u0629",quickName:"\u0627\u0633\u0645 \u0627\u0644\u0645\u0631\u064A\u0636",quickPhone:"\u0631\u0642\u0645 \u0627\u0644\u062C\u0648\u0627\u0644",quickNational:"\u0627\u0644\u0647\u0648\u064A\u0629 / \u0627\u0644\u0625\u0642\u0627\u0645\u0629",quickInsurance:"\u0631\u0642\u0645 \u0627\u0644\u062A\u0623\u0645\u064A\u0646",quickDept:"\u0627\u0644\u0642\u0633\u0645",quickDate:"\u0627\u0644\u062A\u0627\u0631\u064A\u062E",quickTime:"\u0627\u0644\u0648\u0642\u062A",quickAddress:"\u0627\u0644\u0639\u0646\u0648\u0627\u0646",quickComplaint:"\u0633\u0628\u0628 \u0627\u0644\u0637\u0644\u0628",sendRequest:"\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0637\u0644\u0628",askBasma:"\u0627\u0633\u0623\u0644 \u0628\u0633\u0645\u0629",resultReady:"\u062A\u0645 \u062A\u0646\u0641\u064A\u0630 \u0627\u0644\u0639\u0645\u0644\u064A\u0629",missingFields:"\u0623\u0643\u0645\u0644 \u0627\u0644\u062D\u0642\u0648\u0644 \u0627\u0644\u0645\u0637\u0644\u0648\u0628\u0629",failedAction:"\u062A\u0639\u0630\u0631 \u062A\u0646\u0641\u064A\u0630 \u0627\u0644\u0637\u0644\u0628. \u062D\u0627\u0648\u0644 \u0644\u0627\u062D\u0642\u0627\u064B.",commandTitle:"\u0645\u0631\u0643\u0632 \u0627\u0644\u062A\u062D\u0643\u0645 \u0627\u0644\u062D\u064A",commandSub:"\u0645\u0624\u0634\u0631\u0627\u062A \u062A\u0634\u063A\u064A\u0644\u064A\u0629 \u0645\u0628\u0627\u0634\u0631\u0629 \u0645\u0646 HNH \u0648 GIVC \u0648 NPHIES \u0648 ClaimLinc \u2014 \u0635\u0641\u062D\u0629 \u0648\u0627\u062D\u062F\u0629 \u0644\u0645\u0631\u0627\u0642\u0628\u0629 \u0627\u0644\u062D\u0631\u0643\u0629 \u0627\u0644\u0633\u0631\u064A\u0631\u064A\u0629 \u0648\u0627\u0644\u0631\u0642\u0645\u064A\u0629.",opsPatients:"\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0645\u0631\u0636\u0649",opsAppointments:"\u0645\u0648\u0627\u0639\u064A\u062F \u0627\u0644\u064A\u0648\u0645",opsProviders:"\u0645\u0632\u0648\u062F \u0635\u062D\u064A",opsClaims:"\u0645\u0637\u0627\u0644\u0628\u0629",homecareMetric:"\u0632\u064A\u0627\u0631\u0627\u062A \u0645\u0646\u0632\u0644\u064A\u0629",telehealthMetric:"\u062C\u0644\u0633\u0627\u062A \u0639\u0646 \u0628\u0639\u062F",givcMetric:"\u0623\u0637\u0628\u0627\u0621 GIVC",connectedMetric:"\u0623\u0646\u0638\u0645\u0629 \u0645\u062A\u0635\u0644\u0629",featureTitle:"\u0645\u064A\u0632\u0627\u062A \u062C\u062F\u064A\u062F\u0629 \u062C\u0627\u0647\u0632\u0629 \u0644\u0644\u062A\u0634\u063A\u064A\u0644",featureSub:"\u062E\u062F\u0645\u0627\u062A \u0631\u0642\u0645\u064A\u0629 \u0645\u062A\u0635\u0644\u0629 \u0645\u0628\u0627\u0634\u0631\u0629 \u0628\u0648\u0627\u062C\u0647\u0627\u062A HNH \u2014 \u0644\u0627 \u0646\u0645\u0627\u0630\u062C \u0648\u0647\u0645\u064A\u0629\u060C \u0643\u0644 \u0625\u062C\u0631\u0627\u0621 \u064A\u0633\u062A\u062F\u0639\u064A API \u062D\u064A.",featureProvider:"\u0644\u0648\u062D\u0629 \u0627\u0644\u0637\u0628\u064A\u0628",featureProviderDesc:"\u0645\u0633\u0627\u062D\u0629 \u0639\u0645\u0644 \u0644\u0644\u0637\u0628\u064A\u0628 \u0645\u0639 \u0627\u0644\u0645\u0648\u0627\u0639\u064A\u062F\u060C \u0627\u0644\u0645\u0631\u0636\u0649\u060C FHIR\u060C GIVC\u060C \u0648 NPHIES.",featureEligibility:"\u062A\u062D\u0642\u0642 \u0627\u0644\u0623\u0647\u0644\u064A\u0629 \u0639\u0628\u0631 GIVC",featureEligibilityDesc:"\u0646\u0642\u0637\u0629 \u062F\u062E\u0648\u0644 \u0645\u0628\u0627\u0634\u0631\u0629 \u0644\u0641\u062D\u0635 \u0627\u0644\u062A\u063A\u0637\u064A\u0629 \u0648\u0631\u0628\u0637 OID \u0648\u0634\u0628\u0643\u0629 \u0627\u0644\u0623\u0637\u0628\u0627\u0621.",featureHomecare:"\u0627\u0644\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0645\u0646\u0632\u0644\u064A\u0629",featureHomecareDesc:"\u062C\u062F\u0648\u0644\u0629 \u0632\u064A\u0627\u0631\u0629 \u0645\u0646\u0632\u0644\u064A\u0629 \u0645\u0639 \u0633\u0628\u0628 \u0627\u0644\u0637\u0644\u0628 \u0648\u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u0648\u0627\u0644\u0648\u0642\u062A.",featureTelehealth:"\u0627\u0644\u062A\u0637\u0628\u064A\u0628 \u0639\u0646 \u0628\u0639\u062F",featureTelehealthDesc:"\u0625\u0646\u0634\u0627\u0621 \u062C\u0644\u0633\u0629 \u0631\u0642\u0645\u064A\u0629 \u0645\u0639 \u0631\u0627\u0628\u0637 \u063A\u0631\u0641\u0629 Telehealth \u0641\u0648\u0631\u064A.",featureSearch:"\u0627\u0644\u0628\u062D\u062B \u0627\u0644\u0637\u0628\u064A \u0627\u0644\u0630\u0643\u064A",featureSearchDesc:"AutoRAG \u0648 DeepSeek \u0644\u0644\u0628\u062D\u062B \u0641\u064A \u0645\u0639\u0631\u0641\u0629 \u0627\u0644\u0645\u0633\u062A\u0634\u0641\u0649.",featureRcm:"\u062F\u0648\u0631\u0629 \u0627\u0644\u0625\u064A\u0631\u0627\u062F\u0627\u062A",featureRcmDesc:"\u0635\u062D\u0629 ClaimLinc\u060C \u0627\u0644\u0645\u0637\u0627\u0644\u0628\u0627\u062A\u060C \u0648\u0627\u0644\u062A\u062F\u0642\u064A\u0642 \u0642\u0628\u0644 \u0627\u0644\u0625\u0631\u0633\u0627\u0644.",launch:"\u062A\u0634\u063A\u064A\u0644"},en:{desc:"Hayat National Hospitals Group \u2014 Integrated Healthcare Ecosystem with Basma, GIVC, SBS, Oracle & NPHIES portals.",title:"Hayat National Hospitals | HNH \u2014 Integrated Ecosystem",titleShort:"Hayat National Hospital",osVer:"BrainSAIT Healthcare OS v5.0",heroBadge:"Live Data \u2014 Connected to BrainSAIT",heroH1:'Hayat National<br><span class="gd">Hospitals Group</span>',heroP:"Integrated Smart Healthcare \u2014 Basma Voice \xB7 GIVC \xB7 SBS \xB7 Oracle \xB7 NPHIES \xB7 ClaimLinc",heroBookBtn:"\u{1F4C5} Book Appointment",heroDeptBtn:"Browse Departments",statDoctors:"Doctors",statBranches:"Branches",statDepts:"Departments",statBeds:"Beds",navDepts:"Departments",navBranches:"Branches",navDoctors:"Doctors",navPortal:"Ecosystem",navEcosystem:"Ecosystem",navCommand:"Live OS",navBook:"\u{1F4C5} Book Now",langBtn:"\u0627\u0644\u0639\u0631\u0628\u064A\u0629",secDeptsTitle:"Medical Departments",secDeptsSub:"Over 30 medical specialties",secBranchesTitle:"Our Branches",secBranchesSub:"Five branches across KSA",secDoctorsTitle:"Our Doctors",secDoctorsSub:"Team of expert consultants",ecosystemTitle:"Integrated Healthcare Ecosystem",ecosystemSub:"Smart portals for every user \u2014 live data and full system integration",patientTitle:"Patient",patientDesc:"View lab results, book appointments, track claims, AI chat with Basma",providerTitle:"Provider",providerDesc:"Schedule management, patient records, Oracle & NPHIES integration, performance reports",payerTitle:"Payer / Insurance",payerDesc:"Eligibility verification, pre-authorization management, revenue cycle tracking",studentTitle:"Student",studentDesc:"Medical academy \u2014 training courses, certificates, digital medical library",adminTitle:"Admin",adminDesc:"Full dashboard \u2014 analytics, reports, user & permission management",receptionTitle:"Reception",receptionDesc:"Patient registration, appointment management, insurance verification, reports",rcmTitle:"Revenue Cycle",rcmDesc:"Claims management, collection tracking, financial analytics, NPHIES reporting",integrationsTitle:"Live Integrations",integrationsSub:"All systems connected and operational",givcTitle:"GIVC \u2014 Global Integrated Virtual Care",givcDesc:"Provider network, doctor registration, OID-based eligibility verification",givcRegister:"Register New Doctor",givcNetwork:"Browse Network",givcOidLabel:"Identifier (OID)",aiTitle:"Basma \u2014 AI Medical Assistant",aiDesc:"Talk to Basma by voice or text \u2014 book appointments, check eligibility, track claims, medical inquiries",aiTalkBtn:"Talk to Basma \u{1F399}\uFE0F",aiChatBtn:"\u{1F4AC} Chat Now",ctaTitle:"Your Health First",ctaSub:"Book your appointment now through our integrated ecosystem",ctaBook:"Book Now",ctaCall:"Call Us",fAbout:"An intelligent integrated healthcare ecosystem \u2014 25 years of excellence.",fLinks:"Quick Links",fContact:"Contact Us",fServices:"Services",fEmerg:"Emergency 24/7",fAppt:"Book Appointment",fEcosystem:"Ecosystem",fPortal:"Portal",fBasma:"Basma AI",fPowered:"Powered by",fCopy:"\xA9 2026 All rights reserved",statusConnected:"Online",statusWarning:"Warning",statusOffline:"Offline",loading:"Loading...",systemOnline:"All systems operational",oracleBridge:"Oracle Bridge",nphiesPortal:"NPHIES Portal",claimlincPortal:"ClaimLinc",basmaPortal:"Basma AI",sbsPortal:"SBS Portal",givcPortal:"GIVC Portal",searchTitle:"AI-Powered Smart Search",searchSub:"Ask about any doctor, department, procedure, or medication \u2014 instant answers from hospital knowledge base",searchPlaceholder:"e.g. cardiologists, emergency hours, insurance, home care...",searchBtn:"\u{1F50D} Search Now",hcTitle:"Home Healthcare",hcSub:"Our team comes to you",hcDesc:"Home visits by certified nurses and doctors \u2014 checkups, IV therapy, post-surgery care, chronic disease management.",thTitle:"Telehealth",thSub:"Medical consultation anywhere",thDesc:"Video or voice consultation with your doctor \u2014 no hospital visit needed. 24/7 with HNH specialists.",digitalTitle:"Digital Health Services",digitalSub:"Smart innovation in healthcare \u2014 AI search, home care, and live video consultations",emailTitle:"Smart Patient Communications",emailDesc:"Confirmations, reminders, and e-prescriptions \u2014 bilingual smart email for every patient.",openAction:"Open service",bookModalTitle:"Quick appointment booking",basmaModalTitle:"Basma inside HNH",homecareModalTitle:"Schedule home care visit",telehealthModalTitle:"Create telehealth session",eligModalTitle:"Insurance and eligibility check",quickName:"Patient name",quickPhone:"Mobile number",quickNational:"National / Iqama ID",quickInsurance:"Insurance ID",quickDept:"Department",quickDate:"Date",quickTime:"Time",quickAddress:"Address",quickComplaint:"Reason",sendRequest:"Submit request",askBasma:"Ask Basma",resultReady:"Action completed",missingFields:"Complete the required fields",failedAction:"Unable to complete the request. Try again later.",commandTitle:"Live Command Center",commandSub:"Operational signals from HNH, GIVC, NPHIES, and ClaimLinc \u2014 one view for clinical and digital throughput.",opsPatients:"Patient records",opsAppointments:"Today visits",opsProviders:"Providers",opsClaims:"Claims",homecareMetric:"Home visits",telehealthMetric:"Telehealth sessions",givcMetric:"GIVC doctors",connectedMetric:"Connected systems",featureTitle:"New Features Ready To Launch",featureSub:"Digital services wired directly to HNH APIs \u2014 no static mockups, every action opens a live workflow.",featureProvider:"Doctor Dashboard",featureProviderDesc:"Clinical workspace with appointments, patients, FHIR, GIVC, and NPHIES context.",featureEligibility:"GIVC Eligibility",featureEligibilityDesc:"Direct entry for coverage checks, provider OIDs, and network verification.",featureHomecare:"Home Healthcare",featureHomecareDesc:"Schedule field-care visits with address, timing, and reason.",featureTelehealth:"Telehealth Rooms",featureTelehealthDesc:"Create digital sessions with instant room links.",featureSearch:"AI Medical Search",featureSearchDesc:"AutoRAG and DeepSeek across hospital knowledge.",featureRcm:"Revenue Cycle",featureRcmDesc:"ClaimLinc health, claims status, and pre-submission checks.",launch:"Launch"}},I0=[{i:"\u2764\uFE0F",nA:"\u0627\u0644\u0642\u0644\u0628 \u0648\u0627\u0644\u0623\u0648\u0639\u064A\u0629",nE:"Cardiology",dA:"\u062A\u0634\u062E\u064A\u0635 \u0648\u0639\u0644\u0627\u062C \u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0642\u0644\u0628",dE:"Heart disease diagnosis"},{i:"\u{1F9B4}",nA:"\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0639\u0638\u0627\u0645",nE:"Orthopedics",dA:"\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0645\u0641\u0627\u0635\u0644 \u0648\u0627\u0644\u0643\u0633\u0648\u0631",dE:"Joint surgery & fractures"},{i:"\u{1F476}",nA:"\u0637\u0628 \u0627\u0644\u0623\u0637\u0641\u0627\u0644",nE:"Pediatrics",dA:"\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0623\u0637\u0641\u0627\u0644 \u062D\u062F\u064A\u062B\u064A \u0627\u0644\u0648\u0644\u0627\u062F\u0629",dE:"Newborn & child care"},{i:"\u{1F469}",nA:"\u0627\u0644\u0646\u0633\u0627\u0621 \u0648\u0627\u0644\u0648\u0644\u0627\u062F\u0629",nE:"OB/GYN",dA:"\u0645\u062A\u0627\u0628\u0639\u0629 \u0627\u0644\u062D\u0645\u0644 \u0648\u0627\u0644\u0648\u0644\u0627\u062F\u0629",dE:"Pregnancy & delivery"},{i:"\u{1F486}",nA:"\u0627\u0644\u062C\u0644\u062F\u064A\u0629 \u0648\u0627\u0644\u062A\u062C\u0645\u064A\u0644",nE:"Dermatology",dA:"\u0639\u0644\u0627\u062C \u0627\u0644\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u062C\u0644\u062F\u064A\u0629",dE:"Skin disease treatment"},{i:"\u{1FA7A}",nA:"\u0627\u0644\u0628\u0627\u0637\u0646\u064A\u0629",nE:"Internal Med",dA:"\u062A\u0634\u062E\u064A\u0635 \u0627\u0644\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0628\u0627\u0637\u0646\u064A\u0629",dE:"Internal disease diagnosis"},{i:"\u{1F52A}",nA:"\u0627\u0644\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0639\u0627\u0645\u0629",nE:"General Surgery",dA:"\u062C\u0631\u0627\u062D\u0629 \u0639\u0627\u0645\u0629 \u0648\u0645\u0646\u0627\u0638\u064A\u0631",dE:"General & laparoscopic"},{i:"\u{1F9E0}",nA:"\u0627\u0644\u0623\u0639\u0635\u0627\u0628",nE:"Neurology",dA:"\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0645\u062E \u0648\u0627\u0644\u0623\u0639\u0635\u0627\u0628",dE:"Brain & nerve diseases"}],B0=[{nA:"\u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0645\u0646\u0648\u0631\u0629",nE:"Madinah",aA:"\u0637\u0631\u064A\u0642 \u0641\u0631\u0639 \u0627\u0644\u062D\u062C\u0627\u0632",aE:"Al-Hijra Branch Road"},{nA:"\u0627\u0644\u0631\u064A\u0627\u0636",nE:"Riyadh",aA:"\u062D\u064A \u0627\u0644\u0631\u0628\u0648\u0629",aE:"Al-Rabwa District"},{nA:"\u062C\u0627\u0632\u0627\u0646",nE:"Jazan",aA:"\u0637\u0631\u064A\u0642 \u0627\u0644\u0643\u0648\u0631\u0646\u064A\u0634",aE:"Corniche Road"},{nA:"\u062E\u0645\u064A\u0633 \u0645\u0634\u064A\u0637",nE:"Khamis Mushayt",aA:"\u0637\u0631\u064A\u0642 \u0627\u0644\u0623\u0645\u064A\u0631 \u0633\u0644\u0637\u0627\u0646",aE:"Prince Sultan Road"},{nA:"\u0639\u0646\u064A\u0632\u0629",nE:"Unayzah",aA:"\u0627\u0644\u0642\u0635\u064A\u0645 \u2014 \u0637\u0631\u064A\u0642 \u0627\u0644\u0645\u062F\u064A\u0646\u0629",aE:"Al-Qassim \u2014 Medina Road"}],L0=[{nA:"\u062F. \u0645\u0639\u0627\u0648\u064A\u0629 \u062F\u0628\u0648\u0631\u0629",nE:"Dr. Muawiya Daboura",sA:"\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u062A\u062C\u0645\u064A\u0644",sE:"Plastic Surgery"},{nA:"\u062F. \u0646\u0647\u0644\u0629 \u0637\u0627\u0644\u0628 \u062F\u064A\u0628",nE:"Dr. Nahla Taleb Deeb",sA:"\u0627\u0644\u0646\u0633\u0627\u0621 \u0648\u0627\u0644\u0648\u0644\u0627\u062F\u0629",sE:"OB/GYN"},{nA:"\u062F. \u0648\u0633\u0627\u0645 \u0641\u0627\u0631\u0648\u0642",nE:"Dr. Wisam Farouk",sA:"\u0627\u0644\u0646\u0633\u0627\u0621 \u0648\u0627\u0644\u0648\u0644\u0627\u062F\u0629",sE:"OB/GYN"},{nA:"\u062F. \u0623\u0645\u064A\u0631\u0629 \u0627\u0644\u0628\u064A\u0644\u064A",nE:"Dr. Amira Al-Bili",sA:"\u0627\u0644\u062C\u0644\u062F\u064A\u0629",sE:"Dermatology"},{nA:"\u062F. \u0633\u0639\u062F \u0627\u0644\u0642\u062D\u0637\u0627\u0646\u064A",nE:"Dr. Saad Al-Qahtani",sA:"\u0627\u0644\u0642\u0644\u0628",sE:"Cardiology"},{nA:"\u062F. \u0644\u064A\u0644\u0649 \u0627\u0644\u0634\u0647\u0631\u064A",nE:"Dr. Layla Al-Shehri",sA:"\u0637\u0628 \u0627\u0644\u0623\u0637\u0641\u0627\u0644",sE:"Pediatrics"},{nA:"\u062F. \u0639\u0628\u062F\u0627\u0644\u0644\u0647 \u0627\u0644\u0639\u062A\u064A\u0628\u064A",nE:"Dr. Abdullah Al-Otaibi",sA:"\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0639\u0638\u0627\u0645",sE:"Orthopedics"},{nA:"\u062F. \u0645\u0631\u064A\u0645 \u0627\u0644\u062D\u0633\u064A\u0646\u064A",nE:"Dr. Maryam Al-Husseini",sA:"\u0627\u0644\u0646\u0633\u0627\u0621 \u0648\u0627\u0644\u0648\u0644\u0627\u062F\u0629",sE:"OB/GYN"}],H0="*,::after,::before{box-sizing:border-box;margin:0;padding:0}:root{--p:#0066CC;--pd:#004A99;--a:#C9A84C;--al:#E0C878;--n:#1A2B4A;--of:#F8FAFC;--l:#F1F5F9;--g:#E8EDF3;--g3:#94A3B8;--t:#1E293B;--tl:#64748B;--s:#10B981;--d:#EF4444;--w:#F59E0B;--gr:linear-gradient(135deg,#1A2B4A,var(--p));--ga:linear-gradient(135deg,#C9A84C,#E0C878);--gg:linear-gradient(135deg,#D4A843,#F0D88A,#C9A84C);--sm:0 1px 3px rgba(0,0,0,.08);--md:0 4px 16px rgba(0,0,0,.1);--lg:0 8px 32px rgba(0,0,0,.12);--r:8px;--rm:12px;--rl:16px;--rxl:24px;--rf:9999px;--fa:Tajawal,sans-serif;--fe:Inter,sans-serif;--tr:.3s cubic-bezier(.4,0,.2,1);--cc:1280px;--hh:80px}body{font-family:var(--fa);color:var(--t);background:var(--of);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}html{scroll-behavior:smooth}.h{position:fixed;top:0;inset-inline:0;z-index:1000;background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);box-shadow:0 1px 0 rgba(0,0,0,.06);height:var(--hh)}.h.sc{background:rgba(255,255,255,.97);box-shadow:0 4px 20px rgba(0,0,0,.08)}.hi{max-width:var(--cc);margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}.l{display:flex;align-items:center;gap:12px;text-decoration:none}.li{width:44px;height:44px;background:var(--gr);border-radius:var(--rm);display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:var(--sm)}.lt{font-size:1.05rem;font-weight:800;color:var(--n);line-height:1.2}.lt sm{display:block;font-size:.6rem;font-weight:400;color:var(--g3);text-transform:uppercase;letter-spacing:.3px}.nv{display:flex;align-items:center;gap:4px}.nv a{text-decoration:none;color:var(--t);font-weight:500;font-size:.88rem;padding:8px 14px;border-radius:var(--rf)}.nv a:hover{background:var(--l);color:var(--p)}.lb{padding:6px 14px;border-radius:var(--rf);background:var(--l);border:1px solid var(--g);cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:600;color:var(--n)}.lb:hover{background:var(--g)}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:var(--rf);font-weight:600;font-size:.9rem;cursor:pointer;border:none;text-decoration:none;white-space:nowrap;font-family:inherit}.bp{background:var(--gr);color:#fff;box-shadow:var(--md)}.bp:hover{transform:translateY(-2px);box-shadow:var(--lg)}.ba{background:var(--ga);color:var(--n);box-shadow:var(--md)}.ba:hover{transform:translateY(-2px);box-shadow:var(--lg)}.bw{background:rgba(255,255,255,.95);color:var(--n);box-shadow:var(--sm)}.bw:hover{background:#fff;transform:translateY(-1px)}.bl{padding:14px 32px;font-size:1rem}.bs{padding:8px 18px;font-size:.82rem}.mb{display:none;background:none;border:none;cursor:pointer;font-size:1.5rem;color:var(--n);padding:8px;border-radius:var(--r)}.he{min-height:100vh;display:flex;align-items:center;padding-top:var(--hh);position:relative;overflow:hidden;background:var(--gr)}.he::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(0,163,224,.12),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(201,168,76,.08),transparent 50%)}.hp{position:absolute;inset:0;overflow:hidden}.pt{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.04),transparent);animation:fl 20s ease-in-out infinite}@keyframes fl{0%,100%{transform:translate(0,0)scale(1)}25%{transform:translate(30px,-40px)scale(1.1)}50%{transform:translate(-20px,20px)scale(.95)}75%{transform:translate(15px,30px)scale(1.05)}}.he .co{position:relative;z-index:2;max-width:var(--cc);margin:0 auto;padding:40px 24px;width:100%}.hc{max-width:680px}.hb{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:var(--rf);background:rgba(16,185,129,.12);color:var(--s);font-size:.78rem;font-weight:600;margin-bottom:24px;border:1px solid rgba(16,185,129,.2);box-shadow:0 0 20px rgba(16,185,129,.08)}.hb::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--s);animation:pu 2s infinite}@keyframes pu{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(16,185,129,.5)}50%{opacity:.5;box-shadow:0 0 0 6px rgba(16,185,129,0)}}.he h1{font-size:clamp(2.2rem,5.5vw,3.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:20px}.he h1 .gd{background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.he p{font-size:1.1rem;color:rgba(255,255,255,.75);max-width:680px;margin-bottom:32px;line-height:1.8}.hbt{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px}.hs{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.hst{background:rgba(255,255,255,.08);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:var(--rxl);padding:20px;text-align:center;transition:var(--tr)}.hst:hover{background:rgba(255,255,255,.12);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.12)}.hst .nm{font-size:2rem;font-weight:800;color:#fff;display:inline}.hst .sf{font-size:1rem;font-weight:400;color:var(--a)}.hst .lb{font-size:.82rem;color:rgba(255,255,255,.6);margin-top:4px;display:block}.se{padding:80px 0}.sea{background:#fff}.sel{background:var(--of)}.co{max-width:var(--cc);margin:0 auto;padding:0 24px}.sh{text-align:center;margin-bottom:48px}.sh h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;color:var(--n);margin-bottom:8px}.sh .gl{width:60px;height:3px;background:var(--gg);margin:12px auto;border-radius:2px}.sh p{color:var(--tl);font-size:1rem;margin-top:4px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}.g6{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.cd{background:#fff;border:1px solid var(--g);border-radius:var(--rxl);padding:24px;transition:var(--tr)}.cd:hover{box-shadow:var(--lg);transform:translateY(-4px);border-color:rgba(0,102,204,.1)}.ci{width:56px;height:56px;border-radius:var(--rm);background:var(--gr);display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:16px;box-shadow:var(--md)}.cd h3{font-size:1rem;font-weight:700;margin-bottom:8px;color:var(--n)}.cd p{font-size:.88rem;color:var(--tl);line-height:1.7}.dc{text-align:center}.dc .ci{margin:0 auto 16px}.dcc{text-align:center}.da{width:80px;height:80px;border-radius:50%;background:var(--ga);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;color:var(--n);box-shadow:var(--md)}.sp{color:var(--p);font-weight:600;font-size:.85rem;margin-bottom:4px}.bc{padding:0;overflow:hidden}.bh{background:var(--gr);padding:28px 24px;color:#fff}.bh h3{color:#fff;font-size:1.1rem;margin-bottom:4px}.bh .bcx{color:rgba(255,255,255,.7);font-size:.85rem;margin-top:4px}.bb{padding:24px}.bb p{color:var(--tl);font-size:.88rem;margin-bottom:16px}.cs{background:var(--gr);padding:80px 0;text-align:center;position:relative;overflow:hidden}.cs::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0,rgba(255,255,255,.05),transparent 50%)}.cs .co{position:relative;z-index:2}.cs h2{font-size:2rem;font-weight:800;color:#fff;margin-bottom:12px}.cs p{color:rgba(255,255,255,.7);margin-bottom:32px;font-size:1.05rem}.cb{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.ft{background:var(--n);color:rgba(255,255,255,.6);padding:56px 0 24px}.fg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;margin-bottom:40px}.ft h4{color:#fff;margin-bottom:16px;font-size:.95rem;font-weight:700}.ft a{color:rgba(255,255,255,.5);text-decoration:none;display:block;margin-bottom:8px;font-size:.88rem}.ft a:hover{color:var(--a);padding-inline-start:4px}.ft p{font-size:.88rem;margin-bottom:8px}.sl{display:flex;gap:12px;margin-top:16px}.sl a{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:1.1rem;text-decoration:none;color:rgba(255,255,255,.5)}.sl a:hover{background:rgba(255,255,255,.12)}.fb{border-top:1px solid rgba(255,255,255,.08);padding-top:20px;text-align:center;font-size:.8rem}.fb .pw{color:var(--a);font-weight:600}.wa{position:fixed;bottom:24px;left:24px;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:99;font-size:1.6rem;text-decoration:none}.wa:hover{transform:scale(1.1)}.wa .pr{position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(37,211,102,.2)}.an{opacity:0;transform:translateY(30px);transition:all .7s cubic-bezier(.4,0,.2,1)}.an.vi{opacity:1;transform:translateY(0)}.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}.d6{transition-delay:.6s}.ld{display:flex;justify-content:center;padding:40px}.spn{width:32px;height:32px;border:3px solid var(--g);border-top-color:var(--p);border-radius:50%;animation:sp .7s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}.ts{position:fixed;bottom:24px;right:24px;padding:14px 24px;border-radius:var(--rm);color:#fff;font-weight:600;z-index:9999;opacity:0;transform:translateY(100px);transition:all .4s}.ts.sh{opacity:1;transform:translateY(0)}.ts.s{background:var(--s)}.ts.e{background:var(--d)}.ts.w{background:var(--w);color:#1a1a1a}.pr{position:relative}.blink{animation:blink 1.5s infinite}.ec{margin-bottom:60px}.ec-g{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:24px}.ec-c{background:#fff;border:1px solid var(--g);border-radius:var(--rxl);padding:20px;text-align:center;transition:var(--tr);position:relative;overflow:hidden}.ec-c:hover{transform:translateY(-3px);box-shadow:var(--lg);border-color:rgba(0,102,204,.15)}.ec-c.l{background:linear-gradient(180deg,#F0F7FF,#fff)}.ec-c.r{border-color:rgba(16,185,129,.25)}.ec-c.r .ec-d{border-color:var(--s)}.ec-ic{width:48px;height:48px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin:0 auto 12px;box-shadow:var(--sm)}.ec-n{font-size:.9rem;font-weight:700;color:var(--n);margin-bottom:4px}.ec-d{font-size:.8rem;color:var(--tl);line-height:1.5}.ec-badge{position:absolute;top:8px;right:8px;display:flex;align-items:center;gap:4px;font-size:.6rem;font-weight:800;padding:3px 7px;border-radius:var(--rf);text-transform:uppercase;letter-spacing:.5px}.ec-b.ok{background:rgba(16,185,129,.12);color:var(--s)}.ec-b.warn{background:rgba(245,158,11,.12);color:var(--w)}.ec-b.off{background:rgba(239,68,68,.1);color:var(--d)}.ec-b::before{content:'';width:5px;height:5px;border-radius:50%}.ec-b.ok::before{background:var(--s)}.ec-b.warn::before{background:var(--w);animation:pu 2s infinite}.ec-b.off::before{background:var(--d)}.ec-b.pf::before{background:var(--p)}.ig{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:20px}.ig-c{background:#fff;border:1px solid var(--g);border-radius:var(--rl);padding:18px;display:flex;align-items:center;gap:14px;transition:var(--tr)}.ig-c:hover{box-shadow:var(--md);transform:translateY(-2px);border-color:rgba(0,102,204,.1)}.ig-ic{width:44px;height:44px;border-radius:var(--rm);background:var(--gr);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;box-shadow:var(--sm)}.ig-c.g{background:linear-gradient(135deg,#F0FDF4,#f0fdf4)}.ig-c.w{background:linear-gradient(135deg,#FFFBEB,#fffbeb)}.ig-n{font-size:.88rem;font-weight:700;color:var(--t)}.ig-s{font-size:.75rem;color:var(--tl);margin-top:2px}.ig-b{font-size:.65rem;font-weight:800;padding:4px 10px;border-radius:var(--rf);white-space:nowrap}.ig-b.ok{background:rgba(16,185,129,.12);color:var(--s)}.ig-b.warn{background:rgba(245,158,11,.12);color:var(--w)}.ig-b.off{background:rgba(239,68,68,.1);color:var(--d)}.ai-s{background:#fff;border:1px solid var(--g);border-radius:var(--rxl);overflow:hidden;margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:0;box-shadow:var(--md)}.ai-v{border-radius:var(--rxl) 0 0 var(--rxl);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:40px;background:linear-gradient(135deg,#F0F7FF,#E8F4FF);text-align:center}.ai-v .ai-orb{width:100px;height:100px;border-radius:50%;background:var(--gr);display:grid;place-items:center;font-size:2rem;box-shadow:0 0 0 6px rgba(0,102,204,.08),0 20px 44px rgba(0,102,204,.16);position:relative}.ai-v .ai-orb::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(0,102,204,.15);animation:pu 3s infinite}.ai-v .ai-orb::after{content:'';position:absolute;inset:-16px;border-radius:50%;border:1px solid rgba(0,102,204,.08);animation:pu 3s infinite .5s}.ai-v p{font-size:.9rem;color:var(--tl);max-width:280px}.ai-c{padding:40px;border-radius:0 var(--rxl) var(--rxl) 0;display:flex;flex-direction:column;justify-content:center;gap:16px}.ai-c h3{font-size:1.2rem;font-weight:800;color:var(--n);margin-bottom:4px}.ai-c p{font-size:.85rem;color:var(--tl);line-height:1.6}.ai-btns{display:flex;gap:10px;flex-wrap:wrap}.ai-btns .btn{gap:8px}.pf{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:var(--rf);background:rgba(0,102,204,.08);color:var(--p);font-size:.68rem;font-weight:700;font-family:inherit;cursor:pointer;border:none;transition:var(--tr)}.pf:hover{background:rgba(0,102,204,.14)}.eh{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.eh-c{padding:3px 8px;border-radius:var(--rf);background:rgba(201,168,76,.1);color:var(--a);font-size:.6rem;font-weight:700}.mb{display:none;background:none;border:none;cursor:pointer;font-size:1.5rem;color:var(--n);padding:8px;border-radius:var(--r)}@media(max-width:1024px){.ec-g{grid-template-columns:1fr 1fr}}@media(max-width:900px){.nv{display:none}.mb{display:block}.nv.op{display:flex;flex-direction:column;position:fixed;inset:0;background:#fff;padding:80px 24px 24px;z-index:500;gap:0}.nv.op a{padding:14px 0;border-bottom:1px solid var(--g);border-radius:0}.hs,.g3,.g4{grid-template-columns:1fr 1fr}.fg{grid-template-columns:1fr 1fr}.ec-g{grid-template-columns:1fr 1fr}.ig{grid-template-columns:1fr}.ai-s{grid-template-columns:1fr}.ai-v{border-radius:var(--rxl) var(--rxl) 0 0}.ai-c{border-radius:0 0 var(--rxl) var(--rxl)}}@media(max-width:480px){.hs,.g3,.g4,.fg,.ec-g{grid-template-columns:1fr}}.ss{padding:72px 0;background:linear-gradient(135deg,var(--n) 0%,var(--p) 100%);position:relative;overflow:hidden}.ss::before{content:'';position:absolute;inset:0;background:url(data:image/svg+xml,%3Csvg%20width='60'%20height='60'%20viewBox='0%200%2060%2060'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cg%20fill='none'%20fill-rule='evenodd'%3E%3Cg%20fill='%23ffffff'%20fill-opacity='0.03'%3E%3Cpath%20d='M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E);}.ss .sh h2{color:#fff!important}.ss .sh p{color:rgba(255,255,255,.75)!important}.ss .gl{background:linear-gradient(90deg,rgba(255,255,255,0),var(--al),rgba(255,255,255,0))!important}.sb-wrap{max-width:720px;margin:0 auto}.sb-box{display:flex;border-radius:var(--rl);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}.sb-in{flex:1;padding:18px 24px;font-size:1rem;border:none;outline:none;background:#fff;color:var(--t);font-family:var(--fa)}.sb-in::placeholder{color:var(--tl)}.sb-btn{padding:18px 28px;background:var(--ga);border:none;cursor:pointer;font-family:var(--fa);font-size:.95rem;font-weight:700;color:var(--n);white-space:nowrap;transition:var(--tr)}.sb-btn:hover{background:var(--gg)}.sr-res{margin-top:24px}.sr-ans{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:var(--rm);padding:20px 24px;color:#fff;font-size:.92rem;line-height:1.9;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}.sr-src{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.sr-src span{padding:4px 12px;border-radius:var(--rf);background:rgba(201,168,76,.25);color:var(--al);font-size:.75rem;border:1px solid rgba(201,168,76,.35)}.sr-pow{font-size:.72rem;color:rgba(255,255,255,.5);margin-top:12px}.dhs{padding:96px 0;background:var(--of)}.dhs-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px;margin-top:48px}.dhs-c{background:#fff;border-radius:var(--rxl);padding:36px 32px;box-shadow:var(--md);border:1px solid var(--g);position:relative;overflow:hidden;transition:var(--tr)}.dhs-c:hover{transform:translateY(-5px);box-shadow:var(--lg)}.dhs-c::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}.dhs-c.hc::after{background:linear-gradient(90deg,#10B981,#34D399)}.dhs-c.th::after{background:linear-gradient(90deg,#0066CC,#0EA5E9)}.dhs-c.em::after{background:linear-gradient(90deg,#8B5CF6,#A78BFA)}.dhs-ic{width:72px;height:72px;border-radius:var(--rm);display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:24px}.dhs-ic.hc{background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(52,211,153,.08))}.dhs-ic.th{background:linear-gradient(135deg,rgba(0,102,204,.12),rgba(14,165,233,.08))}.dhs-ic.em{background:linear-gradient(135deg,rgba(139,92,246,.12),rgba(167,139,250,.08))}.dhs-new{position:absolute;top:20px;inset-inline-end:20px;background:var(--ga);color:var(--n);padding:4px 12px;border-radius:var(--rf);font-size:.65rem;font-weight:800;letter-spacing:.5px}@media(max-width:900px){.sb-box{flex-direction:column}.sb-btn{border-radius:0 0 var(--rl) var(--rl)}.dhs-g{grid-template-columns:1fr}}",D0="button{font-family:inherit}.ec-c{border:0;text-align:inherit;cursor:pointer;width:100%}.ft button{display:block;background:none;border:0;color:#CBD5E1;font:inherit;cursor:pointer;padding:4px 0;text-align:inherit}.ft button:hover{color:#fff}.mx{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}.mx.on{display:flex}.mx-b{position:absolute;inset:0;background:rgba(15,23,42,.56);backdrop-filter:blur(10px)}.mx-p{position:relative;width:min(760px,100%);max-height:86vh;overflow:auto;background:linear-gradient(180deg,#fff,#F8FAFC);border:1px solid rgba(148,163,184,.28);border-radius:28px;box-shadow:0 32px 90px rgba(15,23,42,.28);padding:24px}.mx-x{position:absolute;top:14px;inset-inline-end:14px;width:38px;height:38px;border:0;border-radius:50%;background:#EEF2F7;color:var(--n);cursor:pointer;font-size:1.2rem}.mx-h{padding-inline-end:44px;margin-bottom:18px}.mx-h h3{font-size:1.35rem;color:var(--n);margin-bottom:4px}.mx-h p{color:var(--tl);font-size:.92rem}.fx{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.fx .full{grid-column:1/-1}.fi{display:flex;flex-direction:column;gap:5px}.fi label{font-weight:700;font-size:.8rem;color:var(--n)}.fi input,.fi select,.fi textarea{width:100%;border:1px solid var(--g);border-radius:14px;padding:12px 13px;background:#fff;color:var(--t);font:inherit;outline:none}.fi textarea{min-height:86px;resize:vertical}.fi input:focus,.fi select:focus,.fi textarea:focus{border-color:var(--p);box-shadow:0 0 0 4px rgba(0,102,204,.12)}.mx-a{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.mx-r{margin-top:16px;border-radius:18px;background:#F1F5F9;padding:14px;color:var(--t);font-size:.9rem;line-height:1.8;white-space:normal}.mx-r.ok{background:#ECFDF5;color:#065F46}.mx-r.er{background:#FEF2F2;color:#991B1B}.mini-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}.mini-c{background:#fff;border:1px solid var(--g);border-radius:16px;padding:12px}.mini-c strong{display:block;color:var(--n);margin-bottom:4px}.mini-c span{display:block;color:var(--tl);font-size:.82rem}@media(max-width:640px){.fx{grid-template-columns:1fr}.mx-p{border-radius:22px;padding:18px}.mx{padding:12px}}",O0='.cmd{position:relative;background:#08111f;color:#fff;padding:72px 0;overflow:hidden}.cmd:before{content:"";position:absolute;inset:-30%;background:radial-gradient(circle at 20% 20%,rgba(14,165,233,.32),transparent 28%),radial-gradient(circle at 80% 0%,rgba(201,168,76,.26),transparent 24%),linear-gradient(135deg,#08111f,#122946);opacity:.95}.cmd:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent)}.cmd .co{position:relative;z-index:1}.cmd-shell{display:grid;grid-template-columns:minmax(0,.85fr) minmax(380px,1.15fr);gap:28px;align-items:center}.cmd-copy h2{font-size:clamp(2rem,4vw,4.4rem);line-height:.95;letter-spacing:-.06em;margin:12px 0;color:#fff}.cmd-copy p{color:#bdd2df;max-width:620px;font-size:1.02rem}.cmd-k{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);border-radius:999px;padding:8px 12px;color:#a8e8ff;font-weight:900;font-size:.76rem;text-transform:uppercase;letter-spacing:.12em}.cmd-k:before{content:"";width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 18px #10b981}.cmd-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.cmd-board{background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.18);border-radius:30px;padding:16px;box-shadow:0 28px 90px rgba(0,0,0,.35);backdrop-filter:blur(18px)}.cmd-top{display:flex;gap:7px;align-items:center;margin-bottom:14px;color:#8ee6ff;font-size:.72rem;font-weight:900;letter-spacing:.18em}.cmd-top span{width:10px;height:10px;border-radius:50%;background:#ef4444}.cmd-top span:nth-child(2){background:#f59e0b}.cmd-top span:nth-child(3){background:#10b981}.cmd-top b{margin-inline-start:auto}.cmd-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.cmd-m{min-height:132px;border-radius:22px;background:rgba(8,17,31,.62);border:1px solid rgba(255,255,255,.12);padding:18px;display:flex;flex-direction:column;justify-content:space-between}.cmd-m strong{font-size:clamp(1.7rem,3vw,3rem);line-height:1;color:#fff;letter-spacing:-.05em}.cmd-m span,.cmd-strip span{color:#9fb8c7;font-size:.78rem;font-weight:800}.cmd-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:10px}.cmd-strip div{border-radius:18px;background:rgba(255,255,255,.08);padding:14px;border:1px solid rgba(255,255,255,.1)}.cmd-strip b{display:block;color:#dff6ff;font-size:1.35rem}.nf{background:linear-gradient(180deg,#f8fafc,#eef6fb);padding:72px 0}.nf-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(210px,auto);gap:14px}.nf-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;text-align:inherit;text-decoration:none;border:0;border-radius:28px;padding:24px;background:#fff;color:var(--n);box-shadow:0 18px 50px rgba(15,23,42,.08);overflow:hidden;cursor:pointer;min-height:210px;transition:transform .25s ease,box-shadow .25s ease}.nf-card:before{content:"";position:absolute;inset:auto -40px -70px auto;width:170px;height:170px;border-radius:50%;background:linear-gradient(135deg,rgba(0,102,204,.18),rgba(201,168,76,.24));transition:transform .3s ease}.nf-card:hover{transform:translateY(-6px);box-shadow:0 26px 70px rgba(15,23,42,.14)}.nf-card:hover:before{transform:scale(1.2)}.nf-card.big{grid-column:span 2;grid-row:span 2;background:linear-gradient(135deg,#10213f,#0066cc);color:#fff}.nf-card span{font-size:.76rem;font-weight:950;color:var(--a);letter-spacing:.14em}.nf-card h3{font-size:1.25rem;line-height:1.1;margin:18px 0 10px;max-width:90%}.nf-card.big h3{font-size:clamp(1.8rem,3vw,3.1rem);letter-spacing:-.05em}.nf-card p{color:var(--tl);font-size:.9rem;line-height:1.7;max-width:95%;position:relative;z-index:1}.nf-card.big p{color:#d8e9f4;font-size:1rem}.nf-card b{margin-top:auto;color:inherit;position:relative;z-index:1}.nf-card:nth-child(2){background:#fff7ed}.nf-card:nth-child(3){background:#ecfdf5}.nf-card:nth-child(4){background:#eff6ff}.nf-card:nth-child(5){background:#f5f3ff}.nf-card:nth-child(6){background:#fff1f2}@media(max-width:980px){.cmd-shell{grid-template-columns:1fr}.cmd-grid,.cmd-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.nf-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nf-card.big{grid-column:span 2;grid-row:span 1}}@media(max-width:560px){.cmd{padding:48px 0}.cmd-grid,.cmd-strip,.nf-grid{grid-template-columns:1fr}.nf-card.big{grid-column:span 1}.cmd-board{border-radius:22px}.cmd-m{min-height:110px}}';function q0(u,a){return'<header class="h" id="hdr"><div class="hi"><a href="/" class="l"><div class="li">\u{1F3E5}</div><div class="lt">'+u.titleShort+"<sm>"+u.osVer+'</sm></div></a><nav class="nv" id="mn"><a href="#command">'+u.navCommand+'</a><a href="#depts">'+u.navDepts+'</a><a href="#branches">'+u.navBranches+'</a><a href="#doctors">'+u.navDoctors+'</a><a href="#ecosystem"><span style="font-size:.75rem;opacity:.6;">\u{1F310}</span> '+u.navEcosystem+'</a><button class="lb" id="lb">'+u.langBtn+'</button><button class="btn bp bs" data-open="appointment">'+u.navBook+`</button></nav><button class="mb" onclick="document.getElementById('mn').classList.toggle('op');return false;">\u2630</button></div></header>`}r(q0,"hdr");function N0(u){return'<section class="se sea" id="ecosystem"><div class="co"><div class="sh an"><h2>'+u.ecosystemTitle+'</h2><div class="gl"></div><p>'+u.ecosystemSub+'</p></div><div class="ec"><h3 style="font-size:1.1rem;font-weight:700;color:var(--n);margin-bottom:16px;">\u{1F465} '+u.navPortal+'</h3><div class="ec-g">  <button class="ec-c an d1" data-open="patient"><div class="ec-badge ok pf">Live</div><div class="ec-ic" style="background:linear-gradient(135deg,#0066CC,#0EA5E9)">\u{1F9D1}\u200D\u{1F3EB}</div><div class="ec-n">'+u.patientTitle+'</div><div class="ec-d">'+u.patientDesc+'</div></button>  <a href="/provider-dashboard" class="ec-c an d2" style="display:block;text-decoration:none;color:inherit"><div class="ec-badge ok pf">Live</div><div class="ec-ic" style="background:linear-gradient(135deg,#10B981,#34D399)">\u2B50</div><div class="ec-n">'+u.providerTitle+'</div><div class="ec-d">'+u.providerDesc+'</div></a>  <button class="ec-c an d3" data-open="eligibility"><div class="ec-badge ok pf">Live</div><div class="ec-ic" style="background:linear-gradient(135deg,#F59E0B,#FBBF24)">\u{1F3E6}</div><div class="ec-n">'+u.payerTitle+'</div><div class="ec-d">'+u.payerDesc+'</div></button>  <a href="/academy" class="ec-c an d4"><div class="ec-badge ok pf">Live</div><div class="ec-ic" style="background:linear-gradient(135deg,#8B5CF6,#A78BFA)">\u{1F393}</div><div class="ec-n">'+u.studentTitle+'</div><div class="ec-d">'+u.studentDesc+'</div></a>  <button class="ec-c an d5" data-open="appointment"><div class="ec-badge ok pf">Live</div><div class="ec-ic" style="background:linear-gradient(135deg,#EC4899,#F472B6)">\u{1F481}</div><div class="ec-n">'+u.receptionTitle+'</div><div class="ec-d">'+u.receptionDesc+'</div></button>  <button class="ec-c an d6 l" data-open="status"><div class="ec-badge warn pf">Secure</div><div class="ec-ic" style="background:linear-gradient(135deg,#64748B,#94A3B8)">\u{1F512}</div><div class="ec-n">'+u.adminTitle+'</div><div class="ec-d">'+u.adminDesc+'</div></button>  <button class="ec-c an d5 l" data-open="rcm"><div class="ec-badge warn pf">Secure</div><div class="ec-ic" style="background:linear-gradient(135deg,#DC2626,#EF4444)">\u{1F4B0}</div><div class="ec-n">'+u.rcmTitle+'</div><div class="ec-d">'+u.rcmDesc+'</div></button>  <button class="ec-c an d6 r" data-open="basma"><div class="ec-badge ok">Basma</div><div class="ec-ic" style="background:linear-gradient(135deg,#059669,#10B981)">\u{1F399}\uFE0F</div><div class="ec-n">'+u.basmaPortal+'</div><div class="ec-d">'+u.aiDesc+'</div></button>  <button class="ec-c an d1" data-open="homecare"><div class="ec-badge ok pf">New</div><div class="ec-ic" style="background:linear-gradient(135deg,#10B981,#34D399)">\u{1F3E0}</div><div class="ec-n">'+u.hcTitle+'</div><div class="ec-d">'+u.hcSub+'</div></button>  <button class="ec-c an d2" data-open="telehealth"><div class="ec-badge ok pf">New</div><div class="ec-ic" style="background:linear-gradient(135deg,#0EA5E9,#38BDF8)">\u{1F3A5}</div><div class="ec-n">'+u.thTitle+'</div><div class="ec-d">'+u.thSub+'</div></button>  <button class="ec-c an d1" data-open="givc"><div class="ec-badge ok">GIVC</div><div class="ec-ic" style="background:linear-gradient(135deg,#7C3AED,#A855F7)">\u{1F310}</div><div class="ec-n">'+u.givcPortal+'</div><div class="ec-d">'+u.givcDesc+'</div></button></div></div><div class="ec"><h3 style="font-size:1.1rem;font-weight:700;color:var(--n);margin-bottom:16px;">\u{1F517} '+u.integrationsTitle+'</h3><div class="ig" id="liveStatus"><div class="ld"><div class="spn"></div></div></div></div><div class="ec"><h3 style="font-size:1.1rem;font-weight:700;color:var(--n);margin-bottom:16px;">\u{1F916} '+u.aiTitle+'</h3><div class="ai-s"><div class="ai-v"><div class="ai-orb">\u{1F399}\uFE0F</div><p>'+u.aiDesc+'</p></div><div class="ai-c"><h3>'+u.aiTitle+"</h3><p>"+u.aiDesc+'</p><div class="ai-btns"><button data-open="basma" class="btn ba bs">'+u.aiTalkBtn+'</button><button data-open="basma" class="btn bp bs">'+u.aiChatBtn+'</button></div><div class="eh"><span class="eh-c">DeepSeek AI</span><span class="eh-c">Oracle Health</span><span class="eh-c">NPHIES</span><span class="eh-c">Multi-language</span></div></div></div></div></div></section>'}r(N0,"ecoSys");function M0(u,a,e){var t=a?"right":"left";return'<section class="he"><div class="hp"><div class="pt" style="width:120px;height:120px;top:10%;'+t+':15%"></div><div class="pt" style="width:80px;height:80px;top:60%;'+t+':70%;animation-delay:3s"></div><div class="pt" style="width:60px;height:60px;top:30%;'+t+':40%;animation-delay:6s"></div><div class="pt" style="width:100px;height:100px;top:70%;'+t+':20%;animation-delay:2s"></div></div><div class="co"><div class="hc"><div class="hb">\u25CF '+u.heroBadge+"</div><h1>"+u.heroH1+"</h1><p>"+u.heroP+'</p><div class="hbt"><button data-open="appointment" class="btn ba bl">'+u.heroBookBtn+'</button><a href="#ecosystem" class="btn bw bl">\u{1F310} '+u.navEcosystem+'</a></div><div class="hs" id="hs"><div class="hst"><span class="nm" id="sd">\u2014</span><span class="sf">+</span><span class="lb">'+u.statDoctors+'</span></div><div class="hst"><span class="nm">5</span><span class="lb">'+u.statBranches+'</span></div><div class="hst"><span class="nm" id="sdp">\u2014</span><span class="sf">+</span><span class="lb">'+u.statDepts+'</span></div><div class="hst"><span class="nm">1200</span><span class="sf">+</span><span class="lb">'+u.statBeds+"</span></div></div></div></div></section>"}r(M0,"bdy");function R0(u){return'<section class="ss" id="search"><div class="co"><div class="sh an"><h2>'+u.searchTitle+'</h2><div class="gl"></div><p>'+u.searchSub+'</p></div><div class="sb-wrap"><div class="sb-box"><input class="sb-in" id="srchQ" type="text" placeholder="'+u.searchPlaceholder+'"/><button class="sb-btn" onclick="doSearch()">'+u.searchBtn+'</button></div><div class="sr-res" id="srchRes" style="display:none"></div></div></div></section>'}r(R0,"searchSec");function P0(u){return'<section class="cmd" id="command"><div class="co"><div class="cmd-shell an"><div class="cmd-copy"><div class="cmd-k">BrainSAIT HNH OS</div><h2>'+u.commandTitle+"</h2><p>"+u.commandSub+'</p><div class="cmd-actions"><button class="btn ba bs" data-open="appointment">'+u.ctaBook+'</button><a class="btn bw bs" href="/provider-dashboard">'+u.featureProvider+'</a></div></div><div class="cmd-board"><div class="cmd-top"><span></span><span></span><span></span><b>LIVE</b></div><div class="cmd-grid"><div class="cmd-m"><strong id="opsPatients">\u2014</strong><span>'+u.opsPatients+'</span></div><div class="cmd-m"><strong id="opsToday">\u2014</strong><span>'+u.opsAppointments+'</span></div><div class="cmd-m"><strong id="opsProviders">\u2014</strong><span>'+u.opsProviders+'</span></div><div class="cmd-m"><strong id="opsClaims">\u2014</strong><span>'+u.opsClaims+'</span></div></div><div class="cmd-strip"><div><b id="opsHomecare">\u2014</b><span>'+u.homecareMetric+'</span></div><div><b id="opsTelehealth">\u2014</b><span>'+u.telehealthMetric+'</span></div><div><b id="opsGivc">\u2014</b><span>'+u.givcMetric+'</span></div><div><b id="opsConnected">\u2014</b><span>'+u.connectedMetric+"</span></div></div></div></div></div></section>"}r(P0,"commandSec");function j0(u){return'<section class="nf" id="features"><div class="co"><div class="sh an"><h2>'+u.featureTitle+'</h2><div class="gl"></div><p>'+u.featureSub+'</p></div><div class="nf-grid"><a class="nf-card big an d1" href="/provider-dashboard"><span>01</span><h3>'+u.featureProvider+"</h3><p>"+u.featureProviderDesc+"</p><b>"+u.launch+' \u2192</b></a><a class="nf-card an d2" href="/givc/?lang=en#eligibility"><span>02</span><h3>'+u.featureEligibility+"</h3><p>"+u.featureEligibilityDesc+"</p><b>"+u.launch+' \u2192</b></a><button class="nf-card an d3" data-open="homecare"><span>03</span><h3>'+u.featureHomecare+"</h3><p>"+u.featureHomecareDesc+"</p><b>"+u.launch+' \u2192</b></button><button class="nf-card an d4" data-open="telehealth"><span>04</span><h3>'+u.featureTelehealth+"</h3><p>"+u.featureTelehealthDesc+"</p><b>"+u.launch+' \u2192</b></button><a class="nf-card an d5" href="#search"><span>05</span><h3>'+u.featureSearch+"</h3><p>"+u.featureSearchDesc+"</p><b>"+u.launch+' \u2192</b></a><button class="nf-card an d6" data-open="rcm"><span>06</span><h3>'+u.featureRcm+"</h3><p>"+u.featureRcmDesc+"</p><b>"+u.launch+" \u2192</b></button></div></div></section>"}r(j0,"featureSec");function z0(u){return'<section class="dhs" id="digitalHealth"><div class="co"><div class="sh an"><h2>'+u.digitalTitle+'</h2><div class="gl"></div><p>'+u.digitalSub+'</p></div><div class="dhs-g"><div class="dhs-c hc an d1"><div class="dhs-new">New</div><div class="dhs-ic hc">\u{1F3E0}</div><h3 style="font-size:1.1rem;font-weight:800;color:var(--n);margin-bottom:8px;">'+u.hcTitle+'</h3><p style="font-size:.88rem;color:var(--tl);margin-bottom:8px;">'+u.hcSub+'</p><p style="font-size:.82rem;color:var(--tl);line-height:1.7;">'+u.hcDesc+'</p><button data-open="homecare" class="btn bp bs" style="margin-top:20px;">'+u.hcTitle+' \u2192</button></div><div class="dhs-c th an d2"><div class="dhs-new">New</div><div class="dhs-ic th">\u{1F3A5}</div><h3 style="font-size:1.1rem;font-weight:800;color:var(--n);margin-bottom:8px;">'+u.thTitle+'</h3><p style="font-size:.88rem;color:var(--tl);margin-bottom:8px;">'+u.thSub+'</p><p style="font-size:.82rem;color:var(--tl);line-height:1.7;">'+u.thDesc+'</p><button data-open="telehealth" class="btn bp bs" style="margin-top:20px;">'+u.thTitle+' \u2192</button></div><div class="dhs-c em an d3"><div class="dhs-ic em">\u{1F4E7}</div><h3 style="font-size:1.1rem;font-weight:800;color:var(--n);margin-bottom:8px;">'+u.emailTitle+'</h3><p style="font-size:.82rem;color:var(--tl);line-height:1.7;margin-top:8px;">'+u.emailDesc+"</p></div></div></div></section>"}r(z0,"dhsSec");function $0(u,a){return'<footer class="ft"><div class="co"><div class="fg"><div><h4>\u{1F3E5} '+u.titleShort+"</h4><p>"+u.fAbout+'</p><div class="sl"><a href="https://wa.me/'+a+'" target="_blank">\u{1F4AC}</a><a href="tel:'+a+'">\u{1F4DE}</a><a href="mailto:info@hayathospitals.com">\u{1F4E7}</a></div></div><div><h4>'+u.fLinks+'</h4><a href="#depts">'+u.navDepts+'</a><a href="#branches">'+u.navBranches+'</a><a href="#doctors">'+u.navDoctors+'</a><a href="#ecosystem">'+u.fEcosystem+'</a><a href="#ecosystem">'+u.fPortal+"</a></div><div><h4>"+u.fServices+'</h4><a href="tel:'+a+'">'+u.fEmerg+'</a><button data-open="appointment">'+u.fAppt+'</button><button data-open="basma">'+u.fBasma+"</button></div><div><h4>"+u.fContact+'</h4><a href="tel:'+a+'">\u{1F4DE} +'+a+'</a><a href="mailto:info@hayathospitals.com">\u{1F4E7} info@hayathospitals.com</a><a href="https://wa.me/'+a+'" target="_blank">\u{1F4AC} WhatsApp</a></div></div><div class="fb"><p>'+u.fCopy+'</p><p style="margin-top:4px;font-size:.78rem;">'+u.fPowered+' <span class="pw">BrainSAIT Healthcare OS v5.0</span></p></div></div></footer><a href="https://wa.me/'+a+'" class="wa" target="_blank">\u{1F4AC}<div class="pr"></div></a><div class="ts" id="ts"></div>'}r($0,"ftr");function U0(u){return'<div class="mx" id="mx"><div class="mx-b" data-close="1"></div><div class="mx-p"><button class="mx-x" data-close="1">\xD7</button><div class="mx-h"><h3 id="mxTitle"></h3><p id="mxSub"></p></div><div id="mxBody"></div><div class="mx-r" id="mxRes" style="display:none"></div></div></div><template id="tpl-appointment"><div class="fx"><div class="fi"><label>'+u.quickName+'</label><input id="apName" autocomplete="name"></div><div class="fi"><label>'+u.quickPhone+'</label><input id="apPhone" inputmode="tel"></div><div class="fi"><label>'+u.quickNational+'</label><input id="apNational"></div><div class="fi"><label>'+u.quickDept+'</label><select id="apDept"><option>Cardiology</option><option>OB/GYN</option><option>Pediatrics</option><option>Dermatology</option><option>Orthopedics</option></select></div><div class="fi"><label>'+u.quickDate+'</label><input id="apDate" type="date"></div><div class="fi"><label>'+u.quickTime+'</label><input id="apTime" type="time"></div><div class="fi full"><label>'+u.quickComplaint+'</label><textarea id="apReason"></textarea></div></div><div class="mx-a"><button class="btn ba bs" data-act="appointment">'+u.sendRequest+'</button><button class="btn bp bs" data-open="eligibility">'+u.eligModalTitle+'</button></div></template><template id="tpl-basma"><div class="fx"><div class="fi full"><label>'+u.askBasma+'</label><textarea id="baMsg" placeholder="'+u.searchPlaceholder+'"></textarea></div></div><div class="mx-a"><button class="btn ba bs" data-act="basma">'+u.askBasma+'</button><button class="btn bp bs" data-act="voice">'+u.aiTalkBtn+'</button></div></template><template id="tpl-homecare"><div class="fx"><div class="fi"><label>'+u.quickName+'</label><input id="hcName"></div><div class="fi"><label>'+u.quickPhone+'</label><input id="hcPhone" inputmode="tel"></div><div class="fi"><label>'+u.quickNational+'</label><input id="hcNational"></div><div class="fi"><label>'+u.quickDate+'</label><input id="hcDate" type="date"></div><div class="fi"><label>'+u.quickTime+'</label><input id="hcTime" type="time"></div><div class="fi"><label>'+u.quickDept+'</label><select id="hcType"><option value="routine">Routine</option><option value="iv-therapy">IV Therapy</option><option value="wound-care">Wound Care</option><option value="physiotherapy">Physiotherapy</option></select></div><div class="fi full"><label>'+u.quickAddress+'</label><textarea id="hcAddress"></textarea></div><div class="fi full"><label>'+u.quickComplaint+'</label><textarea id="hcReason"></textarea></div></div><div class="mx-a"><button class="btn ba bs" data-act="homecare">'+u.sendRequest+'</button></div></template><template id="tpl-telehealth"><div class="fx"><div class="fi"><label>'+u.quickName+'</label><input id="thName"></div><div class="fi"><label>'+u.quickPhone+'</label><input id="thPhone" inputmode="tel"></div><div class="fi"><label>'+u.quickNational+'</label><input id="thNational"></div><div class="fi"><label>'+u.quickDate+'</label><input id="thDate" type="date"></div><div class="fi"><label>'+u.quickTime+'</label><input id="thTime" type="time"></div><div class="fi"><label>'+u.quickDept+'</label><select id="thType"><option value="consultation">Consultation</option><option value="follow-up">Follow-up</option><option value="second-opinion">Second opinion</option><option value="pharmacy">Pharmacy</option></select></div><div class="fi full"><label>'+u.quickComplaint+'</label><textarea id="thReason"></textarea></div></div><div class="mx-a"><button class="btn ba bs" data-act="telehealth">'+u.sendRequest+'</button></div></template><template id="tpl-eligibility"><div class="fx"><div class="fi"><label>'+u.quickInsurance+'</label><input id="elIns"></div><div class="fi"><label>'+u.quickNational+'</label><input id="elNat"></div><div class="fi full"><label>'+u.quickDept+'</label><select id="elType"><option value="medical">Medical</option><option value="hospital">Hospital</option><option value="pharmacy">Pharmacy</option><option value="dental">Dental</option></select></div></div><div class="mx-a"><button class="btn ba bs" data-act="eligibility">'+u.sendRequest+'</button></div></template><template id="tpl-givc"><div class="fx"><div class="fi"><label>\u0627\u0644\u0627\u0633\u0645 \u0628\u0627\u0644\u0639\u0631\u0628\u064A / Name (AR)</label><input id="givcNameAr"></div><div class="fi"><label>\u0627\u0644\u0627\u0633\u0645 \u0628\u0627\u0644\u0625\u0646\u062C\u0644\u064A\u0632\u064A / Name (EN)</label><input id="givcNameEn"></div><div class="fi"><label>\u0631\u0642\u0645 \u0627\u0644\u0647\u0648\u064A\u0629 / National ID</label><input id="givcNat"></div><div class="fi"><label>\u0627\u0644\u062A\u062E\u0635\u0635 / Specialty</label><input id="givcSpec"></div><div class="fi"><label>\u0631\u0642\u0645 \u0627\u0644\u062A\u0631\u062E\u064A\u0635 / License #</label><input id="givcLic"></div><div class="fi"><label>\u0627\u0644\u0641\u0631\u0639 / Branch</label><select id="givcBranch"><option value="R001">Riyadh</option><option value="M001">Madinah</option><option value="K001">Khamis</option><option value="J001">Jizan</option><option value="U001">Unaizah</option></select></div></div><div class="mx-a"><button class="btn ba bs" data-act="givc-register">'+u.givcRegister+'</button><button class="btn bp bs" data-act="givc-network">'+u.givcNetwork+'</button></div></template><template id="tpl-list"><div id="miniList"><div class="ld"><div class="spn"></div></div></div></template>'}r(U0,"hub");function F0(u,a,e){return`<script>
-(function(){
-  var isAr=`+(u?"true":"false")+`;
-  var phone="`+a+`";
-  var labels={appointment:"`+e.bookModalTitle+'",basma:"'+e.basmaModalTitle+'",homecare:"'+e.homecareModalTitle+'",telehealth:"'+e.telehealthModalTitle+'",eligibility:"'+e.eligModalTitle+'",patient:"'+e.patientTitle+'",providers:"'+e.providerTitle+'",status:"'+e.adminTitle+'",rcm:"'+e.rcmTitle+'",givc:"'+e.givcTitle+`"};
-  function $(id){return document.getElementById(id);}
-  function v(id){var e=$(id);return e?e.value.trim():"";}
-  function today(){return new Date().toISOString().slice(0,10);}
-  function result(html,ok){var r=$("mxRes");if(!r)return;r.style.display="block";r.className="mx-r "+(ok?"ok":"er");r.innerHTML=html;}
-  function spin(){var r=$("mxRes");if(r){r.style.display="block";r.className="mx-r";r.innerHTML="<div class=ld><div class=spn></div></div>";}}
-  function closeMx(){var m=$("mx");if(m)m.classList.remove("on");}
-  function setDefaults(k){var d=today();["apDate","hcDate","thDate"].forEach(function(id){var e=$(id);if(e&&!e.value)e.value=d;});["apTime","hcTime","thTime"].forEach(function(id){var e=$(id);if(e&&!e.value)e.value="10:00";});}
-  function openMx(k){var m=$("mx"),b=$("mxBody"),r=$("mxRes"),ti=$("mxTitle"),su=$("mxSub"),tpl=$("tpl-"+(k==="providers"||k==="patient"||k==="status"||k==="rcm"?"list":k));if(!m||!b||!tpl)return;if(ti)ti.textContent=labels[k]||k;if(su)su.textContent="BrainSAIT HNH native workflow \xB7 /api/*";b.innerHTML=tpl.innerHTML;if(r){r.style.display="none";r.innerHTML="";}m.classList.add("on");setDefaults(k);if(k==="patient")loadPatients();if(k==="providers")loadProviders();if(k==="status")loadStatus();if(k==="rcm")loadRcm();if(k==="givc")loadGivcNetwork();}
-  function api(path,opt){opt=opt||{};opt.headers=Object.assign({"Content-Type":"application/json"},opt.headers||{});return fetch(path,opt).then(function(r){return r.json().then(function(d){d.__status=r.status;return d;});});}
-  function fmt(d){return "<pre style='white-space:pre-wrap;margin:0'>"+JSON.stringify(d,null,2).replace(/[<>&]/g,function(c){return {"<":"&lt;",">":"&gt;","&":"&amp;"}[c];})+"</pre>";}
-  function card(a,b,c){return "<div class=mini-c><strong>"+a+"</strong><span>"+(b||"\u2014")+"</span>"+(c?"<span>"+c+"</span>":"")+"</div>";}
-  function ensurePatient(prefix){var name=v(prefix+"Name"),ph=v(prefix+"Phone"),nat=v(prefix+"National");if(!name||!ph)return Promise.resolve(null);return api("/api/patients?search="+encodeURIComponent(ph)).then(function(found){var a=found.patients||[];if(a.length)return a[0].id;return api("/api/patients",{method:"POST",body:JSON.stringify({full_name_ar:name,full_name_en:name,phone:ph,national_id:nat})}).then(function(d){return d.patient_id||null;});});}
-  function loadPatients(){spin();api("/api/patients?limit=8").then(function(d){var a=d.patients||[];result("<div class=mini-g>"+a.map(function(x){return card(x.full_name_ar||x.full_name_en,x.phone,x.national_id);}).join("")+"</div>",true);}).catch(function(){result("`+e.failedAction+`",false);});}
-  function loadProviders(){spin();api("/api/providers").then(function(d){var a=d.providers||[];result("<div class=mini-g>"+a.slice(0,12).map(function(x){return card(x.name_ar||x.name_en||x.full_name_ar,x.specialty||x.department,x.branch||x.branch_id);}).join("")+"</div>",true);}).catch(function(){result("`+e.failedAction+`",false);});}
-  function loadStatus(){spin();api("/api/health").then(function(d){result(fmt(d),true);}).catch(function(){result("`+e.failedAction+`",false);});}
-  function loadRcm(){spin();api("/api/rcm/health").then(function(d){result(fmt(d),true);}).catch(function(){result("`+e.failedAction+`",false);});}
-  function act(k){if(k==="appointment")return doAppointment();if(k==="basma")return doBasma(false);if(k==="voice")return doBasma(true);if(k==="homecare")return doHomecare();if(k==="telehealth")return doTelehealth();if(k==="eligibility")return doEligibility();if(k==="givc-register")return doGivcRegister();if(k==="givc-network")return loadGivcNetwork();}
-  function doAppointment(){if(!v("apName")||!v("apPhone")||!v("apDate")){result("`+e.missingFields+`",false);return;}spin();ensurePatient("ap").then(function(pid){if(!pid)throw new Error("patient");return api("/api/appointments",{method:"POST",body:JSON.stringify({patient_id:pid,clinic_name:v("apDept"),appointment_date:v("apDate"),appointment_time:v("apTime")||"10:00",reason:v("apReason"),appointment_type:"digital"})});}).then(function(d){result("\u2705 `+e.resultReady+`<br>"+fmt(d),!!d.success);}).catch(function(){result("`+e.failedAction+`",false);});}
-  function sp(text,lang){if(window.speechSynthesis){var u=new SpeechSynthesisUtterance(text);u.lang=lang==="ar"?"ar-SA":"en-US";u.rate=0.95;u.pitch=1;var voices=speechSynthesis.getVoices();var match=voices.find(function(v){return v.lang.startsWith(lang);});if(match)u.voice=match;speechSynthesis.cancel();speechSynthesis.speak(u);}}
-  function doBasma(voice){var msg=v("baMsg");if(!msg){result("`+e.missingFields+`",false);return;}spin();api("/api/chat",{method:"POST",body:JSON.stringify({message:msg,language:isAr?"ar":"en",session_id:"hnh-web"})}).then(function(d){var answer=d.response||d.reply||d.answer||"\u2014";result(answer,true);if(voice){fetch("/api/voice/speak",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:answer,lang:isAr?"ar":"en"})}).then(function(r){if(r.ok)return r.blob();throw new Error("tts-unavailable");}).then(function(blob){if(blob){new Audio(URL.createObjectURL(blob)).play().catch(function(){sp(answer,isAr?"ar":"en");});}}).catch(function(){sp(answer,isAr?"ar":"en");});}}).catch(function(){result("`+e.failedAction+`",false);});}
-  function doHomecare(){if(!v("hcName")||!v("hcPhone")||!v("hcDate")||!v("hcAddress")){result("`+e.missingFields+`",false);return;}spin();ensurePatient("hc").then(function(pid){return api("/api/homecare/visits",{method:"POST",body:JSON.stringify({patient_id:pid||"PAT-WALKIN",visit_date:v("hcDate"),visit_time:v("hcTime")||"10:00",visit_type:v("hcType"),address:v("hcAddress"),chief_complaint:v("hcReason")})});}).then(function(d){result("\u2705 `+e.resultReady+`<br>"+fmt(d),!!d.success);}).catch(function(){result("`+e.failedAction+`",false);});}
-  function doTelehealth(){if(!v("thName")||!v("thPhone")||!v("thDate")){result("`+e.missingFields+`",false);return;}spin();ensurePatient("th").then(function(pid){return api("/api/telehealth/sessions",{method:"POST",body:JSON.stringify({patient_id:pid||"PAT-WALKIN",session_date:v("thDate"),session_time:v("thTime")||"10:00",session_type:v("thType"),chief_complaint:v("thReason")})});}).then(function(d){var link=d.join_url?"<br><a href='"+d.join_url+"' target='_blank'>"+d.join_url+"</a>":"";result("\u2705 `+e.resultReady+`<br>"+fmt(d)+link,!!d.success);}).catch(function(){result("`+e.failedAction+`",false);});}
-  function doEligibility(){if(!v("elIns")){result("`+e.missingFields+`",false);return;}spin();api("/api/eligibility/check",{method:"POST",body:JSON.stringify({insurance_id:v("elIns"),national_id:v("elNat"),service_type:v("elType")||"medical"})}).then(function(d){result(fmt(d),!!d.success);}).catch(function(){result("`+e.failedAction+`",false);});}
-  function loadGivcNetwork(){spin();api("/givc/api/providers/givc-network").then(function(d){var a=d.doctors||[];if(!a.length){result('<div style="text-align:center;padding:20px;color:var(--tl)">`+e.statusOffline+`</div>',false);return;}result("<div class=mini-g>"+a.slice(0,12).map(function(x){return card(x.name_ar||x.name_en,x.specialty,x.givc_oid?x.givc_oid.slice(-8):"\u2014");}).join("")+"</div>",true);}).catch(function(){result("`+e.failedAction+`",false);});}
-  function doGivcRegister(){var n=v("givcNameAr"),nat=v("givcNat"),spec=v("givcSpec");if(!n||!nat||!spec){result("`+e.missingFields+`",false);return;}spin();api("/givc/api/providers/givc-register",{method:"POST",body:JSON.stringify({name_ar:n,name_en:v("givcNameEn"),national_id:nat,specialty:spec,license_number:v("givcLic"),branch_code:v("givcBranch")||"R001"})}).then(function(d){result("\u2705 `+e.resultReady+`<br>"+fmt(d),!!d.success);}).catch(function(){result("`+e.failedAction+`",false);});}
+`;
+
+// src/pages.js
+var STATIC_PAGES = {
+  "about": about,
+  "academy": academy,
+  "blog": blog,
+  "branches": branches2,
+  "contact": contact,
+  "departments": departments,
+  "doctors": doctors,
+  "faq": faq,
+  "packages": packages,
+  "index": index
+};
+var L = {
+  "ar": {
+    "desc": "\u0645\u062C\u0645\u0648\u0639\u0629 \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A \u2014 \u0645\u0646\u0638\u0648\u0645\u0629 \u0635\u062D\u064A\u0629 \u0645\u062A\u0643\u0627\u0645\u0644\u0629 \u0645\u0639 \u0628\u0633\u0645\u0629 \u0648 GIVC \u0648 SBS \u0648 Oracle \u0648 NPHIES.",
+    "title": "\u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A | HNH \u2014 \u0627\u0644\u0645\u0646\u0638\u0648\u0645\u0629 \u0627\u0644\u0645\u062A\u0643\u0627\u0645\u0644\u0629",
+    "titleShort": "\u0645\u0633\u062A\u0634\u0641\u0649 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A",
+    "osVer": "BrainSAIT Healthcare OS v5.0",
+    "heroBadge": "\u0628\u064A\u0627\u0646\u0627\u062A \u062D\u064A\u0629 \u2014 \u0645\u062A\u0635\u0644 \u0628\u0640 BrainSAIT",
+    "heroH1": '\u0645\u062C\u0645\u0648\u0639\u0629 \u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A<br><span class="gd">\u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A</span>',
+    "heroP": "\u0645\u0646\u0638\u0648\u0645\u0629 \u0635\u062D\u064A\u0629 \u0630\u0643\u064A\u0629 \u0645\u062A\u0643\u0627\u0645\u0644\u0629 \u2014 \u0628\u0633\u0645\u0629 \u0627\u0644\u0635\u0648\u062A\u064A\u0629 \xB7 GIVC \xB7 SBS \xB7 Oracle \xB7 NPHIES \xB7 ClaimLinc",
+    "heroBookBtn": "\u{1F4C5} \u0627\u062D\u062C\u0632 \u0645\u0648\u0639\u062F",
+    "heroDeptBtn": "\u062A\u0635\u0641\u062D \u0627\u0644\u0623\u0642\u0633\u0627\u0645",
+    "statDoctors": "\u0637\u0628\u064A\u0628",
+    "statBranches": "\u0641\u0631\u0639",
+    "statDepts": "\u0642\u0633\u0645 \u0637\u0628\u064A",
+    "statBeds": "\u0633\u0631\u064A\u0631",
+    "navDepts": "\u0627\u0644\u0623\u0642\u0633\u0627\u0645",
+    "navBranches": "\u0627\u0644\u0641\u0631\u0648\u0639",
+    "navDoctors": "\u0627\u0644\u0623\u0637\u0628\u0627\u0621",
+    "navPortal": "\u0627\u0644\u0645\u0646\u0638\u0648\u0645\u0629",
+    "navEcosystem": "\u0627\u0644\u0645\u0646\u0638\u0648\u0645\u0629",
+    "navCommand": "\u0627\u0644\u0645\u0631\u0643\u0632 \u0627\u0644\u062D\u064A",
+    "navBook": "\u{1F4C5} \u0627\u062D\u062C\u0632 \u0645\u0648\u0639\u062F",
+    "langBtn": "EN",
+    "secDeptsTitle": "\u0627\u0644\u0623\u0642\u0633\u0627\u0645 \u0627\u0644\u0637\u0628\u064A\u0629",
+    "secDeptsSub": "\u0623\u0643\u062B\u0631 \u0645\u0646 30 \u062A\u062E\u0635\u0635\u0627\u064B \u0637\u0628\u064A\u0627\u064B",
+    "secBranchesTitle": "\u0641\u0631\u0648\u0639\u0646\u0627",
+    "secBranchesSub": "\u062E\u0645\u0633\u0629 \u0641\u0631\u0648\u0639 \u0641\u064A \u0627\u0644\u0645\u0645\u0644\u0643\u0629",
+    "secDoctorsTitle": "\u0623\u0637\u0628\u0627\u0624\u0646\u0627",
+    "secDoctorsSub": "\u0641\u0631\u064A\u0642 \u0645\u0646 \u0623\u0645\u0647\u0631 \u0627\u0644\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u064A\u0646",
+    "ecosystemTitle": "\u0627\u0644\u0645\u0646\u0638\u0648\u0645\u0629 \u0627\u0644\u0635\u062D\u064A\u0629 \u0627\u0644\u0645\u062A\u0643\u0627\u0645\u0644\u0629",
+    "ecosystemSub": "\u0628\u0648\u0627\u0628\u0627\u062A \u0630\u0643\u064A\u0629 \u0644\u0643\u0644 \u0645\u0633\u062A\u062E\u062F\u0645 \u2014 \u0628\u064A\u0627\u0646\u0627\u062A \u062D\u064A\u0629 \u0648\u062A\u0643\u0627\u0645\u0644 \u0643\u0627\u0645\u0644 \u0628\u064A\u0646 \u0627\u0644\u0623\u0646\u0638\u0645\u0629",
+    "patientTitle": "\u0627\u0644\u0645\u0631\u064A\u0636",
+    "patientDesc": "\u0627\u0633\u062A\u0639\u0631\u0627\u0636 \u0627\u0644\u0641\u062D\u0648\u0635\u0627\u062A\u060C \u062D\u062C\u0632 \u0627\u0644\u0645\u0648\u0627\u0639\u064A\u062F\u060C \u0645\u062A\u0627\u0628\u0639\u0629 \u0627\u0644\u0645\u0637\u0627\u0644\u0628\u0627\u062A\u060C \u0627\u0644\u062F\u0631\u062F\u0634\u0629 \u0627\u0644\u0630\u0643\u064A\u0629 \u0645\u0639 \u0628\u0633\u0645\u0629",
+    "providerTitle": "\u0627\u0644\u0645\u0632\u0648\u062F \u0627\u0644\u0635\u062D\u064A",
+    "providerDesc": "\u062C\u062F\u0648\u0644 \u0627\u0644\u0645\u0648\u0627\u0639\u064A\u062F\u060C \u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0645\u0631\u0636\u0649\u060C \u0627\u0644\u062A\u0643\u0627\u0645\u0644 \u0645\u0639 Oracle \u0648 NPHIES\u060C \u062A\u0642\u0627\u0631\u064A\u0631 \u0627\u0644\u0623\u062F\u0627\u0621",
+    "payerTitle": "\u0627\u0644\u062A\u0623\u0645\u064A\u0646",
+    "payerDesc": "\u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0627\u0644\u0623\u0647\u0644\u064A\u0629\u060C \u0625\u062F\u0627\u0631\u0629 \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0627\u062A \u0627\u0644\u0645\u0633\u0628\u0642\u0629\u060C \u0645\u062A\u0627\u0628\u0639\u0629 \u062F\u0648\u0631\u0629 \u0627\u0644\u0625\u064A\u0631\u0627\u062F\u0627\u062A",
+    "studentTitle": "\u0627\u0644\u0637\u0627\u0644\u0628",
+    "studentDesc": "\u0627\u0644\u0623\u0643\u0627\u062F\u064A\u0645\u064A\u0629 \u0627\u0644\u0637\u0628\u064A\u0629 \u2014 \u062F\u0648\u0631\u0627\u062A \u062A\u062F\u0631\u064A\u0628\u064A\u0629\u060C \u0634\u0647\u0627\u062F\u0627\u062A\u060C \u0645\u0643\u062A\u0628\u0629 \u0637\u0628\u064A\u0629 \u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A\u0629",
+    "adminTitle": "\u0627\u0644\u0625\u062F\u0627\u0631\u0629",
+    "adminDesc": "\u0644\u0648\u062D\u0629 \u062A\u062D\u0643\u0645 \u0634\u0627\u0645\u0644\u0629 \u2014 \u0625\u062D\u0635\u0627\u0626\u064A\u0627\u062A\u060C \u062A\u0642\u0627\u0631\u064A\u0631\u060C \u0625\u062F\u0627\u0631\u0629 \u0627\u0644\u0645\u0633\u062A\u062E\u062F\u0645\u064A\u0646 \u0648\u0627\u0644\u0635\u0644\u0627\u062D\u064A\u0627\u062A",
+    "receptionTitle": "\u0627\u0644\u0627\u0633\u062A\u0642\u0628\u0627\u0644",
+    "receptionDesc": "\u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u0645\u0631\u0636\u0649\u060C \u0625\u062F\u0627\u0631\u0629 \u0627\u0644\u0645\u0648\u0627\u0639\u064A\u062F\u060C \u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0627\u0644\u062A\u0623\u0645\u064A\u0646\u060C \u0637\u0628\u0627\u0639\u0629 \u0627\u0644\u062A\u0642\u0627\u0631\u064A\u0631",
+    "rcmTitle": "\u062F\u0648\u0631\u0629 \u0627\u0644\u0625\u064A\u0631\u0627\u062F\u0627\u062A",
+    "rcmDesc": "\u0627\u0644\u0645\u0637\u0627\u0644\u0628\u0627\u062A \u0627\u0644\u0645\u0627\u0644\u064A\u0629\u060C \u0645\u062A\u0627\u0628\u0639\u0629 \u0627\u0644\u062A\u062D\u0635\u064A\u0644\u060C \u062A\u062D\u0644\u064A\u0644 \u0627\u0644\u0623\u062F\u0627\u0621 \u0627\u0644\u0645\u0627\u0644\u064A\u060C \u062A\u0642\u0627\u0631\u064A\u0631 NPHIES",
+    "integrationsTitle": "\u0627\u0644\u062A\u0643\u0627\u0645\u0644\u0627\u062A \u0627\u0644\u062D\u064A\u0629",
+    "integrationsSub": "\u062C\u0645\u064A\u0639 \u0627\u0644\u0623\u0646\u0638\u0645\u0629 \u0645\u062A\u0635\u0644\u0629 \u0648\u062A\u0639\u0645\u0644 \u0628\u0634\u0643\u0644 \u0645\u0628\u0627\u0634\u0631",
+    "givcTitle": "GIVC \u2014 \u0627\u0644\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0627\u0641\u062A\u0631\u0627\u0636\u064A\u0629 \u0627\u0644\u0645\u062A\u0643\u0627\u0645\u0644\u0629",
+    "givcDesc": "Global Integrated Virtual Care \u2014 \u0634\u0628\u0643\u0629 \u0627\u0644\u0623\u0637\u0628\u0627\u0621\u060C \u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u0645\u0632\u0648\u062F\u064A\u0646\u060C \u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0627\u0644\u0623\u0647\u0644\u064A\u0629 \u0645\u0639 OID",
+    "givcRegister": "\u062A\u0633\u062C\u064A\u0644 \u0637\u0628\u064A\u0628 \u062C\u062F\u064A\u062F",
+    "givcNetwork": "\u062A\u0635\u0641\u062D \u0627\u0644\u0634\u0628\u0643\u0629",
+    "givcOidLabel": "\u0631\u0642\u0645 \u0627\u0644\u062A\u0639\u0631\u064A\u0641 (OID)",
+    "aiTitle": "\u0628\u0633\u0645\u0629 \u2014 \u0627\u0644\u0645\u0633\u0627\u0639\u062F \u0627\u0644\u0637\u0628\u064A \u0627\u0644\u0630\u0643\u064A",
+    "aiDesc": "\u062A\u062D\u062F\u062B \u0645\u0639 \u0628\u0633\u0645\u0629 \u0628\u0627\u0644\u0635\u0648\u062A \u0623\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u2014 \u062D\u062C\u0632 \u0645\u0648\u0627\u0639\u064A\u062F\u060C \u0641\u062D\u0635 \u0627\u0644\u0623\u0647\u0644\u064A\u0629\u060C \u0645\u062A\u0627\u0628\u0639\u0629 \u0627\u0644\u0645\u0637\u0627\u0644\u0628\u0627\u062A\u060C \u0627\u0633\u062A\u0641\u0633\u0627\u0631\u0627\u062A \u0637\u0628\u064A\u0629",
+    "aiTalkBtn": "\u062A\u062D\u062F\u062B \u0645\u0639 \u0628\u0633\u0645\u0629 \u{1F399}\uFE0F",
+    "aiChatBtn": "\u{1F4AC} \u062F\u0631\u062F\u0634\u0629 \u0646\u0635\u064A\u0629",
+    "ctaTitle": "\u0635\u062D\u062A\u0643 \u0623\u0648\u0644\u0627\u064B",
+    "ctaSub": "\u0627\u062D\u062C\u0632 \u0645\u0648\u0639\u062F\u0643 \u0627\u0644\u0622\u0646 \u0639\u0628\u0631 \u0627\u0644\u0645\u0646\u0638\u0648\u0645\u0629 \u0627\u0644\u0645\u062A\u0643\u0627\u0645\u0644\u0629",
+    "ctaBook": "\u0627\u062D\u062C\u0632 \u0645\u0648\u0639\u062F \u0627\u0644\u0622\u0646",
+    "ctaCall": "\u0627\u062A\u0635\u0644 \u0628\u0646\u0627",
+    "fAbout": "\u0645\u0646\u0638\u0648\u0645\u0629 \u0635\u062D\u064A\u0629 \u0630\u0643\u064A\u0629 \u0645\u062A\u0643\u0627\u0645\u0644\u0629 \u2014 \u0645\u0646\u0630 25 \u0639\u0627\u0645\u0627\u064B \u0645\u0646 \u0627\u0644\u062A\u0645\u064A\u0632.",
+    "fLinks": "\u0631\u0648\u0627\u0628\u0637 \u0633\u0631\u064A\u0639\u0629",
+    "fContact": "\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0646\u0627",
+    "fServices": "\u062E\u062F\u0645\u0627\u062A",
+    "fEmerg": "\u0637\u0648\u0627\u0631\u0626 24/7",
+    "fAppt": "\u062D\u062C\u0632 \u0645\u0648\u0639\u062F",
+    "fEcosystem": "\u0627\u0644\u0645\u0646\u0638\u0648\u0645\u0629",
+    "fPortal": "\u0627\u0644\u0628\u0648\u0627\u0628\u0629",
+    "fBasma": "\u0628\u0633\u0645\u0629 AI",
+    "fPowered": "\u0645\u0634\u063A\u0651\u0644 \u0628\u0646\u0638\u0627\u0645",
+    "fCopy": "\xA9 2026 \u062C\u0645\u064A\u0639 \u0627\u0644\u062D\u0642\u0648\u0642 \u0645\u062D\u0641\u0648\u0638\u0629",
+    "statusConnected": "\u0645\u062A\u0635\u0644",
+    "statusWarning": "\u062A\u062D\u0630\u064A\u0631",
+    "statusOffline": "\u063A\u064A\u0631 \u0645\u062A\u0635\u0644",
+    "loading": "\u062C\u0627\u0631\u064A \u0627\u0644\u062A\u062D\u0645\u064A\u0644...",
+    "systemOnline": "\u062C\u0645\u064A\u0639 \u0627\u0644\u0623\u0646\u0638\u0645\u0629 \u062A\u0639\u0645\u0644",
+    "oracleBridge": "\u062C\u0633\u0631 Oracle",
+    "nphiesPortal": "\u0628\u0648\u0627\u0628\u0629 NPHIES",
+    "claimlincPortal": "ClaimLinc",
+    "basmaPortal": "\u0628\u0633\u0645\u0629 AI",
+    "sbsPortal": "SBS",
+    "givcPortal": "GIVC",
+    "searchTitle": "\u0627\u0644\u0628\u062D\u062B \u0627\u0644\u0630\u0643\u064A \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064A",
+    "searchSub": "\u0627\u0633\u0623\u0644 \u0639\u0646 \u0623\u064A \u0637\u0628\u064A\u0628 \u0623\u0648 \u0642\u0633\u0645 \u0623\u0648 \u0625\u062C\u0631\u0627\u0621 \u0623\u0648 \u062F\u0648\u0627\u0621 \u2014 \u0625\u062C\u0627\u0628\u0627\u062A \u0641\u0648\u0631\u064A\u0629 \u0645\u0646 \u0642\u0627\u0639\u062F\u0629 \u0645\u0639\u0631\u0641\u0629 \u0627\u0644\u0645\u0633\u062A\u0634\u0641\u0649",
+    "searchPlaceholder": "\u0645\u062B\u0627\u0644: \u0623\u0637\u0628\u0627\u0621 \u0627\u0644\u0642\u0644\u0628\u060C \u0633\u0627\u0639\u0627\u062A \u0627\u0644\u0637\u0648\u0627\u0631\u0626\u060C \u0627\u0644\u062A\u0623\u0645\u064A\u0646 \u0627\u0644\u0637\u0628\u064A\u060C \u0627\u0644\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0645\u0646\u0632\u0644\u064A\u0629...",
+    "searchBtn": "\u{1F50D} \u0627\u0628\u062D\u062B \u0627\u0644\u0622\u0646",
+    "hcTitle": "\u0627\u0644\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0635\u062D\u064A\u0629 \u0627\u0644\u0645\u0646\u0632\u0644\u064A\u0629",
+    "hcSub": "\u0641\u0631\u064A\u0642 \u0645\u062A\u062E\u0635\u0635 \u064A\u0623\u062A\u064A \u0625\u0644\u064A\u0643",
+    "hcDesc": "\u0632\u064A\u0627\u0631\u0627\u062A \u0645\u0646\u0632\u0644\u064A\u0629 \u0645\u0646 \u0645\u0645\u0631\u0636\u0627\u062A \u0648\u0623\u0637\u0628\u0627\u0621 \u0645\u0639\u062A\u0645\u062F\u064A\u0646 \u2014 \u0641\u062D\u0648\u0635\u0627\u062A\u060C \u0639\u0644\u0627\u062C \u0648\u0631\u064A\u062F\u064A\u060C \u0631\u0639\u0627\u064A\u0629 \u0645\u0627 \u0628\u0639\u062F \u0627\u0644\u062C\u0631\u0627\u062D\u0629\u060C \u0645\u062A\u0627\u0628\u0639\u0629 \u0627\u0644\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0645\u0632\u0645\u0646\u0629.",
+    "thTitle": "\u0627\u0644\u062A\u0637\u0628\u064A\u0628 \u0639\u0646 \u0628\u064F\u0639\u062F",
+    "thSub": "\u0627\u0633\u062A\u0634\u0627\u0631\u0629 \u0637\u0628\u064A\u0629 \u0645\u0646 \u0623\u064A \u0645\u0643\u0627\u0646",
+    "thDesc": "\u062A\u062D\u062F\u062B \u0645\u0639 \u0637\u0628\u064A\u0628\u0643 \u0641\u064A\u062F\u064A\u0648 \u0623\u0648 \u0635\u0648\u062A \u2014 \u062F\u0648\u0646 \u0627\u0644\u062D\u0627\u062C\u0629 \u0644\u0644\u0632\u064A\u0627\u0631\u0629. \u0645\u062A\u0627\u062D 24/7 \u0645\u0639 \u0623\u0637\u0628\u0627\u0621 \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A.",
+    "digitalTitle": "\u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0635\u062D\u064A\u0629 \u0627\u0644\u0631\u0642\u0645\u064A\u0629",
+    "digitalSub": "\u0627\u0628\u062A\u0643\u0627\u0631 \u0631\u0642\u0645\u064A \u0641\u064A \u062E\u062F\u0645\u0629 \u0635\u062D\u062A\u0643 \u2014 \u0628\u062D\u062B \u0630\u0643\u064A\u060C \u0631\u0639\u0627\u064A\u0629 \u0645\u0646\u0632\u0644\u064A\u0629\u060C \u0648\u0627\u0633\u062A\u0634\u0627\u0631\u0627\u062A \u0641\u064A\u062F\u064A\u0648 \u0645\u0628\u0627\u0634\u0631\u0629",
+    "emailTitle": "\u0627\u0644\u062A\u0648\u0627\u0635\u0644 \u0627\u0644\u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A \u0627\u0644\u0630\u0643\u064A",
+    "emailDesc": "\u062A\u0623\u0643\u064A\u062F\u0627\u062A\u060C \u062A\u0630\u0643\u064A\u0631\u0627\u062A\u060C \u0648\u0648\u0635\u0641\u0627\u062A \u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A\u0629 \u2014 \u0628\u0631\u064A\u062F \u0630\u0643\u064A \u062B\u0646\u0627\u0626\u064A \u0627\u0644\u0644\u063A\u0629 \u0644\u0643\u0644 \u0645\u0631\u064A\u0636.",
+    "openAction": "\u0627\u0641\u062A\u062D \u0627\u0644\u062E\u062F\u0645\u0629",
+    "bookModalTitle": "\u062D\u062C\u0632 \u0645\u0648\u0639\u062F \u0633\u0631\u064A\u0639",
+    "basmaModalTitle": "\u0628\u0633\u0645\u0629 \u062F\u0627\u062E\u0644 HNH",
+    "homecareModalTitle": "\u062C\u062F\u0648\u0644\u0629 \u0632\u064A\u0627\u0631\u0629 \u0645\u0646\u0632\u0644\u064A\u0629",
+    "telehealthModalTitle": "\u0625\u0646\u0634\u0627\u0621 \u062C\u0644\u0633\u0629 \u062A\u0637\u0628\u064A\u0628 \u0639\u0646 \u0628\u0639\u062F",
+    "eligModalTitle": "\u062A\u062D\u0642\u0642 \u0627\u0644\u062A\u0623\u0645\u064A\u0646 \u0648\u0627\u0644\u0623\u0647\u0644\u064A\u0629",
+    "quickName": "\u0627\u0633\u0645 \u0627\u0644\u0645\u0631\u064A\u0636",
+    "quickPhone": "\u0631\u0642\u0645 \u0627\u0644\u062C\u0648\u0627\u0644",
+    "quickNational": "\u0627\u0644\u0647\u0648\u064A\u0629 / \u0627\u0644\u0625\u0642\u0627\u0645\u0629",
+    "quickInsurance": "\u0631\u0642\u0645 \u0627\u0644\u062A\u0623\u0645\u064A\u0646",
+    "quickDept": "\u0627\u0644\u0642\u0633\u0645",
+    "quickDate": "\u0627\u0644\u062A\u0627\u0631\u064A\u062E",
+    "quickTime": "\u0627\u0644\u0648\u0642\u062A",
+    "quickAddress": "\u0627\u0644\u0639\u0646\u0648\u0627\u0646",
+    "quickComplaint": "\u0633\u0628\u0628 \u0627\u0644\u0637\u0644\u0628",
+    "sendRequest": "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0637\u0644\u0628",
+    "askBasma": "\u0627\u0633\u0623\u0644 \u0628\u0633\u0645\u0629",
+    "resultReady": "\u062A\u0645 \u062A\u0646\u0641\u064A\u0630 \u0627\u0644\u0639\u0645\u0644\u064A\u0629",
+    "missingFields": "\u0623\u0643\u0645\u0644 \u0627\u0644\u062D\u0642\u0648\u0644 \u0627\u0644\u0645\u0637\u0644\u0648\u0628\u0629",
+    "failedAction": "\u062A\u0639\u0630\u0631 \u062A\u0646\u0641\u064A\u0630 \u0627\u0644\u0637\u0644\u0628. \u062D\u0627\u0648\u0644 \u0644\u0627\u062D\u0642\u0627\u064B.",
+    "commandTitle": "\u0645\u0631\u0643\u0632 \u0627\u0644\u062A\u062D\u0643\u0645 \u0627\u0644\u062D\u064A",
+    "commandSub": "\u0645\u0624\u0634\u0631\u0627\u062A \u062A\u0634\u063A\u064A\u0644\u064A\u0629 \u0645\u0628\u0627\u0634\u0631\u0629 \u0645\u0646 HNH \u0648 GIVC \u0648 NPHIES \u0648 ClaimLinc \u2014 \u0635\u0641\u062D\u0629 \u0648\u0627\u062D\u062F\u0629 \u0644\u0645\u0631\u0627\u0642\u0628\u0629 \u0627\u0644\u062D\u0631\u0643\u0629 \u0627\u0644\u0633\u0631\u064A\u0631\u064A\u0629 \u0648\u0627\u0644\u0631\u0642\u0645\u064A\u0629.",
+    "opsPatients": "\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0645\u0631\u0636\u0649",
+    "opsAppointments": "\u0645\u0648\u0627\u0639\u064A\u062F \u0627\u0644\u064A\u0648\u0645",
+    "opsProviders": "\u0645\u0632\u0648\u062F \u0635\u062D\u064A",
+    "opsClaims": "\u0645\u0637\u0627\u0644\u0628\u0629",
+    "homecareMetric": "\u0632\u064A\u0627\u0631\u0627\u062A \u0645\u0646\u0632\u0644\u064A\u0629",
+    "telehealthMetric": "\u062C\u0644\u0633\u0627\u062A \u0639\u0646 \u0628\u0639\u062F",
+    "givcMetric": "\u0623\u0637\u0628\u0627\u0621 GIVC",
+    "connectedMetric": "\u0623\u0646\u0638\u0645\u0629 \u0645\u062A\u0635\u0644\u0629",
+    "featureTitle": "\u0645\u064A\u0632\u0627\u062A \u062C\u062F\u064A\u062F\u0629 \u062C\u0627\u0647\u0632\u0629 \u0644\u0644\u062A\u0634\u063A\u064A\u0644",
+    "featureSub": "\u062E\u062F\u0645\u0627\u062A \u0631\u0642\u0645\u064A\u0629 \u0645\u062A\u0635\u0644\u0629 \u0645\u0628\u0627\u0634\u0631\u0629 \u0628\u0648\u0627\u062C\u0647\u0627\u062A HNH \u2014 \u0644\u0627 \u0646\u0645\u0627\u0630\u062C \u0648\u0647\u0645\u064A\u0629\u060C \u0643\u0644 \u0625\u062C\u0631\u0627\u0621 \u064A\u0633\u062A\u062F\u0639\u064A API \u062D\u064A.",
+    "featureProvider": "\u0644\u0648\u062D\u0629 \u0627\u0644\u0637\u0628\u064A\u0628",
+    "featureProviderDesc": "\u0645\u0633\u0627\u062D\u0629 \u0639\u0645\u0644 \u0644\u0644\u0637\u0628\u064A\u0628 \u0645\u0639 \u0627\u0644\u0645\u0648\u0627\u0639\u064A\u062F\u060C \u0627\u0644\u0645\u0631\u0636\u0649\u060C FHIR\u060C GIVC\u060C \u0648 NPHIES.",
+    "featureEligibility": "\u062A\u062D\u0642\u0642 \u0627\u0644\u0623\u0647\u0644\u064A\u0629 \u0639\u0628\u0631 GIVC",
+    "featureEligibilityDesc": "\u0646\u0642\u0637\u0629 \u062F\u062E\u0648\u0644 \u0645\u0628\u0627\u0634\u0631\u0629 \u0644\u0641\u062D\u0635 \u0627\u0644\u062A\u063A\u0637\u064A\u0629 \u0648\u0631\u0628\u0637 OID \u0648\u0634\u0628\u0643\u0629 \u0627\u0644\u0623\u0637\u0628\u0627\u0621.",
+    "featureHomecare": "\u0627\u0644\u0631\u0639\u0627\u064A\u0629 \u0627\u0644\u0645\u0646\u0632\u0644\u064A\u0629",
+    "featureHomecareDesc": "\u062C\u062F\u0648\u0644\u0629 \u0632\u064A\u0627\u0631\u0629 \u0645\u0646\u0632\u0644\u064A\u0629 \u0645\u0639 \u0633\u0628\u0628 \u0627\u0644\u0637\u0644\u0628 \u0648\u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u0648\u0627\u0644\u0648\u0642\u062A.",
+    "featureTelehealth": "\u0627\u0644\u062A\u0637\u0628\u064A\u0628 \u0639\u0646 \u0628\u0639\u062F",
+    "featureTelehealthDesc": "\u0625\u0646\u0634\u0627\u0621 \u062C\u0644\u0633\u0629 \u0631\u0642\u0645\u064A\u0629 \u0645\u0639 \u0631\u0627\u0628\u0637 \u063A\u0631\u0641\u0629 Telehealth \u0641\u0648\u0631\u064A.",
+    "featureSearch": "\u0627\u0644\u0628\u062D\u062B \u0627\u0644\u0637\u0628\u064A \u0627\u0644\u0630\u0643\u064A",
+    "featureSearchDesc": "AutoRAG \u0648 DeepSeek \u0644\u0644\u0628\u062D\u062B \u0641\u064A \u0645\u0639\u0631\u0641\u0629 \u0627\u0644\u0645\u0633\u062A\u0634\u0641\u0649.",
+    "featureRcm": "\u062F\u0648\u0631\u0629 \u0627\u0644\u0625\u064A\u0631\u0627\u062F\u0627\u062A",
+    "featureRcmDesc": "\u0635\u062D\u0629 ClaimLinc\u060C \u0627\u0644\u0645\u0637\u0627\u0644\u0628\u0627\u062A\u060C \u0648\u0627\u0644\u062A\u062F\u0642\u064A\u0642 \u0642\u0628\u0644 \u0627\u0644\u0625\u0631\u0633\u0627\u0644.",
+    "launch": "\u062A\u0634\u063A\u064A\u0644"
+  },
+  "en": {
+    "desc": "Hayat National Hospitals Group \u2014 Integrated Healthcare Ecosystem with Basma, GIVC, SBS, Oracle & NPHIES portals.",
+    "title": "Hayat National Hospitals | HNH \u2014 Integrated Ecosystem",
+    "titleShort": "Hayat National Hospital",
+    "osVer": "BrainSAIT Healthcare OS v5.0",
+    "heroBadge": "Live Data \u2014 Connected to BrainSAIT",
+    "heroH1": 'Hayat National<br><span class="gd">Hospitals Group</span>',
+    "heroP": "Integrated Smart Healthcare \u2014 Basma Voice \xB7 GIVC \xB7 SBS \xB7 Oracle \xB7 NPHIES \xB7 ClaimLinc",
+    "heroBookBtn": "\u{1F4C5} Book Appointment",
+    "heroDeptBtn": "Browse Departments",
+    "statDoctors": "Doctors",
+    "statBranches": "Branches",
+    "statDepts": "Departments",
+    "statBeds": "Beds",
+    "navDepts": "Departments",
+    "navBranches": "Branches",
+    "navDoctors": "Doctors",
+    "navPortal": "Ecosystem",
+    "navEcosystem": "Ecosystem",
+    "navCommand": "Live OS",
+    "navBook": "\u{1F4C5} Book Now",
+    "langBtn": "\u0627\u0644\u0639\u0631\u0628\u064A\u0629",
+    "secDeptsTitle": "Medical Departments",
+    "secDeptsSub": "Over 30 medical specialties",
+    "secBranchesTitle": "Our Branches",
+    "secBranchesSub": "Five branches across KSA",
+    "secDoctorsTitle": "Our Doctors",
+    "secDoctorsSub": "Team of expert consultants",
+    "ecosystemTitle": "Integrated Healthcare Ecosystem",
+    "ecosystemSub": "Smart portals for every user \u2014 live data and full system integration",
+    "patientTitle": "Patient",
+    "patientDesc": "View lab results, book appointments, track claims, AI chat with Basma",
+    "providerTitle": "Provider",
+    "providerDesc": "Schedule management, patient records, Oracle & NPHIES integration, performance reports",
+    "payerTitle": "Payer / Insurance",
+    "payerDesc": "Eligibility verification, pre-authorization management, revenue cycle tracking",
+    "studentTitle": "Student",
+    "studentDesc": "Medical academy \u2014 training courses, certificates, digital medical library",
+    "adminTitle": "Admin",
+    "adminDesc": "Full dashboard \u2014 analytics, reports, user & permission management",
+    "receptionTitle": "Reception",
+    "receptionDesc": "Patient registration, appointment management, insurance verification, reports",
+    "rcmTitle": "Revenue Cycle",
+    "rcmDesc": "Claims management, collection tracking, financial analytics, NPHIES reporting",
+    "integrationsTitle": "Live Integrations",
+    "integrationsSub": "All systems connected and operational",
+    "givcTitle": "GIVC \u2014 Global Integrated Virtual Care",
+    "givcDesc": "Provider network, doctor registration, OID-based eligibility verification",
+    "givcRegister": "Register New Doctor",
+    "givcNetwork": "Browse Network",
+    "givcOidLabel": "Identifier (OID)",
+    "aiTitle": "Basma \u2014 AI Medical Assistant",
+    "aiDesc": "Talk to Basma by voice or text \u2014 book appointments, check eligibility, track claims, medical inquiries",
+    "aiTalkBtn": "Talk to Basma \u{1F399}\uFE0F",
+    "aiChatBtn": "\u{1F4AC} Chat Now",
+    "ctaTitle": "Your Health First",
+    "ctaSub": "Book your appointment now through our integrated ecosystem",
+    "ctaBook": "Book Now",
+    "ctaCall": "Call Us",
+    "fAbout": "An intelligent integrated healthcare ecosystem \u2014 25 years of excellence.",
+    "fLinks": "Quick Links",
+    "fContact": "Contact Us",
+    "fServices": "Services",
+    "fEmerg": "Emergency 24/7",
+    "fAppt": "Book Appointment",
+    "fEcosystem": "Ecosystem",
+    "fPortal": "Portal",
+    "fBasma": "Basma AI",
+    "fPowered": "Powered by",
+    "fCopy": "\xA9 2026 All rights reserved",
+    "statusConnected": "Online",
+    "statusWarning": "Warning",
+    "statusOffline": "Offline",
+    "loading": "Loading...",
+    "systemOnline": "All systems operational",
+    "oracleBridge": "Oracle Bridge",
+    "nphiesPortal": "NPHIES Portal",
+    "claimlincPortal": "ClaimLinc",
+    "basmaPortal": "Basma AI",
+    "sbsPortal": "SBS Portal",
+    "givcPortal": "GIVC Portal",
+    "searchTitle": "AI-Powered Smart Search",
+    "searchSub": "Ask about any doctor, department, procedure, or medication \u2014 instant answers from hospital knowledge base",
+    "searchPlaceholder": "e.g. cardiologists, emergency hours, insurance, home care...",
+    "searchBtn": "\u{1F50D} Search Now",
+    "hcTitle": "Home Healthcare",
+    "hcSub": "Our team comes to you",
+    "hcDesc": "Home visits by certified nurses and doctors \u2014 checkups, IV therapy, post-surgery care, chronic disease management.",
+    "thTitle": "Telehealth",
+    "thSub": "Medical consultation anywhere",
+    "thDesc": "Video or voice consultation with your doctor \u2014 no hospital visit needed. 24/7 with HNH specialists.",
+    "digitalTitle": "Digital Health Services",
+    "digitalSub": "Smart innovation in healthcare \u2014 AI search, home care, and live video consultations",
+    "emailTitle": "Smart Patient Communications",
+    "emailDesc": "Confirmations, reminders, and e-prescriptions \u2014 bilingual smart email for every patient.",
+    "openAction": "Open service",
+    "bookModalTitle": "Quick appointment booking",
+    "basmaModalTitle": "Basma inside HNH",
+    "homecareModalTitle": "Schedule home care visit",
+    "telehealthModalTitle": "Create telehealth session",
+    "eligModalTitle": "Insurance and eligibility check",
+    "quickName": "Patient name",
+    "quickPhone": "Mobile number",
+    "quickNational": "National / Iqama ID",
+    "quickInsurance": "Insurance ID",
+    "quickDept": "Department",
+    "quickDate": "Date",
+    "quickTime": "Time",
+    "quickAddress": "Address",
+    "quickComplaint": "Reason",
+    "sendRequest": "Submit request",
+    "askBasma": "Ask Basma",
+    "resultReady": "Action completed",
+    "missingFields": "Complete the required fields",
+    "failedAction": "Unable to complete the request. Try again later.",
+    "commandTitle": "Live Command Center",
+    "commandSub": "Operational signals from HNH, GIVC, NPHIES, and ClaimLinc \u2014 one view for clinical and digital throughput.",
+    "opsPatients": "Patient records",
+    "opsAppointments": "Today visits",
+    "opsProviders": "Providers",
+    "opsClaims": "Claims",
+    "homecareMetric": "Home visits",
+    "telehealthMetric": "Telehealth sessions",
+    "givcMetric": "GIVC doctors",
+    "connectedMetric": "Connected systems",
+    "featureTitle": "New Features Ready To Launch",
+    "featureSub": "Digital services wired directly to HNH APIs \u2014 no static mockups, every action opens a live workflow.",
+    "featureProvider": "Doctor Dashboard",
+    "featureProviderDesc": "Clinical workspace with appointments, patients, FHIR, GIVC, and NPHIES.",
+    "featureEligibility": "Eligibility Check via GIVC",
+    "featureEligibilityDesc": "Direct entry point for coverage verification, OID linking, and provider network.",
+    "featureHomecare": "Home Healthcare",
+    "featureHomecareDesc": "Schedule home visits with reason, address, and timing.",
+    "featureTelehealth": "Telehealth",
+    "featureTelehealthDesc": "Create digital sessions with instant Telehealth room links.",
+    "featureSearch": "Smart Medical Search",
+    "featureSearchDesc": "AutoRAG and DeepSeek to search hospital knowledge.",
+    "featureRcm": "Revenue Cycle",
+    "featureRcmDesc": "ClaimLinc health, claims, and pre-submission audit.",
+    "launch": "Launch"
+  }
+};
+var DE = [
+  { i: "\u{1F691}", nA: "\u0627\u0644\u0637\u0648\u0627\u0631\u0626", nE: "Emergency", dA: "\u062E\u062F\u0645\u0629 24 \u0633\u0627\u0639\u0629 \u0644\u0644\u062D\u0627\u0644\u0627\u062A \u0627\u0644\u062D\u0631\u062C\u0629 \u0648\u0627\u0644\u0645\u0633\u062A\u0639\u062C\u0644\u0629.", dE: "24/7 Critical and urgent care services." },
+  { i: "\u{1FAC0}", nA: "\u0627\u0644\u0642\u0644\u0628", nE: "Cardiology", dA: "\u0642\u0633\u0637\u0631\u0629 \u0642\u0644\u0628\u064A\u0629 \u0648\u062C\u0631\u0627\u062D\u0629 \u0642\u0644\u0628 \u0645\u062A\u0637\u0648\u0631\u0629 \u0628\u0623\u064A\u062F\u064A \u0627\u0633\u062A\u0634\u0627\u0631\u064A\u064A\u0646.", dE: "Advanced cardiac care and surgery by consultants." },
+  { i: "\u{1F9B4}", nA: "\u0627\u0644\u0639\u0638\u0627\u0645", nE: "Orthopedics", dA: "\u0639\u0644\u0627\u062C \u0627\u0644\u0645\u0641\u0627\u0635\u0644 \u0648\u0627\u0644\u0643\u0633\u0648\u0631 \u0648\u0627\u0644\u0639\u0645\u0648\u062F \u0627\u0644\u0641\u0642\u0631\u064A \u0648\u0627\u0644\u0637\u0628 \u0627\u0644\u0631\u064A\u0627\u0636\u064A.", dE: "Treatment for joints, fractures, spine, and sports medicine." },
+  { i: "\u{1F476}", nA: "\u0627\u0644\u0623\u0637\u0641\u0627\u0644", nE: "Pediatrics", dA: "\u0631\u0639\u0627\u064A\u0629 \u0645\u062A\u062E\u0635\u0635\u0629 \u0644\u0644\u0623\u0637\u0641\u0627\u0644 \u0648\u062D\u062F\u064A\u062B\u064A \u0627\u0644\u0648\u0644\u0627\u062F\u0629 \u0628\u0623\u0639\u0644\u0649 \u0627\u0644\u0645\u0639\u0627\u064A\u064A\u0631.", dE: "Expert care for children and neonates at highest standards." },
+  { i: "\u{1F930}", nA: "\u0627\u0644\u0646\u0633\u0627\u0621 \u0648\u0627\u0644\u0648\u0644\u0627\u062F\u0629", nE: "OB/GYN", dA: "\u0645\u062A\u0627\u0628\u0639\u0629 \u0627\u0644\u062D\u0645\u0644 \u0648\u0627\u0644\u0648\u0644\u0627\u062F\u0629 \u0627\u0644\u0637\u0628\u064A\u0639\u064A\u0629 \u0648\u0627\u0644\u0642\u064A\u0635\u0631\u064A\u0629 \u0628\u0623\u0645\u0627\u0646.", dE: "Safe pregnancy follow-up and delivery services." },
+  { i: "\u{1F9B7}", nA: "\u0627\u0644\u0623\u0633\u0646\u0627\u0646", nE: "Dentistry", dA: "\u062A\u062C\u0645\u064A\u0644 \u0648\u0632\u0631\u0627\u0639\u0629 \u0648\u0639\u0644\u0627\u062C \u0627\u0644\u0623\u0633\u0646\u0627\u0646 \u0628\u0623\u062D\u062F\u062B \u0627\u0644\u062A\u0642\u0646\u064A\u0627\u062A.", dE: "Cosmetic, implant, and dental care with latest tech." },
+  { i: "\u{1F441}\uFE0F", nA: "\u0627\u0644\u0639\u064A\u0648\u0646", nE: "Ophthalmology", dA: "\u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0639\u064A\u0648\u0646 \u0648\u0627\u0644\u0644\u064A\u0632\u0643 \u0648\u062A\u0635\u062D\u064A\u062D \u0627\u0644\u0646\u0638\u0631.", dE: "Eye surgery, LASIK, and vision correction." },
+  { i: "\u{1F9E0}", nA: "\u0627\u0644\u0645\u062E \u0648\u0627\u0644\u0623\u0639\u0635\u0627\u0628", nE: "Neurology", dA: "\u062A\u0634\u062E\u064A\u0635 \u0648\u0639\u0644\u0627\u062C \u0627\u0636\u0637\u0631\u0627\u0628\u0627\u062A \u0627\u0644\u062C\u0647\u0627\u0632 \u0627\u0644\u0639\u0635\u0628\u064A \u0648\u0627\u0644\u0633\u0643\u062A\u0627\u062A.", dE: "Diagnosis and treatment of nervous system disorders." }
+];
+var BR = [
+  { nA: "\u0627\u0644\u0631\u064A\u0627\u0636", nE: "Riyadh", aA: "\u0637\u0631\u064A\u0642 \u0627\u0644\u062F\u0627\u0626\u0631\u064A \u0627\u0644\u063A\u0631\u0628\u064A - \u0645\u062E\u0631\u062C 27", aE: "Western Ring Road - Exit 27" },
+  { nA: "\u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0645\u0646\u0648\u0631\u0629", nE: "Madinah", aA: "\u0637\u0631\u064A\u0642 \u0627\u0644\u0645\u0644\u0643 \u0639\u0628\u062F\u0627\u0644\u0644\u0647 - \u062D\u064A \u0627\u0644\u0631\u0646\u0648\u0646\u0627", aE: "King Abdullah Road - Al Ranuna" },
+  { nA: "\u062E\u0645\u064A\u0633 \u0645\u0634\u064A\u0637", nE: "Khamis Mushait", aA: "\u0637\u0631\u064A\u0642 \u0627\u0644\u0645\u0644\u0643 \u0641\u0647\u062F - \u062D\u064A \u0627\u0644\u0631\u0635\u0631\u0627\u0635", aE: "King Fahd Road - Al Rasras" },
+  { nA: "\u062C\u0627\u0632\u0627\u0646", nE: "Jazan", aA: "\u0637\u0631\u064A\u0642 \u0627\u0644\u0645\u0637\u0627\u0631 - \u062D\u064A \u0627\u0644\u0633\u0648\u064A\u0633", aE: "Airport Road - Al Suwaiss" },
+  { nA: "\u0639\u0646\u064A\u0632\u0629", nE: "Unaizah", aA: "\u0637\u0631\u064A\u0642 \u0627\u0644\u0645\u0644\u0643 \u0639\u0628\u062F\u0627\u0644\u0639\u0632\u064A\u0632 - \u062D\u064A \u0627\u0644\u0631\u064A\u0627\u0646", aE: "King Abdulaziz Road - Al Rayyan" }
+];
+var DO = [
+  { nA: "\u062F. \u0641\u0648\u0632\u064A\u0629 \u0627\u0644\u062C\u0627\u0631 \u0627\u0644\u0644\u0647", nE: "Dr. Fawzia Al-Jar Allah", sA: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u0648\u0631\u0626\u064A\u0633 \u0645\u062C\u0644\u0633 \u0627\u0644\u0625\u062F\u0627\u0631\u0629", sE: "Consultant & Chairman" },
+  { nA: "\u062F. \u062D\u0633\u064A\u0646 \u0628\u0646 \u062D\u0633\u0648\u0633\u0629", nE: "Dr. Hussein bin Husousa", sA: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u0648\u0631\u0626\u064A\u0633 \u062A\u0646\u0641\u064A\u0630\u064A", sE: "Consultant & CEO" },
+  { nA: "\u062F. \u0623\u062D\u0645\u062F \u0627\u0644\u0635\u0627\u0644\u062D", nE: "Dr. Ahmed Al-Saleh", sA: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A \u062C\u0631\u0627\u062D\u0629 \u0627\u0644\u0642\u0644\u0628 \u0648\u0627\u0644\u0635\u062F\u0631", sE: "Cardiothoracic Surgery Consultant" },
+  { nA: "\u062F. \u0633\u0627\u0631\u0629 \u0627\u0644\u0645\u0646\u0635\u0648\u0631", nE: "Dr. Sarah Al-Mansour", sA: "\u0627\u0633\u062A\u0634\u0627\u0631\u064A\u0629 \u0627\u0644\u0646\u0633\u0627\u0621 \u0648\u0627\u0644\u0648\u0644\u0627\u062F\u0629", sE: "OB/GYN Consultant" }
+];
+var CSS = `:root{
+  --p: #002C5E; /* Deep Navy */
+  --s: #0066CC; /* Medical Blue */
+  --a: #C9A84C; /* Sophisticated Gold */
+  --al: #FDF4E3; /* Cream Gold */
+  --n: #0F172A; /* Slate 900 */
+  --of: #F8FAFC; /* Slate 50 */
+  --l: #F1F5F9; /* Slate 100 */
+  --g: #E2E8F0; /* Slate 200 */
+  --g3: #94A3B8; /* Slate 400 */
+  --t: #1E293B; /* Slate 800 */
+  --tl: #64748B; /* Slate 500 */
+  --success: #10B981;
+  --danger: #EF4444;
+  --warn: #F59E0B;
+  --gr: linear-gradient(135deg, #002C5E 0%, #0066CC 100%);
+  --ga: linear-gradient(135deg, #C9A84C 0%, #E6C97F 100%);
+  --gg: linear-gradient(135deg, #C9A84C 0%, #FDF4E3 50%, #C9A84C 100%);
+  --glass: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --xl: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  --r: 12px;
+  --rm: 16px;
+  --rl: 24px;
+  --rxl: 40px;
+  --rf: 9999px;
+  --fa: 'Tajawal', sans-serif;
+  --fe: 'Inter', sans-serif;
+  --tr: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --cc: 1320px;
+  --hh: 84px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fa);color:var(--t);background:var(--of);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+
+/* Premium Header */
+.h{position:fixed;top:0;inset-inline:0;z-index:1000;background:rgba(255,255,255,0.7);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);height:var(--hh);transition:var(--tr)}
+.h.sc{background:rgba(255,255,255,0.9);box-shadow:var(--md);height:70px}
+.hi{max-width:var(--cc);margin:0 auto;padding:0 32px;height:100%;display:flex;align-items:center;justify-content:space-between;gap:20px}
+
+.l{display:flex;align-items:center;gap:14px;text-decoration:none}
+.li{width:48px;height:48px;background:var(--gr);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;box-shadow:var(--md);color:#fff}
+.lt{font-size:1.15rem;font-weight:900;color:var(--p);line-height:1.1}
+.lt sm{display:block;font-size:0.65rem;font-weight:600;color:var(--tl);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px}
+
+.nv{display:flex;align-items:center;gap:4px}
+.nv a{text-decoration:none;color:var(--n);font-weight:600;font-size:0.92rem;padding:10px 18px;border-radius:var(--rf);transition:var(--tr)}
+.nv a:hover{background:rgba(0,44,94,0.05);color:var(--s)}
+.nv a.active{background:var(--p);color:#fff}
+
+.lb{padding:8px 16px;border-radius:var(--rf);background:var(--l);border:1px solid var(--g);cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:700;color:var(--p);transition:var(--tr)}
+.lb:hover{background:var(--g);transform:scale(1.05)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 28px;border-radius:var(--rf);font-weight:700;font-size:0.95rem;cursor:pointer;border:none;text-decoration:none;white-space:nowrap;font-family:inherit;transition:var(--tr);position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:var(--tr)}
+.btn:hover::after{background:rgba(255,255,255,0.1)}
+.btn:active{transform:scale(0.97)}
+
+.bp{background:var(--gr);color:#fff;box-shadow:0 10px 20px -5px rgba(0,44,94,0.3)}
+.bp:hover{transform:translateY(-3px);box-shadow:0 15px 30px -5px rgba(0,44,94,0.4)}
+
+.ba{background:var(--ga);color:var(--p);box-shadow:0 10px 20px -5px rgba(212,175,55,0.3)}
+.ba:hover{transform:translateY(-3px);box-shadow:0 15px 30px -5px rgba(212,175,55,0.4)}
+
+.bw{background:#fff;color:var(--p);border:1px solid var(--g);box-shadow:var(--sm)}
+.bw:hover{background:var(--of);border-color:var(--p);transform:translateY(-2px)}
+
+.bl{padding:18px 40px;font-size:1.05rem}
+.bs{padding:10px 20px;font-size:0.85rem}
+
+/* Hero Section */
+.he{min-height:100vh;display:flex;align-items:center;padding-top:var(--hh);position:relative;overflow:hidden;background:#fff}
+.he::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 20%, rgba(0,44,94,0.05), transparent 40%), radial-gradient(circle at 20% 80%, rgba(212,175,55,0.05), transparent 40%)}
+.hp{position:absolute;inset:0;pointer-events:none}
+.pt{position:absolute;border-radius:50%;filter:blur(60px);opacity:0.4;animation:fl 15s ease-in-out infinite}
+@keyframes fl{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(50px,-30px) scale(1.2)}66%{transform:translate(-30px,50px) scale(0.9)}}
+
+.he .co{position:relative;z-index:10;max-width:var(--cc);margin:0 auto;padding:60px 32px;width:100%}
+.hc{max-width:720px}
+.hb{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:var(--rf);background:rgba(16,185,129,0.1);color:var(--success);font-size:0.85rem;font-weight:700;margin-bottom:32px;border:1px solid rgba(16,185,129,0.2)}
+.hb::before{content:'';width:10px;height:10px;border-radius:50%;background:var(--success);box-shadow:0 0 10px var(--success)}
+
+.he h1{font-size:clamp(2.8rem, 6vw, 4.5rem);font-weight:900;color:var(--p);margin-bottom:24px;line-height:1}
+.he h1 .gd{background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.he p{font-size:1.25rem;color:var(--tl);margin-bottom:40px;max-width:600px;line-height:1.6}
+.hbt{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:60px}
+`;
+var UX_CSS = `
+
+.mx{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}
+.mx.on{display:flex}
+.mx-b{position:absolute;inset:0;background:rgba(15,23,42,0.8);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.mx-p{position:relative;width:min(800px, 100%);max-height:90vh;overflow-y:auto;background:#fff;border-radius:var(--rxl);box-shadow:var(--xl);padding:40px;animation:zoomIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)}
+@keyframes zoomIn{from{opacity:0;transform:scale(0.95) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)}}
+
+.mx-x{position:absolute;top:24px;inset-inline-end:24px;width:40px;height:40px;border-radius:50%;border:none;background:var(--l);color:var(--p);cursor:pointer;font-size:1.5rem;display:grid;place-items:center;transition:var(--tr)}
+.mx-x:hover{background:var(--p);color:#fff;transform:rotate(90deg)}
+
+.mx-h{margin-bottom:32px;border-bottom:1px solid var(--g);padding-bottom:20px}
+.mx-h h3{font-size:1.8rem;color:var(--p);margin-bottom:8px}
+.mx-h p{color:var(--tl);font-weight:600}
+
+.fx{display:grid;grid-template-columns:repeat(2, 1fr);gap:24px}
+.fx .full{grid-column:1/-1}
+.fi{display:flex;flex-direction:column;gap:8px}
+.fi label{font-weight:700;font-size:0.88rem;color:var(--p);text-transform:uppercase;letter-spacing:0.05em}
+.fi input,.fi select,.fi textarea{width:100%;border:2px solid var(--g);border-radius:var(--rm);padding:14px 18px;font-size:1rem;font-family:inherit;transition:var(--tr);outline:none;background:var(--of)}
+.fi input:focus,.fi select:focus,.fi textarea:focus{border-color:var(--s);background:#fff;box-shadow:0 0 0 4px rgba(0,95,180,0.1)}
+.fi textarea{min-height:120px}
+
+.mx-a{display:flex;gap:16px;margin-top:40px;padding-top:24px;border-top:1px solid var(--g)}
+.mx-r{margin-top:24px;padding:24px;border-radius:var(--rm);background:var(--l);border-left:5px solid var(--p);animation:fadeIn 0.3s ease}
+@keyframes fadeIn{from{opacity:0} to{opacity:1}}
+.mx-r.ok{background:#ECFDF5;border-color:var(--success);color:#065F46}
+.mx-r.er{background:#FEF2F2;border-color:var(--danger);color:#991B1B}
+
+@media(max-width:640px){
+  .fx{grid-template-columns:1fr}
+  .mx-p{padding:24px;border-radius:var(--rl)}
+}
+`;
+var ENHANCE_CSS = `.cmd{position:relative;background:var(--n);color:#fff;padding:100px 0;overflow:hidden}.cmd::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 30%, rgba(0,95,184,0.3), transparent 50%), radial-gradient(circle at 30% 70%, rgba(212,175,55,0.15), transparent 50%);pointer-events:none}.cmd-shell{display:grid;grid-template-columns:1fr 1.2fr;gap:60px;align-items:center}.cmd-copy h2{font-size:clamp(2.5rem, 5vw, 4rem);margin:20px 0;line-height:1}.cmd-copy p{font-size:1.15rem;color:rgba(255,255,255,0.7);margin-bottom:40px}.cmd-board{background:rgba(255,255,255,.07);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--rxl);padding:32px;box-shadow:0 40px 100px rgba(0,0,0,0.5)}.cmd-top{display:flex;gap:8px;margin-bottom:24px}.cmd-top span{width:12px;height:12px;border-radius:50%}.cmd-top span:nth-child(1){background:#FF5F56}.cmd-top span:nth-child(2){background:#FFBD2E}.cmd-top span:nth-child(3){background:#27C93F}.cmd-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:20px}.cmd-m{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:var(--rl);padding:24px;transition:var(--tr)}.cmd-m:hover{background:rgba(255,255,255,0.1);transform:translateY(-5px)}.cmd-m strong{display:block;font-size:2.5rem;color:var(--al);margin-bottom:4px}.cmd-m span{font-size:0.85rem;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em}.cmd-strip{display:grid;grid-template-columns:repeat(4, 1fr);gap:12px;margin-top:20px}.cmd-strip div{background:rgba(255,255,255,0.03);border-radius:var(--r);padding:16px;text-align:center}.cmd-strip b{display:block;font-size:1.2rem;color:#fff}.cmd-strip span{font-size:0.7rem;color:rgba(255,255,255,0.4)}@media(max-width:960px){.cmd-shell{grid-template-columns:1fr;gap:40px}.cmd-strip{grid-template-columns:repeat(2,1fr)}}
+
+/* Grid Utilities */
+.g3,.g4{display:grid;gap:24px}.g3{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}.g4{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+
+/* Premium Cards */
+.cd{background:#fff;border:1px solid var(--g);border-radius:var(--rl);padding:32px;transition:var(--tr);display:flex;flex-direction:column;gap:12px;box-shadow:var(--sm);position:relative;overflow:hidden}
+.cd:hover{transform:translateY(-8px);box-shadow:var(--xl);border-color:var(--s)}
+.cd::before{content:'';position:absolute;top:0;left:0;width:100%;height:4px;background:var(--gr);opacity:0;transition:var(--tr)}
+.cd:hover::before{opacity:1}
+.ci{width:64px;height:64px;border-radius:18px;background:var(--l);display:grid;place-items:center;font-size:2rem;margin-bottom:8px;transition:var(--tr)}
+.cd:hover .ci{background:var(--p);color:#fff;transform:rotate(10deg)}
+.cd h3{font-size:1.4rem;color:var(--p);font-weight:800}
+.cd p{color:var(--tl);font-size:1rem;line-height:1.6}
+
+/* Branch Cards Specific */
+.bc{background:var(--of)}
+.bh{flex:1}.bcx{font-size:0.9rem;color:var(--tl);margin-top:8px;font-weight:600}
+.bb{display:flex;gap:12px;margin-top:24px;padding-top:20px;border-top:1px solid var(--g)}
+
+/* Doctor Cards Specific */
+.dcc{text-align:center;align-items:center}
+.da{width:100px;height:100px;border-radius:50%;background:var(--gr);color:#fff;display:grid;place-items:center;font-size:2.5rem;font-weight:900;margin:0 auto 16px;box-shadow:var(--lg)}
+.sp{font-weight:700;color:var(--a);font-size:0.9rem;margin-bottom:16px}
+
+/* CTA Section */
+.cs{background:var(--gr);color:#fff;padding:100px 0;text-align:center;position:relative;overflow:hidden}
+.cs::before{content:'';position:absolute;inset:0;background:url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="rgba(255,255,255,0.05)"/></svg>');opacity:0.5}
+.cs .co{position:relative;z-index:10}
+.cs h2{font-size:clamp(2.5rem, 5vw, 3.5rem);margin-bottom:24px}
+.cs p{font-size:1.25rem;opacity:0.9;margin-bottom:48px;max-width:700px;margin-inline:auto}
+.cb{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+
+/* WhatsApp Float */
+.wa{position:fixed;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font-size:1.8rem;text-decoration:none;z-index:1000;transition:var(--tr)}
+.wa:hover{transform:scale(1.1) rotate(10deg)}
+
+/* Animations */
+.an{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.4, 0, 0.2, 1)}
+.an.vi{opacity:1;transform:translateY(0)}
+.d1{transition-delay:0.1s} .d2{transition-delay:0.2s} .d3{transition-delay:0.3s} .d4{transition-delay:0.4s} .d5{transition-delay:0.5s} .d6{transition-delay:0.6s}
+
+/* Mobile Nav & Header Enhanced */
+.mb{display:none;background:none;border:none;font-size:1.8rem;color:var(--p);cursor:pointer;padding:8px;position:relative;z-index:2001}
+
+@media(max-width:1080px){
+  .nv{display:flex;position:fixed;top:0;inset-inline:0;height:100vh;background:rgba(255,255,255,0.96);-webkit-backdrop-filter:blur(40px);backdrop-filter:blur(40px);flex-direction:column;justify-content:center;align-items:center;padding:40px;gap:20px;z-index:2000;transform:translateY(-100%);transition:transform 0.6s cubic-bezier(0.8, 0, 0.2, 1);visibility:hidden}
+  .nv.op{transform:translateY(0);visibility:visible}
+  .mb{display:block}
+  .hi{padding:0 20px}
+  .li{width:40px;height:40px;font-size:1.2rem;border-radius:10px}
+  .lt{font-size:1rem}
+  .lt sm{font-size:0.55rem}
+  .nv a{width:auto;border-radius:var(--rm);padding:12px 30px;font-size:1.4rem;text-align:center}
+  .lb{width:auto;text-align:center;padding:12px 40px;font-size:1.1rem}
+  .btn.bs{width:auto;padding:16px 40px;font-size:1.1rem}
+}
+
+@media(max-width:768px){
+  .g3,.g4{grid-template-columns:1fr}
+  .se{padding:60px 0}
+  .cs h2{font-size:2rem}
+  .he{padding-top:100px}
+  .he h1{font-size:2.8rem}
+}
+`;
+function hdr(t, p) {
+  return '<header class="h" id="hdr"><div class="hi"><a href="/" class="l"><div class="li">\u{1F3E5}</div><div class="lt">' + t.titleShort + "<sm>" + t.osVer + '</sm></div></a><nav class="nv" id="mn"><a href="#command">' + t.navCommand + '</a><a href="#depts">' + t.navDepts + '</a><a href="#branches">' + t.navBranches + '</a><a href="#doctors">' + t.navDoctors + '</a><a href="#ecosystem"><span style="font-size:.75rem;opacity:.6;">\u{1F310}</span> ' + t.navEcosystem + '</a><button class="lb" id="lb">' + t.langBtn + '</button><a href="https://bsma.elfadil.com" target="_blank" class="btn bp bs">' + t.navBook + '</a></nav><button class="mb" id="mbt">\u2630</button></div></header>';
+}
+__name(hdr, "hdr");
+function ecoSys(t) {
+  return '<section class="se sea" id="ecosystem"><div class="co"><div class="sh an"><h2>' + t.ecosystemTitle + '</h2><div class="gl"></div><p>' + t.ecosystemSub + '</p></div><div class="ec"><h3 style="font-size:1.1rem;font-weight:700;color:var(--p);margin-bottom:24px;">\u{1F465} ' + t.navPortal + '</h3><div class="ec-g">  <button class="ec-c an d1" data-open="patient"><div class="ec-badge ok">Live</div><div class="ec-ic" style="background:rgba(0,95,184,0.1);color:var(--s)">\u{1F9D1}\u200D\u{1F3EB}</div><div class="ec-n">' + t.patientTitle + '</div><div class="ec-d">' + t.patientDesc + '</div></button>  <a href="/provider-dashboard" class="ec-c an d2" style="display:block;text-decoration:none;color:inherit"><div class="ec-badge ok">Live</div><div class="ec-ic" style="background:rgba(16,185,129,0.1);color:var(--success)">\u2B50</div><div class="ec-n">' + t.providerTitle + '</div><div class="ec-d">' + t.providerDesc + '</div></a>  <button class="ec-c an d3" data-open="eligibility"><div class="ec-badge ok">Live</div><div class="ec-ic" style="background:rgba(212,175,55,0.1);color:var(--a)">\u{1F3E6}</div><div class="ec-n">' + t.payerTitle + '</div><div class="ec-d">' + t.payerDesc + '</div></button>  <a href="/academy" class="ec-c an d4" style="display:block;text-decoration:none;color:inherit"><div class="ec-badge ok">Live</div><div class="ec-ic" style="background:rgba(124,58,237,0.1);color:#7C3AED">\u{1F393}</div><div class="ec-n">' + t.studentTitle + '</div><div class="ec-d">' + t.studentDesc + '</div></a>  <button class="ec-c an d5" data-open="appointment"><div class="ec-badge ok">Live</div><div class="ec-ic" style="background:rgba(236,72,153,0.1);color:#EC4899">\u{1F481}</div><div class="ec-n">' + t.receptionTitle + '</div><div class="ec-d">' + t.receptionDesc + '</div></button>  <button class="ec-c an d6" data-open="status"><div class="ec-badge warn">Secure</div><div class="ec-ic" style="background:rgba(100,116,139,0.1);color:var(--tl)">\u{1F512}</div><div class="ec-n">' + t.adminTitle + '</div><div class="ec-d">' + t.adminDesc + '</div></button>  <button class="ec-c an d5" data-open="rcm"><div class="ec-badge warn">Secure</div><div class="ec-ic" style="background:rgba(239,68,68,0.1);color:var(--danger)">\u{1F4B0}</div><div class="ec-n">' + t.rcmTitle + '</div><div class="ec-d">' + t.rcmDesc + '</div></button>  <button class="ec-c an d6" data-open="basma"><div class="ec-badge ok">Basma</div><div class="ec-ic" style="background:rgba(16,185,129,0.1);color:var(--success)">\u{1F399}\uFE0F</div><div class="ec-n">' + t.basmaPortal + '</div><div class="ec-d">' + t.aiDesc + '</div></button>  <button class="ec-c an d1" data-open="homecare"><div class="ec-badge ok">New</div><div class="ec-ic" style="background:rgba(16,185,129,0.1);color:var(--success)">\u{1F3E0}</div><div class="ec-n">' + t.hcTitle + '</div><div class="ec-d">' + t.hcSub + '</div></button>  <button class="ec-c an d2" data-open="telehealth"><div class="ec-badge ok">New</div><div class="ec-ic" style="background:rgba(14,165,233,0.1);color:var(--s)">\u{1F3A5}</div><div class="ec-n">' + t.thTitle + '</div><div class="ec-d">' + t.thSub + '</div></button>  <button class="ec-c an d1" data-open="givc"><div class="ec-badge ok">GIVC</div><div class="ec-ic" style="background:rgba(124,58,237,0.1);color:#7C3AED">\u{1F310}</div><div class="ec-n">' + t.givcPortal + '</div><div class="ec-d">' + t.givcDesc + '</div></button></div></div><div class="ec"><h3 style="font-size:1.1rem;font-weight:700;color:var(--p);margin-bottom:24px;">\u{1F517} ' + t.integrationsTitle + '</h3><div class="ig" id="liveStatus" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(200px,1fr));gap:16px"><div class="ld"><div class="spn"></div></div></div></div><div class="ec"><h3 style="font-size:1.1rem;font-weight:700;color:var(--p);margin-bottom:24px;">\u{1F916} ' + t.aiTitle + '</h3><div class="ai-s"><div class="ai-v"><div class="ai-orb">\u{1F399}\uFE0F</div><p>' + t.aiDesc + '</p></div><div class="ai-c"><h3>' + t.aiTitle + "</h3><p>" + t.aiDesc + '</p><div class="ai-btns"><button data-open="basma" class="btn ba bs">' + t.aiTalkBtn + '</button><button data-open="basma" class="btn bp bs">' + t.aiChatBtn + '</button></div><div class="eh" style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap"><span class="lb bs">DeepSeek AI</span><span class="lb bs">Oracle Health</span><span class="lb bs">NPHIES</span><span class="lb bs">Multi-language</span></div></div></div></div></div></section>';
+}
+__name(ecoSys, "ecoSys");
+function bdy(t, A, p) {
+  var dir = A ? "right" : "left";
+  return '<section class="he"><div class="hp"><div class="pt" style="width:300px;height:300px;top:-100px;' + dir + ':-100px;background:rgba(0,44,94,0.1)"></div><div class="pt" style="width:200px;height:200px;bottom:10%;' + dir + ':70%;background:rgba(212,175,55,0.08);animation-delay:3s"></div></div><div class="co"><div class="hc"><div class="hb">\u25CF ' + t.heroBadge + "</div><h1>" + t.heroH1 + "</h1><p>" + t.heroP + '</p><div class="hbt"><button data-open="appointment" class="btn ba bl">' + t.heroBookBtn + '</button><a href="#ecosystem" class="btn bw bl">\u{1F310} ' + t.navEcosystem + '</a></div><div class="hs" id="hs"><div class="hst"><span class="nm" id="sd">\u2014</span><span class="sf">+</span><span class="lb">' + t.statDoctors + '</span></div><div class="hst"><span class="nm">5</span><span class="lb">' + t.statBranches + '</span></div><div class="hst"><span class="nm" id="sdp">\u2014</span><span class="sf">+</span><span class="lb">' + t.statDepts + '</span></div><div class="hst"><span class="nm">1200</span><span class="sf">+</span><span class="lb">' + t.statBeds + "</span></div></div></div></div></section>";
+}
+__name(bdy, "bdy");
+function searchSec(t) {
+  return '<section class="ss se sel" id="search" style="background:var(--of);border-top:1px solid var(--g);border-bottom:1px solid var(--g)"><div class="co"><div class="sh an"><h2>' + t.searchTitle + '</h2><div class="gl"></div><p>' + t.searchSub + '</p></div><div class="sb-wrap" style="max-width:800px;margin:0 auto"><div class="sb-box" style="display:flex;background:#fff;border:1px solid var(--g);border-radius:var(--rf);padding:6px;box-shadow:var(--lg)"><input class="sb-in" id="srchQ" type="text" placeholder="' + t.searchPlaceholder + '" style="flex:1;border:none;padding:16px 24px;font-size:1.1rem;outline:none;border-radius:var(--rf) 0 0 var(--rf)"/><button class="btn bp bl" onclick="doSearch()" style="padding:14px 40px">' + t.searchBtn + '</button></div><div class="sr-res" id="srchRes" style="display:none;margin-top:32px;padding:32px;background:#fff;border-radius:var(--rl);border:1px solid var(--g);box-shadow:var(--xl)"></div></div></div></section>';
+}
+__name(searchSec, "searchSec");
+function commandSec(t) {
+  return '<section class="cmd se" id="command" style="background:var(--n);color:#fff"><div class="co"><div class="cmd-shell an"><div class="cmd-copy"><div class="cmd-k">BrainSAIT HNH OS</div><h2 style="color:#fff;margin:24px 0">' + t.commandTitle + '</h2><p style="color:rgba(255,255,255,0.7)">' + t.commandSub + '</p><div class="cmd-actions" style="display:flex;gap:16px;margin-top:32px"><button class="btn ba bs" data-open="appointment">' + t.ctaBook + '</button><a class="btn bw bs" href="/provider-dashboard" style="background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.2)">' + t.featureProvider + '</a></div></div><div class="cmd-board"><div class="cmd-top"><span></span><span></span><span></span><b style="margin-inline-start:auto;font-size:0.75rem;letter-spacing:0.1em;opacity:0.8">LIVE DATA</b></div><div class="cmd-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px"><div class="cmd-m"><strong id="opsPatients" style="color:var(--al)">\u2014</strong><span style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;opacity:0.6">' + t.opsPatients + '</span></div><div class="cmd-m"><strong id="opsToday" style="color:var(--al)">\u2014</strong><span style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;opacity:0.6">' + t.opsAppointments + '</span></div><div class="cmd-m"><strong id="opsProviders" style="color:var(--al)">\u2014</strong><span style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;opacity:0.6">' + t.opsProviders + '</span></div><div class="cmd-m"><strong id="opsClaims" style="color:var(--al)">\u2014</strong><span style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;opacity:0.6">' + t.opsClaims + '</span></div></div><div class="cmd-strip" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px"><div><b id="opsHomecare" style="color:#fff">\u2014</b><span style="display:block;font-size:0.65rem;text-transform:uppercase;opacity:0.5">' + t.homecareMetric + '</span></div><div><b id="opsTelehealth" style="color:#fff">\u2014</b><span style="display:block;font-size:0.65rem;text-transform:uppercase;opacity:0.5">' + t.telehealthMetric + '</span></div><div><b id="opsGivc" style="color:#fff">\u2014</b><span style="display:block;font-size:0.65rem;text-transform:uppercase;opacity:0.5">' + t.givcMetric + '</span></div><div><b id="opsConnected" style="color:#fff">\u2014</b><span style="display:block;font-size:0.65rem;text-transform:uppercase;opacity:0.5">' + t.connectedMetric + "</span></div></div></div></div></div></section>";
+}
+__name(commandSec, "commandSec");
+function featureSec(t) {
+  return '<section class="se sea" id="features"><div class="co"><div class="sh an"><h2>' + t.featureTitle + '</h2><div class="gl"></div><p>' + t.featureSub + '</p></div><div class="g3"><a class="cd an d1" href="/provider-dashboard" style="text-decoration:none;color:inherit"><div class="ci">\u{1F468}\u200D\u2695\uFE0F</div><h3>' + t.featureProvider + "</h3><p>" + t.featureProviderDesc + '</p><b style="margin-top:auto;color:var(--p)">' + t.launch + ' \u2192</b></a><button class="cd an d2" data-open="eligibility"><div class="ci">\u2705</div><h3>' + t.featureEligibility + "</h3><p>" + t.featureEligibilityDesc + '</p><b style="margin-top:auto;color:var(--p)">' + t.launch + ' \u2192</b></button><button class="cd an d3" data-open="homecare"><div class="ci">\u{1F3E0}</div><h3>' + t.featureHomecare + "</h3><p>" + t.featureHomecareDesc + '</p><b style="margin-top:auto;color:var(--p)">' + t.launch + ' \u2192</b></button><button class="cd an d4" data-open="telehealth"><div class="ci">\u{1F3A5}</div><h3>' + t.featureTelehealth + "</h3><p>" + t.featureTelehealthDesc + '</p><b style="margin-top:auto;color:var(--p)">' + t.launch + ' \u2192</b></button><a class="cd an d5" href="#search" style="text-decoration:none;color:inherit"><div class="ci">\u{1F50D}</div><h3>' + t.featureSearch + "</h3><p>" + t.featureSearchDesc + '</p><b style="margin-top:auto;color:var(--p)">' + t.launch + ' \u2192</b></a><button class="cd an d6" data-open="rcm"><div class="ci">\u{1F4B0}</div><h3>' + t.featureRcm + "</h3><p>" + t.featureRcmDesc + '</p><b style="margin-top:auto;color:var(--p)">' + t.launch + " \u2192</b></button></div></div></section>";
+}
+__name(featureSec, "featureSec");
+function dhsSec(t) {
+  return '<section class="se sel" id="digitalHealth"><div class="co"><div class="sh an"><h2>' + t.digitalTitle + '</h2><div class="gl"></div><p>' + t.digitalSub + '</p></div><div class="g3"><div class="cd an d1"><div class="ci">\u{1F3E0}</div><h3 style="color:var(--p)">' + t.hcTitle + "</h3><p>" + t.hcDesc + '</p><button data-open="homecare" class="btn bp bs" style="margin-top:16px;">' + t.hcTitle + ' \u2192</button></div><div class="cd an d2"><div class="ci">\u{1F3A5}</div><h3 style="color:var(--p)">' + t.thTitle + "</h3><p>" + t.thDesc + '</p><button data-open="telehealth" class="btn bp bs" style="margin-top:16px;">' + t.thTitle + ' \u2192</button></div><div class="cd an d3"><div class="ci">\u{1F4E7}</div><h3 style="color:var(--p)">' + t.emailTitle + "</h3><p>" + t.emailDesc + "</p></div></div></div></section>";
+}
+__name(dhsSec, "dhsSec");
+function ftr(t, p) {
+  return '<footer class="ft"><div class="co"><div class="fg"><div><h4 style="font-size:1.4rem;margin-bottom:32px">\u{1F3E5} ' + t.titleShort + '</h4><p style="margin-bottom:24px">' + t.fAbout + '</p><div style="display:flex;gap:12px"><a href="https://wa.me/' + p + '" class="btn bw bs" target="_blank">\u{1F4AC} WhatsApp</a><a href="tel:' + p + '" class="btn bw bs">\u{1F4DE} Call</a></div></div><div><h4>' + t.fLinks + '</h4><a href="#depts">' + t.navDepts + '</a><a href="#branches">' + t.navBranches + '</a><a href="#doctors">' + t.navDoctors + '</a><a href="#ecosystem">' + t.fEcosystem + '</a><a href="/academy">' + t.studentTitle + "</a></div><div><h4>" + t.fServices + '</h4><a href="tel:' + p + '">' + t.fEmerg + '</a><button data-open="appointment">' + t.fAppt + '</button><button data-open="basma">' + t.fBasma + "</button></div><div><h4>" + t.fContact + '</h4><a href="tel:' + p + '">\u{1F4DE} +' + p + '</a><a href="mailto:info@hayathospitals.com">\u{1F4E7} info@hayathospitals.com</a><p style="font-size:0.85rem;margin-top:20px;opacity:0.6">' + t.fCopy + '</p></div></div><div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:32px;text-align:center"><p style="font-size:0.9rem">' + t.fPowered + ' <span style="color:var(--al);font-weight:800">BrainSAIT Healthcare OS v5.0</span></p></div></div></footer><a href="https://wa.me/' + p + '" class="wa" style="background:#25D366;color:#fff;box-shadow:var(--xl);bottom:32px;left:32px" target="_blank">\u{1F4AC}</a><div class="ts" id="ts"></div>';
+}
+__name(ftr, "ftr");
+function hub(t) {
+  return '<div class="mx" id="mx"><div class="mx-b" data-close="1"></div><div class="mx-p"><button class="mx-x" data-close="1">\xD7</button><div class="mx-h"><h3 id="mxTitle" style="color:var(--p)"></h3><p id="mxSub"></p></div><div id="mxBody"></div><div class="mx-r" id="mxRes" style="display:none"></div></div></div><template id="tpl-appointment"><div class="fx"><div class="fi"><label>' + t.quickName + '</label><input id="apName" placeholder="Name"></div><div class="fi"><label>' + t.quickPhone + '</label><input id="apPhone" inputmode="tel" placeholder="+966"></div><div class="fi"><label>' + t.quickNational + '</label><input id="apNational" placeholder="ID #"></div><div class="fi"><label>' + t.quickDept + '</label><select id="apDept"><option>Cardiology</option><option>OB/GYN</option><option>Pediatrics</option><option>Dermatology</option><option>Orthopedics</option></select></div><div class="fi"><label>' + t.quickDate + '</label><input id="apDate" type="date"></div><div class="fi"><label>' + t.quickTime + '</label><input id="apTime" type="time"></div><div class="fi full"><label>' + t.quickComplaint + '</label><textarea id="apReason" placeholder="Reason..."></textarea></div></div><div class="mx-a"><button class="btn bp bl" data-act="appointment">' + t.sendRequest + '</button><button class="btn bw bl" data-open="eligibility">' + t.eligModalTitle + '</button></div></template><template id="tpl-basma"><div class="fx"><div class="fi full"><label>' + t.askBasma + '</label><textarea id="baMsg" placeholder="' + t.searchPlaceholder + '" style="min-height:160px;font-size:1.2rem"></textarea></div></div><div class="mx-a"><button class="btn ba bl" data-act="basma" style="flex:1">' + t.askBasma + '</button><button class="btn bp bl" data-act="voice" style="width:60px;padding:0">\u{1F399}\uFE0F</button></div></template><template id="tpl-homecare"><div class="fx"><div class="fi"><label>' + t.quickName + '</label><input id="hcName"></div><div class="fi"><label>' + t.quickPhone + '</label><input id="hcPhone" inputmode="tel"></div><div class="fi"><label>' + t.quickNational + '</label><input id="hcNational"></div><div class="fi"><label>' + t.quickDate + '</label><input id="hcDate" type="date"></div><div class="fi"><label>' + t.quickTime + '</label><input id="hcTime" type="time"></div><div class="fi"><label>' + t.quickDept + '</label><select id="hcType"><option value="routine">Routine</option><option value="iv-therapy">IV Therapy</option><option value="wound-care">Wound Care</option><option value="physiotherapy">Physiotherapy</option></select></div><div class="fi full"><label>' + t.quickAddress + '</label><textarea id="hcAddress" placeholder="Full address..."></textarea></div><div class="fi full"><label>' + t.quickComplaint + '</label><textarea id="hcReason"></textarea></div></div><div class="mx-a"><button class="btn ba bl" data-act="homecare" style="width:100%">' + t.sendRequest + '</button></div></template><template id="tpl-telehealth"><div class="fx"><div class="fi"><label>' + t.quickName + '</label><input id="thName"></div><div class="fi"><label>' + t.quickPhone + '</label><input id="thPhone" inputmode="tel"></div><div class="fi"><label>' + t.quickNational + '</label><input id="thNational"></div><div class="fi"><label>' + t.quickDate + '</label><input id="thDate" type="date"></div><div class="fi"><label>' + t.quickTime + '</label><input id="thTime" type="time"></div><div class="fi"><label>' + t.quickDept + '</label><select id="thType"><option value="consultation">Consultation</option><option value="follow-up">Follow-up</option><option value="second-opinion">Second opinion</option><option value="pharmacy">Pharmacy</option></select></div><div class="fi full"><label>' + t.quickComplaint + '</label><textarea id="thReason"></textarea></div></div><div class="mx-a"><button class="btn ba bl" data-act="telehealth" style="width:100%">' + t.sendRequest + '</button></div></template><template id="tpl-eligibility"><div class="fx"><div class="fi"><label>' + t.quickInsurance + '</label><input id="elIns"></div><div class="fi"><label>' + t.quickNational + '</label><input id="elNat"></div><div class="fi full"><label>' + t.quickDept + '</label><select id="elType"><option value="medical">Medical</option><option value="hospital">Hospital</option><option value="pharmacy">Pharmacy</option><option value="dental">Dental</option></select></div></div><div class="mx-a"><button class="btn ba bl" data-act="eligibility" style="width:100%">' + t.sendRequest + '</button></div></template><template id="tpl-givc"><div class="fx"><div class="fi"><label>Name (AR)</label><input id="givcNameAr"></div><div class="fi"><label>Name (EN)</label><input id="givcNameEn"></div><div class="fi"><label>National ID</label><input id="givcNat"></div><div class="fi"><label>Specialty</label><input id="givcSpec"></div><div class="fi"><label>License #</label><input id="givcLic"></div><div class="fi"><label>Branch</label><select id="givcBranch"><option value="R001">Riyadh</option><option value="M001">Madinah</option><option value="K001">Khamis</option><option value="J001">Jizan</option><option value="U001">Unaizah</option></select></div></div><div class="mx-a"><button class="btn ba bl" data-act="givc-register">' + t.givcRegister + '</button><button class="btn bw bl" data-act="givc-network">' + t.givcNetwork + '</button></div></template><template id="tpl-list"><div id="miniList" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px"><div class="ld"><div class="spn"></div></div></div></template>';
+}
+__name(hub, "hub");
+function scr(A, p, t) {
+  return "<script>\n(function(){\n  var isAr=" + (A ? "true" : "false") + ';\n  var phone="' + p + '";\n  var labels={appointment:"' + t.bookModalTitle + '",basma:"' + t.basmaModalTitle + '",homecare:"' + t.homecareModalTitle + '",telehealth:"' + t.telehealthModalTitle + '",eligibility:"' + t.eligModalTitle + '",patient:"' + t.patientTitle + '",providers:"' + t.providerTitle + '",status:"' + t.adminTitle + '",rcm:"' + t.rcmTitle + '",givc:"' + t.givcTitle + '"};\n  function $(id){return document.getElementById(id);}\n  function v(id){var e=$(id);return e?e.value.trim():"";}\n  function today(){return new Date().toISOString().slice(0,10);}\n  function result(html,ok){var r=$("mxRes");if(!r)return;r.style.display="block";r.className="mx-r "+(ok?"ok":"er");r.innerHTML=html;}\n  function spin(){var r=$("mxRes");if(r){r.style.display="block";r.className="mx-r";r.innerHTML="<div class=ld><div class=spn></div></div>";}}\n  function closeMx(){var m=$("mx");if(m)m.classList.remove("on");}\n  function setDefaults(k){var d=today();["apDate","hcDate","thDate"].forEach(function(id){var e=$(id);if(e&&!e.value)e.value=d;});["apTime","hcTime","thTime"].forEach(function(id){var e=$(id);if(e&&!e.value)e.value="10:00";});}\n  function openMx(k){var m=$("mx"),b=$("mxBody"),r=$("mxRes"),ti=$("mxTitle"),su=$("mxSub"),tpl=$("tpl-"+(k==="providers"||k==="patient"||k==="status"||k==="rcm"?"list":k));if(!m||!b||!tpl)return;if(ti)ti.textContent=labels[k]||k;if(su)su.textContent="BrainSAIT HNH native workflow \xB7 /api/*";b.innerHTML=tpl.innerHTML;if(r){r.style.display="none";r.innerHTML="";}m.classList.add("on");setDefaults(k);if(k==="patient")loadPatients();if(k==="providers")loadProviders();if(k==="status")loadStatus();if(k==="rcm")loadRcm();if(k==="givc")loadGivcNetwork();}\n  function api(path,opt){opt=opt||{};opt.headers=Object.assign({"Content-Type":"application/json"},opt.headers||{});return fetch(path,opt).then(function(r){return r.json().then(function(d){d.__status=r.status;return d;});});}\n  function fmt(d){return "<pre style="white-space:pre-wrap;margin:0">"+JSON.stringify(d,null,2).replace(/[<>&]/g,function(c){return {"<":"&lt;",">":"&gt;","&":"&amp;"}[c];})+"</pre>";}\n  function card(a,b,c){return "<div class=mini-c><strong>"+a+"</strong><span>"+(b||"\u2014")+"</span>"+(c?"<span>"+c+"</span>":"")+"</div>";}\n  function ensurePatient(prefix){var name=v(prefix+"Name"),ph=v(prefix+"Phone"),nat=v(prefix+"National");if(!name||!ph)return Promise.resolve(null);return api("/api/patients?search="+encodeURIComponent(ph)).then(function(found){var a=found.patients||[];if(a.length)return a[0].id;return api("/api/patients",{method:"POST",body:JSON.stringify({full_name_ar:name,full_name_en:name,phone:ph,national_id:nat})}).then(function(d){return d.patient_id||null;});});}\n  function loadPatients(){spin();api("/api/patients?limit=8").then(function(d){var a=d.patients||[];result("<div class=mini-g>"+a.map(function(x){return card(x.full_name_ar||x.full_name_en,x.phone,x.national_id);}).join("")+"</div>",true);}).catch(function(){result("' + t.failedAction + '",false);});}\n  function loadProviders(){spin();api("/api/providers").then(function(d){var a=d.providers||[];result("<div class=mini-g>"+a.slice(0,12).map(function(x){return card(x.name_ar||x.name_en||x.full_name_ar,x.specialty||x.department,x.branch||x.branch_id);}).join("")+"</div>",true);}).catch(function(){result("' + t.failedAction + '",false);});}\n  function loadStatus(){spin();api("/api/health").then(function(d){result(fmt(d),true);}).catch(function(){result("' + t.failedAction + '",false);});}\n  function loadRcm(){spin();api("/api/rcm/health").then(function(d){result(fmt(d),true);}).catch(function(){result("' + t.failedAction + '",false);});}\n  function act(k){if(k==="appointment")return doAppointment();if(k==="basma")return doBasma(false);if(k==="voice")return doBasma(true);if(k==="homecare")return doHomecare();if(k==="telehealth")return doTelehealth();if(k==="eligibility")return doEligibility();if(k==="givc-register")return doGivcRegister();if(k==="givc-network")return loadGivcNetwork();}\n  function doAppointment(){if(!v("apName")||!v("apPhone")||!v("apDate")){result("' + t.missingFields + '",false);return;}spin();ensurePatient("ap").then(function(pid){if(!pid)throw new Error("patient");return api("/api/appointments",{method:"POST",body:JSON.stringify({patient_id:pid,clinic_name:v("apDept"),appointment_date:v("apDate"),appointment_time:v("apTime")||"10:00",reason:v("apReason"),appointment_type:"digital"})});}).then(function(d){result("\u2705 ' + t.resultReady + '<br>"+fmt(d),!!d.success);}).catch(function(){result("' + t.failedAction + '",false);});}\n  function sp(text,lang){if(window.speechSynthesis){var u=new SpeechSynthesisUtterance(text);u.lang=lang==="ar"?"ar-SA":"en-US";u.rate=0.95;u.pitch=1;var voices=speechSynthesis.getVoices();var match=voices.find(function(v){return v.lang.startsWith(lang);});if(match)u.voice=match;speechSynthesis.cancel();speechSynthesis.speak(u);}}\n  function doBasma(voice){var msg=v("baMsg");if(!msg){result("' + t.missingFields + '",false);return;}spin();api("/api/chat",{method:"POST",body:JSON.stringify({message:msg,language:isAr?"ar":"en",session_id:"hnh-web"})}).then(function(d){var answer=d.response||d.reply||d.answer||"\u2014";result(answer,true);if(voice){fetch("/api/voice/speak",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:answer,lang:isAr?"ar":"en"})}).then(function(r){if(r.ok)return r.blob();throw new Error("tts-unavailable");}).then(function(blob){if(blob){new Audio(URL.createObjectURL(blob)).play().catch(function(){sp(answer,isAr?"ar":"en");});}}).catch(function(){sp(answer,isAr?"ar":"en");});}}).catch(function(){result("' + t.failedAction + '",false);});}\n  function doHomecare(){if(!v("hcName")||!v("hcPhone")||!v("hcDate")||!v("hcAddress")){result("' + t.missingFields + '",false);return;}spin();ensurePatient("hc").then(function(pid){return api("/api/homecare/visits",{method:"POST",body:JSON.stringify({patient_id:pid||"PAT-WALKIN",visit_date:v("hcDate"),visit_time:v("hcTime")||"10:00",visit_type:v("hcType"),address:v("hcAddress"),chief_complaint:v("hcReason")})});}).then(function(d){result("\u2705 ' + t.resultReady + '<br>"+fmt(d),!!d.success);}).catch(function(){result("' + t.failedAction + '",false);});}\n  function doTelehealth(){if(!v("thName")||!v("thPhone")||!v("thDate")){result("' + t.missingFields + '",false);return;}spin();ensurePatient("th").then(function(pid){return api("/api/telehealth/sessions",{method:"POST",body:JSON.stringify({patient_id:pid||"PAT-WALKIN",session_date:v("thDate"),session_time:v("thTime")||"10:00",session_type:v("thType"),chief_complaint:v("thReason")})});}).then(function(d){var link=d.join_url?"<br><a href=""+d.join_url+"" target="_blank">"+d.join_url+"</a>":"";result("\u2705 ' + t.resultReady + '<br>"+fmt(d)+link,!!d.success);}).catch(function(){result("' + t.failedAction + '",false);});}\n  function doEligibility(){if(!v("elIns")){result("' + t.missingFields + '",false);return;}spin();api("/api/eligibility/check",{method:"POST",body:JSON.stringify({insurance_id:v("elIns"),national_id:v("elNat"),service_type:v("elType")||"medical"})}).then(function(d){result(fmt(d),!!d.success);}).catch(function(){result("' + t.failedAction + `",false);});}
+  function loadGivcNetwork(){spin();api("/givc/api/providers/givc-network").then(function(d){var a=d.doctors||[];if(!a.length){result('<div style="text-align:center;padding:20px;color:var(--tl)">` + t.statusOffline + `</div>',false);return;}result("<div class=mini-g>"+a.slice(0,12).map(function(x){return card(x.name_ar||x.name_en,x.specialty,x.givc_oid?x.givc_oid.slice(-8):"\u2014");}).join("")+"</div>",true);}).catch(function(){result("` + t.failedAction + '",false);});}\n  function doGivcRegister(){var n=v("givcNameAr"),nat=v("givcNat"),spec=v("givcSpec");if(!n||!nat||!spec){result("' + t.missingFields + '",false);return;}spin();api("/givc/api/providers/givc-register",{method:"POST",body:JSON.stringify({name_ar:n,name_en:v("givcNameEn"),national_id:nat,specialty:spec,license_number:v("givcLic"),branch_code:v("givcBranch")||"R001"})}).then(function(d){result("\u2705 ' + t.resultReady + '<br>"+fmt(d),!!d.success);}).catch(function(){result("' + t.failedAction + `",false);});}
   function ls(){
     fetch("/api/stats").then(function(r){return r.json();}).then(function(d){
       if(d.success){
@@ -6002,23 +10055,9 @@ document.addEventListener('hnh:langChanged', e => {
   function loadIntegrations(){
     var cont=document.getElementById("liveStatus");if(!cont)return;
     fetch("/api/health").then(function(r){return r.json();}).then(function(d){
-      if(!d.success||!d.integrations){cont.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--tl);font-size:.88rem;">`+e.statusOffline+`</div>';return;}
+      if(!d.success||!d.integrations){cont.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--tl);font-size:.88rem;">` + t.statusOffline + `</div>';return;}
       var ints=[
-        {key:"oracle_bridge",icon:"\u{1F310}",name:"`+e.oracleBridge+`"},
-        {key:"nphies_mirror",icon:"\u{1F4CB}",name:"`+e.nphiesPortal+`"},
-        {key:"claimlinc",icon:"\u{1F4B0}",name:"`+e.claimlincPortal+`"},
-        {key:"basma_portal",icon:"\u{1F399}\uFE0F",name:"`+e.basmaPortal+`"},
-        {key:"sbs_portal",icon:"\u{1F4E6}",name:"`+e.sbsPortal+`"},
-        {key:"givc_portal",icon:"\u{1F504}",name:"`+e.givcPortal+`"}
-      ];
-      var html="";
-      ints.forEach(function(item){
-        var status=d.integrations[item.key]||"unknown";
-        var ok=status==="connected"||status==="live";
-        var warn=status==="warning"||status==="degraded";
-        var cls="ig-c "+(ok?"g":warn?"w":"");
-        var scls="ig-b "+(ok?"ok":warn?"warn":"off");
-        var stxt=ok?"`+e.statusConnected+'":warn?"'+e.statusWarning+'":"'+e.statusOffline+`";
+        {key:"oracle_bridge",icon:"\u{1F310}",name:"` + t.oracleBridge + '"},\n        {key:"nphies_mirror",icon:"\u{1F4CB}",name:"' + t.nphiesPortal + '"},\n        {key:"claimlinc",icon:"\u{1F4B0}",name:"' + t.claimlincPortal + '"},\n        {key:"basma_portal",icon:"\u{1F399}\uFE0F",name:"' + t.basmaPortal + '"},\n        {key:"sbs_portal",icon:"\u{1F4E6}",name:"' + t.sbsPortal + '"},\n        {key:"givc_portal",icon:"\u{1F504}",name:"' + t.givcPortal + '"}\n      ];\n      var html="";\n      ints.forEach(function(item){\n        var status=d.integrations[item.key]||"unknown";\n        var ok=status==="connected"||status==="live";\n        var warn=status==="warning"||status==="degraded";\n        var cls="ig-c "+(ok?"g":warn?"w":"");\n        var scls="ig-b "+(ok?"ok":warn?"warn":"off");\n        var stxt=ok?"' + t.statusConnected + '":warn?"' + t.statusWarning + '":"' + t.statusOffline + `";
         var tnl=(d.integrations.oracle_tunnel&&item.key==="oracle_bridge")?d.integrations.oracle_tunnel:"";
         html+='<div class="'+cls+'"><div class="ig-ic">'+item.icon+'</div><div style="flex:1"><div class="ig-n">'+item.name+'</div><div class="ig-s">'+tnl+'</div></div><span class="'+scls+'">'+stxt+'</span></div>';
       });
@@ -6031,7 +10070,7 @@ document.addEventListener('hnh:langChanged', e => {
         }
       }
     }).catch(function(){
-      cont.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--d);font-size:.88rem;">`+e.statusOffline+`</div>';
+      cont.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--d);font-size:.88rem;">` + t.statusOffline + `</div>';
     });
   }
   function setTxt(id,val){var e=document.getElementById(id);if(e)e.textContent=(val==null||val===""?"\u2014":Number(val).toLocaleString());}
@@ -6052,7 +10091,27 @@ document.addEventListener('hnh:langChanged', e => {
   if(lb)lb.addEventListener("click",function(){
     window.location.href=window.location.pathname+"?lang="+(isAr?"en":"ar");
   });
-  document.addEventListener("click",function(e){var c=e.target.closest("[data-close]");if(c){closeMx();return;}var o=e.target.closest("[data-open]");if(o){e.preventDefault();openMx(o.getAttribute("data-open"));return;}var a=e.target.closest("[data-act]");if(a){e.preventDefault();act(a.getAttribute("data-act"));}});
+  document.addEventListener("click",function(e){
+    var t=e.target;
+    var close=t.closest("[data-close]");if(close){closeMx();return;}
+    var open=t.closest("[data-open]");if(open){e.preventDefault();openMx(open.getAttribute("data-open"));return;}
+    var actBtn=t.closest("[data-act]");if(actBtn){e.preventDefault();act(actBtn.getAttribute("data-act"));return;}
+    var mbt=t.closest("#mbt");
+    if(mbt){
+      var m=$("mn");if(!m)return;
+      var op=m.classList.toggle("op");
+      mbt.textContent=op?"\u2715":"\u2630";
+      return;
+    }
+    var link=t.closest("#mn a");
+    if(link){
+      var m=$("mn"),mb=$("mbt");
+      if(m&&m.classList.contains("op")){
+        m.classList.remove("op");
+        if(mb)mb.textContent="\u2630";
+      }
+    }
+  });
   document.addEventListener("keydown",function(e){if(e.key==="Escape")closeMx();});
   var ob=new IntersectionObserver(function(es){
     es.forEach(function(e){if(e.isIntersecting)e.target.classList.add("vi");});
@@ -6073,7 +10132,7 @@ document.addEventListener('hnh:langChanged', e => {
       html+='<div class="sr-pow">Powered by BrainSAIT AutoRAG \xB7 DeepSeek AI</div>';
       res.innerHTML=html;
     })
-    .catch(function(){res.innerHTML='<div class="sr-ans">`+(u?"\u062D\u062F\u062B \u062E\u0637\u0623. \u062D\u0627\u0648\u0644 \u0645\u062C\u062F\u062F\u0627\u064B.":"Search error. Please try again.")+`</div>';});
+    .catch(function(){res.innerHTML='<div class="sr-ans">` + (A ? "\u062D\u062F\u062B \u062E\u0637\u0623. \u062D\u0627\u0648\u0644 \u0645\u062C\u062F\u062F\u0627\u064B." : "Search error. Please try again.") + `</div>';});
   };
   var sq=document.getElementById("srchQ");
   if(sq)sq.addEventListener("keydown",function(e){if(e.key==="Enter")window.doSearch();});
@@ -6082,117 +10141,331 @@ document.addEventListener('hnh:langChanged', e => {
       if(el.getBoundingClientRect().top<window.innerHeight)el.classList.add("vi");
     });
   },500);
-})();<\/script>`}r(F0,"scr");function G0(u){var a=new URL(u.url),e=a.searchParams.get("lang")||"en",t=e==="ar",n=t?"rtl":"ltr",i=a.searchParams.get("provider")||"",s=t?{title:"\u0644\u0648\u062D\u0629 \u0627\u0644\u0637\u0628\u064A\u0628",subtitle:"\u0645\u0633\u0627\u062D\u0629 \u0639\u0645\u0644 \u0633\u0631\u064A\u0631\u064A\u0629 \u0645\u062A\u0643\u0627\u0645\u0644\u0629 \u0645\u0639 HNH \u0648 GIVC \u0648 NPHIES",overview:"\u0646\u0638\u0631\u0629 \u0639\u0627\u0645\u0629",patients:"\u0627\u0644\u0645\u0631\u0636\u0649",appointments:"\u0627\u0644\u0645\u0648\u0627\u0639\u064A\u062F",nphies:"NPHIES",network:"\u0634\u0628\u0643\u0629 GIVC",insights:"\u0631\u0624\u0649 \u0645\u062F\u0639\u0648\u0645\u0629 \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064A",back:"\u0627\u0644\u0639\u0648\u062F\u0629 \u0625\u0644\u0649 HNH",eligibility:"\u062A\u062D\u0642\u0642 \u0627\u0644\u0623\u0647\u0644\u064A\u0629",refresh:"\u062A\u062D\u062F\u064A\u062B",live:"\u062D\u064A",provider:"\u0627\u0644\u0637\u0628\u064A\u0628",active:"\u0646\u0634\u0637"}:{title:"Doctor Dashboard",subtitle:"Premium clinical workspace integrated with HNH, GIVC, and NPHIES",overview:"Overview",patients:"Patients",appointments:"Appointments",nphies:"NPHIES",network:"GIVC Network",insights:"AI-Powered Insights",back:"Back to HNH",eligibility:"Eligibility Check",refresh:"Refresh",live:"Live",provider:"Provider",active:"Active"},o=`:root{--p:#1193d4;--ink:#0f1c22;--mut:#617c89;--bg:#f6f8fb;--card:#fff;--line:#e8eef2;--ok:#10b981;--warn:#f59e0b;--nav:#101c22}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0%,rgba(17,147,212,.18),transparent 30%),linear-gradient(180deg,#f6f8fb,#eef4f7);color:var(--ink);font-family:${t?"'IBM Plex Sans Arabic'":"Inter"},system-ui,sans-serif;min-height:100vh}.shell{display:grid;grid-template-columns:280px 1fr;min-height:100vh}.side{background:linear-gradient(180deg,#101c22,#18303a);color:#fff;padding:24px;position:sticky;top:0;height:100vh}.brand{display:flex;gap:12px;align-items:center;margin-bottom:30px}.mark{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#1193d4,#73d7ff);display:grid;place-items:center;font-weight:900;box-shadow:0 16px 45px rgba(17,147,212,.35)}.brand h1{font-size:1.05rem;margin:0}.brand p{font-size:.78rem;color:#a0b4bc;margin:2px 0 0}.nav{display:grid;gap:8px}.nav a{display:flex;gap:12px;align-items:center;color:#cfe1e8;text-decoration:none;padding:12px;border-radius:14px;font-weight:750;font-size:.92rem}.nav a.on,.nav a:hover{background:rgba(255,255,255,.1);color:#fff}.sidefoot{position:absolute;bottom:24px;left:24px;right:24px;color:#a0b4bc;font-size:.78rem}.sidefoot a{color:#d9eef8}.main{padding:28px;display:grid;gap:22px}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.eyebrow{display:inline-flex;gap:8px;align-items:center;background:#e8f7ff;color:#0369a1;border:1px solid #c7ecff;border-radius:999px;padding:6px 10px;font-weight:850;font-size:.78rem}.top h2{font-size:clamp(1.8rem,3vw,3.2rem);line-height:1;margin:14px 0 8px;letter-spacing:-.04em}.top p{color:var(--mut);margin:0;max-width:720px}.tools{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}.btn{border:0;border-radius:14px;padding:11px 15px;font-weight:850;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px}.btn.primary{background:var(--p);color:#fff;box-shadow:0 14px 34px rgba(17,147,212,.28)}.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:rgba(255,255,255,.9);border:1px solid rgba(226,236,241,.95);border-radius:24px;padding:18px;box-shadow:0 16px 40px rgba(16,28,34,.08);backdrop-filter:blur(16px)}.metric .k{color:var(--mut);font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em}.metric .v{font-size:2rem;font-weight:950;letter-spacing:-.04em;margin-top:6px}.metric .s{color:var(--mut);font-size:.82rem}.wide{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px}.section-title h3{margin:0;font-size:1.1rem}.list{display:grid;gap:10px}.row{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:#fff;border-radius:18px;padding:12px}.avatar{width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,#dff4ff,#b7e6ff);display:grid;place-items:center;font-weight:950;color:#075985;flex:0 0 auto}.grow{flex:1;min-width:0}.grow b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.grow span{color:var(--mut);font-size:.85rem}.pill{border-radius:999px;padding:5px 9px;font-size:.74rem;font-weight:900;background:#ecfdf5;color:#047857}.pill.warn{background:#fffbeb;color:#b45309}.nphies{background:linear-gradient(135deg,#10232c,#173b49);color:#fff;overflow:hidden;position:relative}.nphies:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;right:-70px;top:-70px;background:rgba(17,147,212,.25)}.nphies>*{position:relative;z-index:1}.mut{color:#a0b4bc}.bar{height:9px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin:14px 0}.bar i{display:block;height:100%;width:88%;background:linear-gradient(90deg,#10b981,#73d7ff)}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:850;color:var(--mut);cursor:pointer}.tab.on{background:#101c22;color:#fff}.panel{display:none}.panel.on{display:block}.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}.action{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);border-radius:22px;padding:16px;text-decoration:none;color:#fff;font-weight:900;display:grid;gap:8px}.icon{width:40px;height:40px;border-radius:14px;background:#e8f7ff;color:#0369a1;display:grid;place-items:center;font-size:1rem}.empty{padding:22px;text-align:center;color:var(--mut)}.footnav{display:none}@media(max-width:980px){.shell{grid-template-columns:1fr}.side{position:static;height:auto}.sidefoot{display:none}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wide{grid-template-columns:1fr}.main{padding:18px 14px 92px}.footnav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);justify-content:space-around;padding:9px 4px;z-index:10}.footnav a{font-size:.72rem;color:var(--mut);text-decoration:none;display:grid;place-items:center;gap:2px}.footnav a.on{color:var(--p)}}@media(max-width:560px){.grid{grid-template-columns:1fr}.top{display:grid}.tools{justify-content:flex-start}.actions{grid-template-columns:1fr}}`,l=`const providerId=${JSON.stringify(i)};const copy=${JSON.stringify(s)};const $=id=>document.getElementById(id);function safe(s){return String(s||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));}function initials(s){return safe(s).replace(/^\u062F.s*|^Dr.s*/,'').slice(0,2)||'DR';}async function api(p,o){const r=await fetch(p,o);return r.json();}function row(name,meta,status){return '<div class="row"><div class="avatar">'+initials(name)+'</div><div class="grow"><b>'+safe(name)+'</b><span>'+safe(meta)+'</span></div>'+(status?'<span class="pill '+(status==='warning'?'warn':'')+'">'+safe(status)+'</span>':'')+'</div>';}function setMetric(id,v){const e=$(id);if(e)e.textContent=v;}async function load(){const [stats,providers,appointments,patients,health,givc]=await Promise.allSettled([api('/api/stats'),api('/api/providers'),api('/api/appointments?limit=8'),api('/api/patients?limit=8'),api('/api/health'),api('/givc/api/providers/givc-network')]);const st=stats.value&&stats.value.stats||{};setMetric('mPatients',st.total_patients||0);setMetric('mToday',st.today_appointments||0);setMetric('mProviders',st.total_providers||0);setMetric('mClaims',st.total_claims||0);const ps=(providers.value&&providers.value.providers)||[];const selected=providerId?ps.find(p=>p.id===providerId||String(p.db_id)===providerId||p.givc_oid===providerId):ps.find(p=>p.givc_registered)||ps[0];if(selected){$('providerName').textContent=selected.name_en||selected.name_ar||copy.provider;$('providerMeta').textContent=[selected.specialty,selected.branch||selected.branch_id,selected.givc_oid?'OID '+selected.givc_oid:''].filter(Boolean).join(' \xB7 ');}const apps=(appointments.value&&appointments.value.appointments)||[];$('appointments').innerHTML=apps.length?apps.map(a=>row(a.patient_name_en||a.patient_name_ar||('Patient #'+a.patient_id),(a.appointment_date||'')+' \xB7 '+(a.appointment_time||'')+' \xB7 '+(a.clinic_name||a.appointment_type||''),a.status==='scheduled'?'live':a.status)).join(''):'<div class="empty">No appointments found</div>';const pats=(patients.value&&patients.value.patients)||[];$('patients').innerHTML=pats.length?pats.map(p=>row(p.full_name_en||p.full_name_ar,p.phone||p.national_id||p.mrn,'live')).join(''):'<div class="empty">No patients found</div>';const gdocs=(givc.value&&givc.value.doctors)||[];$('network').innerHTML=gdocs.length?gdocs.slice(0,8).map(d=>row(d.name_en||d.name_ar,[d.specialty,d.branch_code,d.givc_oid].filter(Boolean).join(' \xB7 '),d.network_visibility==='public'?'live':'warning')).join(''):'<div class="empty">No GIVC doctors found</div>';const ints=(health.value&&health.value.integrations)||{};$('nphiesStatus').textContent='ClaimLinc '+(ints.claimlinc||'unknown')+' \xB7 NPHIES Mirror '+(ints.nphies_mirror||'unknown');$('oracleStatus').textContent='Oracle '+(ints.oracle_bridge||'unknown')+' \xB7 GIVC '+(ints.givc_portal||'unknown');}document.addEventListener('click',e=>{const t=e.target.closest('[data-tab]');if(!t)return;document.querySelectorAll('.tab,.panel').forEach(x=>x.classList.remove('on'));t.classList.add('on');$(t.dataset.tab).classList.add('on');});load().catch(e=>{document.querySelectorAll('[data-live]').forEach(el=>el.innerHTML='<div class="empty">Unable to load live data</div>');});`,d='<!doctype html><html lang="'+e+'" dir="'+n+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101c22"><title>'+s.title+' | HNH</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet"><style>'+o+'</style></head><body><div class="shell"><aside class="side"><div class="brand"><div class="mark">H</div><div><h1>BrainSAIT HNH</h1><p>Clinical Command Center</p></div></div><nav class="nav"><a class="on" href="#overview">\u2301 '+s.overview+'</a><a href="#patients">\u2637 '+s.patients+'</a><a href="#appointments">\u25F7 '+s.appointments+'</a><a href="#nphies">\u25C8 '+s.nphies+'</a><a href="/givc/network">\u25CE '+s.network+'</a></nav><div class="sidefoot">'+s.live+' \xB7 HNH + GIVC + NPHIES<br><a href="/">'+s.back+'</a></div></aside><main class="main"><section class="top" id="overview"><div><span class="eyebrow">\u25CF '+s.live+" Workspace</span><h2>"+s.title+"</h2><p>"+s.subtitle+'</p></div><div class="tools"><a class="btn ghost" href="/">'+s.back+'</a><button class="btn primary" onclick="location.reload()">'+s.refresh+'</button></div></section><section class="card"><div class="section-title"><div><h3 id="providerName">'+s.provider+'</h3><p id="providerMeta" style="margin:4px 0 0;color:var(--mut)">Loading provider network...</p></div><span class="pill">'+s.active+'</span></div></section><section class="grid"><div class="card metric"><div class="k">Patients</div><div class="v" id="mPatients">\u2014</div><div class="s">registered records</div></div><div class="card metric"><div class="k">Today</div><div class="v" id="mToday">\u2014</div><div class="s">scheduled visits</div></div><div class="card metric"><div class="k">Doctors</div><div class="v" id="mProviders">\u2014</div><div class="s">HNH network</div></div><div class="card metric"><div class="k">Claims</div><div class="v" id="mClaims">\u2014</div><div class="s">RCM ledger</div></div></section><section class="wide"><div class="card"><div class="section-title"><h3>'+s.insights+'</h3><div class="tabs"><button class="tab on" data-tab="appointments">'+s.appointments+'</button><button class="tab" data-tab="patients">'+s.patients+'</button><button class="tab" data-tab="network">'+s.network+'</button></div></div><div id="appointments" class="panel on list" data-live></div><div id="patients" class="panel list" data-live></div><div id="network" class="panel list" data-live></div></div><div class="card nphies" id="nphies"><div class="section-title"><h3>'+s.nphies+'</h3><span class="pill">V2</span></div><p class="mut" id="nphiesStatus">Loading...</p><div class="bar"><i></i></div><p class="mut" id="oracleStatus">Loading...</p><div class="actions"><a class="action" href="/api/nphies/270"><span class="icon">270</span>'+s.eligibility+'</a><a class="action" href="/api/rcm/health"><span class="icon">RCM</span>Revenue Cycle</a><a class="action" href="/givc/network"><span class="icon">OID</span>'+s.network+'</a><a class="action" href="javascript:void(0)" onclick="fetch(\'/api/rcm/auto-appeal-batch\',{method:\'POST\',headers:{\'Content-Type\':\'application/json\'},body:\'{}\'}).then(r=>r.json()).then(d=>alert(d.message)).catch(e=>alert(e))"><span class="icon">🤖</span>Auto Appeal</a><a class="action" href="/api/fhir/Practitioner/'+(i||"DRV-S85MNP")+'"><span class="icon">FHIR</span>Practitioner</a></div></div></section></main></div><nav class="footnav"><a class="on" href="#overview">\u2301<span>'+s.overview+'</span></a><a href="#patients">\u2637<span>'+s.patients+'</span></a><a href="#appointments">\u25F7<span>'+s.appointments+'</span></a><a href="#nphies">\u25C8<span>'+s.nphies+"</span></a></nav><script>"+l+"<\/script></body></html>";return d=d.replace('href="/api/nphies/270"','href="/givc/?lang='+e+'#eligibility"'),new Response(d,{headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"public, max-age=120"}})}r(G0,"providerDashboardPage");
-function basmaPortalPage(u) {
-  return new Response("<!DOCTYPE html>\n<html lang=\"ar\" dir=\"rtl\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no\">\n<meta name=\"theme-color\" content=\"#080b14\">\n<meta name=\"description\" content=\"BasmaGuist Medical — AI Healthcare Assistant for Hayat National Hospitals\">\n<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">\n<title>BasmaGuist Medical AI</title>\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link href=\"https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap\" rel=\"stylesheet\">\n<script src=\"https://elevenlabs.io/convai-widget/index.js\" async type=\"text/javascript\"></script>\n<link rel=\"icon\" href=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A4%96%3C/text%3E%3C/svg%3E\">\n<style>\n/* BASMA AI v3.0 Enhanced */\n:root{--rose:#e8528d;--rl:rgba(232,82,141,.12);--rg:rgba(232,82,141,.25);--purple:#9333ea;--pl:rgba(147,51,234,.12);--blue:#3b82f6;--bl:rgba(59,130,246,.12);--teal:#14b8a6;--tl:rgba(20,184,166,.12);--p:var(--rose);--succ:#10b981;--sl:rgba(16,185,129,.12);--err:#ef4444;--el:rgba(239,68,68,.12);--warn:#f59e0b;--wl:rgba(245,158,11,.12);--info:#06b6d4;--il:rgba(6,182,212,.12);--bg:#080b14;--s1:rgba(17,24,39,.7);--s2:rgba(26,34,53,.6);--cd:rgba(30,41,59,.5);--inp:rgba(31,41,55,.8);--gl:rgba(17,24,39,.4);--bd:rgba(55,65,81,.5);--tx:#f1f5f9;--tm:#94a3b8;--td:#64748b;--r:14px;--rs:10px;--rx:6px;--sh:0 4px 24px rgba(0,0,0,.35);--shl:0 8px 40px rgba(0,0,0,.45);--gr:0 0 20px rgba(232,82,141,.15);--gb:16px;--gbd:1px solid rgba(255,255,255,.06)}\n*,:after,:before{box-sizing:border-box;margin:0;padding:0}\nhtml{font-size:15px}\nbody{font-family:'Noto Sans Arabic',-apple-system,sans-serif;background:var(--bg);color:var(--tx);min-height:100dvh;display:flex;flex-direction:column}\nbody::before{content:'';position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse 600px 400px at 20% 20%,rgba(232,82,141,.06),transparent),radial-gradient(ellipse 500px 500px at 80% 80%,rgba(147,51,234,.05),transparent),radial-gradient(ellipse 400px 300px at 50% 50%,rgba(59,130,246,.04),transparent);pointer-events:none}\n::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:0 0}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}\nheader{background:var(--gl);-webkit-backdrop-filter:blur(var(--gb));backdrop-filter:blur(var(--gb));border-bottom:var(--gbd);display:flex;align-items:center;height:60px;flex-shrink:0;gap:12px;position:sticky;top:0;z-index:100;padding:0 20px}\n.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}\n.logo-ic{width:38px;height:38px;background:linear-gradient(135deg,var(--rose),var(--purple));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:var(--gr)}\n.logo-tx{font-weight:700;font-size:1.05rem;white-space:nowrap}\n.logo-sub{color:var(--tm);font-size:.75rem}\n.hdr-s{flex:1}\n.lb{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:var(--sl);color:var(--succ);font-size:.7rem;font-weight:600;white-space:nowrap}\n.lb::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--succ);animation:lp 2s infinite}\n@keyframes lp{0%,100%{opacity:1}50%{opacity:.3}}\n.hc{display:flex;gap:3px;overflow-x:auto;scrollbar-width:none;flex:1;justify-content:center}\n.hc::-webkit-scrollbar{display:none}\n.hc-btn{padding:5px 12px;border-radius:16px;font-size:.78rem;background:var(--inp);border:1px solid var(--bd);color:var(--tm);cursor:pointer;transition:all .25s;white-space:nowrap;font-family:inherit}\n.hc-btn:hover{border-color:var(--p);color:#fff}\n.hc-btn.on{background:linear-gradient(135deg,var(--rose),var(--purple));color:#fff;border-color:transparent;box-shadow:var(--gr)}\n.hdr-btn{background:var(--inp);border:1px solid var(--bd);color:var(--tm);padding:7px 12px;border-radius:var(--rx);cursor:pointer;font-size:.82rem;transition:all .2s;display:flex;align-items:center;gap:5px;white-space:nowrap;font-family:inherit}\n.hdr-btn:hover{border-color:var(--p);color:#fff;box-shadow:var(--gr)}\n.tabs{background:var(--gl);-webkit-backdrop-filter:blur(var(--gb));backdrop-filter:blur(var(--gb));border-bottom:var(--gbd);display:flex;overflow-x:auto;flex-shrink:0;scrollbar-width:none}\n.tab{font-size:.8rem;color:var(--tm);background:0 0;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .25s;white-space:nowrap;display:flex;align-items:center;gap:4px;flex-shrink:0;font-family:inherit;padding:11px 12px}\n.tab:hover{color:var(--tx);background:rgba(255,255,255,.02)}\n.tab.on{color:var(--p);border-bottom-color:var(--p)}\n.tab.on::after{content:'';position:absolute;bottom:-1px;left:20%;right:20%;height:2px;background:linear-gradient(90deg,var(--rose),var(--purple));border-radius:1px;display:none}\nmain{flex:1;display:flex;overflow:hidden}\n.pn{display:none;flex:1;overflow-y:auto;padding:20px;animation:pi .3s ease-out}\n.pn.on{display:block}\n@keyframes pi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}\n.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px}\n.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}\n.sc{background:var(--gl);-webkit-backdrop-filter:blur(var(--gb));backdrop-filter:blur(var(--gb));border:var(--gbd);border-radius:var(--r);padding:18px;transition:all .3s;position:relative;overflow:hidden}\n.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--rose),var(--purple));opacity:0;transition:opacity .3s}\n.sc:hover{transform:translateY(-3px);box-shadow:var(--shl);border-color:rgba(232,82,141,.15)}\n.sc:hover::before{opacity:1}\n.sc-i{font-size:1.8rem;margin-bottom:6px}\n.sc-l{color:var(--tm);font-size:.8rem;margin-bottom:2px}\n.sc-v{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,var(--tx),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}\n.sc-d{font-size:.72rem;color:var(--td);margin-top:2px}\n.cd{background:var(--gl);-webkit-backdrop-filter:blur(var(--gb));backdrop-filter:blur(var(--gb));border:var(--gbd);border-radius:var(--r);margin-bottom:14px;overflow:hidden}\n.cd-h{padding:14px 18px;border-bottom:var(--gbd);display:flex;align-items:center;justify-content:space-between;font-weight:600;font-size:.9rem;cursor:pointer}\n.cd-h:hover{background:rgba(255,255,255,.02)}\n.cd-b{padding:14px 18px}\n.cd-b.hide{display:none}\n.fg{margin-bottom:12px}\n.fg label{display:block;margin-bottom:4px;font-size:.82rem;color:var(--tm);font-weight:500}\n.fg input,.fg select{width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:10px 12px;font-size:.88rem;font-family:inherit;transition:all .25s}\n.fg input:focus,.fg select:focus{border-color:var(--p);outline:none;box-shadow:var(--gr)}\n.fg select option{background:var(--s1);color:var(--tx)}\n.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}\n.btn{padding:10px 18px;border-radius:var(--rs);border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;gap:6px;font-family:inherit}\n.btn:active{transform:scale(.97)}\n.btn-p{background:linear-gradient(135deg,var(--rose),var(--purple));color:#fff;box-shadow:0 2px 12px rgba(232,82,141,.25)}\n.btn-p:hover{box-shadow:0 4px 20px rgba(232,82,141,.35)}\n.btn-o{background:0 0;border:1px solid var(--bd);color:var(--tx)}\n.btn-o:hover{border-color:var(--p);color:#fff}\n.btn-s{background:linear-gradient(135deg,#10b981,#059669);color:#fff}\n.btn-d{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}\n.btn-w{width:100%;justify-content:center}\n.btn-sm{padding:6px 12px;font-size:.78rem;border-radius:var(--rx)}\n.tw{border-radius:var(--rs);overflow-x:auto}\n.tw table{width:100%;border-collapse:collapse;font-size:.8rem}\n.tw th{background:rgba(15,23,42,.6);color:var(--tm);font-weight:600;padding:9px 10px;border-bottom:var(--gbd);white-space:nowrap}\n.tw td{padding:9px 10px;border-bottom:var(--gbd)}\n.tw tr:hover td{background:rgba(255,255,255,.02)}\n.bd{display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:12px;font-size:.72rem;font-weight:600}\n.bd-ok{background:var(--sl);color:var(--succ)}\n.bd-er{background:var(--el);color:var(--err)}\n.bd-wa{background:var(--wl);color:var(--warn)}\n.bd-in{background:var(--il);color:var(--info)}\n.vp{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:24px;text-align:center}\n.vr{width:180px;height:180px;border-radius:50%;background:var(--gl);border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;margin-bottom:20px;cursor:pointer;transition:all .4s}\n.vr:hover{border-color:var(--p);box-shadow:var(--gr)}\n.vr.ls{border-color:var(--rose);box-shadow:0 0 40px rgba(232,82,141,.3);animation:vp 2s infinite}\n.vr.th{border-color:var(--purple);box-shadow:0 0 40px rgba(147,51,234,.3);animation:vs 1.5s linear infinite}\n.vr.sp{border-color:var(--teal);box-shadow:0 0 40px rgba(20,184,166,.3)}\n@keyframes vp{0%,100%{box-shadow:0 0 20px rgba(232,82,141,.2)}50%{box-shadow:0 0 50px rgba(232,82,141,.4)}}\n@keyframes vs{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}\n.vi{font-size:3.5rem;transition:all .3s}\n.vr.ls .vi{animation:vb .8s infinite}\n@keyframes vb{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}\n.vs{font-size:1.1rem;font-weight:600;margin-bottom:6px}\n.vsu{color:var(--tm);font-size:.85rem;margin-bottom:16px}\n.vtx{max-width:500px;min-height:40px;padding:12px 20px;background:var(--cd);border:var(--gbd);border-radius:var(--r);font-size:.9rem;line-height:1.6;margin-bottom:16px}\n.vw{display:flex;align-items:center;gap:3px;height:30px;margin-bottom:16px}\n.vw span{width:3px;background:var(--rose);border-radius:2px;animation:wv 1.2s ease-in-out infinite}\n.vw span:nth-child(1){animation-delay:0s;height:12px}\n.vw span:nth-child(2){animation-delay:.1s;height:20px}\n.vw span:nth-child(3){animation-delay:.2s;height:16px}\n.vw span:nth-child(4){animation-delay:.3s;height:24px}\n.vw span:nth-child(5){animation-delay:.4s;height:14px}\n@keyframes wv{0%,100%{height:8px}50%{height:24px}}\n.vw.pa span{animation:none;height:4px;opacity:.3}\n.vh{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:500px}\n.vh button{padding:6px 14px;border-radius:16px;font-size:.78rem;background:var(--inp);border:1px solid var(--bd);color:var(--tm);cursor:pointer;transition:all .25s;font-family:inherit}\n.vh button:hover{border-color:var(--p);color:#fff;background:var(--rl)}\n.ca{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}\n.cs{display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px;border-top:var(--gbd);background:var(--gl)}\n.cs button{padding:6px 14px;border-radius:16px;font-size:.78rem;background:var(--inp);border:1px solid var(--bd);color:var(--tm);cursor:pointer;transition:all .25s;font-family:inherit}\n.cs button:hover{border-color:var(--p);color:#fff;background:var(--rl)}\n.cb{display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:var(--gbd);background:var(--gl)}\n.cb textarea{flex:1;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);font-size:.88rem;padding:10px 14px;resize:none;min-height:42px;max-height:100px;font-family:inherit}\n.cb textarea:focus{border-color:var(--p);outline:none;box-shadow:var(--gr)}\n.cb .sb{width:42px;height:42px;border-radius:var(--rs);border:none;background:linear-gradient(135deg,var(--rose),var(--purple));color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;box-shadow:var(--gr)}\n.cb .sb:hover{transform:scale(1.05)}\n.cb .mb{width:42px;height:42px;border-radius:var(--rs);border:1px solid var(--bd);background:var(--inp);color:var(--tm);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s}\n.cb .mb.on{background:linear-gradient(135deg,#ef4444,#dc2626);border-color:transparent;animation:cpl 1.5s infinite}\n@keyframes cpl{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)}}\n.msg{max-width:82%;padding:12px 16px;border-radius:var(--r);line-height:1.65;font-size:.88rem;word-wrap:break-word;animation:mi .3s ease-out}\n@keyframes mi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}\n.msg.us{background:linear-gradient(135deg,var(--rose),var(--purple));color:#fff;align-self:flex-end;border-end-end-radius:4px}\n.msg.bo{background:var(--cd);align-self:flex-start;border:var(--gbd)}\n.msg .mt{font-size:.68rem;color:rgba(255,255,255,.5);margin-top:4px}\n.msg.bo .mt{color:var(--td)}\n.ty{display:flex;gap:5px;padding:12px 18px;align-self:flex-start;background:var(--cd);border-radius:var(--r);border:var(--gbd)}\n.ty span{width:7px;height:7px;border-radius:50%;background:var(--rose);animation:tb 1.4s infinite}\n.ty span:nth-child(2){animation-delay:.15s}\n.ty span:nth-child(3){animation-delay:.3s}\n@keyframes tb{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}\n.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 22px;border-radius:var(--rs);background:var(--gl);-webkit-backdrop-filter:blur(var(--gb));backdrop-filter:blur(var(--gb));border:var(--gbd);color:var(--tx);font-size:.85rem;box-shadow:var(--shl);z-index:999;display:none;align-items:center;gap:8px;max-width:88%}\n.toast.on{display:flex;animation:ti .35s ease-out}\n@keyframes ti{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}\n.ld{display:flex;align-items:center;justify-content:center;gap:8px;padding:24px;color:var(--tm)}\n.em{display:flex;flex-direction:column;align-items:center;padding:48px 24px;text-align:center;color:var(--tm)}\n.em .ei{font-size:2.5rem;margin-bottom:12px;opacity:.5}\n.em h3{font-size:.95rem;margin-bottom:6px;color:var(--tx)}\n.em p{font-size:.82rem;max-width:320px;line-height:1.5}\n.ib{display:flex;gap:6px;flex-wrap:wrap}\n.ib span{padding:3px 9px;border-radius:10px;font-size:.7rem;display:inline-flex;align-items:center;gap:3px}\n.ib .up{background:var(--sl);color:var(--succ)}\n.ib .dn{background:var(--el);color:var(--err)}\n.ib .wa{background:var(--wl);color:var(--warn)}\n.srch-ans{background:linear-gradient(135deg,rgba(232,82,141,.08),rgba(147,51,234,.08));border:1px solid rgba(232,82,141,.2);border-radius:var(--r);padding:16px;font-size:.88rem;line-height:1.9;margin-bottom:12px}\n.srch-src{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}\n.srch-src span{display:inline-block;padding:3px 10px;border-radius:10px;background:var(--pl);color:var(--purple);font-size:.72rem;border:1px solid rgba(147,51,234,.2)}\n.visit-card{background:var(--gl);border:var(--gbd);border-radius:var(--r);padding:14px;margin-bottom:10px;border-inline-start:3px solid var(--teal)}\n.sess-card{background:var(--gl);border:var(--gbd);border-radius:var(--r);padding:14px;margin-bottom:10px;border-inline-start:3px solid var(--blue)}\n.sess-code{font-size:1rem;font-weight:700;color:var(--blue);letter-spacing:.12em;margin:4px 0}\n@media(max-width:768px){.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}header{padding:0 12px;height:auto;flex-wrap:wrap;gap:6px}.hc{order:3;width:100%;justify-content:flex-start;padding:4px 0}.pn{padding:14px}.tab{padding:9px 8px;font-size:.75rem}.sc{padding:14px}.sc-v{font-size:1.3rem}}\n</style>\n</head>\n<body>\n<div class=\"toast\" id=\"toast\"></div>\n<header>\n  <div class=\"logo\"><div class=\"logo-ic\">🤖</div><div><div class=\"logo-tx\">بسمة <span class=\"logo-sub\">| AI Agent</span></div></div></div>\n  <div class=\"hdr-s\"></div>\n  <span class=\"lb\" id=\"liveBadge\">متصل</span>\n  <div class=\"hc\" id=\"hospChips\">\n    <button class=\"hc-btn on\" data-h=\"riyadh\">الرياض</button>\n    <button class=\"hc-btn\" data-h=\"madinah\">المدينة</button>\n    <button class=\"hc-btn\" data-h=\"unaizah\">عنيزة</button>\n    <button class=\"hc-btn\" data-h=\"khamis\">خميس</button>\n    <button class=\"hc-btn\" data-h=\"jizan\">جيزان</button>\n    <button class=\"hc-btn\" data-h=\"abha\">أبها</button>\n  </div>\n  <button class=\"hdr-btn\" id=\"langBtn\">🇸🇦 AR</button>\n</header>\n<nav class=\"tabs\" id=\"tabNav\">\n  <button class=\"tab on\" data-tab=\"voice\">🎙️ صوتي</button>\n  <button class=\"tab\" data-tab=\"chat\">💬 محادثة</button>\n  <button class=\"tab\" data-tab=\"insights\">📊 تحليلات</button>\n  <button class=\"tab\" data-tab=\"nphies\">🏛️ NPHIES</button>\n  <button class=\"tab\" data-tab=\"elig\">🛡️ أهلية</button>\n  <button class=\"tab\" data-tab=\"appt\">📅 مواعيد</button>\n  <button class=\"tab\" data-tab=\"oracle\">🔗 Oracle</button>\n  <button class=\"tab\" data-tab=\"comms\">📞 تواصل</button>\n  <button class=\"tab\" data-tab=\"search\">🔍 بحث</button>\n  <button class=\"tab\" data-tab=\"homecare\">🏠 رعاية</button>\n  <button class=\"tab\" data-tab=\"telehealth\">🎥 تطبيب</button>\n</nav>\n<main>\n<section class=\"pn on\" id=\"pn-voice\">\n  <div class=\"vp\">\n    <div style=\"margin-bottom:14px\"><elevenlabs-convai agent-id=\"agent_3401kaac3de5fsnvvfyye79vp9es\"></elevenlabs-convai></div>\n    <div class=\"vr\" id=\"voiceRing\" data-a=\"toggleVoice\"><span class=\"vi\" id=\"voiceIcon\">🎙️</span></div>\n    <div class=\"vs\" id=\"voiceStatus\">اضغط للتحدث مع بسمة</div>\n    <div class=\"vsu\" id=\"voiceSub\">تتحدث العربية والإنجليزية</div>\n    <div class=\"vtx\" id=\"voiceTranscript\"></div>\n    <div class=\"vw pa\" id=\"voiceWaves\"><span></span><span></span><span></span><span></span><span></span></div>\n    <button class=\"btn btn-o btn-sm\" data-a=\"clearVoice\">🗑️ مسح</button>\n    <div class=\"vh\" style=\"margin-top:16px\">\n      <button data-q=\"اعرف مواعيد العيادات\" class=\"vq\">🕒 مواعيد</button>\n      <button data-q=\"أبي أتأكد من أهليتي التأمينية\" class=\"vq\">🛡️ أهلية</button>\n      <button data-q=\"كم عدد الأطباء\" class=\"vq\">👨‍⚕️ أطباء</button>\n      <button data-q=\"كيف أحجز موعد\" class=\"vq\">📅 حجز</button>\n      <button data-q=\"جهات التأمين المتعاقد معها\" class=\"vq\">🏦 تأمين</button>\n    </div>\n  </div>\n</section>\n<section class=\"pn\" id=\"pn-chat\">\n  <div class=\"ca\" id=\"chatMsgs\"></div>\n  <div class=\"cs\" id=\"chatSugg\">\n    <button data-q=\"عرض إحصائيات المستشفى\">📊 إحصائيات</button>\n    <button data-q=\"أبي أتأكد من أهلية التأمين 1234567890\">🛡️ أهلية</button>\n    <button data-q=\"عرض معلومات فروع المستشفى\">🏥 فروع</button>\n    <button data-q=\"جهات التأمين المتعاقد معها\">🏦 تأمين</button>\n  </div>\n  <div class=\"cb\">\n    <textarea id=\"chatIn\" placeholder=\"اكتب رسالتك هنا...\" rows=\"1\"></textarea>\n    <button class=\"mb\" id=\"chatMicBtn\" data-a=\"toggleChatMic\" aria-label=\"تسجيل\">🎤</button>\n    <button class=\"sb\" data-a=\"sendChat\" aria-label=\"إرسال\">➤</button>\n  </div>\n</section>\n<section class=\"pn\" id=\"pn-insights\">\n  <div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px\">\n    <h2 style=\"font-size:1.1rem;font-weight:700\" id=\"insightsTitle\">📊 تحليلات الأداء</h2>\n    <div class=\"ib\" id=\"integBar\"></div>\n  </div>\n  <div class=\"g3\" id=\"insightCards\"></div>\n  <!-- NPHIES Riyadh Live -->\n  <div class=\"cd\"><div class=\"cd-h\" data-a=\"toggleCard\">🏛️ NPHIES الرياض — بيانات مباشرة <span>▼</span></div><div class=\"cd-b\" id=\"nphiesLive\"><div class=\"ld\">⏳ جاري التحميل...</div></div></div>\n  <!-- Oracle Approvals Live -->\n  <div class=\"cd\"><div class=\"cd-h\" data-a=\"toggleCard\">✅ طابور الموافقات اليوم <span>▼</span></div><div class=\"cd-b hide\" id=\"oracleApprovals\"><div class=\"ld\">⏳</div></div></div>\n  <div class=\"cd\"><div class=\"cd-h\" data-a=\"toggleCard\">🏥 أداء الفروع <span>▼</span></div><div class=\"cd-b\" id=\"branchTable\"></div></div>\n  <div class=\"cd\"><div class=\"cd-h\" data-a=\"toggleCard\">📋 تفاصيل المطالبات <span>▼</span></div><div class=\"cd-b\" id=\"claimsDetail\"></div></div>\n</section>\n<section class=\"pn\" id=\"pn-nphies\">\n  <h2 style=\"font-size:1.1rem;font-weight:700;margin-bottom:16px\">🏛️ NPHIES Mirror</h2>\n  <div class=\"g3\" id=\"nphiesStats\"></div>\n  <div class=\"cd\"><div class=\"cd-h\" data-a=\"toggleCard\">📦 حالة المزامنة <span>▼</span></div><div class=\"cd-b\" id=\"nphiesDetail\"></div></div>\n</section>\n<section class=\"pn\" id=\"pn-elig\">\n  <h2 style=\"font-size:1.1rem;font-weight:700;margin-bottom:16px\">🛡️ التحقق من الأهلية</h2>\n  <div class=\"cd\"><div class=\"cd-b\">\n    <div class=\"fg\"><label for=\"eidIn\">رقم الهوية</label><input id=\"eidIn\" placeholder=\"أدخل رقم الهوية (10 أرقام)\" maxlength=\"10\"></div>\n    <div class=\"fg\"><label for=\"eidType\">النوع</label><select id=\"eidType\"><option value=\"NATIONAL NUMBER\">هوية وطنية</option><option value=\"IQAMA\">إقامة</option><option value=\"PASSPORT\">جواز سفر</option></select></div>\n    <button class=\"btn btn-p btn-w\" data-a=\"checkElig\">🔍 تحقق</button>\n    <div id=\"eligResult\" style=\"margin-top:12px\"></div>\n  </div></div>\n  <div class=\"cd\"><div class=\"cd-h\" data-a=\"toggleCard\">🏦 شركات التأمين <span>▼</span></div><div class=\"cd-b\" id=\"insPartnerList\"></div></div>\n</section>\n<section class=\"pn\" id=\"pn-appt\">\n  <h2 style=\"font-size:1.1rem;font-weight:700;margin-bottom:16px\">📅 حجز موعد</h2>\n  <form id=\"apptForm\"><div class=\"cd\"><div class=\"cd-b\">\n    <div class=\"fg\"><label>الاسم</label><input id=\"apName\" placeholder=\"الاسم الكامل\"></div>\n    <div class=\"fg\"><label>الجوال</label><input id=\"apPhone\" placeholder=\"05xxxxxxxx\" maxlength=\"10\"></div>\n    <div class=\"fr\">\n      <div class=\"fg\"><label>الفرع</label><select id=\"apHosp\"><option value=\"riyadh\">الرياض</option><option value=\"madinah\">المدينة</option><option value=\"unaizah\">عنيزة</option><option value=\"khamis\">خميس مشيط</option><option value=\"jizan\">جيزان</option><option value=\"abha\">أبها</option></select></div>\n      <div class=\"fg\"><label>التخصص</label><select id=\"apSpec\"><option value=\"general\">طب عام</option><option value=\"cardiology\">قلب</option><option value=\"neurology\">أعصاب</option><option value=\"orthopedics\">عظام</option><option value=\"pediatrics\">أطفال</option><option value=\"internal\">باطنة</option><option value=\"surgery\">جراحة</option><option value=\"obgyn\">نساء وتوليد</option><option value=\"ophthalmology\">عيون</option><option value=\"dermatology\">جلدية</option></select></div>\n    </div>\n    <div class=\"fr\">\n      <div class=\"fg\"><label>التاريخ</label><input id=\"apDate\" type=\"date\"></div>\n      <div class=\"fg\"><label>الوقت</label><input id=\"apTime\" type=\"time\"></div>\n    </div>\n    <button class=\"btn btn-p btn-w\" type=\"submit\">📅 تأكيد الحجز</button>\n    <div id=\"apptResult\" style=\"margin-top:12px\"></div>\n  </div></div></form>\n</section>\n<section class=\"pn\" id=\"pn-oracle\">\n  <h2 style=\"font-size:1.1rem;font-weight:700;margin-bottom:16px\">🔗 Oracle Health</h2>\n  <div class=\"g3\" id=\"oracleStats\"></div>\n  <div class=\"cd\"><div class=\"cd-h\" data-a=\"toggleCard\">🔄 حالة الربط <span>▼</span></div><div class=\"cd-b\" id=\"oracleDetail\"></div></div>\n</section>\n<section class=\"pn\" id=\"pn-comms\">\n  <h2 style=\"font-size:1.1rem;font-weight:700;margin-bottom:16px\">📞 التواصل مع المريض</h2>\n  <div class=\"g3\" style=\"grid-template-columns:repeat(auto-fit,minmax(200px,1fr))\">\n    <div class=\"sc\" style=\"border-left:3px solid var(--succ)\">\n      <div class=\"sc-i\">💬</div><div class=\"sc-l\">SMS</div>\n      <div class=\"fg\" style=\"margin-top:10px\"><input id=\"smsPhone\" placeholder=\"+9665xxxxxxxx\" style=\"width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit\"></div>\n      <div class=\"fg\"><textarea id=\"smsBody\" rows=\"2\" placeholder=\"نص الرسالة...\" style=\"width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit;resize:none\"></textarea></div>\n      <button class=\"btn btn-o btn-w btn-sm\" style=\"margin-bottom:6px\" data-a=\"draftSms\">✨ صياغة بالذكاء الاصطناعي</button>\n      <button class=\"btn btn-s btn-w btn-sm\" data-a=\"sendSms\">📤 إرسال SMS</button>\n      <div id=\"smsResult\" style=\"margin-top:8px;font-size:.8rem\"></div>\n    </div>\n    <div class=\"sc\" style=\"border-left:3px solid var(--blue)\">\n      <div class=\"sc-i\">📞</div><div class=\"sc-l\">مكالمة صوتية</div>\n      <div class=\"fg\" style=\"margin-top:10px\"><input id=\"callPhone\" placeholder=\"+9665xxxxxxxx\" style=\"width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit\"></div>\n      <button class=\"btn btn-p btn-w btn-sm\" data-a=\"startCall\">📞 اتصال مع بسمة</button>\n      <div id=\"callResult\" style=\"margin-top:8px;font-size:.8rem\"></div>\n    </div>\n    <div class=\"sc\" style=\"border-left:3px solid var(--succ)\">\n      <div class=\"sc-i\">🟢</div><div class=\"sc-l\">WhatsApp</div>\n      <div class=\"fg\" style=\"margin-top:10px\"><input id=\"waPhone\" placeholder=\"+9665xxxxxxxx\" style=\"width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit\"></div>\n      <div class=\"fg\"><textarea id=\"waBody\" rows=\"2\" placeholder=\"نص الرسالة...\" style=\"width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit;resize:none\"></textarea></div>\n      <button class=\"btn btn-o btn-w btn-sm\" style=\"margin-bottom:6px\" data-a=\"draftWa\">✨ صياغة بالذكاء الاصطناعي</button>\n      <button class=\"btn btn-w btn-sm\" style=\"background:linear-gradient(135deg,#25d366,#128c7e);color:#fff\" data-a=\"sendWhatsApp\">🟢 إرسال WhatsApp</button>\n      <div id=\"waResult\" style=\"margin-top:8px;font-size:.8rem\"></div>\n    </div>\n    <div class=\"sc\" style=\"border-left:3px solid var(--purple)\">\n      <div class=\"sc-i\">✉️</div><div class=\"sc-l\">البريد الإلكتروني</div>\n      <div class=\"fg\" style=\"margin-top:10px\"><input id=\"emTo\" placeholder=\"patient@example.com\" style=\"width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit\"></div>\n      <div class=\"fg\"><select id=\"emType\" style=\"width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit\"><option value=\"appointment\">تأكيد موعد</option><option value=\"homecare\">زيارة منزلية</option><option value=\"telehealth\">رابط تطبيب</option><option value=\"followup\">متابعة</option></select></div>\n      <div class=\"fg\"><input id=\"emName\" placeholder=\"اسم المريض\" style=\"width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit\"></div>\n      <button class=\"btn btn-w btn-sm\" style=\"background:linear-gradient(135deg,var(--purple),#7c3aed);color:#fff;margin-bottom:6px\" data-a=\"sendEmail\">✉️ إرسال البريد</button>\n      <div id=\"emResult\" style=\"margin-top:8px;font-size:.8rem\"></div>\n    </div>\n  </div>\n  <div class=\"cd\" style=\"margin-top:14px\">\n    <div class=\"cd-h\" data-a=\"toggleCard\">🔢 إرسال OTP تحقق <span>▼</span></div>\n    <div class=\"cd-b hide\">\n      <div class=\"fr\">\n        <div class=\"fg\"><label>رقم الجوال</label><input id=\"otpPhone\" placeholder=\"+9665xxxxxxxx\"></div>\n        <div class=\"fg\" style=\"display:flex;align-items:flex-end\"><button class=\"btn btn-p btn-w\" data-a=\"sendOtp\">📲 إرسال OTP</button></div>\n      </div>\n      <div class=\"fr\" style=\"margin-top:8px\">\n        <div class=\"fg\"><label>رمز التحقق</label><input id=\"otpCode\" placeholder=\"123456\" maxlength=\"6\"></div>\n        <div class=\"fg\" style=\"display:flex;align-items:flex-end\"><button class=\"btn btn-s btn-w\" data-a=\"verifyOtp\">✅ تحقق</button></div>\n      </div>\n      <div id=\"otpResult\" style=\"margin-top:8px;font-size:.8rem\"></div>\n    </div>\n  </div>\n</section>\n<section class=\"pn\" id=\"pn-search\">\n  <h2 style=\"font-size:1.1rem;font-weight:700;margin-bottom:16px\">🔍 البحث الذكي بالذكاء الاصطناعي</h2>\n  <div class=\"cd\">\n    <div class=\"cd-b\">\n      <div class=\"fg\">\n        <label>ابحث في قاعدة معرفة المستشفيات</label>\n        <div style=\"display:flex;gap:8px;align-items:center\">\n          <input id=\"srchIn\" placeholder=\"طبيب، قسم، إجراء، دواء، نظام...\" style=\"flex:1;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:10px 14px;font-size:.88rem;font-family:inherit\">\n          <button class=\"btn btn-p\" style=\"white-space:nowrap\" data-a=\"doSearch\">🔍 بحث</button>\n        </div>\n      </div>\n      <div style=\"display:flex;gap:6px;flex-wrap:wrap;margin-top:10px\">\n        <button class=\"vq\" data-a=\"srchHint\" data-q=\"أطباء القلب والأوعية الدموية\">❤️ قلب</button>\n        <button class=\"vq\" data-a=\"srchHint\" data-q=\"مواعيد وإجراءات الطوارئ\">🚨 طوارئ</button>\n        <button class=\"vq\" data-a=\"srchHint\" data-q=\"التأمين الطبي والأهلية\">🛡️ تأمين</button>\n        <button class=\"vq\" data-a=\"srchHint\" data-q=\"الرعاية الصحية المنزلية\">🏠 رعاية منزلية</button>\n        <button class=\"vq\" data-a=\"srchHint\" data-q=\"التطبيب عن بعد والاستشارات الإلكترونية\">🎥 تطبيب</button>\n        <button class=\"vq\" data-a=\"srchHint\" data-q=\"مطالبات NPHIES والتحصيل المالي\">💰 مطالبات</button>\n      </div>\n    </div>\n  </div>\n  <div id=\"srchResult\" style=\"margin-top:14px\"></div>\n</section>\n<section class=\"pn\" id=\"pn-homecare\">\n  <h2 style=\"font-size:1.1rem;font-weight:700;margin-bottom:16px\">🏠 الرعاية الصحية المنزلية</h2>\n  <div class=\"g2\">\n    <form id=\"hcForm\">\n      <div class=\"cd\">\n        <div class=\"cd-h\" data-a=\"toggleCard\">📋 جدولة زيارة منزلية <span>▼</span></div>\n        <div class=\"cd-b\">\n          <div class=\"fg\"><label>اسم المريض</label><input id=\"hcName\" placeholder=\"الاسم الكامل\"></div>\n          <div class=\"fg\"><label>رقم الجوال</label><input id=\"hcPhone\" placeholder=\"+9665xxxxxxxx\"></div>\n          <div class=\"fg\"><label>العنوان التفصيلي</label><input id=\"hcAddr\" placeholder=\"الحي، الشارع، رقم المبنى\"></div>\n          <div class=\"fg\"><label>نوع الزيارة</label>\n            <select id=\"hcType\">\n              <option value=\"general_checkup\">فحص عام</option>\n              <option value=\"wound_care\">عناية بالجروح</option>\n              <option value=\"iv_therapy\">علاج وريدي</option>\n              <option value=\"physiotherapy\">علاج طبيعي</option>\n              <option value=\"post_surgery\">متابعة ما بعد الجراحة</option>\n              <option value=\"elderly_care\">رعاية المسنين</option>\n              <option value=\"chronic_disease\">متابعة الأمراض المزمنة</option>\n            </select>\n          </div>\n          <div class=\"fr\">\n            <div class=\"fg\"><label>التاريخ</label><input id=\"hcDate\" type=\"date\"></div>\n            <div class=\"fg\"><label>الوقت</label><input id=\"hcTime\" type=\"time\" value=\"09:00\"></div>\n          </div>\n          <div class=\"fg\"><label>ملاحظات</label><textarea id=\"hcNotes\" rows=\"2\" placeholder=\"حالة خاصة أو تعليمات...\" style=\"width:100%;background:var(--inp);border:1px solid var(--bd);border-radius:var(--rx);color:var(--tx);padding:8px 10px;font-size:.85rem;font-family:inherit;resize:none\"></textarea></div>\n          <button class=\"btn btn-p btn-w\" type=\"submit\">🏠 جدولة الزيارة</button>\n          <div id=\"hcResult\" style=\"margin-top:12px\"></div>\n        </div>\n      </div>\n    </form>\n    <div>\n      <div class=\"cd\">\n        <div class=\"cd-h\" data-a=\"toggleCard\">📅 زيارات اليوم <span>▼</span></div>\n        <div class=\"cd-b\" id=\"hcVisits\"><div class=\"ld\">⏳ جاري التحميل...</div></div>\n      </div>\n      <div class=\"cd\" style=\"margin-top:14px\">\n        <div class=\"cd-h\" data-a=\"toggleCard\">👩‍⚕️ الممرضات المتاحات <span>▼</span></div>\n        <div class=\"cd-b hide\" id=\"hcNurses\"><div class=\"ld\">⏳</div></div>\n      </div>\n    </div>\n  </div>\n</section>\n<section class=\"pn\" id=\"pn-telehealth\">\n  <h2 style=\"font-size:1.1rem;font-weight:700;margin-bottom:16px\">🎥 التطبيب عن بُعد</h2>\n  <div class=\"g2\">\n    <div>\n      <form id=\"thForm\">\n        <div class=\"cd\">\n          <div class=\"cd-h\" data-a=\"toggleCard\">🆕 إنشاء جلسة جديدة <span>▼</span></div>\n          <div class=\"cd-b\">\n            <div class=\"fg\"><label>اسم المريض</label><input id=\"thPatient\" placeholder=\"اسم المريض\"></div>\n            <div class=\"fg\"><label>رقم الجوال (للإشعار)</label><input id=\"thPhone\" placeholder=\"+9665xxxxxxxx\"></div>\n            <div class=\"fg\"><label>الطبيب</label>\n              <select id=\"thProvider\">\n                <option value=\"dr_qahtani\">د. سعد القحطاني — قلب</option>\n                <option value=\"dr_shehri\">د. ليلى الشهري — أطفال</option>\n                <option value=\"dr_otaibi\">د. عبدالله العتيبي — عظام</option>\n                <option value=\"dr_bili\">د. أميرة البيلي — جلدية</option>\n                <option value=\"dr_farouk\">د. وسام فاروق — نساء وولادة</option>\n                <option value=\"dr_husseini\">د. مريم الحسيني — نساء وولادة</option>\n                <option value=\"dr_daboura\">د. معاوية دبورة — تجميل</option>\n              </select>\n            </div>\n            <div class=\"fr\">\n              <div class=\"fg\"><label>التاريخ</label><input id=\"thDate\" type=\"date\"></div>\n              <div class=\"fg\"><label>الوقت</label><input id=\"thTime\" type=\"time\" value=\"10:00\"></div>\n            </div>\n            <div class=\"fg\"><label>سبب الاستشارة</label><input id=\"thReason\" placeholder=\"وصف موجز للحالة الطبية\"></div>\n            <button class=\"btn btn-p btn-w\" type=\"submit\">🎥 إنشاء الجلسة</button>\n            <div id=\"thResult\" style=\"margin-top:12px\"></div>\n          </div>\n        </div>\n      </form>\n      <div class=\"cd\" style=\"margin-top:14px\">\n        <div class=\"cd-h\" data-a=\"toggleCard\">🔑 انضمام بكود الجلسة <span>▼</span></div>\n        <div class=\"cd-b hide\">\n          <div class=\"fg\"><label>كود الجلسة</label><input id=\"thJoinCode\" placeholder=\"XXXX-XXXX\" style=\"letter-spacing:.1em;font-size:1rem;font-weight:700\"></div>\n          <button class=\"btn btn-s btn-w\" data-a=\"joinTH\">🔗 انضمام للجلسة</button>\n        </div>\n      </div>\n    </div>\n    <div>\n      <div class=\"cd\">\n        <div class=\"cd-h\" data-a=\"toggleCard\">🟢 الجلسات النشطة <span>▼</span></div>\n        <div class=\"cd-b\" id=\"thSessions\"><div class=\"ld\">⏳ جاري التحميل...</div></div>\n      </div>\n      <div class=\"cd\" style=\"margin-top:14px\">\n        <div class=\"cd-h\" data-a=\"toggleCard\">📊 إحصائيات التطبيب <span>▼</span></div>\n        <div class=\"cd-b hide\" id=\"thStats\"><div class=\"ld\">⏳</div></div>\n      </div>\n    </div>\n  </div>\n</section>\n</main>\n<script>\n(function(){'use strict';\n\n// ─── Translations ───\nconst T={ar:{\n  listening:'جاري الاستماع...',tapTalk:'اضغط للتحدث مع بسمة',thinking:'بسمة تفكر...',speaking:'بسمة تتكلم...',\n  voiceSub:'تتحدث العربية والإنجليزية',loading:'جاري التحميل...',failed:'تعذّر الاتصال',retry:'حاول مرة أخرى',\n  totalVal:'القيمة الإجمالية',approvalRate:'نسبة الموافقات',claims:'المطالبات',priorAuth:'الموافقات المسبقة',\n  nphiesGSS:'إجمالي GSS',nphiesPA:'الموافقات المسبقة',nphiesCoC:'شهادات العلاج',nphiesSync:'آخر مزامنة',\n  oracleBridge:'Oracle Bridge',oracleTunnel:'Oracle Tunnel',connected:'متصل',disconnected:'غير متصل',\n  branch:'الفرع',total:'القيمة',approval:'الموافقة',status:'الحالة',auths:'الموافقات',\n  eligible:'مؤهل',notEligible:'غير مؤهل',checkFailed:'تعذّر التحقق',\n  booking:'حجز موعد',bookingOk:'تم الحجز بنجاح',bookingFail:'تعذّر الحجز',\n  d1:'D1 رئيسي',d1his:'D1 HIS',d1basma:'D1 Basma',dbDown:'غير متصل',\n  mirror:'NPHIES Mirror',claimlinc:'ClaimLinc',sbs:'SBS',givc:'GIVC',\n  authHealthy:'المصادقة سليمة',errors:'أخطاء',nphiesAvailable:'NPHIES متاح',yes:'نعم',no:'لا',\n  bookingSuccess:'تم حجز موعدك بنجاح',phoneInvalid:'أدخل رقم جوال صحيح',nameRequired:'أدخل الاسم',\n  idRequired:'أدخل رقم الهوية',idShort:'أدخل رقم هوية صحيح (10 أرقام)',live:'متصل',\n  searching:'جاري البحث...',noResults:'لم يُعثر على نتائج',srchPowered:'مشغّل بـ AutoRAG',\n  hcScheduled:'تم الجدولة بنجاح',hcFail:'تعذّر الجدولة',hcNameReq:'أدخل اسم المريض',hcAddrReq:'أدخل العنوان',\n  thCreated:'تم إنشاء الجلسة',thFail:'تعذّر الإنشاء',thNameReq:'أدخل اسم المريض',thJoinReq:'أدخل كود الجلسة',\n  emailSent:'تم الإرسال بنجاح',emailFail:'تعذّر الإرسال',emailReq:'أدخل البريد الإلكتروني',\n},en:{\n  listening:'Listening...',tapTalk:'Tap to talk to Basma',thinking:'Basma thinking...',speaking:'Basma speaking...',\n  voiceSub:'Speaks Arabic and English',loading:'Loading...',failed:'Connection failed',retry:'Try again',\n  totalVal:'Total Value',approvalRate:'Approval Rate',claims:'Claims',priorAuth:'Prior Authorizations',\n  nphiesGSS:'Total GSS',nphiesPA:'Prior Auths',nphiesCoC:'CoC',nphiesSync:'Last Sync',\n  oracleBridge:'Oracle Bridge',oracleTunnel:'Oracle Tunnel',connected:'Connected',disconnected:'Disconnected',\n  branch:'Branch',total:'Total',approval:'Approval',status:'Status',auths:'Auths',\n  eligible:'Eligible',notEligible:'Not Eligible',checkFailed:'Check Failed',\n  booking:'Book Appointment',bookingOk:'Booked',bookingFail:'Booking Failed',\n  d1:'D1 Primary',d1his:'D1 HIS',d1basma:'D1 Basma',dbDown:'DB Down',\n  mirror:'NPHIES Mirror',claimlinc:'ClaimLinc',sbs:'SBS',givc:'GIVC',\n  authHealthy:'Auth Healthy',errors:'Errors',nphiesAvailable:'NPHIES Available',yes:'Yes',no:'No',\n  bookingSuccess:'Appointment booked',phoneInvalid:'Enter valid phone',nameRequired:'Enter name',\n  idRequired:'Enter ID',idShort:'Enter valid ID (10 digits)',live:'Live',\n  searching:'Searching...',noResults:'No results found',srchPowered:'Powered by AutoRAG',\n  hcScheduled:'Visit scheduled',hcFail:'Scheduling failed',hcNameReq:'Enter patient name',hcAddrReq:'Enter address',\n  thCreated:'Session created',thFail:'Failed to create session',thNameReq:'Enter patient name',thJoinReq:'Enter session code',\n  emailSent:'Email sent',emailFail:'Email failed',emailReq:'Enter email address',\n}};\n\n// ─── Helpers ───\nconst HM={riyadh:{ar:'الرياض',en:'Riyadh'},madinah:{ar:'المدينة',en:'Madinah'},unaizah:{ar:'عنيزة',en:'Unayzah'},khamis:{ar:'خميس مشيط',en:'Khamis Mushayt'},jizan:{ar:'جيزان',en:'Jazan'},abha:{ar:'أبها',en:'Abha'}};\nconst SM={general:{ar:'طب عام',en:'General'},cardiology:{ar:'قلب',en:'Cardiology'},neurology:{ar:'أعصاب',en:'Neurology'},orthopedics:{ar:'عظام',en:'Orthopedics'},pediatrics:{ar:'أطفال',en:'Pediatrics'},internal:{ar:'باطنة',en:'Internal Medicine'},surgery:{ar:'جراحة',en:'Surgery'},obgyn:{ar:'نساء وتوليد',en:'OB/GYN'},ophthalmology:{ar:'عيون',en:'Ophthalmology'},dermatology:{ar:'جلدية',en:'Dermatology'}};\n\nlet lang=localStorage.getItem('bm_lang')||'ar',hosp=localStorage.getItem('bm_hosp')||'riyadh';\nlet recog=null,isL=false,chL=false,chH=[];\nfunction _(k){return(T[lang]&&T[lang][k])||k||'';}\nfunction $(id){return document.getElementById(id);}\nfunction qa(s,e){return(e||document).querySelectorAll(s);}\nfunction qs(s,e){return(e||document).querySelector(s);}\nfunction html(e,s){if(e)e.innerHTML=s||'';}\nfunction n2(v){if(v===null||v===undefined)return'—';return Number(v).toLocaleString(lang==='ar'?'ar-SA':'en-US');}\nfunction pct(v){return n2(v)+'%';}\nfunction sar(v){return n2(v)+(lang==='ar'?' ر.س':' SAR');}\nfunction dt(s){if(!s)return'—';return new Date(s).toLocaleString(lang==='ar'?'ar-SA':'en-US',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}\nfunction nw(){return new Date().toLocaleTimeString(lang==='ar'?'ar-SA':'en-US',{hour:'2-digit',minute:'2-digit'});}\nfunction tt(m,t){const e=$('toast');if(!e)return;e.textContent=m;e.className='toast on'+(t?' '+t:'');setTimeout(()=>e.classList.remove('on'),3500);}\n\n// ─── API ───\nconst BA='https://bsma.elfadil.com',HN='https://hnh.brainsait.org';\nasync function chatApi(m){const r=await fetch(BA+'/basma/chat',{method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(15000),body:JSON.stringify({message:m,lang,hospital:hosp})});return r.json();}\nasync function netApi(){const r=await fetch(BA+'/basma/network',{signal:AbortSignal.timeout(10000)});return r.json();}\nasync function mirApi(){const r=await fetch(BA+'/basma/mirror',{signal:AbortSignal.timeout(10000)});return r.json();}\nasync function hnh(p,b){try{const r=await fetch(HN+p,{method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(10000),body:JSON.stringify(b)});return r.json();}catch(e){return{success:false,error:e.message};}}\n\n// ─── Voice ───\nfunction sV(){\n  if(isL){if(recog)recog.stop();return;}\n  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;\n  if(!SR){tt(_('failed'),'err');return;}\n  recog=new SR();recog.lang=lang==='ar'?'ar-SA':'en-US';recog.interimResults=true;recog.continuous=true;\n  recog.onstart=()=>{isL=true;const r=$('voiceRing');if(r)r.className='vr ls';const i=$('voiceIcon');if(i)i.textContent='🔴';const s=$('voiceStatus');if(s)s.textContent='🔴 '+_('listening');const w=$('voiceWaves');if(w)w.className='vw';};\n  recog.onend=()=>{isL=false;const r=$('voiceRing');if(r)r.className='vr';const i=$('voiceIcon');if(i)i.textContent='🎙️';const s=$('voiceStatus');if(s)s.textContent=_('tapTalk');const w=$('voiceWaves');if(w)w.className='vw pa';};\n  recog.onresult=(e)=>{let f='',im='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)f+=e.results[i][0].transcript;else im+=e.results[i][0].transcript;}const t=$('voiceTranscript');if(!t)return;if(f){t.textContent=f;pV(f);}else if(im)t.textContent=im+'...';};\n  recog.onerror=(e)=>{};recog.start();\n}\nasync function pV(t){\n  const r=$('voiceRing');if(r)r.className='vr th';const i=$('voiceIcon');if(i)i.textContent='🧠';const s=$('voiceStatus');if(s)s.textContent='🧠 '+_('thinking');\n  try{const d=await chatApi(t);const rp=d.reply||d.response||'';if(r)r.className='vr sp';if(i)i.textContent='🔊';if(s)s.textContent='🔊 '+_('speaking');const tx=$('voiceTranscript');if(tx)tx.innerHTML='<strong>'+t+'</strong><br><br>'+rp;if(rp)sp(rp);}catch(e){tt(_('failed'),'err');}\n  if(r)r.className='vr';if(i)i.textContent='🎙️';if(s)s.textContent=_('tapTalk');\n}\nasync function sp(t){\n  try{const r=await fetch(BA+'/basma/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t,lang}),signal:AbortSignal.timeout(10000)});if(r.ok){const a=new Audio(URL.createObjectURL(await r.blob()));await a.play();return;}}catch(e){}\n  try{const u=new SpeechSynthesisUtterance(t);u.lang=lang==='ar'?'ar-SA':'en-US';speechSynthesis.speak(u);}catch(e){}\n}\nfunction clV(){const t=$('voiceTranscript');if(t)t.textContent='';chH=[];}\n\n// ─── Chat ───\nfunction aCM(c,t){\n  const a=$('chatMsgs');if(!a)return;\n  const d=document.createElement('div');d.className='msg '+c;\n  d.innerHTML=t+'<div class=\"mt\">'+nw()+'</div>';a.appendChild(d);a.scrollTop=a.scrollHeight;\n}\nfunction sTp(){const a=$('chatMsgs');if(!a)return;const d=document.createElement('div');d.className='ty';d.id='cL';for(let i=0;i<3;i++){const s=document.createElement('span');d.appendChild(s);}a.appendChild(d);a.scrollTop=a.scrollHeight;}\nfunction rTp(){const e=$('cL');if(e)e.remove();}\nasync function sC(t){\n  const inp=$('chatIn');const m=(t||(inp?inp.value:'')).trim();\n  if(!m)return;if(inp&&!t){inp.value='';inp.style.height='auto';}\n  aCM('us',m);sTp();\n  try{const d=await chatApi(m);rTp();const r=d.reply||d.response||_('failed');aCM('bo',r);chH.push({role:'user',content:m},{role:'assistant',content:r});sp(r);}catch(e){rTp();aCM('bo','⚠️ '+_('failed'));}\n}\nfunction tCM(){\n  if(chL){if(recog)recog.stop();chL=false;const b=$('chatMicBtn');if(b)b.classList.remove('on');return;}\n  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;\n  if(!SR){tt(_('failed'),'err');return;}\n  recog=new SR();recog.lang=lang==='ar'?'ar-SA':'en-US';recog.interimResults=true;\n  recog.onstart=()=>{chL=true;const b=$('chatMicBtn');if(b)b.classList.add('on');};\n  recog.onend=()=>{chL=false;const b=$('chatMicBtn');if(b)b.classList.remove('on');};\n  recog.onresult=(e)=>{const inp=$('chatIn');if(!inp)return;if(e.results[0].isFinal){inp.value=e.results[0][0].transcript;sC();}else inp.value=e.results[0][0].transcript;};\n  recog.start();\n}\n\n// ─── Insights ───\nasync function lI(){\n  const c=$('insightCards'),b=$('branchTable'),cd=$('claimsDetail'),ib=$('integBar');\n  if(!c)return;html(c,'<div class=\"ld\">⏳ '+_('loading')+'</div>');\n  try{\n    const d=await netApi();const f=d.financials||{},bb=d.by_branch||{};\n    html(c,\n      '<div class=\"sc\"><div class=\"sc-i\">💰</div><div class=\"sc-l\">'+_('totalVal')+'</div><div class=\"sc-v\">'+(f.network_total_sar?sar(f.network_total_sar):'—')+'</div></div>'+\n      '<div class=\"sc\"><div class=\"sc-i\">✅</div><div class=\"sc-l\">'+_('approvalRate')+'</div><div class=\"sc-v\">'+(f.network_approval_rate_pct?pct(f.network_approval_rate_pct):'—')+'</div><div class=\"sc-d\">'+n2(f.network_approved_sar||0)+' معتمد</div></div>'+\n      '<div class=\"sc\"><div class=\"sc-i\">📋</div><div class=\"sc-l\">'+_('claims')+'</div><div class=\"sc-v\">'+(f.total_claims_gss?n2(f.total_claims_gss):'—')+'</div><div class=\"sc-d\">GSS</div></div>'+\n      '<div class=\"sc\"><div class=\"sc-i\">📝</div><div class=\"sc-l\">'+_('priorAuth')+'</div><div class=\"sc-v\">'+(d.prior_auth?n2(d.prior_auth.network_total||0):'—')+'</div><div class=\"sc-d\">'+n2(d.prior_auth?.network_check_status||0)+' تحقق</div></div>'\n    );\n    if(Object.keys(bb).length){let h='<div class=\"tw\"><table><thead><tr><th>'+_('branch')+'</th><th>'+_('total')+'</th><th>'+_('approval')+'</th><th>'+_('auths')+'</th><th>'+_('status')+'</th></tr></thead><tbody>';\n    Object.keys(bb).forEach(k=>{const v=bb[k];const bd=Number(v.approval_pct||100)<95;h+='<tr><td>'+(HM[k]?HM[k][lang]:k)+'</td><td>'+sar(v.total_sar||0)+'</td><td>'+pct(v.approval_pct||0)+'</td><td>'+n2(v.pa||0)+'</td><td><span class=\"bd '+(bd?'bd-er':'bd-ok')+'\">'+(bd?'⚠️ الرفض':'✅')+'</span></td></tr>';});\n    h+='</tbody></table></div>';html(b,h);}else html(b,'<div class=\"em\"><div class=\"ei\">📭</div><p>'+_('failed')+'</p></div>');\n    // Claims detail\n    let h2='<div class=\"tw\"><table><thead><tr><th>'+_('branch')+'</th><th>'+_('total')+'</th><th>'+_('approval')+'</th><th>'+_('auths')+'</th></tr></thead><tbody>';\n    Object.keys(bb).forEach(k=>{const v=bb[k];h2+='<tr><td>'+(HM[k]?HM[k][lang]:k)+'</td><td>'+sar(v.total_sar||0)+'</td><td>'+pct(v.approval_pct||0)+'</td><td>'+n2(v.pa||0)+'</td></tr>';});\n    h2+='</tbody></table></div>';html(cd,h2);\n  }catch(e){html(c,'<div class=\"em\"><div class=\"ei\">⚠️</div><h3>'+_('failed')+'</h3></div>');}\n  html(ib,'<span class=\"up\">🟢 D1</span><span class=\"up\">🟢 Oracle</span><span class=\"up\">🟢 NPHIES</span><span class=\"up\">🟢 BSMA</span><span class=\"up\">🟢 GIVC</span><span class=\"up\">🟢 SBS</span>');\n}\n\n// ─── NPHIES ───\nasync function lM(){\n  const st=$('nphiesStats'),dt=$('nphiesDetail');\n  if(!st)return;html(st,'<div class=\"ld\">⏳ '+_('loading')+'</div>');\n  try{\n    const d=await mirApi();\n    html(st,\n      '<div class=\"sc\"><div class=\"sc-i\">📦</div><div class=\"sc-l\">'+_('nphiesGSS')+'</div><div class=\"sc-v\">'+n2(d.total_gss||0)+'</div></div>'+\n      '<div class=\"sc\"><div class=\"sc-i\">📝</div><div class=\"sc-l\">'+_('nphiesPA')+'</div><div class=\"sc-v\">'+n2(d.total_pa||0)+'</div></div>'+\n      '<div class=\"sc\"><div class=\"sc-i\">📋</div><div class=\"sc-l\">'+_('nphiesCoC')+'</div><div class=\"sc-v\">'+n2(d.total_coc||0)+'</div></div>'+\n      '<div class=\"sc\"><div class=\"sc-i\">⏰</div><div class=\"sc-l\">'+_('nphiesSync')+'</div><div class=\"sc-v\" style=\"font-size:.95rem\">'+dt(d.last_sync)+'</div><div class=\"sc-d\">'+(d.auth_healthy?'✅ ':'❌ ')+_('authHealthy')+'</div></div>'\n    );\n    html(dt,'<div style=\"line-height:2;font-size:.88rem\"><div><strong>GSS:</strong> '+n2(d.total_gss||0)+'</div><div><strong>PA:</strong> '+n2(d.total_pa||0)+'</div><div><strong>CoC:</strong> '+n2(d.total_coc||0)+'</div><div><strong>'+_('nphiesSync')+':</strong> '+dt(d.last_sync)+'</div><div><strong>'+_('authHealthy')+':</strong> '+(d.auth_healthy?'✅ '+_('yes'):'❌ '+_('no'))+'</div><div><strong>'+_('errors')+':</strong> '+n2(d.errors||0)+'</div><div><strong>'+_('mirror')+':</strong> '+(d.ok?'✅':'❌')+'</div></div>');\n  }catch(e){html(st,'<div class=\"em\"><div class=\"ei\">⚠️</div><h3>'+_('failed')+'</h3></div>');}\n}\n\n// ─── DeepSeek AI Drafting ───\nasync function draftMsg(targetId, context){\n  const res=$(targetId);\n  if(!res){return '';}\n  html(res,'⏳ بسمة تفكر...');\n  try{\n    const r=await fetch(BA+'/basma/chat',{method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(15000),\n      body:JSON.stringify({message:'اكتب رسالة قصيرة ومهنية باللغة العربية للمريض حول: '+context+'. الرسالة يجب أن تكون من مستشفى الحياة الوطني، قصيرة (3 جمل فقط)، ودودة ومهنية.',lang:'ar',hospital:hosp})});\n    const d=await r.json();\n    const txt=d.reply||d.message||d.text||'';\n    html(res,'');\n    return txt;\n  }catch(e){html(res,'');return '';}\n}\nasync function draftSms(){\n  const body=$('smsBody'),res=$('smsResult');\n  if(!body)return;\n  const ctx=body.value||'تذكير بالموعد الطبي';\n  const txt=await draftMsg('smsResult',ctx);\n  if(txt){body.value=txt;tt('✨ تمت الصياغة','ok');}\n}\nasync function draftWa(){\n  const body=$('waBody'),res=$('waResult');\n  if(!body)return;\n  const ctx=body.value||'تذكير بالموعد الطبي';\n  const txt=await draftMsg('waResult',ctx);\n  if(txt){body.value=txt;tt('✨ تمت الصياغة','ok');}\n}\n\n// ─── Communications ───\nasync function sendSms(){\n  const phone=$('smsPhone').value.trim(),body=$('smsBody').value.trim(),res=$('smsResult');\n  if(!phone||!body){tt('أدخل رقم الجوال ونص الرسالة','err');return;}\n  html(res,'⏳ جاري الإرسال...');\n  try{\n    const r=await fetch(BA+'/comms/sms',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:phone,message:body}),signal:AbortSignal.timeout(15000)});\n    const d=await r.json();\n    html(res,d.success||d.sid?'✅ تم الإرسال':'❌ '+(d.error||'فشل'));\n  }catch(e){html(res,'❌ '+e.message);}\n}\nasync function startCall(){\n  const phone=$('callPhone').value.trim(),res=$('callResult');\n  if(!phone){tt('أدخل رقم الجوال','err');return;}\n  html(res,'⏳ جاري بدء المكالمة...');\n  try{\n    const r=await fetch(BA+'/comms/call',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:phone}),signal:AbortSignal.timeout(15000)});\n    const d=await r.json();\n    html(res,d.success||d.sid?'✅ جاري الاتصال...':'❌ '+(d.error||'فشل'));\n  }catch(e){html(res,'❌ '+e.message);}\n}\nasync function sendWhatsApp(){\n  const phone=$('waPhone').value.trim(),body=$('waBody').value.trim(),res=$('waResult');\n  if(!phone||!body){tt('أدخل رقم الجوال ونص الرسالة','err');return;}\n  html(res,'⏳ جاري الإرسال...');\n  try{\n    const r=await fetch(BA+'/comms/sms',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:phone,message:body,channel:'whatsapp'}),signal:AbortSignal.timeout(15000)});\n    const d=await r.json();\n    html(res,d.success||d.sid?'✅ تم الإرسال':'❌ '+(d.error||'فشل'));\n  }catch(e){html(res,'❌ '+e.message);}\n}\nasync function sendOtp(){\n  const phone=$('otpPhone').value.trim(),res=$('otpResult');\n  if(!phone){tt('أدخل رقم الجوال','err');return;}\n  html(res,'⏳ جاري الإرسال...');\n  try{\n    const r=await fetch(BA+'/comms/verify/phone',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:phone}),signal:AbortSignal.timeout(15000)});\n    const d=await r.json();\n    html(res,d.success?'✅ تم إرسال OTP':'❌ '+(d.error||'فشل'));\n  }catch(e){html(res,'❌ '+e.message);}\n}\nasync function verifyOtp(){\n  const phone=$('otpPhone').value.trim(),code=$('otpCode').value.trim(),res=$('otpResult');\n  if(!phone||!code){tt('أدخل الجوال والرمز','err');return;}\n  html(res,'⏳ جاري التحقق...');\n  try{\n    const r=await fetch(BA+'/comms/verify/confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:phone,otp:code}),signal:AbortSignal.timeout(15000)});\n    const d=await r.json();\n    html(res,d.success?'✅ تم التحقق بنجاح':'❌ '+(d.error||'رمز خاطئ'));\n  }catch(e){html(res,'❌ '+e.message);}\n}\n\n// ─── NPHIES Riyadh Live ───\nasync function lNL(){\n  const el=$('nphiesLive');if(!el)return;\n  try{\n    const d=await fetch(BA+'/basma/riyadh-live',{signal:AbortSignal.timeout(15000)}).then(r=>r.json());\n    if(d.ok){\n      const items=d.items||[];\n      let h='<div class=\"g3\" style=\"margin-bottom:12px\">';\n      h+='<div class=\"sc\" style=\"border-left:3px solid var(--teal)\"><div class=\"sc-i\">💰</div><div class=\"sc-l\">إجمالي GSS</div><div class=\"sc-v\">'+n2(Math.round(d.total_amount_sar/1e6))+' M SAR</div><div class=\"sc-d\">'+d.total_gss+' سجل</div></div>';\n      h+='<div class=\"sc\" style=\"border-left:3px solid var(--succ)\"><div class=\"sc-i\">✅</div><div class=\"sc-l\">نسبة الموافقة</div><div class=\"sc-v\">'+d.approval_rate_pct+'%</div><div class=\"sc-d\">'+d.approved_count+' موافق</div></div>';\n      h+='<div class=\"sc\" style=\"border-left:3px solid var(--blue)\"><div class=\"sc-i\">🏥</div><div class=\"sc-l\">المنشأة</div><div class=\"sc-v\" style=\"font-size:.75rem\">الرياض</div><div class=\"sc-d\">'+d.license+'</div></div>';\n      h+='</div>';\n      if(items.length){\n        h+='<div class=\"tw\"><table><thead><tr><th>الحالة</th><th>الدافع</th><th>المبلغ SAR</th><th>الشهر</th></tr></thead><tbody>';\n        items.forEach(i=>{h+='<tr><td><span style=\"color:'+(i.status==='Approved'?'var(--succ)':'var(--warn)')+'\">'+i.status+'</span></td><td>'+i.payer+'</td><td>'+n2(Math.round(i.amount))+'</td><td>'+i.month+'</td></tr>';});\n        h+='</tbody></table></div>';\n      }\n      h+='<div style=\"font-size:.72rem;color:var(--td);margin-top:8px\">آخر تحديث: '+dt(d.as_of)+'</div>';\n      html(el,h);\n    } else {\n      html(el,'<div style=\"color:var(--warn);font-size:.85rem\">⚠️ '+（d.error||'تعذّر تحميل البيانات')+'</div>');\n    }\n  }catch(e){html(el,'<div style=\"color:var(--err);font-size:.85rem\">❌ '+e.message+'</div>');}\n}\n\n// ─── Oracle Approvals Live ───\nasync function lOA(){\n  const el=$('oracleApprovals');if(!el)return;\n  try{\n    const d=await fetch(HN+'/api/health',{signal:AbortSignal.timeout(10000)}).then(r=>r.json());\n    const approvals=d.today_approvals||null;\n    if(approvals){\n      const s=approvals.summary||{};\n      let h='<div class=\"g3\" style=\"margin-bottom:12px\">';\n      h+='<div class=\"sc\"><div class=\"sc-i\">📂</div><div class=\"sc-l\">مفتوح اليوم</div><div class=\"sc-v\">'+n2(s.opened)+'</div></div>';\n      h+='<div class=\"sc\"><div class=\"sc-i\">📤</div><div class=\"sc-l\">مرسل</div><div class=\"sc-v\">'+n2(s.posted)+'</div></div>';\n      h+='<div class=\"sc\"><div class=\"sc-i\">⚡</div><div class=\"sc-l\">أولوية</div><div class=\"sc-v\" style=\"color:var(--warn)\">'+n2(s.give_priority)+'</div></div>';\n      h+='<div class=\"sc\"><div class=\"sc-i\">💬</div><div class=\"sc-l\">ردود</div><div class=\"sc-v\">'+n2(s.has_response)+'</div></div>';\n      h+='</div>';\n      html(el,h);\n    } else {\n      html(el,'<div class=\"ld\">⏳ جاري استرداد بيانات Oracle...</div>');\n    }\n  }catch(e){html(el,'<div style=\"color:var(--tm);font-size:.85rem\">—</div>');}\n}\n\n// ─── Oracle ───\nasync function lO(){\n  const st=$('oracleStats'),dt=$('oracleDetail');\n  if(!st)return;html(st,'<div class=\"ld\">⏳ '+_('loading')+'</div>');\n  try{\n    const d=await hnh('/api/health',{});const ints=d.integrations||{};\n    const bO=ints.oracle_bridge==='connected',bT=ints.oracle_tunnel||'—',bN=ints.nphies_mirror==='connected';\n    html(st,\n      '<div class=\"sc\" style=\"border-left:3px solid var(--blue)\"><div class=\"sc-i\">🔗</div><div class=\"sc-l\">'+_('oracleBridge')+'</div><div class=\"sc-v\" style=\"font-size:1rem\">'+(bO?'✅ '+_('connected'):'❌ '+_('disconnected'))+'</div></div>'+\n      '<div class=\"sc\" style=\"border-left:3px solid var(--purple)\"><div class=\"sc-i\">🔌</div><div class=\"sc-l\">'+_('oracleTunnel')+'</div><div class=\"sc-v\" style=\"font-size:.9rem\">🟢 نشط</div><div class=\"sc-d\" style=\"font-size:.7rem\">'+(typeof bT==='string'?bT.substring(0,50):'—')+'</div></div>'+\n      '<div class=\"sc\" style=\"border-left:3px solid var(--teal)\"><div class=\"sc-i\">🏛️</div><div class=\"sc-l\">NPHIES</div><div class=\"sc-v\" style=\"font-size:1rem\">'+(bN?'✅ '+_('connected'):'❌ '+_('disconnected'))+'</div><div class=\"sc-d\">'+_('nphiesAvailable')+'</div></div>'+\n      '<div class=\"sc\" style=\"border-left:3px solid var(--rose)\"><div class=\"sc-i\">📊</div><div class=\"sc-l\">'+_('d1')+'</div><div class=\"sc-v\" style=\"font-size:1rem\">'+(ints.d1_primary==='connected'?'✅':'❌')+'</div><div class=\"sc-d\">HIS: '+(ints.d1_his_database==='connected'?'✅':'❌')+'</div></div>'\n    );\n    let h='<div style=\"line-height:2;font-size:.88rem\">';Object.keys(ints).forEach(k=>{const v=ints[k];const ok=v==='connected'||v==='live'||v.includes('reachable');h+='<div><strong style=\"color:var(--tm)\">'+(k.replace(/_/g,' '))+'</strong>: <span class=\"bd '+(ok?'bd-ok':'bd-er')+'\">'+(ok?'✅':'❌')+' '+(typeof v==='string'?v.substring(0,60):'—')+'</span></div>';});h+='</div>';html(dt,h);\n  }catch(e){html(st,'<div class=\"em\"><div class=\"ei\">⚠️</div><h3>'+_('failed')+'</h3></div>');}\n}\n\n// ─── Eligibility ───\nasync function cE(){\n  const inp=$('eidIn'),tp=$('eidType'),res=$('eligResult');\n  if(!inp||!res)return;const id=inp.value.trim();\n  if(!id||id.length<9){tt(_('idShort'),'err');return;}\n  html(res,'<div class=\"ld\">⏳ '+_('loading')+'</div>');\n  try{\n    const d=await hnh('/api/eligibility',{identity_number:id,identity_type:tp?tp.value:'NATIONAL NUMBER'});\n    if(d.success&&d.eligible)html(res,'<div style=\"padding:12px;background:var(--sl);border-radius:var(--rs);color:var(--succ);font-size:.9rem;line-height:1.8\">✅ <strong>'+_('eligible')+'</strong><br>'+(d.payer_name?'المؤمّن: '+d.payer_name+'<br>':'')+(d.network?'الشبكة: '+d.network+'<br>':'')+(d.pct?'النسبة: '+d.pct+'%<br>':'')+(d.policy_number?'الوثيقة: '+d.policy_number:'')+'</div>');\n    else html(res,'<div style=\"padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err);font-size:.9rem\">❌ <strong>'+_('notEligible')+'</strong><br>'+(d.message||'')+'</div>');\n  }catch(e){html(res,'<div style=\"padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)\">⚠️ '+_('checkFailed')+'</div>');}\n}\nasync function lP(){\n  const pl=$('insPartnerList');if(!pl)return;\n  try{\n    const d=await hnh('/api/eligibility',{identity_number:'0000000000',identity_type:'NATIONAL NUMBER'});\n    const ps=d.insurance_partners||d.partners||[];\n    if(ps.length){let h='<div class=\"tw\"><table><thead><tr><th>#</th><th>الشركة</th><th>الشبكة</th><th>النسبة</th></tr></thead><tbody>';ps.forEach((p,i)=>{h+='<tr><td>'+(i+1)+'</td><td>'+(p.name||p.id)+'</td><td>'+(p.network||'—')+'</td><td>'+(p.pct?pct(p.pct):'—')+'</td></tr>';});h+='</tbody></table></div>';html(pl,h);}else html(pl,'<div style=\"color:var(--tm);font-size:.85rem\">—</div>');\n  }catch(e){html(pl,'<div style=\"color:var(--tm);font-size:.85rem\">—</div>');}\n}\n\n// ─── Appointments ───\nasync function bA(e){\n  e.preventDefault();const n=$('apName'),p=$('apPhone');\n  if(!n||!n.value.trim()){tt(_('nameRequired'),'err');return;}\n  if(!p||p.value.length<10){tt(_('phoneInvalid'),'err');return;}\n  const h=$('apHosp').value,s=$('apSpec').value,d=$('apDate').value,t=$('apTime').value;\n  const hn=(HM[h]?HM[h][lang]:h),sn=(SM[s]?SM[s][lang]:s);\n  const res=$('apptResult');\n  html(res,'<div style=\"padding:12px;color:var(--tm)\">⏳ جاري الحجز...</div>');\n  try{\n    // Book via HNH API\n    const r=await fetch(BA+'/api/appointments',{method:'POST',headers:{'Content-Type':'application/json'},\n      body:JSON.stringify({patient_id:null,clinic_name:sn,appointment_date:d,appointment_time:t,appointment_type:'Outpatient',notes:n.value+' | '+p.value}),\n      signal:AbortSignal.timeout(10000)});\n    const bk=await r.json();\n    if(bk.success||bk.id){\n      const bid=bk.id||'—';\n      html(res,'<div style=\"padding:12px;background:var(--sl);border-radius:var(--rs);color:var(--succ);line-height:1.8\">✅ <strong>'+_('bookingOk')+'</strong> #'+bid+'<br>'+hn+' | '+sn+' | '+d+' '+t+'<br>'+n.value+'</div>');\n      tt(_('bookingSuccess')+' — '+hn,'ok');\n      // Send WhatsApp appointment reminder template\n      const phone=p.value.startsWith('+')?p.value:'+966'+p.value.replace(/^0/,'');\n      const [yr,mo,dy]=d.split('-');\n      const tVar1=parseInt(mo)+'/'+parseInt(dy);\n      const [hr,mn]=t.split(':');const h24=parseInt(hr);\n      const tVar2=(h24>12?h24-12:h24||12)+':'+(mn||'00')+(h24>=12?'pm':'am');\n      fetch(BA+'/comms/whatsapp-template',{method:'POST',headers:{'Content-Type':'application/json'},\n        body:JSON.stringify({to:phone,content_sid:'HXb5b62575e6e4ff6129ad7c8efe1f983e',variables:{'1':tVar1,'2':tVar2}}),\n        signal:AbortSignal.timeout(10000)}).catch(()=>{});\n    } else {\n      html(res,'<div style=\"padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)\">❌ '+_('bookingFail')+'</div>');\n    }\n  }catch(e2){\n    html(res,'<div style=\"padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)\">❌ '+e2.message+'</div>');\n  }\n}\n\n// ─── AI Search ───\nasync function doSearch(){\n  const q=$('srchIn');if(!q)return;const query=q.value.trim();if(!query){tt(_('searching'),'err');return;}\n  const res=$('srchResult');\n  html(res,'<div class=\"cd\"><div class=\"cd-b\"><div class=\"ld\">🔍 '+_('searching')+'</div></div></div>');\n  try{\n    const d=await fetch(HN+'/api/search?q='+encodeURIComponent(query)+'&lang='+lang,{signal:AbortSignal.timeout(20000)}).then(r=>r.json());\n    const ans=d.answer||d.result||_('noResults');\n    const srcs=d.sources||d.chunks||[];\n    let h='<div class=\"cd\"><div class=\"cd-b\">';\n    h+='<div class=\"srch-ans\">'+ans+'</div>';\n    if(srcs.length){\n      h+='<div style=\"font-size:.75rem;color:var(--tm);margin-bottom:6px\">📚 المصادر:</div><div class=\"srch-src\">';\n      srcs.forEach(function(s){h+='<span>📄 '+(s.title||s.filename||s)+'</span>';});\n      h+='</div>';\n    }\n    h+='<div style=\"font-size:.7rem;color:var(--td);margin-top:10px\">⚡ '+_('srchPowered')+' · brainsait-ai-search</div>';\n    h+='</div></div>';\n    html(res,h);\n  }catch(e){html(res,'<div class=\"cd\"><div class=\"cd-b\" style=\"color:var(--err)\">❌ '+e.message+'</div></div>');}\n}\n\n// ─── Home Care ───\nasync function lHC(){\n  const vl=$('hcVisits'),nl=$('hcNurses');if(!vl)return;\n  html(vl,'<div class=\"ld\">⏳ '+_('loading')+'</div>');\n  try{\n    const today=new Date().toISOString().split('T')[0];\n    const d=await fetch(HN+'/api/homecare/visits?date='+today+'&hospital_id='+hosp,{signal:AbortSignal.timeout(10000)}).then(r=>r.json());\n    const visits=d.visits||d.data||[];\n    if(!visits.length){html(vl,'<div class=\"em\"><div class=\"ei\">🏠</div><h3>لا توجد زيارات اليوم</h3><p>جدِّل زيارة جديدة</p></div>');\n    }else{\n      let h='';\n      visits.forEach(function(v){\n        const st=v.status||'scheduled';\n        const stColor=st==='completed'?'var(--succ)':st==='in_progress'?'var(--blue)':st==='cancelled'?'var(--err)':'var(--warn)';\n        const stLabel=st==='completed'?'مكتملة':st==='in_progress'?'جارية':st==='cancelled'?'ملغاة':'مجدولة';\n        h+='<div class=\"visit-card\">';\n        h+='<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:8px\">';\n        h+='<strong style=\"font-size:.9rem\">'+(v.patient_name||'—')+'</strong>';\n        h+='<span style=\"font-size:.72rem;padding:3px 8px;border-radius:10px;background:rgba(0,0,0,.3);color:'+stColor+'\">● '+stLabel+'</span>';\n        h+='</div>';\n        h+='<div style=\"font-size:.8rem;color:var(--tm)\">'+(v.visit_type||'—')+' · '+(v.scheduled_time?v.scheduled_time.substring(0,5):'—')+'</div>';\n        h+='<div style=\"font-size:.78rem;color:var(--td);margin-top:4px\">📍 '+(v.address||'—')+'</div>';\n        if(v.vitals&&Object.keys(v.vitals).length){h+='<div style=\"margin-top:8px;font-size:.75rem;color:var(--teal)\">🩺 '+(v.vitals.bp?'BP: '+v.vitals.bp+' ':' ')+(v.vitals.spo2?'SpO2: '+v.vitals.spo2+'% ':' ')+(v.vitals.temp?'T: '+v.vitals.temp+'°C ':'')+'</div>';}\n        h+='</div>';\n      });\n      html(vl,h);\n    }\n  }catch(e){html(vl,'<div class=\"em\"><div class=\"ei\">⚠️</div><h3>'+_('failed')+'</h3></div>');}\n  if(nl){html(nl,'<div class=\"ld\">⏳</div>');\n    try{\n      const nd=await fetch(HN+'/api/homecare/nurses?available=true',{signal:AbortSignal.timeout(8000)}).then(r=>r.json());\n      const nurses=nd.nurses||nd.data||[];\n      if(!nurses.length){html(nl,'<div style=\"color:var(--tm);font-size:.85rem;padding:8px\">لا يوجد ممرضات متاحات الآن</div>');}\n      else{let nh='<div style=\"display:flex;flex-direction:column;gap:8px\">';nurses.forEach(function(n){nh+='<div style=\"display:flex;justify-content:space-between;align-items:center;font-size:.85rem\"><span>👩‍⚕️ '+(n.name||n.nurse_name||'—')+'</span><span style=\"font-size:.72rem;color:var(--succ)\">● متاحة</span></div>';});nh+='</div>';html(nl,nh);}\n    }catch(e2){html(nl,'<div style=\"color:var(--tm);font-size:.85rem;padding:8px\">—</div>');}\n  }\n}\nasync function bookHC(e){\n  e.preventDefault();\n  const nm=$('hcName'),ph=$('hcPhone'),ad=$('hcAddr'),tp=$('hcType'),dt=$('hcDate'),tm=$('hcTime'),nt=$('hcNotes'),res=$('hcResult');\n  if(!nm||!nm.value.trim()){tt(_('hcNameReq'),'err');return;}\n  if(!ad||!ad.value.trim()){tt(_('hcAddrReq'),'err');return;}\n  html(res,'<div style=\"color:var(--tm)\">⏳ جاري الجدولة...</div>');\n  try{\n    const r=await fetch(HN+'/api/homecare/visits',{method:'POST',headers:{'Content-Type':'application/json'},\n      body:JSON.stringify({patient_name:nm.value,patient_phone:ph?ph.value:'',address:ad.value,visit_type:tp?tp.value:'general_checkup',scheduled_date:dt?dt.value:new Date().toISOString().split('T')[0],scheduled_time:tm?tm.value:'09:00',notes:nt?nt.value:'',hospital_id:hosp}),\n      signal:AbortSignal.timeout(12000)}).then(r=>r.json());\n    if(r.success||r.id||r.visit_id){\n      const vid=r.id||r.visit_id||'—';\n      html(res,'<div style=\"padding:12px;background:var(--sl);border-radius:var(--rs);color:var(--succ);line-height:1.8\">✅ '+_('hcScheduled')+'! #'+vid+'<br>'+nm.value+' · '+(dt?dt.value:'')+'</div>');\n      tt('✅ '+_('hcScheduled'),'ok');lHC();\n    }else{html(res,'<div style=\"padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)\">❌ '+(r.error||r.message||_('hcFail'))+'</div>');}\n  }catch(e2){html(res,'<div style=\"padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)\">❌ '+e2.message+'</div>');}\n}\n\n// ─── Telehealth ───\nasync function lTH(){\n  const sl=$('thSessions'),st=$('thStats');if(!sl)return;\n  html(sl,'<div class=\"ld\">⏳ '+_('loading')+'</div>');\n  try{\n    const d=await fetch(HN+'/api/telehealth/sessions?status=scheduled&hospital_id='+hosp,{signal:AbortSignal.timeout(10000)}).then(r=>r.json());\n    const sessions=d.sessions||d.data||[];\n    if(!sessions.length){html(sl,'<div class=\"em\"><div class=\"ei\">🎥</div><h3>لا توجد جلسات نشطة</h3><p>أنشئ جلسة جديدة</p></div>');}\n    else{\n      let h='';\n      sessions.forEach(function(s){\n        const code=s.room_code||s.session_code||'—';\n        const url=s.join_url||s.room_url||('https://telehealth.brainsait.org/room/'+code);\n        h+='<div class=\"sess-card\">';\n        h+='<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:6px\">';\n        h+='<strong style=\"font-size:.9rem\">'+(s.patient_name||'—')+'</strong>';\n        h+='<a href=\"'+url+'\" target=\"_blank\" style=\"font-size:.72rem;padding:4px 12px;border-radius:10px;background:var(--blue);color:#fff;text-decoration:none\">🎥 دخول</a>';\n        h+='</div>';\n        h+='<div class=\"sess-code\">📟 '+code+'</div>';\n        h+='<div style=\"font-size:.78rem;color:var(--tm)\">'+(s.provider_name||'—')+' · '+(s.scheduled_date||'—')+' '+(s.scheduled_time?s.scheduled_time.substring(0,5):'')+'</div>';\n        if(s.reason)h+='<div style=\"font-size:.75rem;color:var(--td);margin-top:4px\">'+s.reason+'</div>';\n        h+='</div>';\n      });\n      html(sl,h);\n    }\n  }catch(e){html(sl,'<div class=\"em\"><div class=\"ei\">⚠️</div><h3>'+_('failed')+'</h3></div>');}\n  if(st){html(st,'<div class=\"ld\">⏳</div>');\n    try{\n      const sd=await fetch(HN+'/api/telehealth/stats',{signal:AbortSignal.timeout(8000)}).then(r=>r.json());\n      html(st,'<div style=\"font-size:.85rem;line-height:2\"><div>📊 الجلسات اليوم: <strong>'+n2(sd.today||0)+'</strong></div><div>✅ مكتملة: <strong>'+n2(sd.completed||0)+'</strong></div><div>⏳ مجدولة: <strong>'+n2(sd.scheduled||0)+'</strong></div><div>👥 المرضى: <strong>'+n2(sd.total_patients||0)+'</strong></div></div>');\n    }catch(e2){html(st,'<div style=\"color:var(--tm);font-size:.85rem;padding:8px\">—</div>');}\n  }\n}\nasync function createTH(e){\n  e.preventDefault();\n  const pt=$('thPatient'),ph=$('thPhone'),pv=$('thProvider'),dt=$('thDate'),tm=$('thTime'),rs=$('thReason'),res=$('thResult');\n  if(!pt||!pt.value.trim()){tt(_('thNameReq'),'err');return;}\n  html(res,'<div style=\"color:var(--tm)\">⏳ جاري إنشاء الجلسة...</div>');\n  try{\n    const r=await fetch(HN+'/api/telehealth/sessions',{method:'POST',headers:{'Content-Type':'application/json'},\n      body:JSON.stringify({patient_name:pt.value,patient_phone:ph?ph.value:'',provider_id:pv?pv.value:'',scheduled_date:dt?dt.value:new Date().toISOString().split('T')[0],scheduled_time:tm?tm.value:'10:00',reason:rs?rs.value:'استشارة طبية',hospital_id:hosp}),\n      signal:AbortSignal.timeout(15000)}).then(r=>r.json());\n    if(r.success||r.session_id||r.id){\n      const code=r.room_code||r.session_code||'—';\n      const url=r.join_url||('https://telehealth.brainsait.org/room/'+code);\n      html(res,'<div style=\"padding:14px;background:var(--sl);border-radius:var(--rs);color:var(--succ);line-height:2\">✅ '+_('thCreated')+'!<br><span style=\"font-size:1.1rem;font-weight:700;color:var(--blue);letter-spacing:.15em\">📟 '+code+'</span><br><a href=\"'+url+'\" target=\"_blank\" style=\"color:var(--blue);font-size:.85rem\">🔗 رابط الجلسة</a></div>');\n      tt('✅ جلسة: '+code,'ok');\n      if(ph&&ph.value){const phone=ph.value.startsWith('+')?ph.value:'+966'+ph.value.replace(/^0/,'');fetch(BA+'/comms/sms',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:phone,message:'جلسة تطبيب عن بُعد — '+(pt?pt.value:'')+' | كود: '+code+' | '+url})}).catch(()=>{});}\n      lTH();\n    }else{html(res,'<div style=\"padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)\">❌ '+(r.error||r.message||_('thFail'))+'</div>');}\n  }catch(e2){html(res,'<div style=\"padding:12px;background:var(--el);border-radius:var(--rs);color:var(--err)\">❌ '+e2.message+'</div>');}\n}\nfunction joinTH(){\n  const c=$('thJoinCode');if(!c||!c.value.trim()){tt(_('thJoinReq'),'err');return;}\n  const code=c.value.trim().toUpperCase();\n  window.open('https://telehealth.brainsait.org/room/'+code,'_blank');\n  tt('🎥 جاري الدخول: '+code,'ok');\n}\n\n// ─── Email ───\nasync function sendEmail(){\n  const to=$('emTo'),tp=$('emType'),nm=$('emName'),res=$('emResult');\n  if(!to||!to.value.trim()){tt(_('emailReq'),'err');return;}\n  html(res,'⏳ جاري الإرسال...');\n  try{\n    const r=await fetch(HN+'/api/email/send',{method:'POST',headers:{'Content-Type':'application/json'},\n      body:JSON.stringify({to:to.value,template:tp?tp.value:'appointment',patient_name:nm?nm.value:'المريض الكريم',lang:'ar',hospital:hosp}),\n      signal:AbortSignal.timeout(15000)}).then(r=>r.json());\n    html(res,r.success||r.id?'✅ '+_('emailSent'):'❌ '+(r.error||_('emailFail')));\n  }catch(e){html(res,'❌ '+e.message);}\n}\n\n// ─── Language ───\nfunction tL(){\n  lang=lang==='ar'?'en':'ar';localStorage.setItem('bm_lang',lang);\n  document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.documentElement.lang=lang;\n  const lb=$('langBtn');if(lb)lb.textContent=lang==='ar'?'🇸🇦 AR':'🇬🇧 EN';\n  ['voiceSub','voiceStatus'].forEach(k=>{const e=$(k);if(e)e.textContent=_(k==='voiceSub'?'voiceSub':lang==='ar'?'اضغط للتحدث مع بسمة':'Tap to talk to Basma');});\n}\n\n// ─── Init ───\nfunction init(){\n  // Set initial lang\n  if(lang==='en'){document.documentElement.dir='ltr';document.documentElement.lang='en';}\n  const lb=$('langBtn');if(lb)lb.textContent=lang==='ar'?'🇸🇦 AR':'🇬🇧 EN';\n\n  // Event delegation\n  document.addEventListener('click',e=>{\n    const t=e.target.closest('[data-a]');if(!t)return;\n    const a=t.dataset.a;\n    if(a==='toggleVoice')sV();else if(a==='clearVoice')clV();else if(a==='sendChat')sC();else if(a==='toggleChatMic')tCM();else if(a==='checkElig')cE();else if(a==='sendSms')sendSms();else if(a==='startCall')startCall();else if(a==='sendWhatsApp')sendWhatsApp();else if(a==='sendOtp')sendOtp();else if(a==='verifyOtp')verifyOtp();else if(a==='draftSms')draftSms();else if(a==='draftWa')draftWa();else if(a==='doSearch')doSearch();else if(a==='joinTH')joinTH();else if(a==='sendEmail')sendEmail();\n    else if(a==='srchHint'){const si=$('srchIn');if(si){si.value=t.dataset.q||'';doSearch();}}\n  });\n\n  // Hospital chips\n  qa('.hc-btn').forEach(b=>{b.addEventListener('click',()=>{qa('.hc-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');hosp=b.dataset.h;localStorage.setItem('bm_hosp',hosp);lI();lM();lO();});});\n\n  // Tab switching\n  qa('.tab').forEach(t=>{t.addEventListener('click',()=>{qa('.tab').forEach(x=>x.classList.remove('on'));qa('.pn').forEach(p=>p.classList.remove('on'));t.classList.add('on');const pn=$('pn-'+t.dataset.tab);if(pn)pn.classList.add('on');    if(t.dataset.tab==='insights'){lI();lNL();lOA();}if(t.dataset.tab==='nphies')lM();if(t.dataset.tab==='oracle')lO();if(t.dataset.tab==='elig')lP();if(t.dataset.tab==='homecare')lHC();if(t.dataset.tab==='telehealth')lTH();if(t.dataset.tab==='chat'&&!chH.length)aCM('bo','👋 السلام عليكم! أنا بسمة، مساعد مستشفيات الحياة الوطني الذكي. كيف أقدر أساعدك اليوم؟');});});\n\n  // Voice hints\n  qa('.vq').forEach(b=>{b.addEventListener('click',()=>{const q=b.dataset.q;if(q){const t=$('voiceTranscript');if(t)t.textContent=q;pV(q);}});});\n  qa('#chatSugg button').forEach(b=>{b.addEventListener('click',()=>{if(b.dataset.q)sC(b.dataset.q);});});\n\n  // Card toggles\n  qa('[data-a=\"toggleCard\"]').forEach(h=>{h.addEventListener('click',()=>{const b=h.nextElementSibling;if(b){b.classList.toggle('hide');const s=h.querySelector('span');if(s)s.textContent=b.classList.contains('hide')?'▶':'▼';}});});\n\n  // Chat input\n  const ci=$('chatIn');if(ci){ci.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sC();}});ci.addEventListener('input',()=>{ci.style.height='auto';ci.style.height=Math.min(ci.scrollHeight,100)+'px';});}\n\n  // Lang toggle\n  if(lb)lb.addEventListener('click',tL);\n\n  // Appointments form\n  const af=$('apptForm');if(af)af.addEventListener('submit',bA);\n\n  // Home Care form\n  const hf=$('hcForm');if(hf)hf.addEventListener('submit',bookHC);\n\n  // Telehealth form\n  const tf=$('thForm');if(tf)tf.addEventListener('submit',createTH);\n\n  // Search enter key\n  const si=$('srchIn');if(si)si.addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});\n\n  // Set default date\n  const ad=$('apDate');if(ad){const d=new Date();d.setDate(d.getDate()+1);ad.value=d.toISOString().split('T')[0];}\n  const hd=$('hcDate');if(hd){const d=new Date();d.setDate(d.getDate()+1);hd.value=d.toISOString().split('T')[0];}\n  const thd=$('thDate');if(thd){const d=new Date();d.setDate(d.getDate()+1);thd.value=d.toISOString().split('T')[0];}\n  const at=$('apTime');if(at)at.value='10:00';\n\n  // Initial data load\n  setTimeout(()=>{lI();lM();lO();lP();lNL();},500);\n}\n\nif(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();\n})();\n</script>\n</body>\n</html>", { headers: { "Content-Type": "text/html; charset=utf-8" } });
+})();<\/script>`;
 }
-function stitchDoctorDashboard(u) {
-  return new Response("<!DOCTYPE html>\n<html lang=\"en\"><head>\n<meta charset=\"utf-8\"/>\n<link crossorigin=\"\" href=\"https://fonts.gstatic.com/\" rel=\"preconnect\"/>\n<link as=\"style\" href=\"https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900\" onload=\"this.rel='stylesheet'\" rel=\"stylesheet\"/>\n<link href=\"https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined\" rel=\"stylesheet\"/>\n<title>Stitch Design</title>\n<link href=\"data:image/x-icon;base64,\" rel=\"icon\" type=\"image/x-icon\"/>\n<script src=\"https://cdn.tailwindcss.com?plugins=forms,container-queries\"></script>\n<script id=\"tailwind-config\">\n    tailwind.config = {\n      darkMode: \"class\",\n      theme: {\n        extend: {\n          colors: {\n            \"primary\": \"#1193d4\",\n            \"background-light\": \"#f6f7f8\",\n            \"background-dark\": \"#101c22\",\n            \"text-light\": \"#111618\",\n            \"text-dark\": \"#ffffff\",\n            \"text-subtle-light\": \"#617c89\",\n            \"text-subtle-dark\": \"#a0b4bc\",\n            \"surface-light\": \"#ffffff\",\n            \"surface-dark\": \"#19272e\",\n            \"border-light\": \"#f0f3f4\",\n            \"border-dark\": \"#2d3f48\"\n          },\n          fontFamily: {\n            \"display\": [\"Inter\"]\n          },\n          borderRadius: {\n            \"DEFAULT\": \"0.25rem\",\n            \"lg\": \"0.5rem\",\n            \"xl\": \"0.75rem\",\n            \"full\": \"9999px\"\n          },\n        },\n      },\n    }\n  </script>\n<style>\n    body {\n      min-height: max(884px, 100dvh);\n    }\n  </style>\n  </head>\n<body class=\"bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark\">\n<div class=\"relative flex h-auto min-h-screen w-full flex-col justify-between overflow-x-hidden\">\n<div class=\"flex-grow\">\n<header class=\"sticky top-0 z-10 flex items-center justify-between border-b border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark p-4\">\n<div class=\"w-12\"></div>\n<h1 class=\"flex-1 text-center text-lg font-bold\">Dashboard</h1>\n<div class=\"flex w-12 items-center justify-end\">\n<button class=\"rounded-full p-2 text-text-subtle-light dark:text-text-subtle-dark hover:bg-primary/10\">\n<span class=\"material-symbols-outlined\">\n              notifications\n            </span>\n</button>\n</div>\n</header>\n<main class=\"p-4 space-y-6\">\n<section>\n<h2 class=\"text-lg font-bold mb-4\">Today's Appointments</h2>\n<div class=\"space-y-2\">\n<div class=\"flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-3 rounded-lg\">\n<img alt=\"Sarah Miller\" class=\"h-14 w-14 rounded-full object-cover\" src=\"https://lh3.googleusercontent.com/aida-public/AB6AXuCBkgwnHuB7HRjE3thE5uEUhmDyYOBadLrto7iyniH-ui1b7D2XAFgCtYfZG2CmEJ4-qtTPc-RY5nMZEVXfzjT8Ka_rDpTcAsHOr8HkZmf8R0LAcJiZX7JJDYCEinpwk4ur12M18HLdQgmsNuY7Q8mpYxDBFzllqs0QJwVBocx1y9thyGLa4xyVuic5e9UYMCX_bypX-v7uymDB9iuAG_6bgzTaXHD7ej9V-fGZcG99mS5lF1UUB-2zj9VXKnSLspebhsqI-sMQHAk\"/>\n<div class=\"flex-1\">\n<p class=\"font-medium\">Patient: Sarah Miller</p>\n<p class=\"text-sm text-text-subtle-light dark:text-text-subtle-dark\">10:00 AM - 10:30 AM</p>\n</div>\n</div>\n<div class=\"flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-3 rounded-lg\">\n<img alt=\"David Lee\" class=\"h-14 w-14 rounded-full object-cover\" src=\"https://lh3.googleusercontent.com/aida-public/AB6AXuAvSfnRgxo-_xQ_gdcp8xv2OJ6Pv8WG8AO2C9PKfcbrv6vKulobQ0mlZ6yNU634W3CUqvCNecFb8qaryGpDoXUgrMXlVIm21aRl6DW0wWLBTzVkmOzoFZHARUzGubB23TPv4e9C3Heiba2D5DPnLFYV00drhjqM2sSKociwQBxCi0JxniM0IZPFvx2fU5nUx9g8HdC91_JCVebxGJ8kjBmiNqJ0ZwZrVudRs3zQ_h7QEn--t85hlBQqXELno2d5EaLTE9cUXWpakso\"/>\n<div class=\"flex-1\">\n<p class=\"font-medium\">Patient: David Lee</p>\n<p class=\"text-sm text-text-subtle-light dark:text-text-subtle-dark\">11:00 AM - 11:30 AM</p>\n</div>\n</div>\n<div class=\"flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-3 rounded-lg\">\n<img alt=\"Emily Chen\" class=\"h-14 w-14 rounded-full object-cover\" src=\"https://lh3.googleusercontent.com/aida-public/AB6AXuAHpDSLh4Cbg3pAFY4pPyXgn-0n1LIJNpv6nPE4KNZcrphpO02c0c8EUu6Soc-rw9h5BIkhv8kUDqboUH2tHllKTThql2dP-uNtCR_pN0dmmKTPhGmCgWb4zSiWyk5CdRwmY1Md_PReo5e5AJedAu151ah3icBFkV4a1lvz0Pd2k3e8jUyFsk64NCw18CL2rZsKDVnbCY84AzZDUGfVDjNhe7DvlJOe6htsJQWm84jt4HK94wgaQL8iokoJiJ7M6qq_7KzvOvuWO7A\"/>\n<div class=\"flex-1\">\n<p class=\"font-medium\">Patient: Emily Chen</p>\n<p class=\"text-sm text-text-subtle-light dark:text-text-subtle-dark\">12:00 PM - 12:30 PM</p>\n</div>\n</div>\n</div>\n</section>\n<section>\n<h2 class=\"text-lg font-bold mb-4\">Patient Summaries</h2>\n<div class=\"space-y-4\">\n<div class=\"flex items-stretch gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-lg\">\n<div class=\"flex flex-[2_2_0px] flex-col justify-between\">\n<div>\n<p class=\"text-sm text-text-subtle-light dark:text-text-subtle-dark\">Recent Visit</p>\n<p class=\"text-base font-bold\">Sarah Miller</p>\n<p class=\"text-sm text-text-subtle-light dark:text-text-subtle-dark\">Hypertension, Follow-up</p>\n</div>\n<button class=\"mt-4 flex h-9 w-fit items-center justify-center rounded-lg bg-primary/10 px-4 text-sm font-medium text-primary hover:bg-primary/20\">View</button>\n</div>\n<div class=\"w-full flex-1 aspect-video bg-cover bg-center rounded-lg\" style='background-image: url(\"https://lh3.googleusercontent.com/aida-public/AB6AXuCwOG_G97lr5z0URy-4coqaWUSji78sB7ln3QbkOVDrwDRpAAL-B87Y-p3QWFtnzmKr_Htkg11EhxEGEqxnpuWxAwh6JObXqKjTyUCxqUa48peYV78zcbfdZAAes-IdTEge-w33szYXAe8wb0A6k8iswfNU6bLsslOSroEEv6jVQ6bHM9-iwoLpQM8hKE2WaAuBAD5jdiKjYy9pHSbfx32dyYLCQATewjbxVCPZWlwoZhSTfQgCs3ZKEeG47IwnwuXvkGWiO9oRcfU\");'></div>\n</div>\n<div class=\"flex items-stretch gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-lg\">\n<div class=\"flex flex-[2_2_0px] flex-col justify-between\">\n<div>\n<p class=\"text-sm text-text-subtle-light dark:text-text-subtle-dark\">New Patient</p>\n<p class=\"text-base font-bold\">David Lee</p>\n<p class=\"text-sm text-text-subtle-light dark:text-text-subtle-dark\">Initial Consultation</p>\n</div>\n<button class=\"mt-4 flex h-9 w-fit items-center justify-center rounded-lg bg-primary/10 px-4 text-sm font-medium text-primary hover:bg-primary/20\">View</button>\n</div>\n<div class=\"w-full flex-1 aspect-video bg-cover bg-center rounded-lg\" style='background-image: url(\"https://lh3.googleusercontent.com/aida-public/AB6AXuB12sPra4lDrcTTLFaqwC4x7no1szxm5qUcR0R6VrQXevrqHL_a4YcxE02N3xICw3NSIEPQSvYvqk7XBOMgEXOZLzKOi5x0EXIUGitMBB_ooPzJOPjsO9JSwJtoA4a7k24y5pTnGVLmVkWgdKSi4CGKrM_Nwf4jR8-O01EQ2QYlVVCEeENnRMXkoTwMfi-CtyJ8f_SWMN3BZ4widybVvbYIFRXMcsFbSovyQeWuMCy3NqnVvM-yjp0jQKhO1fvDA6rIl3s591lCT0Q\");'></div>\n</div>\n<div class=\"flex items-stretch gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-lg\">\n<div class=\"flex flex-[2_2_0px] flex-col justify-between\">\n<div>\n<p class=\"text-sm text-text-subtle-light dark:text-text-subtle-dark\">Follow-up</p>\n<p class=\"text-base font-bold\">Emily Chen</p>\n<p class=\"text-sm text-text-subtle-light dark:text-text-subtle-dark\">Diabetes Management</p>\n</div>\n<button class=\"mt-4 flex h-9 w-fit items-center justify-center rounded-lg bg-primary/10 px-4 text-sm font-medium text-primary hover:bg-primary/20\">View</button>\n</div>\n<div class=\"w-full flex-1 aspect-video bg-cover bg-center rounded-lg\" style='background-image: url(\"https://lh3.googleusercontent.com/aida-public/AB6AXuCRScoM4UKeGDgKRMspys7-oqdg_WAL-KQ-obtbg0nKzmpCtRCv-1Nlz04QeMKtDc4n3tYE6BlwCXC26PbEM6r9E0pQWlL7YIK3fmoS60nvtI931EAxLQQTwOe23GXgDjkW4jqRsAQuTA-PC5Vt6HoZXS1B5NKSjP_x6Qx5DkA0G84sdG9JyFyYdwzbdsDOPsJMdSdEMLimyeU0Dn20La452HQZ_T4u9OAheGtgHVIA9V0YLQCqkvQWdICVIaLPHjnjzKcc3V6ntBU\");'></div>\n</div>\n</div>\n</section>\n<section>\n<h2 class=\"text-lg font-bold mb-4\">Quick Actions</h2>\n<div class=\"grid grid-cols-2 gap-4\">\n<button class=\"flex h-12 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-bold text-white\">New Appointment</button>\n<button class=\"flex h-12 w-full items-center justify-center rounded-lg bg-primary/10 px-4 text-sm font-bold text-primary hover:bg-primary/20\">Search Patients</button>\n</div>\n</section>\n</main>\n</div>\n<footer class=\"sticky bottom-0 z-10 border-t border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark pb-3 pt-2\">\n<nav class=\"flex justify-around\">\n<a class=\"flex flex-1 flex-col items-center justify-end gap-1 text-primary\" href=\"#\">\n<span class=\"material-symbols-outlined\">dashboard</span>\n<p class=\"text-xs font-medium\">Dashboard</p>\n</a>\n<a class=\"flex flex-1 flex-col items-center justify-end gap-1 text-text-subtle-light dark:text-text-subtle-dark\" href=\"#\">\n<span class=\"material-symbols-outlined\">groups</span>\n<p class=\"text-xs font-medium\">Patients</p>\n</a>\n<a class=\"flex flex-1 flex-col items-center justify-end gap-1 text-text-subtle-light dark:text-text-subtle-dark\" href=\"#\">\n<span class=\"material-symbols-outlined\">calendar_month</span>\n<p class=\"text-xs font-medium\">Schedule</p>\n</a>\n<a class=\"flex flex-1 flex-col items-center justify-end gap-1 text-text-subtle-light dark:text-text-subtle-dark\" href=\"#\">\n<span class=\"material-symbols-outlined\">settings</span>\n<p class=\"text-xs font-medium\">Settings</p>\n</a>\n</nav>\n</footer>\n</div>\n\n</body></html>", { headers: { "Content-Type": "text/html; charset=utf-8" } });
+__name(scr, "scr");
+function providerDashboardPage(req) {
+  var url = new URL(req.url);
+  var lang = url.searchParams.get("lang") || "en";
+  var isAr = lang === "ar";
+  var dir = isAr ? "rtl" : "ltr";
+  var providerId = url.searchParams.get("provider") || "";
+  var copy = isAr ? {
+    title: "\u0644\u0648\u062D\u0629 \u0627\u0644\u0637\u0628\u064A\u0628",
+    subtitle: "\u0645\u0633\u0627\u062D\u0629 \u0639\u0645\u0644 \u0633\u0631\u064A\u0631\u064A\u0629 \u0645\u062A\u0643\u0627\u0645\u0644\u0629 \u0645\u0639 HNH \u0648 GIVC \u0648 NPHIES",
+    overview: "\u0646\u0638\u0631\u0629 \u0639\u0627\u0645\u0629",
+    patients: "\u0627\u0644\u0645\u0631\u0636\u0649",
+    appointments: "\u0627\u0644\u0645\u0648\u0627\u0639\u064A\u062F",
+    nphies: "NPHIES",
+    network: "\u0634\u0628\u0643\u0629 GIVC",
+    insights: "\u0631\u0624\u0649 \u0645\u062F\u0639\u0648\u0645\u0629 \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064A",
+    back: "\u0627\u0644\u0639\u0648\u062F\u0629 \u0625\u0644\u0649 HNH",
+    eligibility: "\u062A\u062D\u0642\u0642 \u0627\u0644\u0623\u0647\u0644\u064A\u0629",
+    refresh: "\u062A\u062D\u062F\u064A\u062B",
+    live: "\u062D\u064A",
+    provider: "\u0627\u0644\u0637\u0628\u064A\u0628",
+    active: "\u0646\u0634\u0637"
+  } : {
+    title: "Doctor Dashboard",
+    subtitle: "Premium clinical workspace integrated with HNH, GIVC, and NPHIES",
+    overview: "Overview",
+    patients: "Patients",
+    appointments: "Appointments",
+    nphies: "NPHIES",
+    network: "GIVC Network",
+    insights: "AI-Powered Insights",
+    back: "Back to HNH",
+    eligibility: "Eligibility Check",
+    refresh: "Refresh",
+    live: "Live",
+    provider: "Provider",
+    active: "Active"
+  };
+  var css = `:root{--p:#1193d4;--ink:#0f1c22;--mut:#617c89;--bg:#f6f8fb;--card:#fff;--line:#e8eef2;--ok:#10b981;--warn:#f59e0b;--nav:#101c22}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0%,rgba(17,147,212,.18),transparent 30%),linear-gradient(180deg,#f6f8fb,#eef4f7);color:var(--ink);font-family:${isAr ? "'IBM Plex Sans Arabic'" : "Inter"},system-ui,sans-serif;min-height:100vh}.shell{display:grid;grid-template-columns:280px 1fr;min-height:100vh}.side{background:linear-gradient(180deg,#101c22,#18303a);color:#fff;padding:24px;position:sticky;top:0;height:100vh}.brand{display:flex;gap:12px;align-items:center;margin-bottom:30px}.mark{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#1193d4,#73d7ff);display:grid;place-items:center;font-weight:900;box-shadow:0 16px 45px rgba(17,147,212,.35)}.brand h1{font-size:1.05rem;margin:0}.brand p{font-size:.78rem;color:#a0b4bc;margin:2px 0 0}.nav{display:grid;gap:8px}.nav a{display:flex;gap:12px;align-items:center;color:#cfe1e8;text-decoration:none;padding:12px;border-radius:14px;font-weight:750;font-size:.92rem}.nav a.on,.nav a:hover{background:rgba(255,255,255,.1);color:#fff}.sidefoot{position:absolute;bottom:24px;left:24px;right:24px;color:#a0b4bc;font-size:.78rem}.sidefoot a{color:#d9eef8}.main{padding:28px;display:grid;gap:22px}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.eyebrow{display:inline-flex;gap:8px;align-items:center;background:#e8f7ff;color:#0369a1;border:1px solid #c7ecff;border-radius:999px;padding:6px 10px;font-weight:850;font-size:.78rem}.top h2{font-size:clamp(1.8rem,3vw,3.2rem);line-height:1;margin:14px 0 8px;letter-spacing:-.04em}.top p{color:var(--mut);margin:0;max-width:720px}.tools{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}.btn{border:0;border-radius:14px;padding:11px 15px;font-weight:850;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px}.btn.primary{background:var(--p);color:#fff;box-shadow:0 14px 34px rgba(17,147,212,.28)}.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:rgba(255,255,255,.9);border:1px solid rgba(226,236,241,.95);border-radius:24px;padding:18px;box-shadow:0 16px 40px rgba(16,28,34,.08);backdrop-filter:blur(16px)}.metric .k{color:var(--mut);font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em}.metric .v{font-size:2rem;font-weight:950;letter-spacing:-.04em;margin-top:6px}.metric .s{color:var(--mut);font-size:.82rem}.wide{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px}.section-title h3{margin:0;font-size:1.1rem}.list{display:grid;gap:10px}.row{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:#fff;border-radius:18px;padding:12px}.avatar{width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,#dff4ff,#b7e6ff);display:grid;place-items:center;font-weight:950;color:#075985;flex:0 0 auto}.grow{flex:1;min-width:0}.grow b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.grow span{color:var(--mut);font-size:.85rem}.pill{border-radius:999px;padding:5px 9px;font-size:.74rem;font-weight:900;background:#ecfdf5;color:#047857}.pill.warn{background:#fffbeb;color:#b45309}.nphies{background:linear-gradient(135deg,#10232c,#173b49);color:#fff;overflow:hidden;position:relative}.nphies:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;right:-70px;top:-70px;background:rgba(17,147,212,.25)}.nphies>*{position:relative;z-index:1}.mut{color:#a0b4bc}.bar{height:9px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin:14px 0}.bar i{display:block;height:100%;width:88%;background:linear-gradient(90deg,#10b981,#73d7ff)}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:850;color:var(--mut);cursor:pointer}.tab.on{background:#101c22;color:#fff}.panel{display:none}.panel.on{display:block}.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}.action{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);border-radius:22px;padding:16px;text-decoration:none;color:#fff;font-weight:900;display:grid;gap:8px}.icon{width:40px;height:40px;border-radius:14px;background:#e8f7ff;color:#0369a1;display:grid;place-items:center;font-size:1rem}.empty{padding:22px;text-align:center;color:var(--mut)}.footnav{display:none}@media(max-width:980px){.shell{grid-template-columns:1fr}.side{position:static;height:auto}.sidefoot{display:none}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wide{grid-template-columns:1fr}.main{padding:18px 14px 92px}.footnav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);justify-content:space-around;padding:9px 4px;z-index:10}.footnav a{font-size:.72rem;color:var(--mut);text-decoration:none;display:grid;place-items:center;gap:2px}.footnav a.on{color:var(--p)}}@media(max-width:560px){.grid{grid-template-columns:1fr}.top{display:grid}.tools{justify-content:flex-start}.actions{grid-template-columns:1fr}}`;
+  var js = `const providerId=${JSON.stringify(providerId)};const copy=${JSON.stringify(copy)};const $=id=>document.getElementById(id);function safe(s){return String(s||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));}function initials(s){return safe(s).replace(/^\u062F.s*|^Dr.s*/,'').slice(0,2)||'DR';}async function api(p,o){const r=await fetch(p,o);return r.json();}function row(name,meta,status){return '<div class="row"><div class="avatar">'+initials(name)+'</div><div class="grow"><b>'+safe(name)+'</b><span>'+safe(meta)+'</span></div>'+(status?'<span class="pill '+(status==='warning'?'warn':'')+'">'+safe(status)+'</span>':'')+'</div>';}function setMetric(id,v){const e=$(id);if(e)e.textContent=v;}async function load(){const [stats,providers,appointments,patients,health,givc]=await Promise.allSettled([api('/api/stats'),api('/api/providers'),api('/api/appointments?limit=8'),api('/api/patients?limit=8'),api('/api/health'),api('/givc/api/providers/givc-network')]);const st=stats.value&&stats.value.stats||{};setMetric('mPatients',st.total_patients||0);setMetric('mToday',st.today_appointments||0);setMetric('mProviders',st.total_providers||0);setMetric('mClaims',st.total_claims||0);const ps=(providers.value&&providers.value.providers)||[];const selected=providerId?ps.find(p=>p.id===providerId||String(p.db_id)===providerId||p.givc_oid===providerId):ps.find(p=>p.givc_registered)||ps[0];if(selected){$('providerName').textContent=selected.name_en||selected.name_ar||copy.provider;$('providerMeta').textContent=[selected.specialty,selected.branch||selected.branch_id,selected.givc_oid?'OID '+selected.givc_oid:''].filter(Boolean).join(' \xB7 ');}const apps=(appointments.value&&appointments.value.appointments)||[];$('appointments').innerHTML=apps.length?apps.map(a=>row(a.patient_name_en||a.patient_name_ar||('Patient #'+a.patient_id),(a.appointment_date||'')+' \xB7 '+(a.appointment_time||'')+' \xB7 '+(a.clinic_name||a.appointment_type||''),a.status==='scheduled'?'live':a.status)).join(''):'<div class="empty">No appointments found</div>';const pats=(patients.value&&patients.value.patients)||[];$('patients').innerHTML=pats.length?pats.map(p=>row(p.full_name_en||p.full_name_ar,p.phone||p.national_id||p.mrn,'live')).join(''):'<div class="empty">No patients found</div>';const gdocs=(givc.value&&givc.value.doctors)||[];$('network').innerHTML=gdocs.length?gdocs.slice(0,8).map(d=>row(d.name_en||d.name_ar,[d.specialty,d.branch_code,d.givc_oid].filter(Boolean).join(' \xB7 '),d.network_visibility==='public'?'live':'warning')).join(''):'<div class="empty">No GIVC doctors found</div>';const ints=(health.value&&health.value.integrations)||{};$('nphiesStatus').textContent='ClaimLinc '+(ints.claimlinc||'unknown')+' \xB7 NPHIES Mirror '+(ints.nphies_mirror||'unknown');$('oracleStatus').textContent='Oracle '+(ints.oracle_bridge||'unknown')+' \xB7 GIVC '+(ints.givc_portal||'unknown');}document.addEventListener('click',e=>{const t=e.target.closest('[data-tab]');if(!t)return;document.querySelectorAll('.tab,.panel').forEach(x=>x.classList.remove('on'));t.classList.add('on');$(t.dataset.tab).classList.add('on');});load().catch(e=>{document.querySelectorAll('[data-live]').forEach(el=>el.innerHTML='<div class="empty">Unable to load live data</div>');});`;
+  var html = '<!doctype html><html lang="' + lang + '" dir="' + dir + '"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101c22"><title>' + copy.title + ' | HNH</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet"><style>' + css + '</style></head><body><div class="shell"><aside class="side"><div class="brand"><div class="mark">H</div><div><h1>BrainSAIT HNH</h1><p>Clinical Command Center</p></div></div><nav class="nav"><a class="on" href="#overview">\u2301 ' + copy.overview + '</a><a href="#patients">\u2637 ' + copy.patients + '</a><a href="#appointments">\u25F7 ' + copy.appointments + '</a><a href="#nphies">\u25C8 ' + copy.nphies + '</a><a href="/givc/network">\u25CE ' + copy.network + '</a></nav><div class="sidefoot">' + copy.live + ' \xB7 HNH + GIVC + NPHIES<br><a href="/">' + copy.back + '</a></div></aside><main class="main"><section class="top" id="overview"><div><span class="eyebrow">\u25CF ' + copy.live + " Workspace</span><h2>" + copy.title + "</h2><p>" + copy.subtitle + '</p></div><div class="tools"><a class="btn ghost" href="/">' + copy.back + '</a><button class="btn primary" onclick="location.reload()">' + copy.refresh + '</button></div></section><section class="card"><div class="section-title"><div><h3 id="providerName">' + copy.provider + '</h3><p id="providerMeta" style="margin:4px 0 0;color:var(--mut)">Loading provider network...</p></div><span class="pill">' + copy.active + '</span></div></section><section class="grid"><div class="card metric"><div class="k">Patients</div><div class="v" id="mPatients">\u2014</div><div class="s">registered records</div></div><div class="card metric"><div class="k">Today</div><div class="v" id="mToday">\u2014</div><div class="s">scheduled visits</div></div><div class="card metric"><div class="k">Doctors</div><div class="v" id="mProviders">\u2014</div><div class="s">HNH network</div></div><div class="card metric"><div class="k">Claims</div><div class="v" id="mClaims">\u2014</div><div class="s">RCM ledger</div></div></section><section class="wide"><div class="card"><div class="section-title"><h3>' + copy.insights + '</h3><div class="tabs"><button class="tab on" data-tab="appointments">' + copy.appointments + '</button><button class="tab" data-tab="patients">' + copy.patients + '</button><button class="tab" data-tab="network">' + copy.network + '</button></div></div><div id="appointments" class="panel on list" data-live></div><div id="patients" class="panel list" data-live></div><div id="network" class="panel list" data-live></div></div><div class="card nphies" id="nphies"><div class="section-title"><h3>' + copy.nphies + '</h3><span class="pill">V2</span></div><p class="mut" id="nphiesStatus">Loading...</p><div class="bar"><i></i></div><p class="mut" id="oracleStatus">Loading...</p><div class="actions"><a class="action" href="/api/nphies/270"><span class="icon">270</span>' + copy.eligibility + '</a><a class="action" href="/api/rcm/health"><span class="icon">RCM</span>Revenue Cycle</a><a class="action" href="/givc/network"><span class="icon">OID</span>' + copy.network + '</a><a class="action" href="/api/fhir/Practitioner/' + (providerId || "DRV-S85MNP") + '"><span class="icon">FHIR</span>Practitioner</a></div></div></section></main></div><nav class="footnav"><a class="on" href="#overview">\u2301<span>' + copy.overview + '</span></a><a href="#patients">\u2637<span>' + copy.patients + '</span></a><a href="#appointments">\u25F7<span>' + copy.appointments + '</span></a><a href="#nphies">\u25C8<span>' + copy.nphies + "</span></a></nav><script>" + js + "<\/script></body></html>";
+  html = html.replace('href="/api/nphies/270"', 'href="/givc/?lang=' + lang + '#eligibility"');
+  return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=120" } });
 }
-
-function ru(u){var a=new URL(u.url),e=a.pathname.replace(/\/index\.html$/,"/").replace(/^\//,"")||"index";if(e=e.replace(/\.html$/,"")||"index",e==="provider-dashboard"||e==="doctor-dashboard")return G0(u);if(e==="basma"||e==="basma-portal")return basmaPortalPage(u);if(e==="stitch-doctor-dashboard")return stitchDoctorDashboard(u);var t=e.match(/^course-(.+)$/);if(t){var n=t[0].replace(/-/g,"_");if(k[n])return new Response(k[n],{headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"public, max-age=600"}})}if((e===""||e==="/"||e==="index"||e==="index.html")&&(e="__HOME__"),e!=="__HOME__"&&$e[e])return new Response($e[e],{headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"public, max-age=600"}});if(e.startsWith("course-")){var i=e.replace(/-/g,"_");if(k[i])return new Response(k[i],{headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"public, max-age=600"}})}var s=a.searchParams.get("lang")||"ar",o=Ue[s]||Ue.ar,l=s==="ar",d=l?"rtl":"ltr",m="966920000094",p='<!DOCTYPE html><html lang="'+s+'" dir="'+d+'"><head>';p+='<meta charset="utf-8"/>',p+='<meta name="viewport" content="width=device-width,initial-scale=1.0"/>',p+='<meta name="description" content="'+o.desc+'"/>',p+='<meta name="theme-color" content="#1A2B4A"/>',p+='<meta property="og:title" content="'+o.title+'"/>',p+='<meta property="og:description" content="'+o.desc+'"/>',p+='<meta property="og:type" content="website"/>',p+='<link rel="canonical" href="https://hnh.brainsait.org"/>',p+='<link rel="alternate" href="https://hnh.brainsait.org?lang=ar" hreflang="ar"/>',p+='<link rel="alternate" href="https://hnh.brainsait.org?lang=en" hreflang="en"/>',p+='<link rel="alternate" href="https://hnh.brainsait.org" hreflang="x-default"/>',p+="<title>"+o.title+"</title>",p+='<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8F%A5%3C/text%3E%3C/svg%3E"/>',p+='<link rel="preconnect" href="https://fonts.googleapis.com">',p+='<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',p+='<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">',p+="<style>"+H0+D0+O0+"</style></head><body>",p+=q0(o,m),p+=M0(o,l,m),p+=P0(o),p+=j0(o),p+=R0(o);var g=I0.map(function(v,E){return'<div class="cd dc an d'+(E%4+1)+'"><div class="ci">'+v.i+"</div><h3>"+(l?v.nA:v.nE)+"</h3><p>"+(l?v.dA:v.dE)+"</p></div>"}).join(""),f=B0.map(function(v,E){var P=(l?v.nA:v.nE).toLowerCase().replace(/\s/g,"-");return'<div class="cd bc an d'+(E%3+1)+'"><div class="bh"><h3>'+(l?v.nA:v.nE)+'</h3><div class="bcx">'+(l?v.aA:v.aE)+'</div></div><div class="bb"><a href="tel:'+m+'" class="btn bp bs">'+(l?"\u0627\u062A\u0635\u0644":"Call")+'</a><button data-open="status" class="btn bw bs">'+(l?"\u062D\u0627\u0644\u0629 \u0627\u0644\u0641\u0631\u0639":"Live status")+"</button></div></div>"}).join(""),w=L0.map(function(v,E){var P=l?v.nA:v.nE,Fe=P.replace("\u062F. ","").replace("Dr. ","").charAt(0);return'<div class="cd dcc an d'+(E%4+1)+'"><div class="da">'+Fe+"</div><h3>"+P+'</h3><div class="sp">'+(l?v.sA:v.sE)+'</div><button data-open="appointment" class="btn bp bs">'+(l?"\u0627\u062D\u062C\u0632":"Book")+"</button></div>"}).join("");return p+='<section class="se sel" id="depts"><div class="co"><div class="sh an"><h2>'+o.secDeptsTitle+'</h2><div class="gl"></div><p>'+o.secDeptsSub+'</p></div><div class="g4" id="dg">'+g+"</div></div></section>",p+='<section class="se sea" id="branches"><div class="co"><div class="sh an"><h2>'+o.secBranchesTitle+'</h2><div class="gl"></div><p>'+o.secBranchesSub+'</p></div><div class="g3" id="bg">'+f+"</div></div></section>",p+='<section class="se sel" id="doctors"><div class="co"><div class="sh an"><h2>'+o.secDoctorsTitle+'</h2><div class="gl"></div><p>'+o.secDoctorsSub+'</p></div><div class="g4" id="dog">'+w+"</div></div></section>",p+=N0(o),p+=z0(o),p+='<section class="cs"><div class="co"><h2>'+o.ctaTitle+"</h2><p>"+o.ctaSub+'</p><div class="cb"><button data-open="appointment" class="btn ba bl">'+o.ctaBook+'</button><button data-open="basma" class="btn bw bl">\u{1F399}\uFE0F '+o.aiChatBtn+"</button></div></div></section>",p+=$0(o,m),p+=U0(o),p+=F0(l,m,o),p+="</body></html>",new Response(p,{headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"public, max-age=300"}})}r(ru,"servePage");var h=new D;h.get("/api/health",async(u,a)=>c(await mu(a)));h.get("/api/stats",(u,a)=>Ku(a));h.get("/api/branches",(u,a,e,t,n)=>c({success:!0,branches:gu()}));h.get("/api/branches/([^/]+)",(u,a,e,t)=>{let n=fu(t[0]);return n?c({success:!0,branch:n}):c({success:!1,message:"Branch not found"},404)});h.get("/api/patients",(u,a,e,t,n)=>Eu(u,a,e,t,n));h.get("/api/patients/([^/]+)",(u,a,e,t)=>Su(u,a,e,t));h.post("/api/patients",(u,a)=>wu(u,a));h.patch("/api/patients/([^/]+)",(u,a,e,t)=>Cu(u,a,e,t));h.get("/api/providers",async(u,a,e,t,n)=>{n||(n=new URL(u.url));let i=n?.searchParams?.get("branch")||"",s=n?.searchParams?.get("department")||"",o=await z(a);if(i){let l=i.toLowerCase(),d={riyadh:"r001",r001:"r001",madinah:"m001",madina:"m001",medina:"m001",m001:"m001",khamis:"k001",khamis_mushayt:"k001",khamis_mushait:"k001",k001:"k001",jazan:"j001",jizan:"j001",j001:"j001",unaizah:"u001",unayzah:"u001",u001:"u001"},m=d[l.replace(/[\s-]+/g,"_")]||l;o=o.filter(p=>{let g=String(p.branch||"").toLowerCase().replace(/[\s-]+/g,"_"),f=String(p.branch_id||"").toLowerCase();return g===l||f===l||(d[g]||f)===m})}return s&&(o=o.filter(l=>l.department===s||l.department_id===s)),c({success:!0,providers:o,total:o.length})});h.get("/api/providers/([^/]+)",async(u,a,e,t)=>{let n=await $(t[0],a);return n?c({success:!0,provider:n}):c({success:!1,message:"Provider not found"},404)});h.get("/api/appointments",(u,a,e,t,n)=>bu(u,a,e,t,n));h.get("/api/appointments/([^/]+)",(u,a,e,t)=>yu(u,a,e,t));h.post("/api/appointments",(u,a)=>vu(u,a));h.patch("/api/appointments/([^/]+)",(u,a,e,t)=>xu(u,a,e,t));h.delete("/api/appointments/([^/]+)",(u,a,e,t)=>_u(u,a,e,t));h.get("/api/claims",(u,a,e,t,n)=>ku(u,a,e,t,n));h.get("/api/claims/([^/]+)",(u,a,e,t)=>Tu(u,a,e,t));h.post("/api/claims",(u,a)=>Au(u,a));h.post("/api/claims/([^/]+)/submit",(u,a,e,t)=>Iu(u,a,e,t));h.get("/api/claims/([^/]+)/nphies-status",(u,a,e,t)=>Bu(u,a,e,t));h.post("/api/eligibility/check",(u,a)=>Lu(u,a));h.post("/api/eligibility/verify",(u,a)=>Hu(u,a));h.get("/api/eligibility/history/([^/]+)",(u,a,e,t)=>Du(u,a,e,t));h.post("/api/nphies/270",(u,a)=>Ru(u,a));h.post("/api/nphies/278",(u,a)=>Pu(u,a));h.post("/api/nphies/837",(u,a)=>ju(u,a));h.get("/api/nphies/276/([^/]+)",(u,a,e,t)=>zu(u,a,e,t));h.post("/api/nphies/835",(u,a)=>$u(u,a));h.get("/api/fhir/Patient/([^/]+)",(u,a,e,t)=>Fu(u,a,e,t));h.get("/api/fhir/Patient",(u,a,e,t,n)=>Gu(u,a,e,t,n));h.get("/api/fhir/Practitioner/([^/]+)",(u,a,e,t)=>Vu(u,a,e,t));h.get("/api/fhir/Appointment/([^/]+)",(u,a,e,t)=>Yu(u,a,e,t));h.get("/api/fhir/Claim/([^/]+)",(u,a,e,t)=>Wu(u,a,e,t));h.get("/api/fhir/Coverage/([^/]+)",(u,a,e,t)=>Ju(u,a,e,t));h.post("/api/chat",(u,a)=>G(u,a));h.get("/api/rcm/health",()=>ie());h.get("/api/rcm/batch/([^/]+)",(u,a,e,t)=>se(u,a,e,t));h.post("/api/rcm/validate/price",u=>W(u));h.post("/api/rcm/validate/duplicate",u=>J(u));h.post("/api/rcm/validate/pbm",u=>K(u));h.post("/api/rcm/validate",u=>oe(u));h.post("/api/rcm/appeal/generate",u=>re(u));
-
-h.post("/api/rcm/auto-appeal-batch", async (u, a) => {
-  try {
-    let req = {}; try { req = await u.json(); } catch(e) {}
-    let batchId = req.batch_id || "BAT-2026-NB-00004295-OT";
-    
-    // Simulating batch fetch
-    let claims = [];
-    if (a.DB) {
-      let res = await a.DB.prepare("SELECT * FROM claims WHERE batch_number = ? AND status = 'rejected'").bind(batchId).all();
-      if (res && res.results) claims = res.results;
-    }
-    
-    if (claims.length === 0) {
-      return c({ success: true, message: "No rejected claims found in batch to auto-appeal.", processed: 0 });
-    }
-    
-    let appealed = 0;
-    let results = [];
-    
-    for(let claim of claims) {
-      // Create mock request to /api/rcm/appeal/generate
-      let mockReq = new Request("https://internal/appeal", {
-        method: "POST",
-        body: JSON.stringify({
-           claim_id: claim.claim_id || claim.claim_number,
-           rejection_code: claim.rejection_code || "MN-1-1",
-           payer: claim.payer_name,
-           rejection_amount_sr: claim.total_amount
-        })
-      });
-      let appealData = await (await re(mockReq)).json();
-      
-      // If strong or medium, auto resubmit
-      if (appealData.appeal_strength !== "weak") {
-         let mockResubmit = new Request("https://internal/resubmit", {
-           method: "POST",
-           body: JSON.stringify({ claim_id: claim.claim_id, action: "auto_appeal", appeal_data: appealData })
-         });
-         let resubmitResult = await (await pe(mockResubmit, a, {}, [claim.claim_id])).json();
-         appealed++;
-         results.push({ claim_id: claim.claim_id, status: "Appealed", details: resubmitResult });
-      } else {
-         results.push({ claim_id: claim.claim_id, status: "Skipped", reason: "Weak appeal strength" });
-      }
-    }
-    
-    return c({
-      success: true,
-      batch_id: batchId,
-      total_rejected: claims.length,
-      auto_appealed: appealed,
-      results: results,
-      message: "Automated batch appeal process completed."
-    });
-  } catch(e) {
-    return c({ success: false, error: e.message }, 500);
+__name(providerDashboardPage, "providerDashboardPage");
+function servePage(req) {
+  var url = new URL(req.url);
+  var path = url.pathname.replace(/\/index\.html$/, "/").replace(/^\//, "") || "index";
+  path = path.replace(/\.html$/, "") || "index";
+  if (path === "provider-dashboard" || path === "doctor-dashboard") {
+    return providerDashboardPage(req);
   }
+  var courseMatch = path.match(/^course-(.+)$/);
+  if (courseMatch) {
+    var courseKey = courseMatch[0].replace(/-/g, "_");
+    if (sites_exports[courseKey]) {
+      return new Response(sites_exports[courseKey], {
+        headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=600" }
+      });
+    }
+  }
+  if (path === "" || path === "/" || path === "index" || path === "index.html") {
+    path = "__HOME__";
+  }
+  if (path !== "__HOME__" && STATIC_PAGES[path]) {
+    return new Response(STATIC_PAGES[path], {
+      headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=600" }
+    });
+  }
+  if (path.startsWith("course-")) {
+    var altKey = path.replace(/-/g, "_");
+    if (sites_exports[altKey]) {
+      return new Response(sites_exports[altKey], {
+        headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=600" }
+      });
+    }
+  }
+  var lang = url.searchParams.get("lang") || "ar";
+  var t = L[lang] || L.ar;
+  var A = lang === "ar";
+  var d = A ? "rtl" : "ltr";
+  var p = "966920000094";
+  var html = '<!DOCTYPE html><html lang="' + lang + '" dir="' + d + '"><head>';
+  html += '<meta charset="utf-8"/>';
+  html += '<meta name="viewport" content="width=device-width,initial-scale=1.0"/>';
+  html += '<meta name="description" content="' + t.desc + '"/>';
+  html += '<meta name="theme-color" content="#1A2B4A"/>';
+  html += '<meta property="og:title" content="' + t.title + '"/>';
+  html += '<meta property="og:description" content="' + t.desc + '"/>';
+  html += '<meta property="og:type" content="website"/>';
+  html += '<link rel="canonical" href="https://hnh.brainsait.org"/>';
+  html += '<link rel="alternate" href="https://hnh.brainsait.org?lang=ar" hreflang="ar"/>';
+  html += '<link rel="alternate" href="https://hnh.brainsait.org?lang=en" hreflang="en"/>';
+  html += '<link rel="alternate" href="https://hnh.brainsait.org" hreflang="x-default"/>';
+  html += "<title>" + t.title + "</title>";
+  html += '<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8F%A5%3C/text%3E%3C/svg%3E"/>';
+  html += '<link rel="preconnect" href="https://fonts.googleapis.com">';
+  html += '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
+  html += '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">';
+  html += "<style>" + CSS + UX_CSS + ENHANCE_CSS + "</style></head><body>";
+  html += hdr(t, p);
+  html += bdy(t, A, p);
+  html += commandSec(t);
+  html += featureSec(t);
+  html += searchSec(t);
+  var dgHtml = DE.map(function(d2, i) {
+    return '<div class="cd dc an d' + (i % 4 + 1) + '"><div class="ci">' + d2.i + "</div><h3>" + (A ? d2.nA : d2.nE) + "</h3><p>" + (A ? d2.dA : d2.dE) + "</p></div>";
+  }).join("");
+  var bgHtml = BR.map(function(b, i) {
+    var slug = (A ? b.nA : b.nE).toLowerCase().replace(/\s/g, "-");
+    return '<div class="cd bc an d' + (i % 3 + 1) + '"><div class="bh"><h3>' + (A ? b.nA : b.nE) + '</h3><div class="bcx">' + (A ? b.aA : b.aE) + '</div></div><div class="bb"><a href="tel:' + p + '" class="btn bp bs">' + (A ? "\u0627\u062A\u0635\u0644" : "Call") + '</a><button data-open="status" class="btn bw bs">' + (A ? "\u062D\u0627\u0644\u0629 \u0627\u0644\u0641\u0631\u0639" : "Live status") + "</button></div></div>";
+  }).join("");
+  var dogHtml = DO.map(function(d2, i) {
+    var nm = A ? d2.nA : d2.nE;
+    var init = nm.replace("\u062F. ", "").replace("Dr. ", "").charAt(0);
+    return '<div class="cd dcc an d' + (i % 4 + 1) + '"><div class="da">' + init + "</div><h3>" + nm + '</h3><div class="sp">' + (A ? d2.sA : d2.sE) + '</div><button data-open="appointment" class="btn bp bs">' + (A ? "\u0627\u062D\u062C\u0632" : "Book") + "</button></div>";
+  }).join("");
+  html += '<section class="se sel" id="depts"><div class="co"><div class="sh an"><h2>' + t.secDeptsTitle + '</h2><div class="gl"></div><p>' + t.secDeptsSub + '</p></div><div class="g4" id="dg">' + dgHtml + "</div></div></section>";
+  html += '<section class="se sea" id="branches"><div class="co"><div class="sh an"><h2>' + t.secBranchesTitle + '</h2><div class="gl"></div><p>' + t.secBranchesSub + '</p></div><div class="g3" id="bg">' + bgHtml + "</div></div></section>";
+  html += '<section class="se sel" id="doctors"><div class="co"><div class="sh an"><h2>' + t.secDoctorsTitle + '</h2><div class="gl"></div><p>' + t.secDoctorsSub + '</p></div><div class="g4" id="dog">' + dogHtml + "</div></div></section>";
+  html += ecoSys(t);
+  html += dhsSec(t);
+  html += '<section class="cs"><div class="co"><h2>' + t.ctaTitle + "</h2><p>" + t.ctaSub + '</p><div class="cb"><button data-open="appointment" class="btn ba bl">' + t.ctaBook + '</button><button data-open="basma" class="btn bw bl">\u{1F399}\uFE0F ' + t.aiChatBtn + "</button></div></div></section>";
+  html += ftr(t, p);
+  html += hub(t);
+  html += scr(A, p, t);
+  html += "</body></html>";
+  return new Response(html, {
+    headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300" }
+  });
+}
+__name(servePage, "servePage");
+
+// src/index.js
+var router = new Router();
+router.get("/api/health", async (_, env) => json(await health(env)));
+router.get("/api/stats", (_, env) => getStats(env));
+router.get("/api/branches", (req, env, ctx, p, url) => json({ success: true, branches: getBranches() }));
+router.get("/api/branches/([^/]+)", (req, env, ctx, p) => {
+  const b = getBranch(p[0]);
+  return b ? json({ success: true, branch: b }) : json({ success: false, message: "Branch not found" }, 404);
 });
-h.get("/api/rcm/dashboard/([^/]+)",(u,a,e,t)=>ce(u,a,e,t));h.get("/api/rcm/claims/rejected",(u,a,e,t,n)=>le(u,a,e,t,n));h.post("/api/rcm/claims/([^/]+)/appeal",(u,a,e,t)=>de(u,a,e,t));h.post("/api/rcm/claims/([^/]+)/resubmit",(u,a,e,t)=>pe(u,a,e,t));h.post("/api/voice/speak",(u,a)=>ue(u,a));h.post("/api/voice/chat",(u,a)=>ee(u,a));h.get("/api/voice/voices",()=>ae());h.get("/api/search",(u,a)=>Q(u,a));h.post("/api/search",(u,a)=>Q(u,a));h.post("/api/homecare/visits",(u,a)=>ge(u,a));h.get("/api/homecare/visits",(u,a)=>fe(u,a));h.get("/api/homecare/visits/([^/]+)",(u,a,e,t)=>ve(u,a,e,t));h.patch("/api/homecare/visits/([^/]+)",(u,a,e,t)=>be(u,a,e,t));h.post("/api/homecare/visits/([^/]+)/vitals",(u,a,e,t)=>ye(u,a,e,t));h.get("/api/homecare/nurses",(u,a)=>xe(u,a));h.post("/api/homecare/nurses",(u,a)=>_e(u,a));h.get("/api/homecare/nurses/([^/]+)/schedule",(u,a,e,t)=>we(u,a,e,t));h.get("/api/homecare/stats",(u,a)=>Ee(u,a));h.post("/api/telehealth/sessions",(u,a)=>Ae(u,a));h.get("/api/telehealth/sessions",(u,a)=>ke(u,a));h.get("/api/telehealth/sessions/([^/]+)",(u,a,e,t)=>Te(u,a,e,t));h.patch("/api/telehealth/sessions/([^/]+)",(u,a,e,t)=>Ie(u,a,e,t));h.post("/api/telehealth/sessions/([^/]+)/start",(u,a,e,t)=>Be(u,a,e,t));h.post("/api/telehealth/sessions/([^/]+)/end",(u,a,e,t)=>Le(u,a,e,t));h.post("/api/telehealth/sessions/([^/]+)/prescriptions",(u,a,e,t)=>He(u,a,e,t));h.get("/api/telehealth/sessions/([^/]+)/prescriptions",(u,a,e,t)=>De(u,a,e,t));h.get("/api/telehealth/providers/([^/]+)/availability",(u,a,e,t)=>Oe(u,a,e,t));h.get("/api/telehealth/stats",(u,a)=>qe(u,a));h.post("/api/email/appointment",(u,a)=>Ne(u,a));h.post("/api/email/homecare",(u,a)=>Me(u,a));h.post("/api/email/telehealth",(u,a)=>Re(u,a));h.post("/api/email/followup",(u,a)=>Pe(u,a));h.post("/api/email/send",(u,a)=>je(u,a));h.post("/api/webhooks/email",(u,a)=>c({success:!0,status:"tracked"}));h.post("/api/webhooks/claims",(u,a)=>c({success:!0,status:"updated"}));h.get("/api/email/log",(u,a)=>ze(u,a));h.get("/",(u,a,e,t,n)=>ru(u));h.get("/(.*)",(u,a,e,t,n)=>ru(u));var It={
+router.get("/api/patients", (req, env, ctx, p, url) => getPatients(req, env, ctx, p, url));
+router.get("/api/patients/([^/]+)", (req, env, ctx, p) => getPatient(req, env, ctx, p));
+router.post("/api/patients", (req, env) => createPatient(req, env));
+router.patch("/api/patients/([^/]+)", (req, env, ctx, p) => updatePatient(req, env, ctx, p));
+router.get("/api/providers", async (req, env, ctx, p, url) => {
+  if (!url) url = new URL(req.url);
+  const branch = url?.searchParams?.get("branch") || "";
+  const dept = url?.searchParams?.get("department") || "";
+  let list = await getProviders(env);
+  if (branch) {
+    const b = branch.toLowerCase();
+    const branchAliases = {
+      riyadh: "r001",
+      r001: "r001",
+      madinah: "m001",
+      madina: "m001",
+      medina: "m001",
+      m001: "m001",
+      khamis: "k001",
+      khamis_mushayt: "k001",
+      khamis_mushait: "k001",
+      k001: "k001",
+      jazan: "j001",
+      jizan: "j001",
+      j001: "j001",
+      unaizah: "u001",
+      unayzah: "u001",
+      u001: "u001"
+    };
+    const norm = branchAliases[b.replace(/[\s-]+/g, "_")] || b;
+    list = list.filter((p2) => {
+      const pb = String(p2.branch || "").toLowerCase().replace(/[\s-]+/g, "_");
+      const pid = String(p2.branch_id || "").toLowerCase();
+      return pb === b || pid === b || (branchAliases[pb] || pid) === norm;
+    });
+  }
+  if (dept) list = list.filter((p2) => p2.department === dept || p2.department_id === dept);
+  return json({ success: true, providers: list, total: list.length });
+});
+router.get("/api/providers/([^/]+)", async (req, env, ctx, p) => {
+  const prov = await getProvider(p[0], env);
+  return prov ? json({ success: true, provider: prov }) : json({ success: false, message: "Provider not found" }, 404);
+});
+router.get("/api/appointments", (req, env, ctx, p, url) => getAppointments(req, env, ctx, p, url));
+router.get("/api/appointments/([^/]+)", (req, env, ctx, p) => getAppointment(req, env, ctx, p));
+router.post("/api/appointments", (req, env) => createAppointment(req, env));
+router.patch("/api/appointments/([^/]+)", (req, env, ctx, p) => updateAppointment(req, env, ctx, p));
+router.delete("/api/appointments/([^/]+)", (req, env, ctx, p) => cancelAppointment(req, env, ctx, p));
+router.get("/api/claims", (req, env, ctx, p, url) => getClaims(req, env, ctx, p, url));
+router.get("/api/claims/([^/]+)", (req, env, ctx, p) => getClaim(req, env, ctx, p));
+router.post("/api/claims", (req, env) => createClaim(req, env));
+router.post("/api/claims/([^/]+)/submit", (req, env, ctx, p) => submitClaimToNPHIES(req, env, ctx, p));
+router.get("/api/claims/([^/]+)/nphies-status", (req, env, ctx, p) => getClaimNPHIESStatus(req, env, ctx, p));
+router.post("/api/eligibility/check", (req, env) => checkEligibility(req, env));
+router.post("/api/eligibility/verify", (req, env) => verifyInsurance(req, env));
+router.get("/api/eligibility/history/([^/]+)", (req, env, ctx, p) => getEligibilityHistory(req, env, ctx, p));
+router.post("/api/nphies/270", (req, env) => submit270(req, env));
+router.post("/api/nphies/278", (req, env) => submit278(req, env));
+router.post("/api/nphies/837", (req, env) => submit837(req, env));
+router.get("/api/nphies/276/([^/]+)", (req, env, ctx, p) => getClaimStatus276(req, env, ctx, p));
+router.post("/api/nphies/835", (req, env) => receive835(req, env));
+router.get("/api/fhir/Patient/([^/]+)", (req, env, ctx, p) => getFHIRPatient(req, env, ctx, p));
+router.get("/api/fhir/Patient", (req, env, ctx, p, url) => searchFHIRPatients(req, env, ctx, p, url));
+router.get("/api/fhir/Practitioner/([^/]+)", (req, env, ctx, p) => getFHIRPractitioner(req, env, ctx, p));
+router.get("/api/fhir/Appointment/([^/]+)", (req, env, ctx, p) => getFHIRAppointment(req, env, ctx, p));
+router.get("/api/fhir/Claim/([^/]+)", (req, env, ctx, p) => getFHIRClaim(req, env, ctx, p));
+router.get("/api/fhir/Coverage/([^/]+)", (req, env, ctx, p) => getFHIRCoverage(req, env, ctx, p));
+router.post("/api/chat", (req, env) => handleChat(req, env));
+router.get("/api/rcm/health", () => rcmHealth());
+router.get("/api/rcm/batch/([^/]+)", (req, env, ctx, p) => getRcmBatch(req, env, ctx, p));
+router.post("/api/rcm/validate/price", (req) => validatePrice(req));
+router.post("/api/rcm/validate/duplicate", (req) => validateDuplicate(req));
+router.post("/api/rcm/validate/pbm", (req) => validatePbm(req));
+router.post("/api/rcm/validate", (req) => validateAll(req));
+router.post("/api/rcm/appeal/generate", (req) => generateAppeal(req));
+router.get("/api/rcm/dashboard/([^/]+)", (req, env, ctx, p) => getRcmDashboard(req, env, ctx, p));
+router.get("/api/rcm/claims/rejected", (req, env, ctx, p, url) => getRejectedClaims(req, env, ctx, p, url));
+router.post("/api/rcm/claims/([^/]+)/appeal", (req, env, ctx, p) => markAppeal(req, env, ctx, p));
+router.post("/api/rcm/claims/([^/]+)/resubmit", (req, env, ctx, p) => markResubmit(req, env, ctx, p));
+router.post("/api/voice/speak", (req, env) => handleVoiceSpeak(req, env));
+router.post("/api/voice/chat", (req, env) => handleVoiceChat(req, env));
+router.get("/api/voice/voices", () => handleVoiceVoices());
+router.get("/api/search", (req, env) => handleSearch(req, env));
+router.post("/api/search", (req, env) => handleSearch(req, env));
+router.post("/api/homecare/visits", (req, env) => createVisit(req, env));
+router.get("/api/homecare/visits", (req, env) => listVisits(req, env));
+router.get("/api/homecare/visits/([^/]+)", (req, env, ctx, p) => getVisit(req, env, ctx, p));
+router.patch("/api/homecare/visits/([^/]+)", (req, env, ctx, p) => updateVisit(req, env, ctx, p));
+router.post("/api/homecare/visits/([^/]+)/vitals", (req, env, ctx, p) => recordVitals(req, env, ctx, p));
+router.get("/api/homecare/nurses", (req, env) => listNurses(req, env));
+router.post("/api/homecare/nurses", (req, env) => createNurse(req, env));
+router.get("/api/homecare/nurses/([^/]+)/schedule", (req, env, ctx, p) => getNurseSchedule(req, env, ctx, p));
+router.get("/api/homecare/stats", (_, env) => getHomecareStats(_, env));
+router.post("/api/telehealth/sessions", (req, env) => createSession(req, env));
+router.get("/api/telehealth/sessions", (req, env) => listSessions(req, env));
+router.get("/api/telehealth/sessions/([^/]+)", (req, env, ctx, p) => getSession(req, env, ctx, p));
+router.patch("/api/telehealth/sessions/([^/]+)", (req, env, ctx, p) => updateSession(req, env, ctx, p));
+router.post("/api/telehealth/sessions/([^/]+)/start", (req, env, ctx, p) => startSession(req, env, ctx, p));
+router.post("/api/telehealth/sessions/([^/]+)/end", (req, env, ctx, p) => endSession(req, env, ctx, p));
+router.post("/api/telehealth/sessions/([^/]+)/prescriptions", (req, env, ctx, p) => issuePrescription(req, env, ctx, p));
+router.get("/api/telehealth/sessions/([^/]+)/prescriptions", (req, env, ctx, p) => getPrescriptions(req, env, ctx, p));
+router.get("/api/telehealth/providers/([^/]+)/availability", (req, env, ctx, p) => getProviderAvailability(req, env, ctx, p));
+router.get("/api/telehealth/stats", (_, env) => getTelehealthStats(_, env));
+router.get("/api/telehealth/ice-servers", (req, env) => getIceConfig(req, env));
+router.post("/api/email/appointment", (req, env) => emailAppointment(req, env));
+router.post("/api/email/homecare", (req, env) => emailHomecare(req, env));
+router.post("/api/email/telehealth", (req, env) => emailTelehealth(req, env));
+router.post("/api/email/followup", (req, env) => emailFollowup(req, env));
+router.post("/api/email/send", (req, env) => emailSend(req, env));
+router.get("/api/email/log", (req, env) => getEmailLog(req, env));
+router.post("/api/email/webhook", (req, env) => emailWebhook(req, env));
+router.get("/", (req, env, ctx, p, url) => servePage(req));
+router.get("/(.*)", (req, env, ctx, p, url) => servePage(req));
+var index_default = {
+  async fetch(request, env, ctx) {
+    if (request.method === "OPTIONS") return handleCors(request);
+    const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+    if (!rateLimit(ip)) {
+      return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
+        status: 429,
+        headers: { "Content-Type": "application/json", "Retry-After": "60", ...SECURITY_HEADERS }
+      });
+    }
+    const origin = getAllowedOrigin(request);
+    try {
+      const response = await router.match(request, env, ctx);
+      if (response && typeof response === "object" && response.headers) {
+        const safeCors = {
+          "Access-Control-Allow-Origin": origin || "https://hnh.brainsait.org",
+          "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+          "Vary": "Origin"
+        };
+        for (const [k, v] of Object.entries(safeCors)) {
+          if (!response.headers.has(k)) response.headers.set(k, v);
+        }
+      }
+      return response;
+    } catch (e) {
+      console.error("Handler error:", e);
+      return new Response(JSON.stringify({ error: "Internal server error" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json", ...SECURITY_HEADERS }
+      });
+    }
+  },
   async scheduled(event, env, ctx) {
     console.log("Cron trigger started at:", event.cron);
-    
-    // 1. RCM / NPHIES Automation: Auto-fetch claim statuses (276) and Remittance Advices (835)
     try {
       if (env.NPHIES_MIRROR_URL) {
         console.log("Fetching NPHIES batch status updates...");
-        // This is a simulated background job to pull latest statuses from the mirror.
-        // It helps keep the local D1 cache in sync without human interaction.
         const rcmUpdate = await fetch(env.NPHIES_MIRROR_URL + "/api/rcm/sync-remittance", {
           method: "POST",
           headers: { "Authorization": "Bearer " + (env.API_KEY || "") }
         });
-        if(rcmUpdate.ok) console.log("RCM Sync successful.");
+        if (rcmUpdate.ok) console.log("RCM Sync successful.");
       }
-    } catch(e) {
+    } catch (e) {
       console.error("NPHIES Cron error:", e);
     }
-    
-    // 2. Patient Automation: Send appointment reminders
     try {
       if (env.HIS_DB) {
         console.log("Checking for tomorrow's appointments to send reminders...");
-        // In a real system, we'd query HIS_DB for tomorrow's appointments and push to WhatsApp/MailLinc.
-        // For demonstration of workflow enhancement:
-        const tomorrow = new Date();
+        const tomorrow = /* @__PURE__ */ new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
-        const tStr = tomorrow.toISOString().split('T')[0];
-        
+        const tStr = tomorrow.toISOString().split("T")[0];
         const q = "SELECT * FROM appointments WHERE appointment_date = ? AND status = 'scheduled'";
         const apps = await env.HIS_DB.prepare(q).bind(tStr).all();
         if (apps && apps.results) {
-           console.log("Found " + apps.results.length + " appointments to remind.");
-           for(const app of apps.results) {
-             // Mock call to maillinc or givc-portal for WhatsApp sending
-             console.log("Sending reminder to patient: " + app.patient_id + " for clinic: " + app.clinic_name);
-           }
+          console.log("Found " + apps.results.length + " appointments to remind.");
+          for (const app of apps.results) {
+            console.log("Sending reminder to patient: " + app.patient_id + " for clinic: " + app.clinic_name);
+          }
         }
       }
-    } catch(e) {
+    } catch (e) {
       console.error("Patient Reminder Cron error:", e);
     }
   }
-,
-  async fetch(u,a,e){if(u.method==="OPTIONS")return du();let t=u.headers.get("CF-Connecting-IP")||"unknown";if(!pu(t))return new Response(JSON.stringify({error:"Rate limit exceeded"}),{status:429,headers:{"Content-Type":"application/json","Retry-After":"60",...T}});try{let n=await h.match(u,a,e);if(n&&typeof n=="object"&&n.headers){let i={"Access-Control-Allow-Origin":"https://hnh.brainsait.org","Access-Control-Allow-Methods":"GET, POST, PATCH, DELETE, OPTIONS","Access-Control-Allow-Headers":"Content-Type, Authorization"};for(let[s,o]of Object.entries(i))n.headers.has(s)||n.headers.set(s,o)}return n}catch(n){return console.error("Handler error:",n),new Response(JSON.stringify({error:"Internal server error"}),{status:500,headers:{"Content-Type":"application/json",...T}})}}};export{It as default};
+};
+export {
+  index_default as default
+};
+//# sourceMappingURL=index.js.map
