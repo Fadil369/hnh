@@ -301,3 +301,59 @@ export async function getEmailLog(req, env) {
   const { results } = await env.DB.prepare(q).bind(...binds).all();
   return json({ success: true, emails: results || [], total: results?.length || 0 });
 }
+
+// ── POST /api/email/webhook — Inbound MailLinc delivery events ──────────
+
+/**
+ * Handles incoming webhook events from MailLinc:
+ *   - delivery: Email successfully delivered
+ *   - bounce: Hard or soft bounce
+ *   - complaint: Recipient marked email as spam
+ *   - open/click: Tracking events
+ *
+ * Authenticates via X-Webhook-Secret header (env.MAILLINC_WEBHOOK_SECRET).
+ */
+export async function emailWebhook(req, env) {
+  // Verify webhook secret
+  const secret = req.headers.get('X-Webhook-Secret') || req.headers.get('x-webhook-secret');
+  if (env.MAILLINC_WEBHOOK_SECRET && secret !== env.MAILLINC_WEBHOOK_SECRET) {
+    return json({ success: false, message: 'Unauthorized webhook' }, 401);
+  }
+
+  const body = await req.json().catch(() => ({}));
+  const events = Array.isArray(body) ? body : (body.events || [body]);
+  let processed = 0;
+
+  for (const event of events) {
+    const { type, recipient, message_id, timestamp, details } = event;
+    if (!type || !recipient) continue;
+
+    try {
+      // Update email_log with delivery status
+      const newStatus = type === 'delivery' ? 'delivered'
+        : type === 'bounce' ? 'bounced'
+        : type === 'complaint' ? 'complaint'
+        : type === 'open' ? 'opened'
+        : type === 'click' ? 'clicked'
+        : type;
+
+      await env.DB.prepare(
+        `UPDATE email_log SET status = ?, webhook_event = ?, webhook_at = ?, error = ?
+         WHERE recipient = ? AND status IN ('sent', 'delivered', 'opened')
+         ORDER BY id DESC LIMIT 1`
+      ).bind(
+        newStatus,
+        type,
+        timestamp || new Date().toISOString(),
+        type === 'bounce' ? (details?.bounce_type || 'unknown bounce') : null,
+        recipient,
+      ).run();
+
+      processed++;
+    } catch (e) {
+      console.error('Webhook event processing error:', e?.message);
+    }
+  }
+
+  return json({ success: true, processed, total: events.length });
+}

@@ -1,5 +1,5 @@
 import { Router } from './router.js';
-import { json, err, handleCors } from './utils/response.js';
+import { json, err, handleCors, getAllowedOrigin } from './utils/response.js';
 import { rateLimit } from './utils/rate-limit.js';
 import { CONFIG, SECURITY_HEADERS } from './config.js';
 import { health } from './routes/health.js';
@@ -26,10 +26,10 @@ import {
 import {
   createSession, listSessions, getSession, updateSession,
   startSession, endSession, issuePrescription, getPrescriptions,
-  getProviderAvailability, getTelehealthStats,
+  getProviderAvailability, getTelehealthStats, getIceConfig,
 } from './routes/telehealth.js';
 import {
-  emailAppointment, emailHomecare, emailTelehealth, emailFollowup, emailSend, getEmailLog,
+  emailAppointment, emailHomecare, emailTelehealth, emailFollowup, emailSend, getEmailLog, emailWebhook,
 } from './routes/email.js';
 import { servePage } from './pages.js';
 
@@ -167,6 +167,7 @@ router.post('/api/telehealth/sessions/([^/]+)/prescriptions',         (req, env,
 router.get('/api/telehealth/sessions/([^/]+)/prescriptions',          (req, env, ctx, p) => getPrescriptions(req, env, ctx, p));
 router.get('/api/telehealth/providers/([^/]+)/availability',          (req, env, ctx, p) => getProviderAvailability(req, env, ctx, p));
 router.get('/api/telehealth/stats',                                   (_, env) => getTelehealthStats(_, env));
+router.get('/api/telehealth/ice-servers',                              (req, env) => getIceConfig(req, env));
 
 // Email — البريد الإلكتروني
 router.post('/api/email/appointment', (req, env) => emailAppointment(req, env));
@@ -175,6 +176,7 @@ router.post('/api/email/telehealth',  (req, env) => emailTelehealth(req, env));
 router.post('/api/email/followup',    (req, env) => emailFollowup(req, env));
 router.post('/api/email/send',        (req, env) => emailSend(req, env));
 router.get('/api/email/log',          (req, env) => getEmailLog(req, env));
+router.post('/api/email/webhook',     (req, env) => emailWebhook(req, env));
 
 // SPA — serve for everything else
 router.get('/', (req, env, ctx, p, url) => servePage(req));
@@ -183,23 +185,30 @@ router.get('/(.*)', (req, env, ctx, p, url) => servePage(req));
 // Worker handler
 export default {
   async fetch(request, env, ctx) {
-    if (request.method === 'OPTIONS') return handleCors();
+    // CORS preflight — validate origin
+    if (request.method === 'OPTIONS') return handleCors(request);
+
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
     if (!rateLimit(ip)) {
       return new Response(JSON.stringify({ error: 'Rate limit exceeded' }), {
         status: 429, headers: { 'Content-Type': 'application/json', 'Retry-After': '60', ...SECURITY_HEADERS },
       });
     }
+
+    // Resolve the allowed origin for this request
+    const origin = getAllowedOrigin(request);
+
     try {
       const response = await router.match(request, env, ctx);
-      // Add CORS to all JSON responses
+      // Attach validated CORS headers to all responses
       if (response && typeof response === 'object' && response.headers) {
-        const corsHeaders = {
-          'Access-Control-Allow-Origin': '*',
+        const safeCors = {
+          'Access-Control-Allow-Origin': origin || 'https://hnh.brainsait.org',
           'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Vary': 'Origin',
         };
-        for (const [k, v] of Object.entries(corsHeaders)) {
+        for (const [k, v] of Object.entries(safeCors)) {
           if (!response.headers.has(k)) response.headers.set(k, v);
         }
       }

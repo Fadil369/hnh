@@ -8,9 +8,9 @@ var ORG_NAME_AR = "\u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644
 var ORG_NAME_EN = "Hayat National Hospitals";
 var PHONE = "920000094";
 var CLAIMLINC_BASE = "https://api.brainsait.org/nphies";
-var CLAIMLINC_KEY = "tWapQjRdpCUzlfE2aGdLBneyrBJX8cJkRafFUiWL";
+var CLAIMLINC_KEY = "";
 var CORS = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://hnh.brainsait.org",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-API-Key"
 };
@@ -95,7 +95,7 @@ __name(dedupe, "dedupe");
 var ORACLE_BRIDGE = "https://oracle-bridge.brainsait.org";
 var ORACLE_SCANNER = "https://oracle-claim-scanner.brainsait-fadil.workers.dev";
 var ORACLE_PATIENT = "https://oracle-patient-search.brainsait-fadil.workers.dev";
-var ORACLE_BRIDGE_KEY = "bsma-oracle-b2af3196522b556636b09f5d268cb976";
+var ORACLE_BRIDGE_KEY = "";
 var TUNNEL_STATUS = {
   riyadh: { reachable: true, ms: 247, loginPath: "/prod/faces/Login.jsf", note: "live \u2014 login found, viewState ok" },
   madinah: { reachable: true, ms: 275, loginPath: "/Oasis/faces/Login.jsf", note: "live \u2014 login found, viewState ok (172.25.11.26)" },
@@ -1079,7 +1079,7 @@ async function apiChat(req, env) {
   const sysPrompt = (isAr ? "\u0623\u0646\u062A \u0628\u0633\u0645\u0629\u060C \u0627\u0644\u0645\u0633\u0627\u0639\u062F\u0629 \u0627\u0644\u0630\u0643\u064A\u0629 \u0644\u0645\u0633\u062A\u0634\u0641\u064A\u0627\u062A \u0627\u0644\u062D\u064A\u0627\u0629 \u0627\u0644\u0648\u0637\u0646\u064A. \u062A\u062A\u062D\u062F\u062B\u064A\u0646 \u0627\u0644\u0639\u0631\u0628\u064A\u0629 \u0648\u0627\u0644\u0625\u0646\u062C\u0644\u064A\u0632\u064A\u0629. " : "You are Basma, the AI assistant for Hayat National Hospitals. ") + (ragCtx ? (isAr ? "\u0627\u0633\u062A\u062E\u062F\u0645\u064A \u0647\u0630\u0627 \u0627\u0644\u0633\u064A\u0627\u0642:\n\n" : "Use this context:\n\n") + ragCtx + "\n\n" : "") + (isAr ? "\u0643\u0648\u0646\u064A \u062F\u0627\u0641\u0626\u0629 \u0648\u0645\u0647\u0646\u064A\u0629 \u0648\u0645\u0648\u062C\u0632\u0629. \u0644\u0627 \u062A\u0634\u062E\u0651\u0635\u064A \u0623\u0645\u0631\u0627\u0636\u0627\u064B. \u0644\u0644\u062A\u0648\u0627\u0635\u0644: " : "Be warm, professional, concise. No diagnosis. Contact: ") + PHONE;
   let reply = "";
   try {
-    const dsKey = env.DEEPSEEK_API_KEY || "sk-c228b2bf0a0444379218a045f00becac";
+    const dsKey = env.DEEPSEEK_API_KEY || "";
     const dsRes = await fetch("https://api.deepseek.com/v1/chat/completions", {
       method: "POST",
       headers: { "Content-Type": "application/json", "Authorization": "Bearer " + dsKey },

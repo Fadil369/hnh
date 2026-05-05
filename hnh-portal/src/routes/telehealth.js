@@ -36,6 +36,42 @@ function genRoomCode() {
 const SESSION_TYPES    = ['consultation', 'follow-up', 'second-opinion', 'mental-health', 'nutrition', 'pharmacy'];
 const SESSION_STATUSES = ['scheduled', 'waiting', 'in-progress', 'completed', 'cancelled', 'no-show'];
 
+/**
+ * Build WebRTC ICE server configuration for telehealth video sessions.
+ * Uses public STUN servers + environment-configured TURN for NAT traversal.
+ * TURN credentials should be set via `wrangler secret put TURN_USERNAME` and `TURN_CREDENTIAL`.
+ */
+function getIceServers(env) {
+  const servers = [
+    // Free STUN servers for basic NAT traversal
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    { urls: 'stun:stun.cloudflare.com:3478' },
+  ];
+
+  // TURN server for symmetric NAT / corporate firewall traversal
+  const turnUrl = env?.TURN_SERVER_URL;
+  const turnUser = env?.TURN_USERNAME;
+  const turnCred = env?.TURN_CREDENTIAL;
+
+  if (turnUrl && turnUser && turnCred) {
+    servers.push(
+      { urls: `turn:${turnUrl}:3478?transport=udp`, username: turnUser, credential: turnCred },
+      { urls: `turn:${turnUrl}:3478?transport=tcp`, username: turnUser, credential: turnCred },
+      { urls: `turns:${turnUrl}:5349?transport=tcp`, username: turnUser, credential: turnCred },
+    );
+  } else if (env?.CF_TURN_TOKEN) {
+    // Cloudflare Calls TURN integration (if configured)
+    servers.push({
+      urls: 'turn:turn.cloudflare.com:3478?transport=udp',
+      username: 'cloudflare',
+      credential: env.CF_TURN_TOKEN,
+    });
+  }
+
+  return servers;
+}
+
 // ── POST /api/telehealth/sessions ─────────────────────────────────────────
 
 export async function createSession(req, env) {
@@ -77,7 +113,10 @@ export async function createSession(req, env) {
   ).run();
 
   const session = await env.DB.prepare('SELECT * FROM telehealth_sessions WHERE id = ?').bind(id).first();
-  return json({ success: true, session_id: id, room_code, join_url, session }, 201);
+  return json({
+    success: true, session_id: id, room_code, join_url, session,
+    ice_servers: getIceServers(env),
+  }, 201);
 }
 
 // ── GET /api/telehealth/sessions ──────────────────────────────────────────
@@ -186,6 +225,7 @@ export async function startSession(req, env, ctx, params) {
     join_url: session.join_url,
     started_at,
     status: 'in-progress',
+    ice_servers: getIceServers(env),
   });
 }
 
@@ -318,5 +358,24 @@ export async function getTelehealthStats(req, env) {
       by_status: byStatus?.results || [],
       by_type: byType?.results || [],
     },
+  });
+}
+
+// ── GET /api/telehealth/ice-servers ────────────────────────────────────────
+
+/**
+ * Returns WebRTC ICE configuration (STUN + TURN) for telehealth clients.
+ * TURN credentials are resolved from environment secrets at runtime.
+ */
+export async function getIceConfig(req, env) {
+  const servers = getIceServers(env);
+  const hasTurn = servers.some(s => String(s.urls || '').startsWith('turn'));
+  return json({
+    success: true,
+    ice_servers: servers,
+    turn_available: hasTurn,
+    note: hasTurn
+      ? 'TURN relay available — video calls supported behind symmetric NAT'
+      : 'STUN only — video may fail behind strict NAT. Configure TURN_SERVER_URL, TURN_USERNAME, TURN_CREDENTIAL secrets.',
   });
 }

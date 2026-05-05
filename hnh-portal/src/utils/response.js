@@ -3,15 +3,71 @@
  */
 import { SECURITY_HEADERS } from '../config.js';
 
-/** CORS headers for all API responses */
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
+/**
+ * Approved origins for CORS — healthcare-grade security.
+ * Wildcard patterns allow all subdomains of brainsait.org
+ */
+const ALLOWED_ORIGINS = [
+  'https://hnh.brainsait.org',
+  'https://telehealth.brainsait.org',
+  'https://basma.brainsait.org',
+  'https://sbs.elfadil.com',
+  'https://bsma.elfadil.com',
+  'https://stitch-doctor-dashboard.brainsait-fadil.workers.dev',
+  'https://brainsait-realtime-hub.brainsait-fadil.workers.dev',
+  'https://nphies-mirror.brainsait-fadil.workers.dev',
+  'https://maillinc.brainsait-fadil.workers.dev',
+];
 
-function mergeHeaders(extra = {}) {
-  return { ...CORS_HEADERS, ...SECURITY_HEADERS, ...extra };
+/** Suffix match for *.brainsait.org and *.brainsait-fadil.workers.dev */
+const ALLOWED_SUFFIXES = [
+  '.brainsait.org',
+  '.brainsait-fadil.workers.dev',
+  '.elfadil.com',
+];
+
+/**
+ * Validate the request origin and return it if allowed, otherwise null.
+ * Falls back to the primary site URL for non-browser / missing origin requests.
+ */
+export function getAllowedOrigin(requestOrOrigin) {
+  const origin = typeof requestOrOrigin === 'string'
+    ? requestOrOrigin
+    : (requestOrOrigin?.headers?.get('Origin') || '');
+
+  if (!origin) return 'https://hnh.brainsait.org'; // server-to-server / non-browser
+
+  // Exact match
+  if (ALLOWED_ORIGINS.includes(origin)) return origin;
+
+  // Suffix match (*.brainsait.org etc)
+  try {
+    const url = new URL(origin);
+    if (url.protocol === 'https:' && ALLOWED_SUFFIXES.some(s => url.hostname.endsWith(s))) {
+      return origin;
+    }
+  } catch { /* invalid origin */ }
+
+  // Development: allow localhost
+  if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+    return origin;
+  }
+
+  return null; // denied
+}
+
+/** Build CORS headers for a given origin */
+function corsHeaders(origin) {
+  return {
+    'Access-Control-Allow-Origin': origin || 'https://hnh.brainsait.org',
+    'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Vary': 'Origin',
+  };
+}
+
+function mergeHeaders(extra = {}, origin) {
+  return { ...corsHeaders(origin), ...SECURITY_HEADERS, ...extra };
 }
 
 /**
@@ -51,12 +107,17 @@ export function html(content, status = 200, extraHeaders = {}, cacheSeconds = 0)
 }
 
 /**
- * Handle CORS preflight requests
+ * Handle CORS preflight requests.
+ * Validates origin against the allowlist; rejects unauthorized origins.
  */
-export function handleCors() {
+export function handleCors(request) {
+  const origin = getAllowedOrigin(request);
+  if (!origin) {
+    return new Response(null, { status: 403, headers: { 'Content-Type': 'text/plain' } });
+  }
   return new Response(null, {
     status: 204,
-    headers: mergeHeaders(),
+    headers: mergeHeaders({}, origin),
   });
 }
 
