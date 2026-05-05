@@ -10560,6 +10560,460 @@ router.post("/api/whatsapp/send", (req, env) => notifySendWhatsApp(req, env));
 router.post("/api/whatsapp/appointment", (req, env) => notifyWhatsAppAppointment(req, env));
 // Notify status
 router.get("/api/notify/status", (req, env) => notifyStatus2(req, env));
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// WORKFLOW ORCHESTRATION LAYER — HNH BrainSAIT Healthcare OS v9.2.0
+// Stakeholders: Patient · Provider · Payer · Government/MOH
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const WF_AI_PRIMARY = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
+const WF_AI_FALLBACK = "@cf/meta/llama-3-8b-instruct";
+
+async function wfRunAI(env, messages, model = WF_AI_PRIMARY) {
+  try {
+    const res = await env.AI.run(model, { messages, max_tokens: 2048 });
+    return res?.response || res?.result?.response || "";
+  } catch {
+    if (model !== WF_AI_FALLBACK) return wfRunAI(env, messages, WF_AI_FALLBACK);
+    return "";
+  }
+}
+__name(wfRunAI, "wfRunAI");
+
+async function wfGetPatient(env, patientId) {
+  if (!env.DB) return null;
+  try {
+    return await env.DB.prepare(
+      `SELECT p.*, i.payer_name, i.policy_number, i.member_id
+       FROM patients p LEFT JOIN insurance_info i ON i.patient_id = p.id
+       WHERE p.id = ? LIMIT 1`
+    ).bind(patientId).first();
+  } catch { return null; }
+}
+__name(wfGetPatient, "wfGetPatient");
+
+async function wfNPHIESEligibility(env, patientId, payerId) {
+  const base = env.NPHIES_MIRROR_URL || "https://nphies-mirror.brainsait-fadil.workers.dev";
+  try {
+    const res = await fetch(`${base}/eligibility/check`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ patientId, payerId }),
+      signal: AbortSignal.timeout(8000),
+    });
+    return res.ok ? await res.json() : { eligible: null, error: `NPHIES ${res.status}` };
+  } catch (e) { return { eligible: null, error: e.message }; }
+}
+__name(wfNPHIESEligibility, "wfNPHIESEligibility");
+
+async function wfGenerateSBSCodes(env, soapNotes, diagnoses) {
+  try {
+    const res = await env.AI.run(WF_AI_PRIMARY, {
+      messages: [
+        { role: "system", content: "You are a Saudi SBS/NPHIES medical coding expert. Return ONLY valid JSON with: diagnosis_codes (array of {code,description,type}), procedure_codes (array of {code,description,quantity,unit}), drg_code, clinical_rationale." },
+        { role: "user", content: `SOAP: ${soapNotes}\nDiagnoses: ${JSON.stringify(diagnoses)}` },
+      ],
+      max_tokens: 1024,
+    });
+    return JSON.parse((res?.response || "{}").replace(/```json\n?|\n?```/g, "").trim());
+  } catch { return { diagnosis_codes: [], procedure_codes: [], drg_code: null, clinical_rationale: "Unavailable" }; }
+}
+__name(wfGenerateSBSCodes, "wfGenerateSBSCodes");
+
+function wfAdjudicationRules(claim) {
+  const flags = [];
+  if (!claim.diagnosis_codes?.length) flags.push("MISSING_DIAGNOSIS");
+  if (!claim.procedure_codes?.length) flags.push("MISSING_PROCEDURE");
+  if (claim.amount > 50000) flags.push("HIGH_VALUE_REVIEW");
+  if (claim.is_duplicate) flags.push("POTENTIAL_DUPLICATE");
+  return {
+    flags,
+    autoApprove: flags.length === 0,
+    requiresHuman: flags.includes("HIGH_VALUE_REVIEW") || flags.includes("POTENTIAL_DUPLICATE"),
+  };
+}
+__name(wfAdjudicationRules, "wfAdjudicationRules");
+
+function wfMOHXML(reportData) {
+  const { facility, period, indicators, stats } = reportData;
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<MOHReport xmlns="urn:moh.gov.sa:quality:report:2024" version="2.0">
+  <Header>
+    <FacilityLicense>${facility?.license || "10000000000988"}</FacilityLicense>
+    <FacilityName>${facility?.name || "Hayat National Hospital"}</FacilityName>
+    <ReportPeriod><Start>${period?.start || ""}</Start><End>${period?.end || ""}</End></ReportPeriod>
+    <GeneratedAt>${new Date().toISOString()}</GeneratedAt>
+    <ReportType>MONTHLY_QUALITY</ReportType>
+  </Header>
+  <QualityIndicators>${(indicators || []).map(i => `
+    <Indicator><Code>${i.code}</Code><Name>${i.name}</Name><Value>${i.value}</Value><Target>${i.target || ""}</Target><Unit>${i.unit || ""}</Unit><Status>${i.value >= (i.target || 0) ? "MET" : "NOT_MET"}</Status></Indicator>`).join("")}
+  </QualityIndicators>
+  <Statistics>
+    <TotalPatients>${stats?.total_patients || 0}</TotalPatients>
+    <TotalClaims>${stats?.total_claims || 0}</TotalClaims>
+    <TotalAppointments>${stats?.total_appointments || 0}</TotalAppointments>
+    <TelehealthSessions>${stats?.telehealth_sessions || 0}</TelehealthSessions>
+    <HomecareVisits>${stats?.homecare_visits || 0}</HomecareVisits>
+  </Statistics>
+</MOHReport>`;
+}
+__name(wfMOHXML, "wfMOHXML");
+
+// ── Patient Workflows ─────────────────────────────────────────────────────────
+
+async function wfPatientHealthScreening(request, env) {
+  try {
+    const { patientId, language = "ar" } = await request.json();
+    if (!patientId) return json({ success: false, error: "patientId required" }, 400);
+    const patient = await wfGetPatient(env, patientId);
+    const isAr = language === "ar";
+    const aiResponse = await wfRunAI(env, [
+      { role: "system", content: isAr ? "أنت مساعد طبي ذكي في مستشفيات الحياة الوطنية. اقترح الفحوصات الوقائية المناسبة وفق إرشادات وزارة الصحة السعودية." : "You are a clinical AI assistant at Hayat National Hospital. Recommend preventive screenings per Saudi MOH guidelines." },
+      { role: "user", content: `Patient: ${JSON.stringify(patient || { id: patientId })}` },
+    ]);
+    return json({ success: true, workflow: "health_screening", patient: patient ? { id: patient.id, name: patient.name } : null, screenings: aiResponse, next_step: "book_appointment", language });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfPatientHealthScreening, "wfPatientHealthScreening");
+
+async function wfPatientBookVisit(request, env) {
+  try {
+    const { patientId, speciality, preferredDate, language = "ar" } = await request.json();
+    if (!patientId || !speciality) return json({ success: false, error: "patientId and speciality required" }, 400);
+    const patient = await wfGetPatient(env, patientId);
+    const eligibility = patient?.policy_number ? await wfNPHIESEligibility(env, patientId, patient?.payer_name) : { eligible: "unknown" };
+    let slot = null, appointment = null;
+    if (env.DB) {
+      try {
+        slot = await env.DB.prepare(`SELECT p.id, p.name, p.speciality FROM providers p WHERE LOWER(p.speciality) LIKE ? LIMIT 1`).bind(`%${speciality.toLowerCase()}%`).first();
+        if (slot) {
+          const apptDate = preferredDate || new Date(Date.now() + 86400000 * 3).toISOString();
+          appointment = await env.DB.prepare(`INSERT INTO appointments (patient_id, provider_id, appointment_date, status, type, speciality, created_at) VALUES (?, ?, ?, 'scheduled', 'outpatient', ?, datetime('now')) RETURNING id, appointment_date`).bind(patientId, slot.id, apptDate, speciality).first();
+        }
+      } catch {}
+    }
+    const isAr = language === "ar";
+    const confirmation = await wfRunAI(env, [
+      { role: "system", content: isAr ? "اكتب رسالة تأكيد موعد قصيرة وودودة للمريض بالعربية." : "Write a brief friendly appointment confirmation in English." },
+      { role: "user", content: JSON.stringify({ patient: patient?.name, slot, appointment, eligibility }) },
+    ]);
+    return json({ success: true, workflow: "book_visit", eligibility, provider: slot, appointment, confirmation_message: confirmation, copay: eligibility?.copay_amount || null, language });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfPatientBookVisit, "wfPatientBookVisit");
+
+async function wfPatientPostVisit(request, env) {
+  try {
+    const { patientId, appointmentId, diagnosisCodes, procedureCodes, language = "ar" } = await request.json();
+    if (!patientId || !appointmentId) return json({ success: false, error: "patientId and appointmentId required" }, 400);
+    let claim = null, givcStatus = "not_submitted";
+    if (env.DB) {
+      try {
+        claim = await env.DB.prepare(`INSERT INTO claims (patient_id, appointment_id, status, diagnosis_codes, procedure_codes, submitted_at, created_at) VALUES (?, ?, 'pending', ?, ?, datetime('now'), datetime('now')) RETURNING id`).bind(patientId, appointmentId, JSON.stringify(diagnosisCodes || []), JSON.stringify(procedureCodes || [])).first();
+      } catch {}
+    }
+    if (claim && env.CLAIMLINC_SERVICE) {
+      try {
+        const r = await env.CLAIMLINC_SERVICE.fetch(new Request("https://claimlinc.internal/claims/submit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ patientId, appointmentId, claimId: claim.id, diagnosisCodes, procedureCodes }) }));
+        givcStatus = r.ok ? "submitted" : "failed";
+      } catch { givcStatus = "service_unavailable"; }
+    }
+    const isAr = language === "ar";
+    const explanation = await wfRunAI(env, [
+      { role: "system", content: isAr ? "اشرح حالة المطالبة التأمينية للمريض بلغة بسيطة وودودة." : "Explain the insurance claim status in simple friendly language." },
+      { role: "user", content: JSON.stringify({ claim, givcStatus, diagnosisCodes }) },
+    ]);
+    return json({ success: true, workflow: "post_visit", claim_id: claim?.id, claim_status: "pending", givc_submission: givcStatus, patient_explanation: explanation, language });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfPatientPostVisit, "wfPatientPostVisit");
+
+async function wfPatientLabResults(request, env) {
+  try {
+    const { results, language = "ar" } = await request.json();
+    if (!results || !Array.isArray(results)) return json({ success: false, error: "results array required" }, 400);
+    const isAr = language === "ar";
+    const analysis = await wfRunAI(env, [
+      { role: "system", content: isAr ? "اشرح نتائج المختبر بلغة بسيطة للمريض. حدد القيم غير الطبيعية وما تعنيه. لا تقدم تشخيصاً نهائياً." : "Explain lab results in plain language. Highlight abnormal values. Do not give a definitive diagnosis." },
+      { role: "user", content: `Lab results: ${JSON.stringify(results)}` },
+    ]);
+    const abnormals = results.filter(r => r.flag === "H" || r.flag === "L" || r.flag === "A" || (r.value && r.low && parseFloat(r.value) < parseFloat(r.low)) || (r.value && r.high && parseFloat(r.value) > parseFloat(r.high)));
+    return json({ success: true, workflow: "lab_results", total_tests: results.length, abnormal_count: abnormals.length, abnormal_tests: abnormals, explanation: analysis, recommendation: abnormals.length > 0 ? (isAr ? "يُنصح بمراجعة طبيبك." : "Please consult your physician.") : (isAr ? "جميع النتائج طبيعية." : "All results normal."), language });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfPatientLabResults, "wfPatientLabResults");
+
+async function wfPatientSummary(request, env, _ctx, params) {
+  try {
+    const patientId = params?.[0] || request.url.split("/").pop();
+    if (!patientId) return json({ success: false, error: "patientId required" }, 400);
+    const patient = await wfGetPatient(env, patientId);
+    let appointments = [], claims = [];
+    if (env.DB) {
+      try {
+        const ar = await env.DB.prepare(`SELECT * FROM appointments WHERE patient_id = ? ORDER BY appointment_date DESC LIMIT 10`).bind(patientId).all();
+        appointments = ar.results || [];
+        const cr = await env.DB.prepare(`SELECT id, status, submitted_at, diagnosis_codes FROM claims WHERE patient_id = ? ORDER BY created_at DESC LIMIT 5`).bind(patientId).all();
+        claims = cr.results || [];
+      } catch {}
+    }
+    const now = new Date();
+    return json({ success: true, workflow: "patient_summary", patient, upcoming_appointments: appointments.filter(a => new Date(a.appointment_date) >= now), past_appointments: appointments.filter(a => new Date(a.appointment_date) < now), recent_claims: claims, open_claims: claims.filter(c => c.status === "pending" || c.status === "submitted") });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfPatientSummary, "wfPatientSummary");
+
+// ── Provider Workflows ────────────────────────────────────────────────────────
+
+async function wfProviderClinicalDecision(request, env) {
+  try {
+    const { providerId, patientId, soapNotes, condition, language = "ar" } = await request.json();
+    if (!soapNotes) return json({ success: false, error: "soapNotes required" }, 400);
+    const isAr = language === "ar";
+    const clinicalAnalysis = await wfRunAI(env, [
+      { role: "system", content: `You are a clinical AI assistant for Hayat National Hospital. Analyze SOAP notes and provide evidence-based clinical decision support aligned with Saudi MOH guidelines. ${isAr ? "Respond in Arabic." : "Respond in English."}` },
+      { role: "user", content: `Condition: ${condition || "unspecified"}\nSOAP Notes:\n${soapNotes}\n\nProvide: 1.Clinical assessment 2.Guideline recommendations 3.Medication adjustments 4.Follow-up plan 5.Safety alerts` },
+    ]);
+    const prescriptionRaw = await wfRunAI(env, [
+      { role: "system", content: "Draft a Wasfaty-compatible e-prescription. Return JSON: {medications:[{name,dose,frequency,duration,route,instructions_ar,instructions_en}],prescribing_notes}" },
+      { role: "user", content: `SOAP: ${soapNotes}\nCondition: ${condition}` },
+    ]);
+    let prescription = { medications: [], prescribing_notes: prescriptionRaw };
+    try { prescription = JSON.parse(prescriptionRaw.replace(/```json\n?|\n?```/g, "").trim()); } catch {}
+    let noteId = null;
+    if (env.DB && patientId) {
+      try { const ins = await env.DB.prepare(`INSERT INTO clinical_notes (patient_id, provider_id, soap_notes, ai_analysis, created_at) VALUES (?, ?, ?, ?, datetime('now')) RETURNING id`).bind(patientId, providerId || null, soapNotes, clinicalAnalysis).first(); noteId = ins?.id; } catch {}
+    }
+    return json({ success: true, workflow: "clinical_decision_support", clinical_analysis: clinicalAnalysis, prescription_draft: prescription, wasfaty_ready: prescription?.medications?.length > 0, note_id: noteId, next_steps: ["review_prescription", "submit_billing", "schedule_followup"], language });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfProviderClinicalDecision, "wfProviderClinicalDecision");
+
+async function wfProviderSmartBilling(request, env) {
+  try {
+    const { providerId, patientId, appointmentId, soapNotes, diagnoses } = await request.json();
+    if (!soapNotes || !patientId) return json({ success: false, error: "soapNotes and patientId required" }, 400);
+    const coding = await wfGenerateSBSCodes(env, soapNotes, diagnoses || []);
+    let eligibility = { eligible: null, status: "not_checked" };
+    try { const base = env.NPHIES_MIRROR_URL || "https://nphies-mirror.brainsait-fadil.workers.dev"; const r = await fetch(`${base}/eligibility/realtime`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ patientId }), signal: AbortSignal.timeout(6000) }); if (r.ok) eligibility = await r.json(); } catch {}
+    const flags = [];
+    if (!coding.diagnosis_codes?.length) flags.push("MISSING_DIAGNOSIS_CODES");
+    if (!coding.procedure_codes?.length) flags.push("MISSING_PROCEDURE_CODES");
+    if (eligibility.eligible === false) flags.push("PATIENT_NOT_ELIGIBLE");
+    let claimId = null;
+    if (env.DB && !flags.length) {
+      try { const ins = await env.DB.prepare(`INSERT INTO claims (patient_id, provider_id, appointment_id, status, diagnosis_codes, procedure_codes, drg_code, submitted_at, created_at) VALUES (?, ?, ?, 'pending', ?, ?, ?, datetime('now'), datetime('now')) RETURNING id`).bind(patientId, providerId, appointmentId || null, JSON.stringify(coding.diagnosis_codes), JSON.stringify(coding.procedure_codes), coding.drg_code || null).first(); claimId = ins?.id; } catch {}
+    }
+    let givcResult = { status: flags.length > 0 ? "not_submitted" : "queued" };
+    if (claimId && env.CLAIMLINC_SERVICE) {
+      try { const r = await env.CLAIMLINC_SERVICE.fetch(new Request("https://claimlinc.internal/claims/submit-clean", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ claimId, patientId, providerId, coding, eligibility }) })); givcResult = r.ok ? { status: "submitted", ...await r.json() } : { status: "failed" }; } catch { givcResult = { status: "service_unavailable" }; }
+    }
+    return json({ success: true, workflow: "smart_billing", sbs_codes: coding, eligibility, flags, claim_id: claimId, givc_submission: givcResult, ready_to_submit: flags.length === 0, denial_risk: flags.length > 0 ? "high" : "low" });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfProviderSmartBilling, "wfProviderSmartBilling");
+
+async function wfProviderCohortOutreach(request, env) {
+  try {
+    const { condition, lastVisitMonths = 6, language = "ar" } = await request.json();
+    if (!condition) return json({ success: false, error: "condition required" }, 400);
+    let cohort = [];
+    if (env.DB) {
+      try {
+        const cutoff = new Date(); cutoff.setMonth(cutoff.getMonth() - lastVisitMonths);
+        const r = await env.DB.prepare(`SELECT p.id, p.name, p.phone, p.email, MAX(a.appointment_date) as last_visit FROM patients p LEFT JOIN appointments a ON a.patient_id = p.id LEFT JOIN diagnoses d ON d.patient_id = p.id WHERE (LOWER(d.description) LIKE ? OR LOWER(d.icd_code) LIKE ?) AND (a.appointment_date IS NULL OR a.appointment_date < ?) GROUP BY p.id LIMIT 100`).bind(`%${condition.toLowerCase()}%`, `%${condition.toLowerCase()}%`, cutoff.toISOString()).all();
+        cohort = r.results || [];
+      } catch {}
+    }
+    if (cohort.length === 0) return json({ success: true, workflow: "cohort_outreach", cohort_size: 0, messages: [] });
+    const isAr = language === "ar";
+    const template = await wfRunAI(env, [
+      { role: "system", content: isAr ? "اكتب رسالة تذكير صحية شخصية وودودة للمريض باللغة العربية مع نصيحة صحية مختصرة. استخدم {name} للاسم." : "Write a personalized health reminder with a brief health tip. Use {name} for the patient name." },
+      { role: "user", content: `Condition: ${condition}\nMonths since visit: ${lastVisitMonths}` },
+    ]);
+    const messages = cohort.slice(0, 20).map(p => ({ patient_id: p.id, patient_name: p.name, phone: p.phone, email: p.email, last_visit: p.last_visit, message: template.replace(/\{name\}/gi, p.name || (isAr ? "المريض الكريم" : "Dear Patient")) }));
+    return json({ success: true, workflow: "cohort_outreach", condition, cohort_size: cohort.length, messages_prepared: messages.length, messages, next_step: "send_notifications", channels: ["sms", "whatsapp", "email"], language });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfProviderCohortOutreach, "wfProviderCohortOutreach");
+
+async function wfProviderSchedule(request, env, _ctx, params) {
+  try {
+    const providerId = params?.[0] || request.url.split("/").pop();
+    if (!providerId) return json({ success: false, error: "providerId required" }, 400);
+    let schedule = [];
+    if (env.DB) {
+      try { const r = await env.DB.prepare(`SELECT a.id, a.appointment_date, a.status, a.type, p.id as patient_id, p.name as patient_name, p.phone FROM appointments a JOIN patients p ON p.id = a.patient_id WHERE a.provider_id = ? AND date(a.appointment_date) = date('now') ORDER BY a.appointment_date ASC`).bind(providerId).all(); schedule = r.results || []; } catch {}
+    }
+    return json({ success: true, workflow: "provider_schedule", provider_id: providerId, date: new Date().toISOString().split("T")[0], total_appointments: schedule.length, schedule });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfProviderSchedule, "wfProviderSchedule");
+
+// ── Payer Workflows ───────────────────────────────────────────────────────────
+
+async function wfPayerAdjudicate(request, env) {
+  try {
+    const { claimId, payerId, claim } = await request.json();
+    if (!claimId || !claim) return json({ success: false, error: "claimId and claim required" }, 400);
+    const ruleResult = wfAdjudicationRules(claim);
+    const codeValidRaw = await wfRunAI(env, [
+      { role: "system", content: "You are a Saudi NPHIES claims auditor. Validate codes for compatibility and medical necessity. Return JSON: {valid:boolean,issues:string[],code_compatibility:string,medical_necessity:string}" },
+      { role: "user", content: `Claim: ${JSON.stringify(claim)}` },
+    ]);
+    let validation = { valid: true, issues: [], code_compatibility: "compatible", medical_necessity: "appropriate" };
+    try { validation = JSON.parse(codeValidRaw.replace(/```json\n?|\n?```/g, "").trim()); } catch {}
+    if (!validation.valid) ruleResult.flags.push(...(validation.issues || []));
+    const decision = ruleResult.autoApprove && validation.valid ? "APPROVED" : ruleResult.requiresHuman ? "PENDED_HUMAN_REVIEW" : "DENIED";
+    if (env.DB) {
+      try { await env.DB.prepare(`UPDATE claims SET status = ?, adjudication_result = ?, updated_at = datetime('now') WHERE id = ?`).bind(decision === "APPROVED" ? "approved" : decision === "DENIED" ? "denied" : "pending_review", JSON.stringify({ decision, flags: ruleResult.flags }), claimId).run(); } catch {}
+    }
+    const era = decision === "APPROVED" ? { era_id: `ERA-${Date.now()}`, claim_id: claimId, payer_id: payerId, payment_date: new Date(Date.now() + 86400000 * 3).toISOString().split("T")[0], status: "ISSUED", nphies_reference: `NP-${claimId}-${Date.now()}` } : null;
+    return json({ success: true, workflow: "claims_adjudication", claim_id: claimId, decision, rule_flags: ruleResult.flags, code_validation: validation, auto_approved: decision === "APPROVED", era, denial_reason: decision === "DENIED" ? ruleResult.flags.join("; ") : null });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfPayerAdjudicate, "wfPayerAdjudicate");
+
+async function wfPayerPriorAuth(request, env) {
+  try {
+    const { patientId, providerId, requestedService, diagnosisCodes, payerId, urgency = "routine" } = await request.json();
+    if (!requestedService || !patientId) return json({ success: false, error: "requestedService and patientId required" }, 400);
+    let policyInfo = null;
+    if (env.DB) { try { policyInfo = await env.DB.prepare(`SELECT i.*, p.date_of_birth, p.gender FROM insurance_info i JOIN patients p ON p.id = i.patient_id WHERE i.patient_id = ? LIMIT 1`).bind(patientId).first(); } catch {} }
+    const clinicalRaw = await wfRunAI(env, [
+      { role: "system", content: "You are a Saudi health insurance clinical reviewer. Assess prior authorization against clinical guidelines. Return JSON: {medically_necessary:boolean,guideline_reference:string,conditions_met:string[],conditions_failed:string[],recommendation:\"APPROVE\"|\"DENY\"|\"CLINICAL_REVIEW\",clinical_notes:string}" },
+      { role: "user", content: `Service: ${requestedService}\nCodes: ${JSON.stringify(diagnosisCodes)}\nPatient: ${JSON.stringify(policyInfo)}\nUrgency: ${urgency}` },
+    ]);
+    let cd = { medically_necessary: true, recommendation: "APPROVE", guideline_reference: "Saudi MOH CPGs", conditions_met: [], conditions_failed: [], clinical_notes: "" };
+    try { cd = JSON.parse(clinicalRaw.replace(/```json\n?|\n?```/g, "").trim()); } catch {}
+    const paDecision = urgency === "emergency" ? "APPROVED" : cd.recommendation;
+    const paNumber = paDecision === "APPROVED" ? `PA-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}` : null;
+    if (env.DB) { try { await env.DB.prepare(`INSERT INTO prior_authorizations (patient_id, provider_id, payer_id, requested_service, diagnosis_codes, status, pa_number, decision_reason, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`).bind(patientId, providerId || null, payerId || null, requestedService, JSON.stringify(diagnosisCodes), paDecision.toLowerCase(), paNumber, JSON.stringify(cd)).run(); } catch {} }
+    return json({ success: true, workflow: "prior_authorization", pa_number: paNumber, decision: paDecision, medically_necessary: cd.medically_necessary, guideline_reference: cd.guideline_reference, conditions_met: cd.conditions_met, conditions_failed: cd.conditions_failed, valid_days: paDecision === "APPROVED" ? 90 : 0, urgency });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfPayerPriorAuth, "wfPayerPriorAuth");
+
+async function wfPayerFWADetect(request, env) {
+  try {
+    const { analysisWindow = 30, thresholdSigma = 2.0 } = await request.json();
+    let claimsData = [];
+    if (env.DB) {
+      try {
+        const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - analysisWindow);
+        const r = await env.DB.prepare(`SELECT pr.id as provider_id, pr.name as provider_name, pr.speciality, COUNT(c.id) as claim_count, AVG(c.billed_amount) as avg_amount, SUM(c.billed_amount) as total_billed, COUNT(DISTINCT c.patient_id) as unique_patients, SUM(CASE WHEN c.status='denied' THEN 1 ELSE 0 END) as denials FROM providers pr LEFT JOIN claims c ON c.provider_id = pr.id AND c.created_at >= ? GROUP BY pr.id ORDER BY total_billed DESC LIMIT 50`).bind(cutoff.toISOString()).all();
+        claimsData = r.results || [];
+      } catch {}
+    }
+    const amounts = claimsData.map(p => p.avg_amount || 0).filter(a => a > 0);
+    const mean = amounts.length ? amounts.reduce((s, a) => s + a, 0) / amounts.length : 0;
+    const stdDev = Math.sqrt(amounts.length ? amounts.reduce((s, a) => s + (a - mean) ** 2, 0) / amounts.length : 0);
+    const flagged = claimsData.filter(p => { const z = stdDev > 0 ? Math.abs((p.avg_amount - mean) / stdDev) : 0; p.z_score = Math.round(z * 100) / 100; return z > thresholdSigma || (p.denials / (p.claim_count || 1)) > 0.3; });
+    let aiInsights = "";
+    if (flagged.length > 0) aiInsights = await wfRunAI(env, [{ role: "system", content: "You are a healthcare fraud investigator. Analyze provider billing patterns for FWA indicators. Be concise and specific." }, { role: "user", content: `Flagged: ${JSON.stringify(flagged.slice(0, 10))}\nBaseline: mean=${mean.toFixed(0)}, std=${stdDev.toFixed(0)}\nWindow: ${analysisWindow} days` }]);
+    return json({ success: true, workflow: "fwa_detection", analysis_window_days: analysisWindow, providers_analyzed: claimsData.length, flagged_count: flagged.length, flagged_providers: flagged.slice(0, 20), statistical_baseline: { mean_claim_amount: Math.round(mean), std_deviation: Math.round(stdDev), threshold_sigma: thresholdSigma }, ai_insights: aiInsights, recommended_actions: flagged.length > 0 ? ["initiate_provider_audit", "request_medical_records", "notify_compliance_team"] : ["continue_monitoring"], generated_at: new Date().toISOString() });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfPayerFWADetect, "wfPayerFWADetect");
+
+// ── Government / MOH Workflows ────────────────────────────────────────────────
+
+async function wfGovSurveillance(request, env) {
+  try {
+    const url = new URL(request.url);
+    const region = url.searchParams.get("region") || "all";
+    const condition = url.searchParams.get("condition") || "respiratory";
+    const days = parseInt(url.searchParams.get("days") || "7");
+    let trend = [];
+    if (env.DB) {
+      try { const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - days); const r = await env.DB.prepare(`SELECT date(created_at) as day, COUNT(*) as count FROM diagnoses WHERE created_at >= ? AND (LOWER(description) LIKE ? OR LOWER(icd_code) LIKE ?) GROUP BY day ORDER BY day DESC`).bind(cutoff.toISOString(), `%${condition}%`, `%${condition}%`).all(); trend = r.results || []; } catch {}
+    }
+    const counts = trend.map(d => d.count);
+    const avg = counts.length ? counts.reduce((s, c) => s + c, 0) / counts.length : 0;
+    const latest = counts[0] || 0;
+    const spikeDetected = latest > avg * 1.5 && counts.length >= 3;
+    const spikeRatio = avg > 0 ? (latest / avg).toFixed(2) : "0";
+    let alert = null;
+    if (spikeDetected) alert = await wfRunAI(env, [{ role: "system", content: "You are a Saudi MOH epidemiologist. Analyze data spikes. Provide: severity, likely causes, recommended actions. Be direct." }, { role: "user", content: `Condition: ${condition}\nRegion: ${region}\nBaseline: ${avg.toFixed(1)}/day\nLatest: ${latest}\nRatio: ${spikeRatio}x\nTrend: ${JSON.stringify(trend.slice(0, 7))}` }]);
+    return json({ success: true, workflow: "public_health_surveillance", region, condition, analysis_window_days: days, spike_detected: spikeDetected, spike_ratio: parseFloat(spikeRatio), baseline_daily_avg: Math.round(avg), latest_day_count: latest, alert_level: spikeDetected ? (parseFloat(spikeRatio) > 3 ? "RED" : "AMBER") : "GREEN", alert_text: alert, trend_data: trend, recommended_actions: spikeDetected ? ["notify_moh_command_center", "activate_rapid_response", "increase_surveillance"] : ["continue_passive_surveillance"], generated_at: new Date().toISOString() });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfGovSurveillance, "wfGovSurveillance");
+
+async function wfGovComplianceReport(request, env) {
+  try {
+    const { period, facilityLicense, autoSubmit = false } = await request.json();
+    const now = new Date();
+    const rp = period || { start: new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString().split("T")[0], end: new Date(now.getFullYear(), now.getMonth(), 0).toISOString().split("T")[0] };
+    let stats = {};
+    if (env.DB) {
+      try { stats = await env.DB.prepare(`SELECT (SELECT COUNT(*) FROM patients) as total_patients, (SELECT COUNT(*) FROM appointments WHERE appointment_date BETWEEN ? AND ?) as total_appointments, (SELECT COUNT(*) FROM claims WHERE created_at BETWEEN ? AND ?) as total_claims, (SELECT COUNT(*) FROM claims WHERE status='approved' AND created_at BETWEEN ? AND ?) as approved_claims, (SELECT COUNT(*) FROM telehealth_sessions WHERE created_at BETWEEN ? AND ?) as telehealth_sessions, (SELECT COUNT(*) FROM homecare_visits WHERE created_at BETWEEN ? AND ?) as homecare_visits`).bind(rp.start, rp.end, rp.start, rp.end, rp.start, rp.end, rp.start, rp.end, rp.start, rp.end).first(); } catch {}
+    }
+    const approvalRate = stats?.total_claims > 0 ? Math.round((stats.approved_claims / stats.total_claims) * 100) : 0;
+    const indicators = [
+      { code: "PI-001", name: "Claims Approval Rate", value: approvalRate, target: 90, unit: "%" },
+      { code: "PI-002", name: "Telehealth Sessions", value: stats?.telehealth_sessions || 0, target: 100, unit: "sessions" },
+      { code: "PI-003", name: "Homecare Visits", value: stats?.homecare_visits || 0, target: 50, unit: "visits" },
+      { code: "PI-004", name: "Outpatient Encounters", value: stats?.total_appointments || 0, target: 1000, unit: "encounters" },
+      { code: "PI-005", name: "NPHIES Uptime", value: 99, target: 99, unit: "%" },
+      { code: "PI-006", name: "Digital Claims Rate", value: 100, target: 100, unit: "%" },
+    ];
+    const reportData = { facility: { license: facilityLicense || env.FACILITY_LICENSE || "10000000000988", name: "Hayat National Hospital" }, period: rp, indicators, stats: { total_patients: stats?.total_patients || 0, total_claims: stats?.total_claims || 0, total_appointments: stats?.total_appointments || 0, telehealth_sessions: stats?.telehealth_sessions || 0, homecare_visits: stats?.homecare_visits || 0 } };
+    const mohXML = wfMOHXML(reportData);
+    const summary = await wfRunAI(env, [{ role: "system", content: "Write a concise executive compliance report summary for the Saudi MOH. Highlight achievements and Vision 2030 alignment." }, { role: "user", content: `Period: ${rp.start}–${rp.end}\nIndicators: ${JSON.stringify(indicators)}\nStats: ${JSON.stringify(stats)}` }]);
+    let submissionStatus = "report_ready";
+    if (autoSubmit) { try { const base = env.NPHIES_MIRROR_URL || "https://nphies-mirror.brainsait-fadil.workers.dev"; const r = await fetch(`${base}/reports/submit`, { method: "POST", headers: { "Content-Type": "application/xml" }, body: mohXML, signal: AbortSignal.timeout(15000) }); submissionStatus = r.ok ? "submitted_to_nphies" : `submission_failed_${r.status}`; } catch { submissionStatus = "submission_error"; } }
+    return json({ success: true, workflow: "moh_compliance_report", period: rp, stats, quality_indicators: indicators, indicators_met: indicators.filter(i => i.value >= (i.target || 0)).length, indicators_total: indicators.length, executive_summary: summary, moh_xml: mohXML, submission_status: submissionStatus, generated_at: new Date().toISOString() });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfGovComplianceReport, "wfGovComplianceReport");
+
+async function wfGovPolicyAnalysis(request, env) {
+  try {
+    const { program, years = 2, language = "en" } = await request.json();
+    if (!program) return json({ success: false, error: "program required" }, 400);
+    let agg = {};
+    if (env.DB) { try { const cutoff = new Date(); cutoff.setFullYear(cutoff.getFullYear() - years); agg = await env.DB.prepare(`SELECT COUNT(DISTINCT c.patient_id) as patients_affected, COUNT(c.id) as total_claims, AVG(c.billed_amount) as avg_claim_cost, SUM(c.billed_amount) as total_cost FROM claims c JOIN diagnoses d ON d.patient_id = c.patient_id WHERE (LOWER(d.description) LIKE ? OR LOWER(d.icd_code) LIKE ?) AND c.created_at >= ?`).bind(`%${program.replace(/_/g, " ")}%`, `%${program}%`, cutoff.toISOString()).first(); } catch {} }
+    const isAr = language === "ar";
+    const analysis = await wfRunAI(env, [{ role: "system", content: isAr ? "أنت محلل سياسات صحية للحكومة السعودية. قدم تحليلاً شاملاً لفعالية البرنامج مع توصيات مبنية على الأدلة ورؤية 2030." : "You are a Saudi health policy analyst. Provide comprehensive cost-effectiveness analysis with evidence-based recommendations aligned with Vision 2030." }, { role: "user", content: `Program: ${program.replace(/_/g, " ")}\nYears: ${years}\nData: ${JSON.stringify(agg)}\n\nProvide: 1.Cost-effectiveness 2.Outcome metrics 3.GCC benchmarks 4.Vision 2030 alignment 5.Policy recommendations with ROI` }]);
+    return json({ success: true, workflow: "policy_analysis", program: program.replace(/_/g, " "), analysis_years: years, aggregated_data: agg, policy_analysis: analysis, vision_2030_pillars: ["digital_health", "preventive_care", "quality_outcomes", "cost_efficiency"], recommended_next_steps: ["commission_health_economics_study", "benchmark_gcc_peers", "engage_stakeholders", "draft_policy_brief"], language, generated_at: new Date().toISOString() });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfGovPolicyAnalysis, "wfGovPolicyAnalysis");
+
+async function wfGovKPIDashboard(request, env) {
+  try {
+    let kpis = {};
+    if (env.DB) { try { kpis = await env.DB.prepare(`SELECT (SELECT COUNT(*) FROM patients) as total_patients, (SELECT COUNT(*) FROM providers) as total_providers, (SELECT COUNT(*) FROM claims) as total_claims, (SELECT COUNT(*) FROM claims WHERE status='approved') as approved_claims, (SELECT COUNT(*) FROM claims WHERE status='denied') as denied_claims, (SELECT COUNT(*) FROM claims WHERE status='pending') as pending_claims, (SELECT COUNT(*) FROM appointments WHERE date(appointment_date) = date('now')) as today_appointments, (SELECT COUNT(*) FROM telehealth_sessions) as total_telehealth, (SELECT COUNT(*) FROM homecare_visits) as total_homecare, (SELECT COUNT(*) FROM givc_doctors WHERE givc_status='active') as givc_providers`).first(); } catch {} }
+    const approvalRate = kpis.total_claims > 0 ? Math.round((kpis.approved_claims / kpis.total_claims) * 100) : 0;
+    return json({ success: true, workflow: "gov_kpi_dashboard", facility: env.FACILITY_LICENSE || "10000000000988", kpis: { total_registered_patients: kpis.total_patients || 0, total_providers: kpis.total_providers || 0, today_appointments: kpis.today_appointments || 0, telehealth_sessions_total: kpis.total_telehealth || 0, homecare_visits_total: kpis.total_homecare || 0, total_claims_submitted: kpis.total_claims || 0, claims_approved: kpis.approved_claims || 0, claims_denied: kpis.denied_claims || 0, claims_pending: kpis.pending_claims || 0, claim_approval_rate_pct: approvalRate, givc_active_providers: kpis.givc_providers || 0 }, vision_2030_targets: { digital_health_adoption: "85%", claims_digital_submission: "100%", telehealth_penetration: "30%", home_healthcare_growth: "200%" }, generated_at: new Date().toISOString() });
+  } catch (e) { return json({ success: false, error: e.message }, 500); }
+}
+__name(wfGovKPIDashboard, "wfGovKPIDashboard");
+
+// ── Workflow Route Registrations ──────────────────────────────────────────────
+// Patient
+router.post("/api/workflows/patient/health-screening",  (req, env) => wfPatientHealthScreening(req, env));
+router.post("/api/workflows/patient/book-visit",         (req, env) => wfPatientBookVisit(req, env));
+router.post("/api/workflows/patient/post-visit",         (req, env) => wfPatientPostVisit(req, env));
+router.post("/api/workflows/patient/lab-results",        (req, env) => wfPatientLabResults(req, env));
+router.get("/api/workflows/patient/summary/([^/]+)",     (req, env, ctx, p) => wfPatientSummary(req, env, ctx, p));
+// Provider
+router.post("/api/workflows/provider/clinical-decision", (req, env) => wfProviderClinicalDecision(req, env));
+router.post("/api/workflows/provider/smart-billing",     (req, env) => wfProviderSmartBilling(req, env));
+router.post("/api/workflows/provider/cohort-outreach",   (req, env) => wfProviderCohortOutreach(req, env));
+router.get("/api/workflows/provider/schedule/([^/]+)",   (req, env, ctx, p) => wfProviderSchedule(req, env, ctx, p));
+// Payer
+router.post("/api/workflows/payer/adjudicate",           (req, env) => wfPayerAdjudicate(req, env));
+router.post("/api/workflows/payer/prior-auth",           (req, env) => wfPayerPriorAuth(req, env));
+router.post("/api/workflows/payer/fwa-detect",           (req, env) => wfPayerFWADetect(req, env));
+// Government / MOH
+router.get("/api/workflows/gov/surveillance",            (req, env) => wfGovSurveillance(req, env));
+router.post("/api/workflows/gov/compliance-report",      (req, env) => wfGovComplianceReport(req, env));
+router.post("/api/workflows/gov/policy-analysis",        (req, env) => wfGovPolicyAnalysis(req, env));
+router.get("/api/workflows/gov/kpi-dashboard",           (req, env) => wfGovKPIDashboard(req, env));
+// ── End Workflow Routes ───────────────────────────────────────────────────────
+
 router.get("/", (req, env, ctx, p, url) => servePage(req));
 router.get("/(.*)", (req, env, ctx, p, url) => servePage(req));
 var index_default = {

@@ -20,6 +20,7 @@ const NAV_ITEMS = [
   { href: '/', label: 'الرئيسية', labelEn: 'Home', icon: '🏠' },
   { href: '/portal', label: 'المنافذ', labelEn: 'Portals', icon: '🌐' },
   { href: '/integrations', label: 'التكامل', labelEn: 'Integrations', icon: '🔗' },
+  { href: '/workflows', label: 'سير العمل', labelEn: 'Workflows', icon: '⚙️' },
   { href: '/stitch', label: 'التصاميم', labelEn: 'Designs', icon: '🎨' },
   { href: '/patients', label: 'المرضى', labelEn: 'Patients', icon: '👤' },
   { href: '/appointments', label: 'المواعيد', labelEn: 'Appointments', icon: '📅' },

@@ -7,3 +7,8 @@ out/
 integrations/nphies/__pycache__/
 opencode.json
 basma-portal/.wrangler/
+.wrangler/
+hnh-portal/.wrangler/
+hnh-portal/dist/
+hnh-portal/src/.wrangler/
+hnh-portal/tmp/
