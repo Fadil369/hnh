@@ -57,7 +57,7 @@ export default {
       try {
         const hnhUrl = env.HNH_BACKEND || 'https://hnh.brainsait.org';
         const body = await request.json();
-        const res = await fetch(`${hnhUrl}/basma/chat`, {
+        const res = await fetch(`${hnhUrl}/api/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-Source': 'bsma-portal' },
           body: JSON.stringify(body),
@@ -179,13 +179,17 @@ export default {
       }), { headers: { 'Content-Type': 'application/json', ...CORS } });
     }
 
-    // /basma/drugs → Drug search proxy (via voice agent)
+    // /basma/drugs → Drug search via HNH AI Search
     if (path.startsWith('/basma/drugs')) {
       try {
-        const voiceAgentUrl = env.VOICE_AGENT_URL || 'https://voice.elfadil.com';
-        const qs = url.search || '';
-        const res = await fetch(`${voiceAgentUrl}${path}${qs}`, {
-          signal: AbortSignal.timeout(10000),
+        const q = url.searchParams.get('q') || url.searchParams.get('query') || '';
+        const lang = url.searchParams.get('lang') || 'ar';
+        const hnhUrl = env.HNH_BACKEND || 'https://hnh.brainsait.org';
+        const res = await fetch(`${hnhUrl}/api/search`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Source': 'bsma-portal' },
+          body: JSON.stringify({ query: q ? `drug: ${q}` : 'medications formulary', lang }),
+          signal: AbortSignal.timeout(15000),
         });
         const data = await res.json();
         return new Response(JSON.stringify(data), {
@@ -221,14 +225,15 @@ export default {
       }
     }
 
-    // /basma/rag/* → RAG (Retrieval Augmented Generation)
+    // /basma/rag/* → RAG search via HNH AI Search
     if (path.startsWith('/basma/rag/') && method === 'POST') {
       try {
-        const voiceAgentUrl = env.VOICE_AGENT_URL || 'https://voice.elfadil.com';
-        const opts = { method, headers: { 'Content-Type': 'application/json' } };
-        opts.body = await request.clone().text();
-        const res = await fetch(`${voiceAgentUrl}${path}${url.search}`, {
-          ...opts,
+        const hnhUrl = env.HNH_BACKEND || 'https://hnh.brainsait.org';
+        const body = await request.json();
+        const res = await fetch(`${hnhUrl}/api/search`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Source': 'bsma-portal' },
+          body: JSON.stringify({ query: body.query || body.q || '', lang: body.lang || 'ar' }),
           signal: AbortSignal.timeout(15000),
         });
         const data = await res.json();
@@ -264,7 +269,7 @@ export default {
           if (cRes.ok) claims = await cRes.json();
         } catch {}
 
-        return new Response(JSON.stringify({ visitors: patients.results || [], appointments: claims.results || [], segments: [{ id: 's1', name: 'All Patients', color: '#0ea5e9' }] }), {
+        return new Response(JSON.stringify({ visitors: patients.patients || patients.results || [], appointments: claims.claims || claims.results || [], segments: [{ id: 's1', name: 'All Patients', color: '#0ea5e9' }] }), {
           headers: { 'Content-Type': 'application/json', ...CORS },
         });
       } catch (err) {

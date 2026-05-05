@@ -5,10 +5,12 @@ import { providers } from './providers.js';
 function fhirPatient(patient) {
   if (!patient) return null;
   const names = [];
-  if (patient.name_ar || patient.name_en) {
+  const nameAr = patient.full_name_ar || patient.name_ar || '';
+  const nameEn = patient.full_name_en || patient.name_en || '';
+  if (nameAr || nameEn) {
     const name = { use: 'official' };
-    if (patient.name_en) name.text = patient.name_en;
-    if (patient.name_ar) name.text_ar = patient.name_ar;
+    if (nameEn) name.text = nameEn;
+    if (nameAr) name.text_ar = nameAr;
     names.push(name);
   }
   return {
@@ -26,7 +28,7 @@ function fhirPatient(patient) {
       ...(patient.email ? [{ system: 'email', value: patient.email, use: 'work' }] : []),
     ],
     gender: patient.gender || 'unknown',
-    birthDate: patient.dob || null,
+    birthDate: patient.date_of_birth || patient.dob || null,
     managingOrganization: { reference: 'Organization/HNH-R001', display: 'Hayat National Hospital - Gharnata' },
     generalPractitioner: [],
     communication: [
@@ -42,23 +44,34 @@ function fhirPatient(patient) {
 
 function fhirPractitioner(provider) {
   if (!provider) return null;
+  const qualifications = (provider.education && provider.education.length)
+    ? provider.education.map(edu => ({
+        identifier: [],
+        code: { coding: [{ system: 'http://terminology.hl7.org/CodeSystem/v2-0360', code: 'MD', display: edu.degree }] },
+        period: { start: edu.year ? `${edu.year}-01-01` : '2000-01-01' },
+        issuer: { display: edu.institution },
+      }))
+    : (provider.specialty ? [{ code: { text: provider.specialty } }] : []);
+  const languages = provider.languages && provider.languages.length ? provider.languages : ['ar', 'en'];
   return {
     resourceType: 'Practitioner',
     id: provider.id,
-    identifier: [{ system: 'https://hnh.brainsait.org/identifier/provider', value: provider.id }],
+    identifier: [
+      { system: 'https://hnh.brainsait.org/identifier/provider', value: provider.id },
+      ...(provider.givc_oid ? [{ system: 'urn:ietf:rfc:3986', value: `urn:oid:${provider.givc_oid}` }] : []),
+    ],
     active: true,
     name: [
-      { use: 'official', text_en: provider.name_en || '', text_ar: provider.name_ar || '' },
+      { use: 'official', text: provider.name_en || provider.name_ar || '', text_en: provider.name_en || '', text_ar: provider.name_ar || '' },
     ],
-    qualification: (provider.education || []).map(edu => ({
-      identifier: [],
-      code: { coding: [{ system: 'http://terminology.hl7.org/CodeSystem/v2-0360', code: 'MD', display: edu.degree }] },
-      period: { start: edu.year ? `${edu.year}-01-01` : '2000-01-01' },
-      issuer: { display: edu.institution },
-    })),
-    communication: (provider.languages || []).map(l => ({
+    qualification: qualifications,
+    communication: languages.map(l => ({
       coding: [{ system: 'urn:ietf:bcp:47', code: l }],
     })),
+    extension: [
+      ...(provider.givc_registered ? [{ url: 'https://hnh.brainsait.org/fhir/StructureDefinition/givc-registered', valueBoolean: true }] : []),
+      ...(provider.branch_id ? [{ url: 'https://hnh.brainsait.org/fhir/StructureDefinition/provider-branch', valueString: provider.branch_id }] : []),
+    ],
   };
 }
 
@@ -98,7 +111,7 @@ function fhirClaim(claim) {
 
 // FHIR endpoints
 export async function getFHIRPatient(req, env, ctx, params) {
-  const id = params;
+  const id = params[0];
   const patient = await env.DB.prepare('SELECT * FROM patients WHERE id = ? OR national_id = ?').bind(id, id).first();
   if (!patient) return json({ success: false, message: 'Patient not found' }, 404);
   return json(fhirPatient(patient));
@@ -112,7 +125,7 @@ export async function searchFHIRPatients(req, env, ctx, params, url) {
   let query = 'SELECT * FROM patients WHERE 1=1';
   const binds = [];
 
-  if (name) { query += ' AND (name_ar LIKE ? OR name_en LIKE ?)'; binds.push(`%${name}%`, `%${name}%`); }
+  if (name) { query += ' AND (full_name_ar LIKE ? OR full_name_en LIKE ?)'; binds.push(`%${name}%`, `%${name}%`); }
   if (identifier) { query += ' AND (id LIKE ? OR national_id LIKE ?)'; binds.push(`%${identifier}%`, `%${identifier}%`); }
   if (phone) { query += ' AND phone LIKE ?'; binds.push(`%${phone}%`); }
 
@@ -126,7 +139,7 @@ export async function searchFHIRPatients(req, env, ctx, params, url) {
 }
 
 export async function getFHIRPractitioner(req, env, ctx, params) {
-  const id = params;
+  const id = params[0];
   const { getProvider } = await import("./providers.js");
   const provider = await getProvider(id, env);
   if (!provider) return json({ success: false, message: 'Provider not found' }, 404);
@@ -134,21 +147,21 @@ export async function getFHIRPractitioner(req, env, ctx, params) {
 }
 
 export async function getFHIRAppointment(req, env, ctx, params) {
-  const id = params;
+  const id = params[0];
   const appt = await env.DB.prepare('SELECT * FROM appointments WHERE id = ?').bind(id).first();
   if (!appt) return json({ success: false, message: 'Appointment not found' }, 404);
   return json(fhirAppointment(appt));
 }
 
 export async function getFHIRClaim(req, env, ctx, params) {
-  const id = params;
+  const id = params[0];
   const claim = await env.DB.prepare('SELECT * FROM claims WHERE id = ? OR claim_number = ?').bind(id, id).first();
   if (!claim) return json({ success: false, message: 'Claim not found' }, 404);
   return json(fhirClaim(claim));
 }
 
 export async function getFHIRCoverage(req, env, ctx, params) {
-  const id = params;
+  const id = params[0];
   const patient = await env.DB.prepare('SELECT * FROM patients WHERE id = ? OR national_id = ?').bind(id, id).first();
   
   if (!patient) return json({ success: false, message: 'Patient not found' }, 404);

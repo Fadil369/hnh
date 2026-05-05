@@ -1,4 +1,5 @@
 import { json } from '../utils/response.js';
+import { claimlincEligibility, firstIdentifier } from '../utils/claimlinc.js';
 
 const CLAIMLINC_BASE = 'https://api.brainsait.org/nphies';
 const NPHIES_OID = '1.3.6.1.4.1.61026'; // Hayat National
@@ -30,17 +31,9 @@ export async function submit270(req, env) {
   const body = await req.json();
   const transactionId = 'NPH270-' + Date.now().toString(36).toUpperCase();
 
-  const clData = await claimlinc(env, '/eligibility', {
-    transaction_id: transactionId,
-    nphies_version: 'V2',
-    facility_oid: NPHIES_OID,
-    facility_license: env.FACILITY_LICENSE || '10000000000988',
-    subscriber_id: body.subscriber_id,
-    subscriber_name: body.subscriber_name,
-    national_id: body.national_id,
-    insurance_company: body.insurance_company,
-    service_type: body.service_type || 'medical',
-    provider_npi: body.provider_npi,
+  const clData = await claimlincEligibility(env, {
+    branch: body.branch,
+    identifier: firstIdentifier(body.national_id, body.identifier, body.subscriber_id),
   });
 
   if (clData) {

@@ -93,7 +93,7 @@ export async function listSessions(req, env) {
   const offset   = parseInt(url.searchParams.get('offset') || '0');
 
   let q = `SELECT s.*,
-             p.name_ar as patient_name_ar, p.name_en as patient_name_en, p.phone as patient_phone
+             p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en, p.phone as patient_phone
            FROM telehealth_sessions s
            LEFT JOIN patients p ON s.patient_id = p.id`;
   const binds = [];
@@ -119,7 +119,7 @@ export async function getSession(req, env, ctx, params) {
   const id = params[0];
   const session = await env.DB.prepare(
     `SELECT s.*,
-       p.name_ar as patient_name_ar, p.name_en as patient_name_en,
+       p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en,
        p.phone as patient_phone, p.insurance_company as patient_insurance
      FROM telehealth_sessions s
      LEFT JOIN patients p ON s.patient_id = p.id

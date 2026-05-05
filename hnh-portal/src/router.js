@@ -17,7 +17,8 @@ export class Router {
 
   match(request, env, ctx) {
     const url = new URL(request.url);
-    const method = request.method;
+    const isHead = request.method === 'HEAD';
+    const method = isHead ? 'GET' : request.method;
     const path = url.pathname;
 
     for (const route of this.routes) {
@@ -27,9 +28,15 @@ export class Router {
       if (!match) continue;
 
       const params = match.slice(1);
-      return route.handler(request, env, ctx, ...params, url);
+      const response = route.handler(request, env, ctx, params, url);
+      if (!isHead) return response;
+      return Promise.resolve(response).then(res => new Response(null, {
+        status: res.status,
+        statusText: res.statusText,
+        headers: res.headers,
+      }));
     }
 
-    return new Response('Not Found', { status: 404 });
+    return new Response(request.method === 'HEAD' ? null : 'Not Found', { status: 404 });
   }
 }

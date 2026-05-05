@@ -1,10 +1,5 @@
 import { json } from '../utils/response.js';
-
-const CLAIMLINC_BASE = 'https://api.brainsait.org/nphies';
-
-function claimlinKey(env) {
-  return env.CLAIMLINC_KEY || '';
-}
+import { claimlincEligibility, firstIdentifier } from '../utils/claimlinc.js';
 
 // NPHIES Eligibility & Benefits (270/271) — via ClaimLinc
 export async function checkEligibility(req, env) {
@@ -17,6 +12,7 @@ export async function checkEligibility(req, env) {
     service_type,   // medical, dental, pharmacy, hospital
     provider_npi,
     national_id,
+    branch,
   } = body;
 
   if (!insurance_id) {
@@ -33,40 +29,21 @@ export async function checkEligibility(req, env) {
 
   // === Attempt real ClaimLinc eligibility check ===
   let eligibilityResponse = null;
-  const clKey = claimlinKey(env);
+  const clData = await claimlincEligibility(env, {
+    branch,
+    identifier: firstIdentifier(national_id, patient?.national_id, insurance_id),
+  });
 
-  if (clKey) {
-    try {
-      const clRes = await fetch(`${CLAIMLINC_BASE}/eligibility`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': clKey,
-        },
-        body: JSON.stringify({
-          transaction_id: transactionId,
-          subscriber_id: insurance_id,
-          subscriber_name: patient ? (patient.full_name_en || patient.full_name_ar) : null,
-          national_id: national_id || (patient ? patient.national_id : null),
-          insurance_company: insurance_company || null,
-          service_type: service_type || 'medical',
-          provider_npi: provider_npi || null,
-          facility_license: env.FACILITY_LICENSE || '10000000000988',
-        }),
-        signal: AbortSignal.timeout(8000),
-      });
-
-      if (clRes.ok) {
-        const clData = await clRes.json();
-        eligibilityResponse = {
-          ...clData,
-          transaction_id: transactionId,
-          source: 'claimlinc-live',
-        };
-      }
-    } catch (e) {
-      console.error('ClaimLinc eligibility error:', e?.message?.slice(0, 100));
-    }
+  if (clData) {
+    eligibilityResponse = {
+      ...clData,
+      transaction_id: transactionId,
+      subscriber_id: insurance_id,
+      insurance_company: insurance_company || null,
+      service_type: service_type || 'medical',
+      provider_npi: provider_npi || null,
+      source: 'claimlinc-live',
+    };
   }
 
   // === Fallback: structured mock response (clearly marked) ===
@@ -120,7 +97,7 @@ export async function checkEligibility(req, env) {
 
 export async function verifyInsurance(req, env) {
   const body = await req.json();
-  const { insurance_id, insurance_company } = body;
+  const { insurance_id, insurance_company, national_id, branch } = body;
 
   if (!insurance_id) {
     return json({ success: false, message: 'Insurance ID required' }, 400);
@@ -138,25 +115,18 @@ export async function verifyInsurance(req, env) {
   }
 
   // Attempt ClaimLinc verification
-  const clKey = claimlinKey(env);
-  if (clKey) {
-    try {
-      const clRes = await fetch(`${CLAIMLINC_BASE}/eligibility`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-API-Key': clKey },
-        body: JSON.stringify({ subscriber_id: insurance_id, insurance_company: insurance_company || null }),
-        signal: AbortSignal.timeout(6000),
-      });
-      if (clRes.ok) {
-        const clData = await clRes.json();
-        return json({
-          success: true,
-          verified: clData.status === 'active' || clData.verified === true,
-          details: clData,
-          source: 'claimlinc-live',
-        });
-      }
-    } catch (e) {}
+  const clData = await claimlincEligibility(env, {
+    branch,
+    identifier: firstIdentifier(national_id, insurance_id),
+    timeoutMs: 6000,
+  });
+  if (clData) {
+    return json({
+      success: true,
+      verified: clData.status === 'active' || clData.verified === true || Number(clData.totalElements || clData.total || 0) > 0,
+      details: clData,
+      source: 'claimlinc-live',
+    });
   }
 
   // Fallback: format-only verification

@@ -25,6 +25,14 @@ binding = "BASMA_DB"
 database_name = "basma_production"
 database_id = "c30dd8f8-62f6-42f6-ad47-d442bf3bde7d"
 
+[[services]]
+binding = "CLAIMLINC_SERVICE"
+service = "claimlinc-api"
+
+[[services]]
+binding = "GIVC_SERVICE"
+service = "givc-portal"
+
 [vars]
 ORACLE_BRIDGE_URL  = "https://oracle-bridge.brainsait.org"
 NPHIES_MIRROR_URL  = "https://nphies-mirror.brainsait-fadil.workers.dev"
@@ -61,6 +69,14 @@ database_id = "f79d9487-fd6e-45e0-aaf1-ea9f2a69493d"
 binding = "BASMA_DB"
 database_name = "basma_production"
 database_id = "c30dd8f8-62f6-42f6-ad47-d442bf3bde7d"
+
+[[env.production.services]]
+binding = "CLAIMLINC_SERVICE"
+service = "claimlinc-api"
+
+[[env.production.services]]
+binding = "GIVC_SERVICE"
+service = "givc-portal"
 
 [env.production.ai]
 binding = "AI"

@@ -420,6 +420,47 @@ WHERE contract_type IS NULL
 -- Add updated_at to prior_authorizations (needed for NPHIES PA async callback)
 ALTER TABLE prior_authorizations ADD COLUMN updated_at TEXT DEFAULT (datetime('now'));
 
+-- ============================================
+-- 18. GIVC DOCTOR NETWORK (v3.1: Embedded GIVC)
+-- ============================================
+-- Add GIVC OID field to providers table for doctor network integration
+ALTER TABLE providers ADD COLUMN givc_oid TEXT;
+ALTER TABLE providers ADD COLUMN givc_registered INTEGER DEFAULT 0;
+ALTER TABLE providers ADD COLUMN givc_registered_at TEXT;
+ALTER TABLE providers ADD COLUMN givc_specialty_code TEXT;
+ALTER TABLE providers ADD COLUMN givc_branch_code TEXT;
+
+-- Create GIVC doctor registry table for network tracking
+CREATE TABLE IF NOT EXISTS givc_doctors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    givc_oid TEXT UNIQUE NOT NULL,
+    provider_id INTEGER,
+    national_id TEXT,
+    name_ar TEXT,
+    name_en TEXT,
+    specialty TEXT,
+    subspecialty TEXT,
+    license_number TEXT,
+    license_issuing_authority TEXT,
+    facility_oid TEXT,
+    facility_name TEXT,
+    branch_code TEXT,
+    department TEXT,
+    clinic_location TEXT,
+    phone TEXT,
+    email TEXT,
+    npi TEXT,
+    givc_status TEXT DEFAULT 'pending',
+    network_visibility TEXT DEFAULT 'internal',
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (provider_id) REFERENCES providers(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_givc_oid ON givc_doctors(givc_oid);
+CREATE INDEX IF NOT EXISTS idx_givc_provider ON givc_doctors(provider_id);
+CREATE INDEX IF NOT EXISTS idx_givc_status ON givc_doctors(givc_status);
+
 -- Portal session tracking
 CREATE TABLE IF NOT EXISTS portal_sessions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

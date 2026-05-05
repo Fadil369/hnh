@@ -1,21 +1,23 @@
 import { json } from '../utils/response.js';
 
 export async function createAppointment(req, env) {
-  const body = await req.json();
-  const id = 'APT' + Date.now().toString(36).toUpperCase();
-  
-  await env.DB.prepare(
-    `INSERT INTO appointments (id, patient_id, provider_id, clinic_code, clinic_name, appointment_date, appointment_time, status, appointment_type, reason)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  const body = await req.json().catch(() => ({}));
+  const required = ['patient_id', 'appointment_date', 'appointment_time'];
+  for (const f of required) {
+    if (!body[f]) return json({ success: false, message: `Missing required field: ${f}` }, 400);
+  }
+  const result = await env.DB.prepare(
+    `INSERT INTO appointments (patient_id, provider_id, clinic_code, clinic_name, appointment_date, appointment_time, status, appointment_type, reason)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).bind(
-    id, body.patient_id, body.provider_id || null,
+    body.patient_id, body.provider_id || null,
     body.clinic_code || 'GEN', body.clinic_name || '',
     body.appointment_date, body.appointment_time,
     body.status || 'scheduled', body.appointment_type || 'regular',
     body.reason || ''
   ).run();
 
-  return json({ success: true, appointment_id: id }, 201);
+  return json({ success: true, appointment_id: result.meta?.last_row_id }, 201);
 }
 
 export async function getAppointments(req, env, ctx, params, url) {
@@ -38,7 +40,7 @@ export async function getAppointments(req, env, ctx, params, url) {
   if (status) { conditions.push('a.status = ?'); binds.push(status); }
   if (patient) { conditions.push('a.patient_id = ?'); binds.push(patient); }
   if (search) {
-    conditions.push('(p.name_ar LIKE ? OR p.name_en LIKE ?)');
+    conditions.push('(p.full_name_ar LIKE ? OR p.full_name_en LIKE ?)');
     binds.push(`%${search}%`, `%${search}%`);
   }
 

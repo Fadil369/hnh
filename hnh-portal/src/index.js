@@ -60,7 +60,22 @@ router.get('/api/providers', async (req, env, ctx, p, url) => {
   const branch = url?.searchParams?.get('branch') || '';
   const dept = url?.searchParams?.get('department') || '';
   let list = await getProviders(env);
-  if (branch) list = list.filter(p => (p.branch === branch || p.branch_id === branch));
+  if (branch) {
+    const b = branch.toLowerCase();
+    const branchAliases = {
+      riyadh: 'r001', r001: 'r001',
+      madinah: 'm001', madina: 'm001', medina: 'm001', m001: 'm001',
+      khamis: 'k001', khamis_mushayt: 'k001', khamis_mushait: 'k001', k001: 'k001',
+      jazan: 'j001', jizan: 'j001', j001: 'j001',
+      unaizah: 'u001', unayzah: 'u001', u001: 'u001',
+    };
+    const norm = branchAliases[b.replace(/[\s-]+/g, '_')] || b;
+    list = list.filter(p => {
+      const pb = String(p.branch || '').toLowerCase().replace(/[\s-]+/g, '_');
+      const pid = String(p.branch_id || '').toLowerCase();
+      return pb === b || pid === b || (branchAliases[pb] || pid) === norm;
+    });
+  }
   if (dept) list = list.filter(p => (p.department === dept || p.department_id === dept));
   return json({ success: true, providers: list, total: list.length });
 });

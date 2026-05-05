@@ -79,7 +79,7 @@ export async function listVisits(req, env) {
   const limit    = Math.min(parseInt(url.searchParams.get('limit') || '50'), 200);
   const offset   = parseInt(url.searchParams.get('offset') || '0');
 
-  let q = `SELECT v.*, p.name_ar as patient_name_ar, p.name_en as patient_name_en, p.phone as patient_phone,
+  let q = `SELECT v.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en, p.phone as patient_phone,
                   n.name_ar as nurse_name_ar, n.name_en as nurse_name_en, n.phone as nurse_phone
            FROM homecare_visits v
            LEFT JOIN patients p ON v.patient_id = p.id
@@ -106,7 +106,7 @@ export async function listVisits(req, env) {
 export async function getVisit(req, env, ctx, params) {
   const id = params[0];
   const visit = await env.DB.prepare(
-    `SELECT v.*, p.name_ar as patient_name_ar, p.name_en as patient_name_en,
+    `SELECT v.*, p.full_name_ar as patient_name_ar, p.full_name_en as patient_name_en,
                  p.phone as patient_phone, p.insurance_company as patient_insurance,
                  n.name_ar as nurse_name_ar, n.name_en as nurse_name_en, n.phone as nurse_phone
      FROM homecare_visits v
@@ -238,7 +238,7 @@ export async function getNurseSchedule(req, env, ctx, params) {
   if (!nurse) return json({ success: false, message: 'Nurse not found' }, 404);
 
   const { results } = await env.DB.prepare(
-    `SELECT v.*, p.name_ar as patient_name_ar, p.phone as patient_phone
+    `SELECT v.*, p.full_name_ar as patient_name_ar, p.phone as patient_phone
      FROM homecare_visits v
      LEFT JOIN patients p ON v.patient_id = p.id
      WHERE v.nurse_id = ? AND v.visit_date = ?

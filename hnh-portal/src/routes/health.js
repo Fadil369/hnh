@@ -1,8 +1,8 @@
-async function checkIntegration(url, timeoutMs = 4000) {
+async function checkIntegration(url, timeoutMs = 4000, init = {}) {
   try {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeoutMs);
-    const res = await fetch(url, { signal: controller.signal });
+    const res = await fetch(url, { ...init, signal: controller.signal });
     clearTimeout(id);
     if (res.ok) return 'connected';
     return res.status >= 500 ? 'warning' : 'degraded';
@@ -11,10 +11,34 @@ async function checkIntegration(url, timeoutMs = 4000) {
   }
 }
 
+async function checkClaimLinc(env) {
+  try {
+    if (env.CLAIMLINC_SERVICE) {
+      const res = await env.CLAIMLINC_SERVICE.fetch(new Request('https://claimlinc.internal/nphies/health'));
+      return res.ok ? 'connected' : (res.status >= 500 ? 'warning' : 'degraded');
+    }
+    return await checkIntegration('https://api.brainsait.org/nphies/health', 3000);
+  } catch {
+    return 'offline';
+  }
+}
+
+async function checkGivc(env) {
+  try {
+    if (env.GIVC_SERVICE) {
+      const res = await env.GIVC_SERVICE.fetch(new Request('https://givc.internal/givc/health'));
+      return res.ok ? 'connected' : (res.status >= 500 ? 'warning' : 'degraded');
+    }
+    return await checkIntegration(`${env.GIVC_URL || 'https://hnh.brainsait.org/givc'}/health`, 3000);
+  } catch {
+    return 'offline';
+  }
+}
+
 export async function health(env) {
   const stats = env.DB
     ? await env.DB.prepare(
-        `SELECT 
+        `SELECT
           (SELECT COUNT(*) FROM patients) as total_patients,
           (SELECT COUNT(*) FROM appointments WHERE date(appointment_date) = date('now')) as today_appointments,
           (SELECT COUNT(*) FROM providers) as total_providers,
@@ -24,19 +48,23 @@ export async function health(env) {
     : {};
 
   // Check all integrations with lightweight health pings
-  const [oracleStatus, nphiesStatus, claimlincStatus, bsmaStatus, sbsStatus, givcStatus] = await Promise.allSettled([
-    checkIntegration('https://oracle-bridge.brainsait-fadil.workers.dev/health', 3000),
-    checkIntegration('https://nphies-mirror.brainsait-fadil.workers.dev/health', 3000),
-    checkIntegration('https://claimlinc-worker.fadil369.workers.dev/health', 3000),
-    checkIntegration('https://bsma.elfadil.com/api/health', 3000),
+  const oracleBase = env.ORACLE_BRIDGE_URL || 'https://oracle-bridge.brainsait.org';
+  const mirrorBase = env.NPHIES_MIRROR_URL || 'https://nphies-mirror.brainsait-fadil.workers.dev';
+
+  const [oracleStatus, nphiesStatus, claimlincStatus, basmaStatus, sbsStatus, givcStatus] = await Promise.allSettled([
+    checkIntegration(`${oracleBase}/health`, 3000),
+    checkIntegration(`${mirrorBase}/health`, 3000),
+    checkClaimLinc(env),
+    checkIntegration('https://bsma.elfadil.com/health', 3000),
     checkIntegration('https://sbs.elfadil.com/api/health', 3000),
-    checkIntegration('https://givc.elfadil.com/api/health', 3000),
+    checkGivc(env),
   ]);
 
-  // Fetch NPHIES stats for BSMA ecosystem card
+  // Fetch NPHIES stats for Basma ecosystem card
   let nphiesMirror = null;
   try {
-    const nmRes = await fetch('https://nphies-mirror.brainsait-fadil.workers.dev/mirror/status', { signal: AbortSignal.timeout(4000) });
+    const mirrorBase = env.NPHIES_MIRROR_URL || 'https://nphies-mirror.brainsait-fadil.workers.dev';
+    const nmRes = await fetch(`${mirrorBase}/mirror/status`, { signal: AbortSignal.timeout(4000) });
     if (nmRes.ok) {
       const nmData = await nmRes.json();
       nphiesMirror = { total_gss: nmData.total_gss || 81, total_pa: nmData.total_pa || 51297 };
@@ -57,7 +85,7 @@ export async function health(env) {
       oracle_bridge: oracleStatus.status === 'fulfilled' ? oracleStatus.value : 'offline',
       nphies_mirror: nphiesStatus.status === 'fulfilled' ? nphiesStatus.value : 'offline',
       claimlinc: claimlincStatus.status === 'fulfilled' ? claimlincStatus.value : 'offline',
-      bsma_portal: bsmaStatus.status === 'fulfilled' ? bsmaStatus.value : 'offline',
+      basma_portal: basmaStatus.status === 'fulfilled' ? basmaStatus.value : 'offline',
       sbs_portal: sbsStatus.status === 'fulfilled' ? sbsStatus.value : 'offline',
       givc_portal: givcStatus.status === 'fulfilled' ? givcStatus.value : 'offline',
     },

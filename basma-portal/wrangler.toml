@@ -1,0 +1,31 @@
+name = "basma-portal"
+main = "src/worker.js"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+routes = [
+  { pattern = "bsma.elfadil.com/*", zone_name = "elfadil.com" }
+]
+
+# Environment variables
+[vars]
+HNH_BACKEND          = "https://hnh.brainsait.org"
+ORACLE_BRIDGE_URL    = "https://oracle-bridge.brainsait.org"
+CLAIMLINC_BASE       = "https://api.brainsait.org/nphies"
+MAILLINC_URL         = "https://maillinc.brainsait-fadil.workers.dev"
+ENVIRONMENT          = "production"
+
+[[kv_namespaces]]
+binding = "BASMA_CACHE"
+id = "d7db4659947e48a59b2153585e7676e5"
+
+# Secrets (wrangler secret put --config basma-portal/wrangler.toml <NAME>):
+#   ELEVENLABS_API_KEY   ← ElevenLabs TTS — Arabic voice Salma
+#   CLAIMLINC_API_KEY    ← ClaimLinc network summary key
+#   ORACLE_BRIDGE_KEY    ← Oracle Bridge API key
+#   TWILIO_ACCOUNT_SID   ← Twilio account SID
+#   TWILIO_AUTH_TOKEN    ← Twilio auth token
+#   TWILIO_PHONE_NUMBER  ← Twilio sender number (e.g. +12013862972)
+#   NPHIES_USERNAME      ← NPHIES credentials
+#   NPHIES_PASSWORD      ← NPHIES credentials
+#   MAILLINC_API_KEY     ← MailLinc API key (optional)

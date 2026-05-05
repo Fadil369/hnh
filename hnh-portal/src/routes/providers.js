@@ -193,24 +193,56 @@ export const providers = [
   },
 ];
 
+const BRANCH_ALIASES = {
+  r001: 'R001', riyadh: 'R001',
+  m001: 'M001', madinah: 'M001', madina: 'M001', medina: 'M001',
+  k001: 'K001', khamis: 'K001', khamis_mushayt: 'K001', khamis_mushait: 'K001', 'khamis mushayt': 'K001',
+  j001: 'J001', jazan: 'J001', jizan: 'J001',
+  u001: 'U001', unaizah: 'U001', unayzah: 'U001',
+};
+
+function normalizeBranch(value) {
+  const raw = String(value || '').trim();
+  const key = raw.toLowerCase().replace(/[\s-]+/g, '_');
+  return BRANCH_ALIASES[key] || raw;
+}
+
+function stripDoctorPrefix(value) {
+  return String(value || '').trim().replace(/^(د\.\s*)+/i, '').replace(/^(Dr\.\s*)+/i, '').trim();
+}
+
+function doctorName(prefix, firstName, lastName) {
+  const name = [firstName, lastName].filter(Boolean).join(' ').trim();
+  const clean = stripDoctorPrefix(name);
+  return clean ? `${prefix}${clean}` : '';
+}
 
 async function getProvidersFromDB(env) {
   try {
     if (!env || !env.DB) return null;
     const { results } = await env.DB.prepare(
-      "SELECT id, provider_code, first_name_ar, last_name_ar, first_name_en, last_name_en, specialty, subspecialty, department, clinic_location, phone, email FROM providers WHERE is_active = 1 ORDER BY specialty, last_name_ar"
+      `SELECT id, provider_code, first_name_ar, last_name_ar, first_name_en, last_name_en,
+              specialty, subspecialty, department, clinic_location, phone, email,
+              givc_oid, givc_registered, givc_specialty_code, givc_branch_code
+       FROM providers
+       WHERE is_active = 1
+       ORDER BY specialty, last_name_ar`
     ).all();
     if (results && results.length > 0) {
       return results.map(r => ({
         id: r.provider_code || ("P" + String(r.id).padStart(3, "0")),
-        name_ar: ("د. " + (r.first_name_ar || "") + " " + (r.last_name_ar || "")).trim(),
-        name_en: ("Dr. " + (r.first_name_en || r.first_name_ar || "") + " " + (r.last_name_en || r.last_name_ar || "")).trim(),
+        db_id: r.id,
+        name_ar: doctorName('د. ', r.first_name_ar, r.last_name_ar),
+        name_en: doctorName('Dr. ', r.first_name_en || r.first_name_ar, r.last_name_en || r.last_name_ar),
         specialty: r.specialty || "",
         subspecialty: r.subspecialty || "",
         department: r.department || "",
-        branch: r.clinic_location || "",
+        branch: r.clinic_location || r.givc_branch_code || "",
+        branch_id: normalizeBranch(r.givc_branch_code || r.clinic_location || ""),
         phone: r.phone || "",
         email: r.email || "",
+        givc_oid: r.givc_oid || null,
+        givc_registered: r.givc_registered === 1,
         rating: 4.0,
         experience_years: 10,
         source: "d1",
@@ -231,7 +263,7 @@ export async function getProvider(id, env) {
   if (env && env.DB) {
     const dbProviders = await getProvidersFromDB(env);
     if (dbProviders) {
-      const found = dbProviders.find(p => p.id === id);
+      const found = dbProviders.find(p => p.id === id || String(p.db_id) === String(id) || p.givc_oid === id);
       if (found) return found;
     }
   }

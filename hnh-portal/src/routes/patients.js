@@ -1,26 +1,44 @@
 import { json } from '../utils/response.js';
 
 export async function createPatient(req, env) {
-  const body = await req.json();
-  const id = 'PAT' + Date.now().toString(36).toUpperCase();
+  const body = await req.json().catch(() => ({}));
+  if (!body.phone) return json({ success: false, message: 'phone is required' }, 400);
+
+  const nameAr = body.full_name_ar || body.name_ar || [body.first_name_ar, body.last_name_ar].filter(Boolean).join(' ') || body.full_name_en || body.name_en || 'Patient';
+  const nameEn = body.full_name_en || body.name_en || [body.first_name_en, body.last_name_en].filter(Boolean).join(' ') || nameAr;
+  const nationalId = body.national_id || null;
+
+  const existing = nationalId
+    ? await env.DB.prepare('SELECT * FROM patients WHERE national_id = ? OR phone = ? LIMIT 1').bind(nationalId, body.phone).first()
+    : await env.DB.prepare('SELECT * FROM patients WHERE phone = ? LIMIT 1').bind(body.phone).first();
+
+  if (existing) {
+    return json({
+      success: true,
+      patient_id: existing.id,
+      mrn: existing.mrn,
+      existing: true,
+      message: 'Patient already exists',
+    });
+  }
   
   const mrn = 'HNH-' + Date.now();
   
-  const { data: result } = await env.DB.prepare(
-    `INSERT INTO patients (id, mrn, national_id, first_name_ar, last_name_ar, full_name_ar, first_name_en, last_name_en, full_name_en, phone, email, date_of_birth, gender, blood_type, allergies)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  const result = await env.DB.prepare(
+    `INSERT INTO patients (mrn, national_id, first_name_ar, last_name_ar, full_name_ar, first_name_en, last_name_en, full_name_en, phone, email, date_of_birth, gender, blood_type, allergies)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).bind(
-    id, mrn, body.national_id || null,
-    body.first_name_ar || body.name_ar, body.last_name_ar || '',
-    body.full_name_ar || body.name_ar,
-    body.first_name_en || '', body.last_name_en || '',
-    body.full_name_en || body.name_en || '',
+    mrn, nationalId,
+    body.first_name_ar || nameAr, body.last_name_ar || null,
+    nameAr,
+    body.first_name_en || nameEn, body.last_name_en || null,
+    nameEn,
     body.phone, body.email || null,
     body.date_of_birth || body.dob || null, body.gender || null,
     body.blood_type || null, body.allergies || null
   ).run();
 
-  return json({ success: true, patient_id: id, message: 'Patient created successfully' }, 201);
+  return json({ success: true, patient_id: result.meta?.last_row_id, mrn, message: 'Patient created successfully' }, 201);
 }
 
 export async function getPatients(req, env, ctx, params, url) {
