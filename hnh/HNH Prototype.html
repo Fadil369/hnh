@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مستشفيات الحياة الوطني | Hayat National Hospitals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <style>
+    /* ═══════════════════════════════════════════
+       HNH LUXURY DESIGN SYSTEM
+       Premium Healthcare — Dark Gold Edition
+    ═══════════════════════════════════════════ */
+    :root {
+      --ink:       #0E1520;
+      --ink-soft:  #1A2540;
+      --ink-mid:   #253353;
+      --gold:      #C9A84C;
+      --gold-lt:   #E8CC78;
+      --gold-dk:   #9A7A30;
+      --cream:     #FAF7F2;
+      --cream-dk:  #F0EBE0;
+      --azure:     #1A7FD4;
+      --azure-lt:  #3498DB;
+      --white:     #FFFFFF;
+      --text:      #1E2D45;
+      --text-soft: #4A5C74;
+      --text-muted:#8096B0;
+      --border:    rgba(201,168,76,0.18);
+      --border-lt: rgba(201,168,76,0.08);
+
+      --grad-ink:  linear-gradient(135deg, #0E1520 0%, #1A2B4A 60%, #0F2040 100%);
+      --grad-gold: linear-gradient(135deg, #9A7A30 0%, #C9A84C 50%, #E8CC78 100%);
+      --grad-hero: linear-gradient(145deg, #070E1A 0%, #0E1D35 40%, #111B32 100%);
+      --grad-azure:linear-gradient(135deg, #0F5FA8 0%, #1A7FD4 100%);
+
+      --sh-gold:  0 8px 40px rgba(201,168,76,0.25);
+      --sh-card:  0 4px 32px rgba(0,0,0,0.18);
+      --sh-hover: 0 16px 56px rgba(0,0,0,0.28);
+      --sh-deep:  0 24px 80px rgba(0,0,0,0.35);
+
+      --r-sm: 8px;
+      --r-md: 14px;
+      --r-lg: 20px;
+      --r-xl: 32px;
+      --r-pill: 9999px;
+
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-out: cubic-bezier(0.0, 0, 0.2, 1);
+      --dur: 0.3s;
+      --dur-slow: 0.5s;
+
+      --font-ar: 'Tajawal', sans-serif;
+      --font-en: 'Inter', sans-serif;
+      --font-display: 'Playfair Display', serif;
+      --container: 1320px;
+      --nav-h: 80px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font-ar);
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    [dir="ltr"] body { font-family: var(--font-en); }
+
+    a { text-decoration: none; color: inherit; transition: color var(--dur) var(--ease); }
+    ul { list-style: none; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--ink); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-dk); border-radius: 3px; }
+
+    /* ── CONTAINER ── */
+    .container { max-width: var(--container); margin: 0 auto; padding: 0 28px; }
+
+    /* ── TYPOGRAPHY ── */
+    h1 { font-size: clamp(2.4rem, 5.5vw, 5rem); line-height: 1.1; }
+    h2 { font-size: clamp(1.8rem, 3.5vw, 3rem); line-height: 1.2; }
+    h3 { font-size: clamp(1.2rem, 2vw, 1.6rem); }
+    h4 { font-size: 1.1rem; }
+
+    .display-serif { font-family: var(--font-display); }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 36px; border-radius: var(--r-pill);
+      font-weight: 600; font-size: 0.95rem; transition: all var(--dur) var(--ease);
+      white-space: nowrap; position: relative; overflow: hidden;
+    }
+    .btn-gold {
+      background: var(--grad-gold); color: var(--ink);
+      box-shadow: 0 4px 20px rgba(201,168,76,0.35);
+    }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: var(--sh-gold); }
+
+    .btn-outline-gold {
+      border: 1.5px solid var(--gold); color: var(--gold); background: transparent;
+    }
+    .btn-outline-gold:hover { background: var(--gold); color: var(--ink); }
+
+    .btn-ink {
+      background: var(--ink-soft); color: var(--white);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .btn-ink:hover { transform: translateY(-2px); background: var(--ink-mid); }
+
+    .btn-ghost { color: rgba(255,255,255,0.75); border: 1px solid rgba(255,255,255,0.2); }
+    .btn-ghost:hover { color: white; border-color: var(--gold); background: rgba(201,168,76,0.08); }
+
+    .btn-sm { padding: 10px 24px; font-size: 0.88rem; }
+    .btn-lg { padding: 18px 48px; font-size: 1.05rem; }
+
+    /* ── GOLD LINE DIVIDER ── */
+    .gold-rule {
+      width: 48px; height: 3px;
+      background: var(--grad-gold);
+      border-radius: 2px; margin-bottom: 20px;
+    }
+    .gold-rule.center { margin-left: auto; margin-right: auto; }
+    [dir="rtl"] .gold-rule { margin-right: 0; }
+    [dir="ltr"] .gold-rule { margin-left: 0; }
+
+    /* ══════════════════════════════════
+       NAVIGATION
+    ══════════════════════════════════ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+      height: var(--nav-h);
+      transition: all var(--dur-slow) var(--ease);
+    }
+    .nav-inner {
+      height: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
+      transition: all var(--dur-slow) var(--ease);
+    }
+    .nav.scrolled .nav-inner {
+      background: rgba(10,15,28,0.96);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav:not(.scrolled) .nav-inner { background: transparent; }
+
+    .nav-logo { display: flex; align-items: center; gap: 14px; }
+    .nav-logo-mark {
+      width: 46px; height: 46px;
+      background: var(--grad-gold);
+      border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-mark svg { width: 24px; height: 24px; fill: var(--ink); }
+    .nav-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
+    .nav-logo-text .ar { font-size: 1rem; font-weight: 700; color: white; }
+    .nav-logo-text .en { font-size: 0.72rem; color: var(--gold); font-weight: 500; letter-spacing: 0.04em; }
+
+    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-links a {
+      padding: 8px 14px; border-radius: var(--r-pill);
+      color: rgba(255,255,255,0.72); font-size: 0.88rem; font-weight: 500;
+      transition: all var(--dur) var(--ease);
+    }
+    .nav-links a:hover, .nav-links a.active { color: white; background: rgba(255,255,255,0.08); }
+
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+
+    .lang-btn {
+      padding: 7px 16px; border-radius: var(--r-pill);
+      border: 1.5px solid rgba(201,168,76,0.45);
+      color: var(--gold); font-size: 0.8rem; font-weight: 700;
+      transition: all var(--dur) var(--ease); background: transparent;
+    }
+    .lang-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+    .nav-book {
+      background: var(--grad-gold); color: var(--ink);
+      padding: 10px 22px; border-radius: var(--r-pill);
+      font-size: 0.88rem; font-weight: 700;
+      box-shadow: 0 3px 14px rgba(201,168,76,0.3);
+      transition: all var(--dur) var(--ease);
+    }
+    .nav-book:hover { transform: translateY(-1px); box-shadow: var(--sh-gold); }
+
+    /* ══════════════════════════════════
+       HERO
+    ══════════════════════════════════ */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center;
+      overflow: hidden;
+      background: var(--grad-hero);
+    }
+
+    .hero-canvas {
+      position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+    .hero-glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .hero-glow-1 {
+      width: 600px; height: 600px;
+      top: -200px; right: -100px;
+      background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+    }
+    .hero-glow-2 {
+      width: 400px; height: 400px;
+      bottom: -100px; left: 5%;
+      background: radial-gradient(circle, rgba(26,127,212,0.1) 0%, transparent 70%);
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      padding-top: var(--nav-h);
+      max-width: 760px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 8px 18px; border-radius: var(--r-pill);
+      border: 1px solid var(--border);
+      background: rgba(201,168,76,0.06);
+      color: var(--gold); font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero-eyebrow-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.6); }
+    }
+
+    .hero h1 { color: white; margin-bottom: 24px; font-weight: 800; }
+    .hero h1 .accent { color: var(--gold); }
+    .hero h1 em { font-style: normal; font-family: var(--font-display); font-style: italic; }
+
+    .hero-sub {
+      color: rgba(255,255,255,0.65); font-size: 1.15rem;
+      max-width: 540px; line-height: 1.85; margin-bottom: 44px;
+    }
+    .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 64px; }
+
+    .hero-stats-row {
+      display: flex; gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(12px);
+      max-width: 580px;
+    }
+    .hero-stat-item {
+      flex: 1; padding: 24px 20px; text-align: center;
+      border-left: 1px solid var(--border);
+      transition: background var(--dur) var(--ease);
+    }
+    .hero-stat-item:first-child { border-left: none; }
+    [dir="ltr"] .hero-stat-item { border-left: none; border-right: 1px solid var(--border); }
+    [dir="ltr"] .hero-stat-item:first-child { border-right: none; }
+    .hero-stat-item:hover { background: rgba(201,168,76,0.06); }
+    .hero-stat-num {
+      font-size: 1.9rem; font-weight: 800; color: var(--gold-lt);
+      display: block; line-height: 1;
+    }
+    .hero-stat-lbl {
+      font-size: 0.78rem; color: rgba(255,255,255,0.5);
+      margin-top: 5px; font-weight: 500;
+    }
+
+    /* Hero right panel — visual */
+    .hero-visual {
+      position: absolute;
+      top: 0; right: 0;
+      width: 48%; height: 100%;
+      z-index: 1;
+    }
+    [dir="ltr"] .hero-visual { right: auto; left: 0; }
+
+    .hero-visual-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(26,127,212,0.08) 0%, rgba(201,168,76,0.05) 100%);
+    }
+    .hero-img-placeholder {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-card-float {
+      position: absolute; background: rgba(10,18,32,0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 18px 22px;
+      box-shadow: var(--sh-card);
+    }
+    .hero-card-1 { bottom: 18%; left: 8%; animation: float-card 6s ease-in-out infinite; }
+    .hero-card-2 { top: 22%; right: 6%; animation: float-card 8s ease-in-out infinite 2s; }
+    @keyframes float-card {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    .float-card-label { font-size: 0.7rem; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .float-card-val { font-size: 1.4rem; font-weight: 800; color: white; }
+    .float-card-sub { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-top: 2px; }
+
+    /* Decorative hospital silhouette */
+    .hero-silhouette {
+      position: absolute; bottom: 0; right: 0; left: 0;
+      height: 70%;
+      display: flex; align-items: flex-end; justify-content: center;
+      opacity: 0.06;
+    }
+
+    /* ══════════════════════════════════
+       STATS BAR
+    ══════════════════════════════════ */
+    .stats-bar-section {
+      background: var(--ink);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 0;
+    }
+    .stats-bar-inner {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+    }
+    .stat-bar-item {
+      padding: 40px 32px; text-align: center;
+      border-left: 1px solid var(--border);
+      position: relative;
+      transition: background var(--dur) var(--ease);
+    }
+    .stat-bar-item:first-child { border-left: none; }
+    [dir="ltr"] .stat-bar-item { border-left: none; border-right: 1px solid var(--border); }
+    [dir="ltr"] .stat-bar-item:first-child { border-right: none; }
+    .stat-bar-item:hover { background: rgba(201,168,76,0.04); }
+    .stat-bar-num {
+      font-size: 2.8rem; font-weight: 900; color: var(--gold);
+      display: block; line-height: 1; letter-spacing: -0.02em;
+    }
+    .stat-bar-lbl {
+      font-size: 0.88rem; color: rgba(255,255,255,0.45);
+      margin-top: 8px; font-weight: 500;
+    }
+
+    /* ══════════════════════════════════
+       ABOUT
+    ══════════════════════════════════ */
+    .about-section {
+      background: var(--cream); padding: 120px 0;
+    }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1.1fr; gap: 80px; align-items: center;
+    }
+    .about-visual {
+      position: relative;
+    }
+    .about-img-main {
+      width: 100%; aspect-ratio: 4/5;
+      border-radius: var(--r-xl);
+      background: var(--grad-ink);
+      overflow: hidden; position: relative;
+      box-shadow: var(--sh-deep);
+    }
+    .about-img-badge {
+      position: absolute;
+      background: var(--grad-gold);
+      border-radius: var(--r-lg);
+      padding: 20px 24px;
+      box-shadow: var(--sh-gold);
+    }
+    .about-img-badge.badge-1 { bottom: -20px; right: -20px; [dir="ltr"] &{ right: auto; left: -20px; } }
+    .badge-num { font-size: 2.2rem; font-weight: 900; color: var(--ink); line-height: 1; }
+    .badge-txt { font-size: 0.8rem; color: var(--ink-soft); font-weight: 600; margin-top: 3px; }
+
+    .about-content { padding: 20px 0; }
+    .about-content h2 { color: var(--ink); margin-bottom: 20px; font-weight: 800; }
+    .about-content p { color: var(--text-soft); line-height: 1.9; margin-bottom: 18px; font-size: 1.02rem; }
+    .about-features {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 36px 0 40px;
+    }
+    .about-feat {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 16px; border-radius: var(--r-md);
+      border: 1px solid var(--cream-dk);
+      background: white;
+      transition: all var(--dur) var(--ease);
+    }
+    .about-feat:hover { border-color: var(--gold); box-shadow: 0 4px 20px rgba(201,168,76,0.1); }
+    .about-feat-icon {
+      width: 38px; height: 38px; border-radius: var(--r-sm);
+      background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06));
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .about-feat-icon svg { width: 18px; height: 18px; fill: var(--gold); }
+    .about-feat-label { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+    .about-feat-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ══════════════════════════════════
+       DEPARTMENTS
+    ══════════════════════════════════ */
+    .dept-section { background: var(--ink); padding: 120px 0; }
+    .section-header { text-align: center; margin-bottom: 64px; }
+    .section-header h2 { color: white; }
+    .section-header p { color: rgba(255,255,255,0.45); font-size: 1.05rem; margin-top: 14px; }
+    .section-header.light h2 { color: var(--ink); }
+    .section-header.light p { color: var(--text-soft); }
+
+    .dept-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+    }
+    .dept-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 32px 24px; text-align: center;
+      cursor: pointer;
+      transition: all var(--dur-slow) var(--ease);
+      position: relative; overflow: hidden;
+    }
+    .dept-card::before {
+      content: ''; position: absolute;
+      inset: 0; border-radius: var(--r-lg);
+      background: var(--grad-gold);
+      opacity: 0; transition: opacity var(--dur) var(--ease);
+    }
+    .dept-card:hover { transform: translateY(-6px); border-color: var(--gold); box-shadow: var(--sh-gold); }
+    .dept-card:hover::before { opacity: 0.05; }
+    .dept-card-inner { position: relative; z-index: 1; }
+    .dept-icon {
+      width: 68px; height: 68px; border-radius: var(--r-lg);
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.15);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+      transition: all var(--dur) var(--ease);
+    }
+    .dept-card:hover .dept-icon {
+      background: var(--grad-gold);
+      border-color: transparent;
+    }
+    .dept-icon svg { width: 30px; height: 30px; fill: var(--gold); transition: fill var(--dur) var(--ease); }
+    .dept-card:hover .dept-icon svg { fill: var(--ink); }
+    .dept-name { font-size: 1rem; font-weight: 700; color: white; margin-bottom: 8px; }
+    .dept-desc { font-size: 0.82rem; color: rgba(255,255,255,0.38); line-height: 1.6; }
+
+    /* ══════════════════════════════════
+       DOCTORS
+    ══════════════════════════════════ */
+    .doctors-section { background: var(--cream); padding: 120px 0; }
+
+    .filter-bar {
+      display: flex; align-items: center; gap: 12px;
+      flex-wrap: wrap; margin-bottom: 48px;
+      padding: 20px 24px;
+      background: white; border-radius: var(--r-lg);
+      border: 1px solid var(--cream-dk);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .filter-bar input, .filter-bar select {
+      flex: 1; min-width: 160px;
+      padding: 11px 16px; border-radius: var(--r-pill);
+      border: 1.5px solid var(--cream-dk);
+      font-family: inherit; font-size: 0.9rem; color: var(--text);
+      background: var(--cream); outline: none;
+      transition: border-color var(--dur) var(--ease);
+    }
+    .filter-bar input:focus, .filter-bar select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+    }
+
+    .doctors-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+    .doctor-card {
+      background: white; border-radius: var(--r-xl);
+      overflow: hidden;
+      border: 1px solid var(--cream-dk);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+      transition: all var(--dur-slow) var(--ease);
+    }
+    .doctor-card:hover { transform: translateY(-6px); box-shadow: var(--sh-card); border-color: var(--gold); }
+
+    .doctor-card-top {
+      height: 160px; position: relative;
+      background: var(--grad-ink);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .doctor-card-top::after {
+      content: ''; position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, transparent 60%);
+    }
+    .doctor-avatar {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: var(--grad-gold);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; font-weight: 800; color: var(--ink);
+      border: 3px solid rgba(255,255,255,0.15);
+      position: relative; z-index: 1;
+    }
+    .doctor-specialty-badge {
+      position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--grad-gold); color: var(--ink);
+      padding: 5px 16px; border-radius: var(--r-pill);
+      font-size: 0.75rem; font-weight: 700; white-space: nowrap;
+      z-index: 2;
+    }
+    .doctor-card-body { padding: 28px 20px 22px; text-align: center; }
+    .doctor-name { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+    .doctor-branch {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.78rem; color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .doctor-branch svg { width: 12px; height: 12px; fill: var(--text-muted); }
+    .doctor-years {
+      font-size: 0.78rem; color: var(--text-soft);
+      margin-bottom: 16px;
+    }
+    .doctor-book-btn {
+      width: 100%; padding: 11px; border-radius: var(--r-pill);
+      background: var(--grad-ink); color: white;
+      font-size: 0.88rem; font-weight: 600;
+      transition: all var(--dur) var(--ease);
+    }
+    .doctor-book-btn:hover { background: var(--grad-gold); color: var(--ink); }
+
+    .load-more-wrap { text-align: center; margin-top: 48px; }
+
+    /* ══════════════════════════════════
+       BRANCHES
+    ══════════════════════════════════ */
+    .branches-section { background: var(--ink-soft); padding: 120px 0; }
+    .branches-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+    .branch-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl); overflow: hidden;
+      transition: all var(--dur-slow) var(--ease);
+    }
+    .branch-card:hover { transform: translateY(-4px); border-color: var(--gold); box-shadow: var(--sh-gold); }
+    .branch-card-top {
+      height: 10px;
+      background: var(--grad-gold);
+    }
+    .branch-card-body { padding: 32px 28px; }
+    .branch-icon-wrap {
+      width: 52px; height: 52px; border-radius: var(--r-md);
+      background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+    }
+    .branch-icon-wrap svg { width: 24px; height: 24px; fill: var(--gold); }
+    .branch-name { font-size: 1.15rem; font-weight: 700; color: white; margin-bottom: 6px; }
+    .branch-name-full { font-size: 0.82rem; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
+    .branch-detail {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.85rem; color: rgba(255,255,255,0.5);
+      margin-bottom: 10px;
+      transition: color var(--dur) var(--ease);
+    }
+    .branch-detail:hover { color: var(--gold); }
+    .branch-detail svg { width: 16px; height: 16px; fill: var(--gold); flex-shrink: 0; margin-top: 2px; }
+    .branch-card-footer {
+      margin-top: 24px; padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex; gap: 10px;
+    }
+    .branch-btn {
+      flex: 1; padding: 10px; border-radius: var(--r-pill);
+      font-size: 0.82rem; font-weight: 600;
+      text-align: center;
+      border: 1px solid var(--border); color: rgba(255,255,255,0.5);
+      transition: all var(--dur) var(--ease);
+    }
+    .branch-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .branch-btn.primary { background: var(--grad-gold); color: var(--ink); border-color: transparent; }
+    .branch-btn.primary:hover { box-shadow: var(--sh-gold); }
+
+    /* ══════════════════════════════════
+       TESTIMONIALS
+    ══════════════════════════════════ */
+    .testimonials-section { background: var(--cream); padding: 120px 0; overflow: hidden; }
+
+    .testimonial-track-wrap { overflow: hidden; position: relative; }
+    .testimonial-track {
+      display: flex; transition: transform 0.6s var(--ease-out);
+    }
+    .testimonial-slide {
+      min-width: 100%; padding: 0 10%;
+      text-align: center;
+    }
+    .testimonial-quote-mark {
+      font-family: var(--font-display);
+      font-size: 8rem; line-height: 0.5;
+      color: var(--gold); opacity: 0.25;
+      margin-bottom: 24px; display: block;
+    }
+    .testimonial-text {
+      font-size: 1.3rem; line-height: 1.85;
+      color: var(--ink); font-style: italic;
+      font-family: var(--font-display);
+      max-width: 720px; margin: 0 auto 32px;
+    }
+    .testimonial-author { font-weight: 700; color: var(--ink); font-size: 1rem; }
+    .testimonial-role { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+    .testimonial-stars {
+      display: flex; justify-content: center; gap: 4px;
+      margin-bottom: 28px;
+    }
+    .testimonial-stars svg { width: 18px; height: 18px; fill: var(--gold); }
+
+    .testimonial-nav {
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+      margin-top: 40px;
+    }
+    .t-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--cream-dk); cursor: pointer;
+      transition: all var(--dur) var(--ease);
+    }
+    .t-dot.active { background: var(--gold); width: 24px; border-radius: 4px; }
+    .t-arrow {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1.5px solid var(--cream-dk);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all var(--dur) var(--ease);
+      color: var(--text-soft);
+    }
+    .t-arrow:hover { border-color: var(--gold); color: var(--gold); }
+    .t-arrow svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* ══════════════════════════════════
+       CTA
+    ══════════════════════════════════ */
+    .cta-section {
+      background: var(--ink);
+      padding: 100px 0;
+      position: relative; overflow: hidden;
+    }
+    .cta-glow {
+      position: absolute; border-radius: 50%; filter: blur(100px); pointer-events: none;
+    }
+    .cta-glow-1 { width: 500px; height: 500px; top: -200px; right: 5%; background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%); }
+    .cta-glow-2 { width: 400px; height: 400px; bottom: -150px; left: 5%; background: radial-gradient(circle, rgba(26,127,212,0.1) 0%, transparent 70%); }
+    .cta-inner { position: relative; z-index: 1; text-align: center; }
+    .cta-inner h2 { color: white; font-weight: 800; margin-bottom: 16px; }
+    .cta-inner p { color: rgba(255,255,255,0.5); font-size: 1.1rem; margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* ══════════════════════════════════
+       FOOTER
+    ══════════════════════════════════ */
+    .footer { background: #070E1A; padding: 80px 0 0; }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px; margin-bottom: 60px;
+    }
+    .footer-brand-desc { color: rgba(255,255,255,0.35); font-size: 0.9rem; line-height: 1.8; margin-top: 18px; }
+    .footer-socials { display: flex; gap: 10px; margin-top: 24px; }
+    .footer-social-link {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.35); transition: all var(--dur) var(--ease);
+    }
+    .footer-social-link:hover { border-color: var(--gold); color: var(--gold); }
+    .footer-social-link svg { width: 16px; height: 16px; fill: currentColor; }
+
+    .footer-col-title {
+      font-size: 0.82rem; font-weight: 700; color: white;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 22px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .footer-links { display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a {
+      color: rgba(255,255,255,0.38); font-size: 0.88rem;
+      transition: color var(--dur) var(--ease);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.82rem; color: rgba(255,255,255,0.25);
+    }
+
+    /* ══════════════════════════════════
+       BOOKING MODAL
+    ══════════════════════════════════ */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(5,10,20,0.85);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: all var(--dur-slow) var(--ease);
+      padding: 20px;
+    }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+
+    .modal {
+      background: white; border-radius: var(--r-xl);
+      width: 100%; max-width: 620px;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: var(--sh-deep);
+      transform: translateY(30px) scale(0.97);
+      transition: transform var(--dur-slow) var(--ease);
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+    .modal-header {
+      background: var(--grad-ink);
+      padding: 32px 36px 28px;
+      border-radius: var(--r-xl) var(--r-xl) 0 0;
+      position: relative;
+    }
+    .modal-header h3 { color: white; font-size: 1.3rem; font-weight: 700; }
+    .modal-header p { color: rgba(255,255,255,0.45); font-size: 0.9rem; margin-top: 6px; }
+    .modal-close {
+      position: absolute; top: 20px; left: 20px;
+      [dir="ltr"] &{ left: auto; right: 20px; }
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.5); transition: all var(--dur) var(--ease);
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.15); color: white; }
+    .modal-close svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* Step progress */
+    .modal-steps {
+      display: flex; align-items: center;
+      padding: 0 36px;
+      background: var(--cream); border-bottom: 1px solid var(--cream-dk);
+    }
+    .step-item {
+      flex: 1; padding: 16px 0; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      position: relative;
+    }
+    .step-item:not(:last-child)::after {
+      content: ''; position: absolute;
+      top: 50%; right: -50%;
+      width: 100%; height: 1px;
+      background: var(--cream-dk);
+      z-index: 0;
+    }
+    [dir="ltr"] .step-item:not(:last-child)::after { right: auto; left: -50%; }
+    .step-circle {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 2px solid var(--cream-dk);
+      background: white; color: var(--text-muted);
+      font-size: 0.8rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 1;
+      transition: all var(--dur) var(--ease);
+    }
+    .step-item.active .step-circle { border-color: var(--gold); background: var(--gold); color: var(--ink); }
+    .step-item.done .step-circle { border-color: var(--gold); background: var(--gold); color: var(--ink); }
+    .step-label { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; }
+    .step-item.active .step-label { color: var(--gold); }
+
+    .modal-body { padding: 36px; }
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+
+    .form-group { margin-bottom: 22px; }
+    .form-label {
+      display: block; font-size: 0.88rem; font-weight: 600;
+      color: var(--ink); margin-bottom: 8px;
+    }
+    .form-input {
+      width: 100%; padding: 13px 18px;
+      border: 1.5px solid var(--cream-dk);
+      border-radius: var(--r-md);
+      font-family: inherit; font-size: 0.92rem; color: var(--text);
+      background: var(--cream); outline: none;
+      transition: all var(--dur) var(--ease);
+    }
+    .form-input:focus { border-color: var(--gold); background: white; box-shadow: 0 0 0 3px rgba(201,168,76,0.1); }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .time-slots {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 8px;
+    }
+    .time-slot {
+      padding: 10px 6px; text-align: center; border-radius: var(--r-md);
+      border: 1.5px solid var(--cream-dk);
+      font-size: 0.82rem; font-weight: 600; color: var(--text-soft);
+      cursor: pointer; transition: all var(--dur) var(--ease);
+      background: white;
+    }
+    .time-slot:hover { border-color: var(--gold); color: var(--gold); }
+    .time-slot.selected { background: var(--grad-gold); border-color: transparent; color: var(--ink); }
+    .time-slot.unavailable { opacity: 0.35; cursor: not-allowed; }
+
+    .modal-footer {
+      padding: 24px 36px; border-top: 1px solid var(--cream-dk);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    /* Booking success */
+    .booking-success {
+      text-align: center; padding: 40px 36px;
+    }
+    .success-icon {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
+      border: 2px solid var(--gold);
+      margin: 0 auto 24px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .success-icon svg { width: 40px; height: 40px; fill: var(--gold); }
+
+    /* ══════════════════════════════════
+       CHAT WIDGET
+    ══════════════════════════════════ */
+    .chat-widget {
+      position: fixed; bottom: 28px; z-index: 1000;
+      transition: all var(--dur) var(--ease);
+    }
+    [dir="rtl"] .chat-widget { right: 28px; }
+    [dir="ltr"] .chat-widget { left: 28px; }
+
+    .chat-fab {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: var(--grad-gold);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: var(--sh-gold);
+      cursor: pointer; transition: all var(--dur) var(--ease);
+      position: relative;
+    }
+    .chat-fab:hover { transform: scale(1.08); }
+    .chat-fab svg { width: 26px; height: 26px; fill: var(--ink); }
+    .chat-pulse {
+      position: absolute; inset: -4px; border-radius: 50%;
+      border: 2px solid var(--gold); opacity: 0.5;
+      animation: chat-pulse-ring 2.5s infinite;
+    }
+    @keyframes chat-pulse-ring {
+      0% { transform: scale(1); opacity: 0.5; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+
+    .chat-panel {
+      position: absolute;
+      bottom: 76px;
+      width: 360px;
+      background: white;
+      border-radius: var(--r-xl);
+      box-shadow: var(--sh-deep);
+      overflow: hidden;
+      border: 1px solid var(--cream-dk);
+      opacity: 0; visibility: hidden;
+      transform: translateY(16px) scale(0.96);
+      transition: all var(--dur-slow) var(--ease);
+    }
+    [dir="rtl"] .chat-panel { right: 0; }
+    [dir="ltr"] .chat-panel { left: 0; }
+    .chat-panel.open { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+
+    .chat-head {
+      background: var(--grad-ink); padding: 18px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .chat-head-info { display: flex; align-items: center; gap: 12px; }
+    .chat-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--grad-gold);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .chat-avatar svg { width: 20px; height: 20px; fill: var(--ink); }
+    .chat-name { font-size: 0.95rem; font-weight: 700; color: white; }
+    .chat-status { display: flex; align-items: center; gap: 5px; font-size: 0.72rem; color: rgba(255,255,255,0.45); }
+    .chat-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
+    .chat-close-btn { color: rgba(255,255,255,0.4); transition: color var(--dur) var(--ease); }
+    .chat-close-btn:hover { color: white; }
+    .chat-close-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    .chat-msgs {
+      height: 280px; overflow-y: auto;
+      padding: 16px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .chat-msg {
+      max-width: 82%; padding: 11px 14px;
+      border-radius: var(--r-lg); font-size: 0.88rem; line-height: 1.55;
+    }
+    .chat-msg.bot {
+      background: var(--cream); color: var(--text);
+      border-radius: var(--r-lg) var(--r-lg) var(--r-lg) 4px;
+      [dir="rtl"] &{ border-radius: var(--r-lg) var(--r-lg) 4px var(--r-lg); }
+      align-self: flex-start;
+    }
+    .chat-msg.user {
+      background: var(--grad-ink); color: white;
+      border-radius: var(--r-lg) var(--r-lg) 4px var(--r-lg);
+      [dir="rtl"] &{ border-radius: var(--r-lg) var(--r-lg) var(--r-lg) 4px; }
+      align-self: flex-end;
+    }
+    .chat-suggestions {
+      padding: 8px 14px 4px; display: flex; flex-wrap: wrap; gap: 6px;
+      border-top: 1px solid var(--cream-dk);
+    }
+    .chat-sug {
+      padding: 6px 12px; border-radius: var(--r-pill);
+      border: 1px solid var(--cream-dk); background: var(--cream);
+      font-size: 0.78rem; color: var(--text-soft); cursor: pointer;
+      transition: all var(--dur) var(--ease);
+    }
+    .chat-sug:hover { border-color: var(--gold); color: var(--gold); }
+
+    .chat-input-row {
+      padding: 12px 14px;
+      display: flex; gap: 8px; align-items: center;
+      border-top: 1px solid var(--cream-dk);
+    }
+    .chat-input {
+      flex: 1; padding: 10px 14px; border-radius: var(--r-pill);
+      border: 1.5px solid var(--cream-dk);
+      font-family: inherit; font-size: 0.88rem; outline: none;
+      background: var(--cream); color: var(--text);
+      transition: border-color var(--dur) var(--ease);
+    }
+    .chat-input:focus { border-color: var(--gold); background: white; }
+    .chat-send {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--grad-gold); color: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all var(--dur) var(--ease);
+    }
+    .chat-send:hover { box-shadow: var(--sh-gold); transform: scale(1.05); }
+    .chat-send svg { width: 16px; height: 16px; fill: currentColor; }
+
+    /* ══════════════════════════════════
+       FLOATING ELEMENTS
+    ══════════════════════════════════ */
+    .whatsapp-btn {
+      position: fixed; bottom: 28px; z-index: 999;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: #25D366;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+      transition: all var(--dur) var(--ease);
+    }
+    [dir="rtl"] .whatsapp-btn { left: 28px; }
+    [dir="ltr"] .whatsapp-btn { right: 28px; }
+    .whatsapp-btn:hover { transform: scale(1.1); }
+    .whatsapp-btn svg { width: 26px; height: 26px; fill: white; }
+
+    /* ══════════════════════════════════
+       SCROLL ANIMATIONS
+    ══════════════════════════════════ */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ══════════════════════════════════
+       ILLUSTRATED PLACEHOLDERS
+    ══════════════════════════════════ */
+    .illus-wrap {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ══════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════ */
+    @media (max-width: 1100px) {
+      .dept-grid { grid-template-columns: repeat(3, 1fr); }
+      .doctors-grid { grid-template-columns: repeat(3, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    }
+    @media (max-width: 900px) {
+      .about-grid { grid-template-columns: 1fr; gap: 48px; }
+      .branches-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-visual { display: none; }
+      .hero-content { max-width: 100%; }
+      .stats-bar-inner { grid-template-columns: repeat(2, 1fr); }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 640px) {
+      .dept-grid, .doctors-grid, .branches-grid { grid-template-columns: 1fr 1fr; }
+      .stats-bar-inner { grid-template-columns: 1fr 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .about-features { grid-template-columns: 1fr; }
+      .chat-panel { width: calc(100vw - 56px); }
+    }
+
+    /* ══════════════════════════════════
+       SECTION LABELS (for nav highlight)
+    ══════════════════════════════════ */
+    .section-anchor { scroll-margin-top: var(--nav-h); }
+  </style>
+</head>
+<body>
+
+<!-- REACT APP ROOT -->
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ═══ TRANSLATIONS ═══ */
+const T = {
+  ar: {
+    siteName: 'مستشفيات الحياة الوطني',
+    siteEn: 'Hayat National Hospitals',
+    since: 'منذ 1999',
+    nav: { home:'الرئيسية', about:'عن المجموعة', departments:'الأقسام', doctors:'أطباؤنا', branches:'فروعنا', contact:'اتصل بنا' },
+    bookNow: 'احجز موعد',
+    hero: {
+      badge: 'رعاية استثنائية منذ ١٩٩٩',
+      title: ['رعاية صحية', ' بمعايير', ' عالمية'],
+      titleAccent: 'عالمية',
+      sub: 'منذ أكثر من 25 عامًا، نقدم خدمات طبية متميزة في مختلف أنحاء المملكة العربية السعودية بأعلى معايير الجودة والسلامة',
+      book: 'احجز موعدك الآن',
+      explore: 'تعرف على أقسامنا',
+      stats: [{num:'700+',lbl:'طبيب وطبيبة'},{num:'1200+',lbl:'سرير'},{num:'5',lbl:'فروع رئيسية'},{num:'40K+',lbl:'عملية سنوياً'}]
+    },
+    about: {
+      eyebrow: 'قصتنا',
+      title: 'عن مستشفيات الحياة الوطني',
+      p1: 'تأسست مجموعة مستشفيات الحياة الوطني عام 1999 على يد الشيخ محمد بن ناصر بن جار الله، وتديرها شركة الإنماء للخدمات الطبية.',
+      p2: 'نقدم خدمات طبية متكاملة عبر شبكة من المستشفيات المتخصصة في مختلف مناطق المملكة، بأعلى معايير الجودة والسلامة الدولية.',
+      feats: [
+        {label:'معايير عالمية',sub:'اعتماد JCI وسباهي'},
+        {label:'كوادر مؤهلة',sub:'+700 طبيب متخصص'},
+        {label:'تقنيات حديثة',sub:'أجهزة تشخيص متطورة'},
+        {label:'رعاية متواصلة',sub:'خدمة 24/7 طوال العام'},
+      ],
+      badge: '25+ سنة خبرة',
+      btn: 'المزيد عن المجموعة'
+    },
+    deptSection: { eyebrow:'تخصصاتنا', title:'الأقسام الطبية', sub:'نغطي أكثر من 30 تخصصاً طبياً لخدمة صحتكم' },
+    docSection: { eyebrow:'فريقنا الطبي', title:'أطباؤنا', sub:'فريق من أمهر الأطباء والاستشاريين' },
+    docSearch: 'ابحث عن طبيب...',
+    docDeptAll: 'جميع الأقسام',
+    docBranchAll: 'جميع الفروع',
+    docBook: 'احجز الآن',
+    docYears: 'سنة خبرة',
+    loadMore: 'عرض المزيد',
+    branchSection: { eyebrow:'مواقعنا', title:'فروعنا', sub:'خمسة فروع في مختلف مناطق المملكة' },
+    branchBook: 'احجز موعد',
+    branchCall: 'اتصل بنا',
+    testimonials: { title:'ماذا يقول مرضانا' },
+    cta: { title:'صحتك أولاً', sub:'احجز موعدك الآن واحصل على أفضل رعاية طبية', book:'احجز موعد', call:'اتصل: 966920000094+' },
+    footer: {
+      desc: 'أكثر من 25 عامًا من التميز في الرعاية الصحية المتكاملة في المملكة العربية السعودية.',
+      quickLinks:'روابط سريعة', services:'خدماتنا', contact:'تواصل معنا',
+      links1:['عن المجموعة','الأقسام الطبية','أطباؤنا','فروعنا','الإنجازات','أكاديمية الحياة'],
+      links2:['التوظيف','العروض','الرعاية المنزلية','التغطية التأمينية','خدمة التقسيط','تطبيق الجوال'],
+      rights:'جميع الحقوق محفوظة',
+      privacy:'سياسة الخصوصية', terms:'الشروط والأحكام'
+    },
+    booking: {
+      title: 'حجز موعد',
+      sub: 'اختر القسم والطبيب والوقت المناسب',
+      steps: ['القسم والفرع','التاريخ والوقت','بياناتك','التأكيد'],
+      step1: { deptLabel:'القسم الطبي', branchLabel:'الفرع', doctorLabel:'الطبيب', selectDept:'اختر القسم', selectBranch:'اختر الفرع', selectDoctor:'اختر الطبيب' },
+      step2: { dateLabel:'التاريخ', timeLabel:'الوقت المفضل' },
+      step3: { nameLabel:'الاسم الكامل', phoneLabel:'رقم الجوال', emailLabel:'البريد الإلكتروني', notesLabel:'ملاحظات (اختياري)' },
+      step4: { title:'تم تأكيد الحجز!', sub:'سيتم التواصل معك قريباً', close:'إغلاق', newBook:'حجز جديد' },
+      next:'التالي', prev:'السابق', confirm:'تأكيد الحجز'
+    },
+    chat: {
+      name: 'بسمة — مساعدك الصحي',
+      online: 'متصل الآن',
+      welcome: 'أهلاً! أنا بسمة، مساعدك الصحي الذكي من مستشفيات الحياة الوطني. كيف يمكنني مساعدتك؟',
+      placeholder: 'اكتب رسالتك...',
+      sugs: ['ما هي أقسامكم؟','كيف أحجز موعد؟','شركات التأمين المقبولة','عن الأكاديمية']
+    }
+  },
+  en: {
+    siteName: 'Hayat National Hospitals',
+    siteEn: 'مستشفيات الحياة الوطني',
+    since: 'Est. 1999',
+    nav: { home:'Home', about:'About', departments:'Departments', doctors:'Doctors', branches:'Branches', contact:'Contact' },
+    bookNow: 'Book Now',
+    hero: {
+      badge: 'Exceptional Care Since 1999',
+      title: ['World-Class', ' Healthcare', ''],
+      titleAccent: 'Healthcare',
+      sub: 'For over 25 years, delivering distinguished medical services across the Kingdom of Saudi Arabia with the highest standards of quality and safety.',
+      book: 'Book an Appointment',
+      explore: 'Explore Departments',
+      stats: [{num:'700+',lbl:'Doctors'},{num:'1200+',lbl:'Beds'},{num:'5',lbl:'Branches'},{num:'40K+',lbl:'Annual Surgeries'}]
+    },
+    about: {
+      eyebrow: 'Our Story',
+      title: 'About Hayat National Hospitals',
+      p1: 'Hayat National Hospitals Group was established in 1999 by Sheikh Mohammed bin Nasser bin Jar Allah, operated by Al-Inmaa Medical Services Company.',
+      p2: 'We provide integrated medical services through a network of specialized hospitals across the Kingdom, with the highest international quality and safety standards.',
+      feats: [
+        {label:'Global Standards',sub:'JCI & CBAHI Accredited'},
+        {label:'Expert Staff',sub:'700+ Specialist Doctors'},
+        {label:'Modern Tech',sub:'Advanced Diagnostic Equipment'},
+        {label:'24/7 Care',sub:'Round-the-Clock Service'},
+      ],
+      badge: '25+ Years Experience',
+      btn: 'Learn More About Us'
+    },
+    deptSection: { eyebrow:'Specialties', title:'Medical Departments', sub:'Covering 30+ medical specialties for your health' },
+    docSection: { eyebrow:'Our Team', title:'Our Doctors', sub:'A team of the most skilled doctors and consultants' },
+    docSearch: 'Search doctors...',
+    docDeptAll: 'All Departments',
+    docBranchAll: 'All Branches',
+    docBook: 'Book Now',
+    docYears: 'yrs experience',
+    loadMore: 'Load More',
+    branchSection: { eyebrow:'Locations', title:'Our Branches', sub:'Five branches across the Kingdom to serve you' },
+    branchBook: 'Book Appointment',
+    branchCall: 'Call Us',
+    testimonials: { title:'What Our Patients Say' },
+    cta: { title:'Your Health First', sub:'Book your appointment now and receive the best medical care', book:'Book Appointment', call:'Call: +966920000094' },
+    footer: {
+      desc: 'Over 25 years of excellence in integrated healthcare in the Kingdom of Saudi Arabia.',
+      quickLinks:'Quick Links', services:'Our Services', contact:'Contact Us',
+      links1:['About Us','Medical Departments','Our Doctors','Our Branches','Achievements','Hayat Academy'],
+      links2:['Careers','Offers','Home Healthcare','Insurance Coverage','Installment Plans','Mobile App'],
+      rights:'All Rights Reserved',
+      privacy:'Privacy Policy', terms:'Terms & Conditions'
+    },
+    booking: {
+      title: 'Book Appointment',
+      sub: 'Choose your department, doctor and time',
+      steps: ['Dept & Branch','Date & Time','Your Info','Confirm'],
+      step1: { deptLabel:'Medical Department', branchLabel:'Branch', doctorLabel:'Doctor', selectDept:'Select Department', selectBranch:'Select Branch', selectDoctor:'Select Doctor' },
+      step2: { dateLabel:'Date', timeLabel:'Preferred Time' },
+      step3: { nameLabel:'Full Name', phoneLabel:'Phone Number', emailLabel:'Email', notesLabel:'Notes (optional)' },
+      step4: { title:'Appointment Confirmed!', sub:'We will contact you shortly', close:'Close', newBook:'New Booking' },
+      next:'Next', prev:'Back', confirm:'Confirm Booking'
+    },
+    chat: {
+      name: 'Basma — Health Assistant',
+      online: 'Online Now',
+      welcome: 'Hello! I\'m Basma, your smart health assistant from Hayat National Hospitals. How can I help you?',
+      placeholder: 'Type your message...',
+      sugs: ['What departments?','How to book?','Accepted insurance','About the Academy']
+    }
+  }
+};
+
+/* ═══ DATA ═══ */
+const DEPARTMENTS = [
+  { id:'cardio',  icon:'heart',   nameAr:'القلب والأوعية',    nameEn:'Cardiology',       descAr:'تشخيص وعلاج أمراض القلب والشرايين',          descEn:'Heart disease diagnosis & treatment' },
+  { id:'ortho',   icon:'bone',    nameAr:'جراحة العظام',       nameEn:'Orthopedics',      descAr:'جراحة المفاصل والكسور وإعادة التأهيل',        descEn:'Joint surgery, fractures, rehabilitation' },
+  { id:'peds',    icon:'child',   nameAr:'طب الأطفال',         nameEn:'Pediatrics',       descAr:'رعاية الأطفال حديثي الولادة والأطفال',        descEn:'Care for newborns and children' },
+  { id:'obgyn',   icon:'baby',    nameAr:'النساء والولادة',    nameEn:'OB/GYN',           descAr:'متابعة الحمل والولادة وأمراض النساء',          descEn:'Obstetrics, gynecology & maternity' },
+  { id:'derm',    icon:'skin',    nameAr:'الجلدية والتجميل',  nameEn:'Dermatology',      descAr:'علاج الأمراض الجلدية والتجميل بالليزر',       descEn:'Skin diseases & laser cosmetic treatment' },
+  { id:'neuro',   icon:'brain',   nameAr:'الأعصاب',            nameEn:'Neurology',        descAr:'تشخيص وعلاج أمراض المخ والأعصاب',            descEn:'Brain & nerve disease diagnosis' },
+  { id:'surg',    icon:'scalpel', nameAr:'الجراحة العامة',    nameEn:'General Surgery',  descAr:'جراحة عامة ومناظير جراحية',                  descEn:'General & laparoscopic surgery' },
+  { id:'internal',icon:'body',    nameAr:'الباطنية',           nameEn:'Internal Medicine',descAr:'تشخيص وعلاج الأمراض الداخلية',               descEn:'Diagnosis & treatment of internal diseases' },
+  { id:'ent',     icon:'ear',     nameAr:'الأنف والأذن والحنجرة',nameEn:'ENT',           descAr:'أمراض الأنف والأذن والحنجرة',                descEn:'Ear, nose & throat diseases' },
+  { id:'urology', icon:'kidney',  nameAr:'المسالك البولية',   nameEn:'Urology',          descAr:'علاج أمراض الكلى والمسالك البولية',           descEn:'Kidney & urinary tract diseases' },
+  { id:'eye',     icon:'eye',     nameAr:'طب العيون',          nameEn:'Ophthalmology',    descAr:'العناية بالعيون والجراحة الانكسارية',          descEn:'Eye care & refractive surgery' },
+  { id:'onco',    icon:'cell',    nameAr:'الأورام',            nameEn:'Oncology',         descAr:'تشخيص وعلاج الأورام السرطانية',              descEn:'Cancer diagnosis & treatment' },
+];
+
+const BRANCHES = [
+  { id:'madinah', nameAr:'المدينة المنورة', nameEn:'Madinah',       fullAr:'مستشفى الحياة الوطني — المدينة المنورة', fullEn:'Hayat National Hospital – Madinah',       addrAr:'طريق فرع الحجاز، المدينة المنورة 42316', addrEn:'Al-Hijra Branch Rd, Madinah 42316', phone:'+966920000094', url:'madinah.hayathospitals.com' },
+  { id:'riyadh',  nameAr:'الرياض',           nameEn:'Riyadh',        fullAr:'مستشفى الحياة الوطني — الرياض',          fullEn:'Hayat National Hospital – Riyadh',          addrAr:'طريق الدائري الشرقي، حي الربوة',         addrEn:'Eastern Ring Rd – Al-Rabwa District',    phone:'+966920000094', url:'riyadh.hayathospitals.com' },
+  { id:'jazan',   nameAr:'جازان',             nameEn:'Jazan',         fullAr:'مستشفى الحياة الوطني — جازان',           fullEn:'Hayat National Hospital – Jazan',            addrAr:'طريق الكورنيش — الشاطئ',                  addrEn:'Corniche Road – Al Shati',               phone:'+966920000094', url:'jazan.hayathospitals.com' },
+  { id:'khamis',  nameAr:'خميس مشيط',        nameEn:'Khamis Mushayt',fullAr:'مستشفى الحياة الوطني — خميس مشيط',       fullEn:'Hayat National Hospital – Khamis Mushayt',  addrAr:'طريق الأمير سلطان — أم سرار',            addrEn:'Prince Sultan Rd – Umm Sarar',           phone:'+966920000094', url:'khamis.hayathospitals.com' },
+  { id:'unayzah', nameAr:'عنيزة',             nameEn:'Unayzah',       fullAr:'مستشفى الحياة الوطني — عنيزة',           fullEn:'Hayat National Hospital – Unayzah',          addrAr:'القصيم — عنيزة — طريق المدينة',          addrEn:'Al-Qassim – Unayzah – Medina Road',      phone:'+966920000094', url:'unaizah.hayathospitals.com' },
+];
+
+const DOCTORS = [
+  {ar:'د. معاوية دبورة',     en:'Dr. Muawiya Daboura',    specAr:'جراحة التجميل',    specEn:'Plastic Surgery',   branchAr:'الرياض',  branchEn:'Riyadh',  years:15},
+  {ar:'د. نهله طالب ديب',    en:'Dr. Nahla Taleb Deeb',   specAr:'النساء والولادة',  specEn:'OB/GYN',            branchAr:'الرياض',  branchEn:'Riyadh',  years:21},
+  {ar:'د. وسام فاروق',       en:'Dr. Wisam Farouk',        specAr:'النساء والولادة',  specEn:'OB/GYN',            branchAr:'الرياض',  branchEn:'Riyadh',  years:18},
+  {ar:'د. أميرة البيلي',     en:'Dr. Amira Al-Bili',       specAr:'الجلدية',          specEn:'Dermatology',       branchAr:'الرياض',  branchEn:'Riyadh',  years:12},
+  {ar:'د. أحمد أبو هديمة',   en:'Dr. Ahmed Abu Hudaima',  specAr:'الباطنية',         specEn:'Internal Medicine', branchAr:'المدينة', branchEn:'Madinah', years:20},
+  {ar:'د. إبراهيم القرموط',  en:'Dr. Ibrahim Al-Qarmout', specAr:'القلب',            specEn:'Cardiology',        branchAr:'الرياض',  branchEn:'Riyadh',  years:23},
+  {ar:'د. أسامة المنصور',    en:'Dr. Osama Al-Mansour',   specAr:'المسالك البولية',  specEn:'Urology',           branchAr:'الرياض',  branchEn:'Riyadh',  years:25},
+  {ar:'د. أحمد السعيد',      en:'Dr. Ahmed Al-Saeed',      specAr:'القلب',            specEn:'Cardiology',        branchAr:'جازان',   branchEn:'Jazan',   years:18},
+  {ar:'د. خالد الراجحي',     en:'Dr. Khaled Al-Rajhi',     specAr:'العظام',           specEn:'Orthopedics',       branchAr:'الرياض',  branchEn:'Riyadh',  years:22},
+  {ar:'د. رانيا عزت',        en:'Dr. Rania Ezzat',         specAr:'النساء والولادة',  specEn:'OB/GYN',            branchAr:'الرياض',  branchEn:'Riyadh',  years:15},
+  {ar:'د. بهاء الدين جابر',  en:'Dr. Bahaa Gaber',         specAr:'الأعصاب',          specEn:'Neurology',         branchAr:'الرياض',  branchEn:'Riyadh',  years:20},
+  {ar:'د. عادل لملوم',       en:'Dr. Adel Lamloum',        specAr:'القلب',            specEn:'Cardiology',        branchAr:'جازان',   branchEn:'Jazan',   years:22},
+  {ar:'د. سارة هاشم',        en:'Dr. Sarah Hashem',        specAr:'الباطنية',         specEn:'Internal Medicine', branchAr:'الرياض',  branchEn:'Riyadh',  years:14},
+  {ar:'د. طارق إبراهيم',     en:'Dr. Tarek Ibrahim',       specAr:'الجراحة العامة',  specEn:'General Surgery',   branchAr:'الرياض',  branchEn:'Riyadh',  years:20},
+  {ar:'د. عمرو جلال',        en:'Dr. Amr Jalal',           specAr:'القلب',            specEn:'Cardiology',        branchAr:'الرياض',  branchEn:'Riyadh',  years:18},
+  {ar:'د. ظافر الشهري',      en:'Dr. Dhaffer Al-Shahrani', specAr:'العظام',           specEn:'Orthopedics',       branchAr:'خميس',    branchEn:'Khamis',  years:18},
+];
+
+const TESTIMONIALS = [
+  { textAr:'تجربة ممتازة مع مستشفيات الحياة الوطني. الأطباء محترفون جداً والخدمة راقية بكل المقاييس. أنصح الجميع بزيارة المستشفى.', textEn:'Outstanding experience at Hayat National Hospitals. The doctors are highly professional and the service is exceptional in every regard.', authorAr:'أحمد محمد', authorEn:'Ahmed Mohammed', roleAr:'مريض — فرع الرياض', roleEn:'Patient — Riyadh Branch' },
+  { textAr:'شكراً لفريق مستشفيات الحياة على الرعاية الممتازة. الكوادر الطبية على أعلى مستوى من الاحترافية والإنسانية.', textEn:'Grateful to the Hayat team for their outstanding care. The medical staff demonstrated the highest level of professionalism and compassion.', authorAr:'فاطمة العلي', authorEn:'Fatima Al-Ali', roleAr:'مريضة — فرع المدينة', roleEn:'Patient — Madinah Branch' },
+  { textAr:'أجريت عملية جراحية في مستشفيات الحياة بخميس مشيط وكانت النتائج ممتازة. شكراً لكل الطاقم الطبي والتمريضي الرائع.', textEn:'I had surgery at Hayat in Khamis Mushayt and the results were excellent. Thank you to the entire wonderful medical and nursing team.', authorAr:'خالد الشمري', authorEn:'Khaled Al-Shamri', roleAr:'مريض — فرع خميس مشيط', roleEn:'Patient — Khamis Mushayt Branch' },
+];
+
+/* ═══ ICON SVG MAP ═══ */
+function DeptIcon({ type, size = 30 }) {
+  const paths = {
+    heart: <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>,
+    bone: <><path d="M17.5 6.5A2 2 0 0020 4a2 2 0 00-2-2 2 2 0 00-2 2c0 .37.11.71.27 1.02L12 9.27l-4.27-4.25C7.89 4.71 8 4.37 8 4a2 2 0 00-2-2 2 2 0 00-2 2 2 2 0 002 2c.37 0 .71-.11 1.02-.27L11.27 10l-4.25 4.27C6.71 14.11 6.37 14 6 14a2 2 0 00-2 2 2 2 0 002 2 2 2 0 002-2c0-.37-.11-.71-.27-1.02L12 10.73l4.27 4.25c-.16.31-.27.65-.27 1.02a2 2 0 002 2 2 2 0 002-2 2 2 0 00-2-2c-.37 0-.71.11-1.02.27L12.73 10l4.25-4.27c.31.16.65.27 1.02.27z"/></>,
+    child: <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>,
+    baby: <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm-5-9h4V7h2v4h4v2h-4v4h-2v-4H7z"/>,
+    skin: <><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/><circle cx="12" cy="12" r="4" opacity="0.3"/></>,
+    brain: <path d="M13 3a9 9 0 100 18A9 9 0 0013 3zm-1 16H8.41l-.71.71-1.41-1.41L7 17.59V14H5.5C4.12 14 3 12.88 3 11.5S4.12 9 5.5 9H6V7.5C6 6.12 7.12 5 8.5 5S11 6.12 11 7.5V9h2V7.5C13 6.12 14.12 5 15.5 5S18 6.12 18 7.5V9h.5C19.88 9 21 10.12 21 11.5S19.88 14 18.5 14H17v3.59l.71.71-1.41 1.41-.71-.71H12z"/>,
+    scalpel: <path d="M7.5 5.6L10 7 8.6 4.5 10 2 7.5 3.4 5 2l1.4 2.5L5 7zm12 9.8L17 14l1.4 2.5L17 19l2.5-1.4L22 19l-1.4-2.5L22 14zM22 2l-2.5 1.4L17 2l1.4 2.5L17 7l2.5-1.4L22 7l-1.4-2.5zm-7.63 5.29a.9959.9959 0 00-1.41 0L1.29 18.96c-.39.39-.39 1.02 0 1.41l2.34 2.34c.39.39 1.02.39 1.41 0L16.7 11.05c.39-.39.39-1.02 0-1.41l-2.33-2.35zm-1.03 5.49l-2.12-2.12 2.44-2.44 2.12 2.12-2.44 2.44z"/>,
+    body: <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>,
+    ear: <path d="M17 12h-2c0-1.7-.96-3.19-2.5-3.93L11 7.27C12.26 6.47 14 5 14 3c0-2.21-1.79-4-4-4S6 .79 6 3h2c0-1.1.9-2 2-2s2 .9 2 2c0 1.63-1.96 2.86-3.28 3.5l-1.85.91C5.47 8.61 5 9.76 5 11c0 1.47.64 2.79 1.66 3.7C7.12 15.17 7.4 16 7 17H5v2h2c1.38 0 2.35-1.31 2-2.49-.05-.15-.1-.27-.14-.39C7.77 15.4 7 14.28 7 13c0-.76.33-1.44.87-1.91l1.61-.8C10.24 11.55 11 12.2 11 13h-2v2c.55 0 1.05-.22 1.41-.58C11.22 15.15 12 16 13 16c1.1 0 2-.9 2-2v-1c1.1 0 2-.9 2-2zm-6 6c-2.21 0-4 1.79-4 4h8c0-2.21-1.79-4-4-4z"/>,
+    kidney: <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>,
+    eye: <><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5z"/><circle cx="12" cy="12" r="3" fill="rgba(255,255,255,0.3)"/></>,
+    cell: <><circle cx="12" cy="12" r="3"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></>,
+  };
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor">
+      {paths[type] || paths.body}
+    </svg>
+  );
+}
+
+/* ═══ COUNTER HOOK ═══ */
+function useCounter(target, duration = 2000, started = false) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!started) return;
+    let startTime;
+    const num = parseInt(String(target).replace(/\D/g,''));
+    const suffix = String(target).replace(/[0-9]/g,'');
+    const step = (ts) => {
+      if (!startTime) startTime = ts;
+      const prog = Math.min((ts - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - prog, 3);
+      setVal(Math.floor(num * eased) + suffix);
+      if (prog < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [started]);
+  return val || 0;
+}
+
+/* ═══ INTERSECTION OBSERVER HOOK ═══ */
+function useInView(ref, threshold = 0.1) {
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+  return inView;
+}
+
+/* ═══ CHAT RESPONSES ═══ */
+function getChatResponse(msg, lang) {
+  const l = msg.toLowerCase();
+  const t = T[lang];
+  if (l.includes('قسم') || l.includes('department') || l.includes('تخصص') || l.includes('special'))
+    return lang === 'ar' ? 'لدينا أكثر من 30 تخصصاً طبياً تشمل القلب، العظام، الأطفال، النساء، الجلدية، الأعصاب وأقسام أخرى. هل تريد معرفة المزيد؟' : 'We have 30+ specialties including Cardiology, Orthopedics, Pediatrics, OB/GYN, Dermatology, Neurology and more. Would you like details on any?';
+  if (l.includes('حجز') || l.includes('موعد') || l.includes('book') || l.includes('appoint'))
+    return lang === 'ar' ? 'يمكنك حجز موعد عبر الموقع أو الاتصال على 966920000094+. انقر على "احجز موعد" في الأعلى للبدء.' : 'You can book via the website or call +966920000094. Click "Book Now" at the top to get started.';
+  if (l.includes('تأمين') || l.includes('insurance'))
+    return lang === 'ar' ? 'نتعامل مع شركات تأمين عديدة منها تكافل الراجحي، AXA، وأكثر من 40 شركة تأمين أخرى.' : 'We work with 40+ insurance providers including Takaful Al-Rajhi, AXA, and many others.';
+  if (l.includes('أكاديمية') || l.includes('academy'))
+    return lang === 'ar' ? 'أكاديمية الحياة للتطوير المهني تقدم برامج تدريبية بالتعاون مع الهيئة السعودية للتخصصات الصحية.' : 'Hayat Academy offers professional development programs in collaboration with the Saudi Commission for Health Specialties.';
+  return lang === 'ar' ? 'شكراً لتواصلك! يمكنك السؤال عن الأقسام، المواعيد، التأمين، أو أي موضوع آخر.' : 'Thank you for reaching out! You can ask about departments, appointments, insurance, or anything else.';
+}
+
+/* ═══════════════════════════════════════
+   COMPONENTS
+═══════════════════════════════════════ */
+
+/* NAV */
+function Nav({ lang, setLang, openBooking }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const t = T[lang];
+  const isAr = lang === 'ar';
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return (
+    <nav className={`nav${scrolled ? ' scrolled' : ''}`}>
+      <div className="nav-inner">
+        <a href="#home" className="nav-logo">
+          <div className="nav-logo-mark">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          </div>
+          <div className="nav-logo-text">
+            <span className="ar">{t.siteName}</span>
+            <span className="en">{t.since}</span>
+          </div>
+        </a>
+        <div className="nav-links">
+          {Object.entries(t.nav).map(([k,v]) => (
+            <a key={k} href={`#${k}`} className={k==='home'?'active':''}>{v}</a>
+          ))}
+        </div>
+        <div className="nav-actions">
+          <button className="lang-btn" onClick={() => setLang(lang==='ar'?'en':'ar')}>
+            {isAr ? 'EN' : 'عربي'}
+          </button>
+          <button className="nav-book btn" onClick={openBooking}>{t.bookNow}</button>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+/* HERO */
+function Hero({ lang, openBooking }) {
+  const t = T[lang].hero;
+  const statsRef = useRef(null);
+  const inView = useInView(statsRef, 0.3);
+
+  const counters = t.stats.map(s => {
+    const num = parseInt(s.num.replace(/\D/g,''));
+    const [val, setVal] = useState('0');
+    useEffect(() => {
+      if (!inView) return;
+      let start;
+      const suf = s.num.replace(/[0-9]/g,'');
+      const step = (ts) => {
+        if (!start) start = ts;
+        const p = Math.min((ts-start)/2000, 1);
+        const e = 1 - Math.pow(1-p, 3);
+        setVal(Math.floor(num*e) + suf);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }, [inView]);
+    return val;
+  });
+
+  return (
+    <section className="hero section-anchor" id="home">
+      <div className="hero-canvas">
+        <div className="hero-grid"></div>
+        <div className="hero-glow hero-glow-1"></div>
+        <div className="hero-glow hero-glow-2"></div>
+      </div>
+
+      {/* Right visual panel */}
+      <div className="hero-visual">
+        <div className="hero-visual-bg"></div>
+        <div className="hero-img-placeholder">
+          <IllusHospital />
+        </div>
+        <div className="hero-card-float hero-card-1">
+          <div className="float-card-label">{lang==='ar'?'عمليات ناجحة':'Successful Ops'}</div>
+          <div className="float-card-val">40,000+</div>
+          <div className="float-card-sub">{lang==='ar'?'سنوياً':'per year'}</div>
+        </div>
+        <div className="hero-card-float hero-card-2">
+          <div className="float-card-label">{lang==='ar'?'رضا المرضى':'Patient Satisfaction'}</div>
+          <div className="float-card-val">98.4%</div>
+          <div className="float-card-sub">{lang==='ar'?'معدل الرضا':'satisfaction rate'}</div>
+        </div>
+      </div>
+
+      <div className="container">
+        <div className="hero-content">
+          <div className="hero-eyebrow">
+            <span className="hero-eyebrow-dot"></span>
+            {t.badge}
+          </div>
+          <h1>
+            {t.title[0]}<span className="accent"> {t.title[1]}</span>
+            <br />
+            <em className="accent" style={{fontFamily:'var(--font-display)',fontStyle:'italic'}}>{t.title[2]}</em>
+          </h1>
+          <p className="hero-sub">{t.sub}</p>
+          <div className="hero-ctas">
+            <button className="btn btn-gold btn-lg" onClick={openBooking}>{t.book}</button>
+            <a href="#departments" className="btn btn-ghost btn-lg">{t.explore}</a>
+          </div>
+          <div className="hero-stats-row" ref={statsRef}>
+            {t.stats.map((s, i) => (
+              <div className="hero-stat-item" key={i}>
+                <span className="hero-stat-num">{counters[i]}</span>
+                <span className="hero-stat-lbl">{s.lbl}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ILLUSTRATED HOSPITAL GRAPHIC */
+function IllusHospital() {
+  return (
+    <svg viewBox="0 0 400 500" width="85%" height="85%" style={{opacity:0.18}}>
+      {/* Building */}
+      <rect x="80" y="120" width="240" height="320" rx="4" fill="none" stroke="#C9A84C" strokeWidth="1.5"/>
+      {/* Cross on top */}
+      <rect x="185" y="80" width="30" height="60" rx="3" fill="#C9A84C"/>
+      <rect x="165" y="95" width="70" height="30" rx="3" fill="#C9A84C"/>
+      {/* Windows */}
+      {[0,1,2,3].map(row => [0,1,2,3].map(col => (
+        <rect key={`w${row}${col}`} x={107 + col*56} y={155 + row*60} width="30" height="36" rx="2" fill="none" stroke="#C9A84C" strokeWidth="1" opacity="0.6"/>
+      )))}
+      {/* Entrance */}
+      <rect x="165" y="370" width="70" height="70" rx="3" fill="none" stroke="#C9A84C" strokeWidth="1.5"/>
+      <rect x="195" y="370" width="10" height="70" fill="#C9A84C" opacity="0.3"/>
+      {/* Columns */}
+      <rect x="130" y="340" width="12" height="100" rx="2" fill="#C9A84C" opacity="0.4"/>
+      <rect x="258" y="340" width="12" height="100" rx="2" fill="#C9A84C" opacity="0.4"/>
+      {/* Ground */}
+      <line x1="50" y1="440" x2="350" y2="440" stroke="#C9A84C" strokeWidth="1.5" opacity="0.5"/>
+      {/* Side wings */}
+      <rect x="30" y="200" width="60" height="200" rx="3" fill="none" stroke="#C9A84C" strokeWidth="1" opacity="0.5"/>
+      <rect x="310" y="200" width="60" height="200" rx="3" fill="none" stroke="#C9A84C" strokeWidth="1" opacity="0.5"/>
+    </svg>
+  );
+}
+
+/* ABOUT */
+function About({ lang }) {
+  const t = T[lang].about;
+  const ref = useRef(null);
+  const inView = useInView(ref, 0.15);
+  const icons = [
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>,
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm-1-5h2v2h-2zm0-8h2v6h-2z"/></svg>,
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>,
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>,
+  ];
+
+  return (
+    <section className="about-section section-anchor" id="about" ref={ref}>
+      <div className="container">
+        <div className="about-grid">
+          <div className={`about-visual reveal${inView?' visible':''}`}>
+            <div className="about-img-main">
+              <IllusAbout />
+            </div>
+            <div className="about-img-badge badge-1">
+              <div className="badge-num">{t.badge.split(' ')[0]}</div>
+              <div className="badge-txt">{t.badge.split(' ').slice(1).join(' ')}</div>
+            </div>
+          </div>
+          <div className={`about-content reveal reveal-delay-2${inView?' visible':''}`}>
+            <div className="gold-rule"></div>
+            <p style={{fontSize:'0.78rem', fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--gold)', marginBottom:12}}>{t.eyebrow}</p>
+            <h2>{t.title}</h2>
+            <p style={{marginTop:20}}>{t.p1}</p>
+            <p>{t.p2}</p>
+            <div className="about-features">
+              {t.feats.map((f, i) => (
+                <div className="about-feat" key={i}>
+                  <div className="about-feat-icon">{icons[i]}</div>
+                  <div>
+                    <div className="about-feat-label">{f.label}</div>
+                    <div className="about-feat-sub">{f.sub}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <a href="#about" className="btn btn-ink">{t.btn}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function IllusAbout() {
+  return (
+    <div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',background:'var(--grad-ink)',position:'absolute',inset:0}}>
+      <svg viewBox="0 0 300 360" width="78%" height="78%" style={{opacity:0.22}}>
+        <circle cx="150" cy="120" r="60" fill="none" stroke="#C9A84C" strokeWidth="1.5"/>
+        <circle cx="150" cy="120" r="40" fill="#C9A84C" opacity="0.08"/>
+        {/* Doctor figure */}
+        <circle cx="150" cy="90" r="22" fill="none" stroke="#C9A84C" strokeWidth="1.5"/>
+        <path d="M110 200 Q150 160 190 200 L195 320 H105 Z" fill="none" stroke="#C9A84C" strokeWidth="1.5"/>
+        {/* Stethoscope */}
+        <path d="M130 180 Q120 210 125 230 Q130 255 150 255 Q170 255 175 230 Q180 210 170 180" fill="none" stroke="#C9A84C" strokeWidth="2"/>
+        <circle cx="150" cy="258" r="10" fill="none" stroke="#C9A84C" strokeWidth="2"/>
+        {/* Cross */}
+        <rect x="143" y="270" width="14" height="50" rx="2" fill="#C9A84C" opacity="0.5"/>
+        <rect x="128" y="282" width="44" height="14" rx="2" fill="#C9A84C" opacity="0.5"/>
+      </svg>
+    </div>
+  );
+}
+
+/* DEPARTMENTS */
+function Departments({ lang }) {
+  const t = T[lang].deptSection;
+  const ref = useRef(null);
+  const inView = useInView(ref, 0.1);
+
+  return (
+    <section className="dept-section section-anchor" id="departments" ref={ref}>
+      <div className="container">
+        <div className="section-header">
+          <p style={{fontSize:'0.78rem',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--gold)',marginBottom:12}}>{t.eyebrow}</p>
+          <h2>{t.title}</h2>
+          <p>{t.sub}</p>
+        </div>
+        <div className="dept-grid">
+          {DEPARTMENTS.map((d, i) => (
+            <div
+              key={d.id}
+              className={`dept-card reveal reveal-delay-${(i%4)+1}${inView?' visible':''}`}
+              style={{transitionDelay:`${i*0.05}s`}}
+            >
+              <div className="dept-card-inner">
+                <div className="dept-icon">
+                  <DeptIcon type={d.icon} size={28} />
+                </div>
+                <div className="dept-name">{lang==='ar'?d.nameAr:d.nameEn}</div>
+                <div className="dept-desc">{lang==='ar'?d.descAr:d.descEn}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* DOCTORS */
+function Doctors({ lang, openBooking }) {
+  const t = T[lang];
+  const [search, setSearch] = useState('');
+  const [dept, setDept] = useState('');
+  const [branch, setBranch] = useState('');
+  const [visible, setVisible] = useState(8);
+  const ref = useRef(null);
+  const inView = useInView(ref, 0.05);
+
+  const filtered = DOCTORS.filter(d => {
+    const name = (lang==='ar'?d.ar:d.en).toLowerCase();
+    const spec = lang==='ar'?d.specAr:d.specEn;
+    const br = lang==='ar'?d.branchAr:d.branchEn;
+    return (!search || name.includes(search.toLowerCase())) &&
+           (!dept || spec.includes(dept)) &&
+           (!branch || br.includes(branch));
+  });
+
+  const specOptions = [...new Set(DOCTORS.map(d=>lang==='ar'?d.specAr:d.specEn))];
+  const branchOptions = [...new Set(DOCTORS.map(d=>lang==='ar'?d.branchAr:d.branchEn))];
+
+  function getInitial(name) {
+    const parts = name.replace('د.','').replace('Dr.','').trim().split(' ');
+    return parts[parts.length-1].charAt(0).toUpperCase();
+  }
+
+  return (
+    <section className="doctors-section section-anchor" id="doctors" ref={ref}>
+      <div className="container">
+        <div className="section-header light">
+          <p style={{fontSize:'0.78rem',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--gold)',marginBottom:12}}>{t.docSection.eyebrow}</p>
+          <h2>{t.docSection.title}</h2>
+          <p>{t.docSection.sub}</p>
+        </div>
+
+        <div className="filter-bar">
+          <input type="text" placeholder={t.docSearch} value={search} onChange={e=>{setSearch(e.target.value);setVisible(8);}} style={{minWidth:200}} />
+          <select value={dept} onChange={e=>{setDept(e.target.value);setVisible(8);}}>
+            <option value="">{t.docDeptAll}</option>
+            {specOptions.map(s=><option key={s} value={s}>{s}</option>)}
+          </select>
+          <select value={branch} onChange={e=>{setBranch(e.target.value);setVisible(8);}}>
+            <option value="">{t.docBranchAll}</option>
+            {branchOptions.map(b=><option key={b} value={b}>{b}</option>)}
+          </select>
+        </div>
+
+        <div className="doctors-grid">
+          {filtered.slice(0, visible).map((d, i) => (
+            <div
+              key={i}
+              className={`doctor-card reveal${inView?' visible':''}`}
+              style={{transitionDelay:`${(i%4)*0.08}s`}}
+            >
+              <div className="doctor-card-top">
+                <div className="doctor-avatar">{getInitial(lang==='ar'?d.ar:d.en)}</div>
+                <div className="doctor-specialty-badge">{lang==='ar'?d.specAr:d.specEn}</div>
+              </div>
+              <div className="doctor-card-body">
+                <div className="doctor-name">{lang==='ar'?d.ar:d.en}</div>
+                <div className="doctor-branch">
+                  <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+                  {lang==='ar'?d.branchAr:d.branchEn}
+                </div>
+                <div className="doctor-years">{d.years} {t.docYears}</div>
+                <button className="doctor-book-btn" onClick={openBooking}>{t.docBook}</button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {visible < filtered.length && (
+          <div className="load-more-wrap">
+            <button className="btn btn-outline-gold" onClick={()=>setVisible(v=>v+8)}>
+              {t.loadMore} ({filtered.length - visible})
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* BRANCHES */
+function Branches({ lang, openBooking }) {
+  const t = T[lang].branchSection;
+  const ref = useRef(null);
+  const inView = useInView(ref, 0.1);
+
+  return (
+    <section className="branches-section section-anchor" id="branches" ref={ref}>
+      <div className="container">
+        <div className="section-header">
+          <p style={{fontSize:'0.78rem',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--gold)',marginBottom:12}}>{t.eyebrow}</p>
+          <h2>{t.title}</h2>
+          <p>{t.sub}</p>
+        </div>
+        <div className="branches-grid">
+          {BRANCHES.map((b, i) => (
+            <div
+              key={b.id}
+              className={`branch-card reveal reveal-delay-${(i%3)+1}${inView?' visible':''}`}
+              style={{transitionDelay:`${i*0.08}s`}}
+            >
+              <div className="branch-card-top"></div>
+              <div className="branch-card-body">
+                <div className="branch-icon-wrap">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style={{fill:'var(--gold)'}}>
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                  </svg>
+                </div>
+                <div className="branch-name">{lang==='ar'?b.nameAr:b.nameEn}</div>
+                <div className="branch-name-full">{lang==='ar'?b.fullAr:b.fullEn}</div>
+                <div className="branch-detail">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style={{fill:'var(--gold)',flexShrink:0,marginTop:2}}>
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                  </svg>
+                  <span>{lang==='ar'?b.addrAr:b.addrEn}</span>
+                </div>
+                <div className="branch-detail">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style={{fill:'var(--gold)',flexShrink:0,marginTop:2}}>
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                  </svg>
+                  <span>{b.phone}</span>
+                </div>
+                <div className="branch-card-footer">
+                  <button className="branch-btn primary" onClick={openBooking}>{T[lang].branchBook}</button>
+                  <a href={`tel:${b.phone}`} className="branch-btn">{T[lang].branchCall}</a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* TESTIMONIALS */
+function Testimonials({ lang }) {
+  const [idx, setIdx] = useState(0);
+  const t = T[lang].testimonials;
+
+  useEffect(() => {
+    const timer = setInterval(() => setIdx(i=>(i+1)%TESTIMONIALS.length), 5500);
+    return () => clearInterval(timer);
+  }, []);
+
+  const item = TESTIMONIALS[idx];
+
+  return (
+    <section className="testimonials-section section-anchor" id="contact">
+      <div className="container">
+        <div className="section-header light">
+          <h2>{t.title}</h2>
+        </div>
+        <div className="testimonial-track-wrap">
+          <div className="testimonial-track" style={{transform:`translateX(${lang==='ar'?idx*100:-(idx*100)}%)`}}>
+            {TESTIMONIALS.map((item, i) => (
+              <div className="testimonial-slide" key={i}>
+                <div className="testimonial-stars">
+                  {[0,1,2,3,4].map(s=>(
+                    <svg key={s} viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  ))}
+                </div>
+                <span className="testimonial-quote-mark">"</span>
+                <p className="testimonial-text">{lang==='ar'?item.textAr:item.textEn}</p>
+                <div className="testimonial-author">{lang==='ar'?item.authorAr:item.authorEn}</div>
+                <div className="testimonial-role">{lang==='ar'?item.roleAr:item.roleEn}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="testimonial-nav">
+          <button className="t-arrow" onClick={()=>setIdx(i=>(i-1+TESTIMONIALS.length)%TESTIMONIALS.length)}>
+            <svg viewBox="0 0 24 24"><path d={lang==='ar'?"M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z":"M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"}/></svg>
+          </button>
+          {TESTIMONIALS.map((_,i)=>(
+            <div key={i} className={`t-dot${i===idx?' active':''}`} onClick={()=>setIdx(i)}></div>
+          ))}
+          <button className="t-arrow" onClick={()=>setIdx(i=>(i+1)%TESTIMONIALS.length)}>
+            <svg viewBox="0 0 24 24"><path d={lang==='ar'?"M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z":"M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"}/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* CTA */
+function CTA({ lang, openBooking }) {
+  const t = T[lang].cta;
+  return (
+    <section className="cta-section">
+      <div className="cta-glow cta-glow-1"></div>
+      <div className="cta-glow cta-glow-2"></div>
+      <div className="container">
+        <div className="cta-inner">
+          <div className="gold-rule center"></div>
+          <h2>{t.title}</h2>
+          <p>{t.sub}</p>
+          <div className="cta-btns">
+            <button className="btn btn-gold btn-lg" onClick={openBooking}>{t.book}</button>
+            <a href="tel:+966920000094" className="btn btn-ghost btn-lg">{t.call}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* FOOTER */
+function Footer({ lang }) {
+  const t = T[lang].footer;
+  return (
+    <footer className="footer">
+      <div className="container">
+        <div className="footer-grid">
+          <div>
+            <div className="nav-logo" style={{marginBottom:16}}>
+              <div className="nav-logo-mark">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+              </div>
+              <div className="nav-logo-text">
+                <span className="ar">{T[lang].siteName}</span>
+                <span className="en">{T[lang].since}</span>
+              </div>
+            </div>
+            <p className="footer-brand-desc">{t.desc}</p>
+            <div className="footer-socials">
+              {['facebook','instagram','twitter','linkedin','youtube'].map(s=>(
+                <a key={s} href="#" className="footer-social-link" aria-label={s}>
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="1.5"/></svg>
+                </a>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="footer-col-title">{t.quickLinks}</div>
+            <div className="footer-links">
+              {t.links1.map((l,i)=><a key={i} href="#">{l}</a>)}
+            </div>
+          </div>
+          <div>
+            <div className="footer-col-title">{t.services}</div>
+            <div className="footer-links">
+              {t.links2.map((l,i)=><a key={i} href="#">{l}</a>)}
+            </div>
+          </div>
+          <div>
+            <div className="footer-col-title">{t.contact}</div>
+            <div className="footer-links">
+              <a href="tel:+966920000094">+966920000094</a>
+              <a href="mailto:info@hayathospitals.com">info@hayathospitals.com</a>
+              <a href="#">hnh.brainsait.org</a>
+            </div>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>© {new Date().getFullYear()} {T[lang].siteName}. {t.rights}</span>
+          <div style={{display:'flex',gap:20}}>
+            <a href="#" style={{color:'rgba(255,255,255,0.25)',fontSize:'0.82rem'}}>{t.privacy}</a>
+            <a href="#" style={{color:'rgba(255,255,255,0.25)',fontSize:'0.82rem'}}>{t.terms}</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* BOOKING MODAL */
+function BookingModal({ lang, open, onClose }) {
+  const t = T[lang].booking;
+  const [step, setStep] = useState(1);
+  const [form, setForm] = useState({ dept:'', branch:'', doctor:'', date:'', time:'', name:'', phone:'', email:'', notes:'' });
+  const [confirmed, setConfirmed] = useState(false);
+
+  const times = ['08:00','09:00','10:00','11:00','13:00','14:00','15:00','16:00'];
+  const depts = DEPARTMENTS.map(d=>lang==='ar'?d.nameAr:d.nameEn);
+  const branches = BRANCHES.map(b=>lang==='ar'?b.nameAr:b.nameEn);
+
+  useEffect(() => {
+    if (!open) { setStep(1); setConfirmed(false); setForm({dept:'',branch:'',doctor:'',date:'',time:'',name:'',phone:'',email:'',notes:''}); }
+  }, [open]);
+
+  function handleConfirm() { setConfirmed(true); }
+
+  return (
+    <div className={`modal-overlay${open?' open':''}`} onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="modal">
+        <div className="modal-header">
+          <h3>{t.title}</h3>
+          <p>{t.sub}</p>
+          <button className="modal-close" onClick={onClose}>
+            <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" fill="none"/></svg>
+          </button>
+        </div>
+
+        {!confirmed && (
+          <div className="modal-steps">
+            {t.steps.map((s,i)=>(
+              <div key={i} className={`step-item${step===i+1?' active':step>i+1?' done':''}`}>
+                <div className="step-circle">
+                  {step > i+1 ? <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> : i+1}
+                </div>
+                <div className="step-label">{s}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="modal-body">
+          {confirmed ? (
+            <div className="booking-success">
+              <div className="success-icon">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              </div>
+              <h3 style={{color:'var(--ink)',marginBottom:8}}>{t.step4.title}</h3>
+              <p style={{color:'var(--text-soft)',marginBottom:32}}>{t.step4.sub}</p>
+              <div style={{display:'flex',gap:12,justifyContent:'center'}}>
+                <button className="btn btn-outline-gold" onClick={()=>{setConfirmed(false);setStep(1);}}>{t.step4.newBook}</button>
+                <button className="btn btn-gold" onClick={onClose}>{t.step4.close}</button>
+              </div>
+            </div>
+          ) : (
+            <>
+              {step === 1 && (
+                <div className="form-step active">
+                  <div className="form-group">
+                    <label className="form-label">{t.step1.deptLabel}</label>
+                    <select className="form-input" value={form.dept} onChange={e=>setForm({...form,dept:e.target.value})}>
+                      <option value="">{t.step1.selectDept}</option>
+                      {depts.map(d=><option key={d} value={d}>{d}</option>)}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">{t.step1.branchLabel}</label>
+                    <select className="form-input" value={form.branch} onChange={e=>setForm({...form,branch:e.target.value})}>
+                      <option value="">{t.step1.selectBranch}</option>
+                      {branches.map(b=><option key={b} value={b}>{b}</option>)}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">{t.step1.doctorLabel}</label>
+                    <select className="form-input" value={form.doctor} onChange={e=>setForm({...form,doctor:e.target.value})}>
+                      <option value="">{t.step1.selectDoctor}</option>
+                      {DOCTORS.filter(d=> !form.dept || (lang==='ar'?d.specAr:d.specEn)===form.dept).map((d,i)=>(
+                        <option key={i} value={lang==='ar'?d.ar:d.en}>{lang==='ar'?d.ar:d.en}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+              {step === 2 && (
+                <div className="form-step active">
+                  <div className="form-group">
+                    <label className="form-label">{t.step2.dateLabel}</label>
+                    <input type="date" className="form-input" value={form.date} onChange={e=>setForm({...form,date:e.target.value})} min={new Date().toISOString().split('T')[0]} />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">{t.step2.timeLabel}</label>
+                    <div className="time-slots">
+                      {times.map(time=>(
+                        <div key={time} className={`time-slot${form.time===time?' selected':''}${time==='11:00'?' unavailable':''}`}
+                          onClick={()=>time!=='11:00'&&setForm({...form,time})}>
+                          {time}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {step === 3 && (
+                <div className="form-step active">
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label">{t.step3.nameLabel}</label>
+                      <input type="text" className="form-input" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">{t.step3.phoneLabel}</label>
+                      <input type="tel" className="form-input" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">{t.step3.emailLabel}</label>
+                    <input type="email" className="form-input" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">{t.step3.notesLabel}</label>
+                    <textarea className="form-input" rows="3" value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} style={{resize:'vertical'}}/>
+                  </div>
+                  {form.dept && (
+                    <div style={{background:'var(--cream)',borderRadius:'var(--r-md)',padding:'16px',fontSize:'0.88rem',color:'var(--text-soft)'}}>
+                      <div style={{fontWeight:600,color:'var(--ink)',marginBottom:6}}>{lang==='ar'?'ملخص الحجز:':'Booking Summary:'}</div>
+                      <div>{lang==='ar'?'القسم:':'Dept:'} <strong>{form.dept}</strong></div>
+                      {form.branch && <div>{lang==='ar'?'الفرع:':'Branch:'} <strong>{form.branch}</strong></div>}
+                      {form.doctor && <div>{lang==='ar'?'الطبيب:':'Doctor:'} <strong>{form.doctor}</strong></div>}
+                      {form.date && <div>{lang==='ar'?'التاريخ:':'Date:'} <strong>{form.date}</strong></div>}
+                      {form.time && <div>{lang==='ar'?'الوقت:':'Time:'} <strong>{form.time}</strong></div>}
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        {!confirmed && (
+          <div className="modal-footer">
+            {step > 1 ? (
+              <button className="btn btn-ghost" style={{color:'var(--text-soft)',border:'1px solid var(--cream-dk)'}} onClick={()=>setStep(s=>s-1)}>{t.prev}</button>
+            ) : <span />}
+            {step < 3 ? (
+              <button className="btn btn-gold" onClick={()=>setStep(s=>s+1)}>{t.next}</button>
+            ) : (
+              <button className="btn btn-gold" onClick={handleConfirm}>{t.confirm}</button>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* CHAT WIDGET */
+function ChatWidget({ lang }) {
+  const [open, setOpen] = useState(false);
+  const [msgs, setMsgs] = useState([]);
+  const [input, setInput] = useState('');
+  const msgsRef = useRef(null);
+  const t = T[lang].chat;
+
+  useEffect(() => {
+    setMsgs([{role:'bot',text:t.welcome}]);
+  }, [lang]);
+
+  useEffect(() => {
+    if (msgsRef.current) msgsRef.current.scrollTop = msgsRef.current.scrollHeight;
+  }, [msgs]);
+
+  function send(text) {
+    if (!text.trim()) return;
+    const userMsg = {role:'user',text};
+    setMsgs(m=>[...m, userMsg]);
+    setInput('');
+    setTimeout(() => {
+      setMsgs(m=>[...m, {role:'bot',text:getChatResponse(text,lang)}]);
+    }, 700);
+  }
+
+  return (
+    <div className="chat-widget">
+      <div className={`chat-panel${open?' open':''}`}>
+        <div className="chat-head">
+          <div className="chat-head-info">
+            <div className="chat-avatar">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style={{fill:'var(--ink)'}}>
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <div>
+              <div className="chat-name">{t.name}</div>
+              <div className="chat-status"><span className="chat-status-dot"></span>{t.online}</div>
+            </div>
+          </div>
+          <button className="chat-close-btn" onClick={()=>setOpen(false)}>
+            <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" fill="none"/></svg>
+          </button>
+        </div>
+        <div className="chat-msgs" ref={msgsRef}>
+          {msgs.map((m,i)=>(
+            <div key={i} className={`chat-msg ${m.role}`}>{m.text}</div>
+          ))}
+        </div>
+        <div className="chat-suggestions">
+          {t.sugs.map((s,i)=>(
+            <button key={i} className="chat-sug" onClick={()=>send(s)}>{s}</button>
+          ))}
+        </div>
+        <div className="chat-input-row">
+          <input
+            className="chat-input" type="text"
+            placeholder={t.placeholder} value={input}
+            onChange={e=>setInput(e.target.value)}
+            onKeyDown={e=>e.key==='Enter'&&send(input)}
+          />
+          <button className="chat-send" onClick={()=>send(input)}>
+            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div className="chat-fab" onClick={()=>setOpen(o=>!o)}>
+        <div className="chat-pulse"></div>
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style={{fill:'var(--ink)'}}>
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/>
+          <circle cx="8" cy="10" r="1"/><circle cx="12" cy="10" r="1"/><circle cx="16" cy="10" r="1"/>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+/* ═══ TWEAKS PANEL ═══ */
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme": "dark-gold",
+  "accentColor": "#C9A84C",
+  "bgMode": "dark",
+  "fontStyle": "serif-mix",
+  "density": "comfortable"
+}/*EDITMODE-END*/;
+
+/* ═══ MAIN APP ═══ */
+function App() {
+  const [lang, setLang] = useState(() => localStorage.getItem('hnh-lang') || 'ar');
+  const [bookingOpen, setBookingOpen] = useState(false);
+  const [tweaksOpen, setTweaksOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('hnh-lang', lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.body.style.fontFamily = lang === 'ar' ? 'var(--font-ar)' : 'var(--font-en)';
+  }, [lang]);
+
+  // Tweaks protocol
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweaksOpen(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksOpen(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  return (
+    <>
+      <Nav lang={lang} setLang={setLang} openBooking={()=>setBookingOpen(true)} />
+      <Hero lang={lang} openBooking={()=>setBookingOpen(true)} />
+      
+      {/* Stats bar */}
+      <section className="stats-bar-section">
+        <div className="stats-bar-inner">
+          {[
+            {num:'700+', lbl: lang==='ar'?'طبيب وطبيبة':'Doctors'},
+            {num:'1,200+', lbl: lang==='ar'?'سرير':'Beds'},
+            {num:'3,500+', lbl: lang==='ar'?'موظف':'Employees'},
+            {num:'40,000+', lbl: lang==='ar'?'عملية سنوياً':'Surgeries/year'},
+          ].map((s,i) => (
+            <div className="stat-bar-item" key={i}>
+              <span className="stat-bar-num">{s.num}</span>
+              <span className="stat-bar-lbl">{s.lbl}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <About lang={lang} />
+      <Departments lang={lang} />
+      <Doctors lang={lang} openBooking={()=>setBookingOpen(true)} />
+      <Branches lang={lang} openBooking={()=>setBookingOpen(true)} />
+      <Testimonials lang={lang} />
+      <CTA lang={lang} openBooking={()=>setBookingOpen(true)} />
+      <Footer lang={lang} />
+
+      <BookingModal lang={lang} open={bookingOpen} onClose={()=>setBookingOpen(false)} />
+      <ChatWidget lang={lang} />
+
+      {/* WhatsApp */}
+      <a href="https://wa.me/966920000094" className="whatsapp-btn" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </a>
+
+      {/* Tweaks Panel */}
+      {tweaksOpen && (
+        <div style={{
+          position:'fixed', bottom:24, right:24, zIndex:9999,
+          background:'rgba(10,18,32,0.96)', backdropFilter:'blur(16px)',
+          border:'1px solid rgba(201,168,76,0.25)', borderRadius:16,
+          padding:'20px 24px', minWidth:240,
+          boxShadow:'0 16px 48px rgba(0,0,0,0.5)',
+          color:'white', fontFamily:'var(--font-en)', fontSize:13,
+        }}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+            <strong style={{color:'var(--gold)',fontSize:14}}>Tweaks</strong>
+            <button onClick={()=>{setTweaksOpen(false);window.parent.postMessage({type:'__edit_mode_dismissed'},'*');}} style={{color:'rgba(255,255,255,0.4)',background:'none',border:'none',cursor:'pointer',fontSize:18,lineHeight:1}}>×</button>
+          </div>
+          <div style={{marginBottom:12}}>
+            <div style={{fontSize:11,color:'rgba(255,255,255,0.4)',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.08em'}}>Language</div>
+            <div style={{display:'flex',gap:6}}>
+              {['ar','en'].map(l=>(
+                <button key={l} onClick={()=>setLang(l)} style={{flex:1,padding:'7px',borderRadius:8,border:`1px solid ${lang===l?'var(--gold)':'rgba(255,255,255,0.1)'}`,background:lang===l?'rgba(201,168,76,0.15)':'transparent',color:lang===l?'var(--gold)':'rgba(255,255,255,0.4)',cursor:'pointer',fontSize:12,fontWeight:600,transition:'all 0.2s'}}>
+                  {l==='ar'?'العربية':'English'}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{marginBottom:12}}>
+            <div style={{fontSize:11,color:'rgba(255,255,255,0.4)',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.08em'}}>Quick Actions</div>
+            <button onClick={()=>setBookingOpen(true)} style={{width:'100%',padding:'9px',borderRadius:8,border:'1px solid rgba(201,168,76,0.3)',background:'rgba(201,168,76,0.08)',color:'var(--gold)',cursor:'pointer',fontSize:12,fontWeight:600,marginBottom:6}}>
+              Open Booking Modal
+            </button>
+            <button onClick={()=>document.querySelector('.chat-fab')?.click()} style={{width:'100%',padding:'9px',borderRadius:8,border:'1px solid rgba(255,255,255,0.1)',background:'transparent',color:'rgba(255,255,255,0.5)',cursor:'pointer',fontSize:12,fontWeight:600}}>
+              Open Chat Widget
+            </button>
+          </div>
+          <div style={{fontSize:10,color:'rgba(255,255,255,0.2)',marginTop:8,borderTop:'1px solid rgba(255,255,255,0.06)',paddingTop:8}}>
+            HNH Luxury Prototype · BrainSAIT
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+</body>
+</html>
