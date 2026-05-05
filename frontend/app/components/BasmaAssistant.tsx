@@ -305,12 +305,14 @@ export default function BasmaAssistant() {
 
   return (
     <>
+      {/* FAB trigger */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 left-6 z-50 flex h-16 w-16 items-center justify-center rounded-full border text-2xl text-white shadow-2xl transition hover:scale-[1.03]"
+        className="fixed bottom-20 left-5 z-50 flex h-14 w-14 items-center justify-center rounded-2xl text-2xl text-white shadow-2xl transition-all hover:scale-105 hover:shadow-[0_8px_32px_rgba(37,99,235,0.4)] active:scale-95 md:bottom-6"
         style={{
-          background: 'linear-gradient(135deg, #1d4ed8, #0f172a)',
-          borderColor: 'rgba(255,255,255,0.14)',
+          background: 'linear-gradient(140deg, #1d4ed8 0%, #0ea5e9 100%)',
+          border: '1px solid rgba(255,255,255,0.18)',
+          boxShadow: '0 8px 28px rgba(37,99,235,0.35)',
         }}
         title="بسمة المساعد الذكي | Basma AI Assistant"
         aria-label="Open Basma AI Assistant"
@@ -320,40 +322,57 @@ export default function BasmaAssistant() {
 
       {open && (
         <div
-          className="fixed bottom-24 left-6 z-50 flex h-[34rem] w-[calc(100vw-2rem)] max-w-[26rem] flex-col overflow-hidden rounded-[1.4rem] border shadow-2xl"
+          className="fixed bottom-36 left-4 z-50 flex flex-col overflow-hidden rounded-3xl border shadow-2xl animate-slide-up md:bottom-8 md:left-6"
           style={{
+            width: 'min(calc(100vw - 2rem), 26rem)',
+            height: 'min(calc(100dvh - 9rem), 34rem)',
             backgroundColor: 'var(--surface)',
             borderColor: 'var(--border)',
-            boxShadow: '0 30px 80px rgba(15, 23, 42, 0.24)',
+            boxShadow: '0 32px 80px rgba(11, 17, 32, 0.28), 0 8px 20px rgba(11, 17, 32, 0.14)',
           }}
           dir="rtl"
           role="dialog"
           aria-label="Basma AI Assistant"
         >
-          <div className="relative overflow-hidden border-b p-4 text-white" style={{ background: 'linear-gradient(135deg, #0f172a, #1d4ed8)', borderColor: 'rgba(255,255,255,0.08)' }}>
-            <div className="subtle-grid opacity-30" />
-            <div className="relative z-10 flex items-start justify-between gap-3">
-              <div>
-                <div className="font-bold text-sm">بسمة | Basma AI</div>
-                <div className="text-[11px] text-blue-100/80">مستشفيات الحياة الوطنية · BrainSAIT</div>
-                <div className="mt-2 text-[11px] text-white/70">Appointments · Screening · Claims · Clinical support</div>
+          {/* Header */}
+          <div
+            className="relative overflow-hidden flex-shrink-0 px-4 py-3.5 text-white"
+            style={{ background: 'linear-gradient(140deg, #050d1f 0%, #1d4ed8 60%, #0ea5e9 100%)' }}
+          >
+            <div className="subtle-grid opacity-20" />
+            <div className="relative z-10 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div
+                  className="flex h-10 w-10 items-center justify-center rounded-xl text-xl shadow-inner flex-shrink-0"
+                  style={{ background: 'rgba(255,255,255,0.14)', border: '1px solid rgba(255,255,255,0.18)' }}
+                >
+                  🤖
+                </div>
+                <div>
+                  <div className="font-bold text-sm leading-tight">بسمة · Basma AI</div>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="live-dot" style={{ width: 6, height: 6 }} />
+                    <span className="text-[11px] text-white/70">Hayat National Hospitals · BrainSAIT</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
+
+              <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => setVoiceMode(v => !v)}
-                  className={`rounded-full border px-3 py-1 text-xs transition ${
-                    voiceMode
-                      ? 'bg-white text-blue-900 border-white'
-                      : 'border-blue-200/50 text-white hover:border-white hover:bg-white/10'
-                  }`}
-                  title={voiceMode ? 'تعطيل الصوت | Disable voice' : 'تفعيل الصوت | Enable voice'}
+                  className="flex h-8 w-8 items-center justify-center rounded-xl text-sm transition-all hover:bg-white/10"
+                  style={voiceMode
+                    ? { background: 'rgba(255,255,255,0.22)', border: '1px solid rgba(255,255,255,0.28)' }
+                    : { border: '1px solid rgba(255,255,255,0.14)' }}
+                  title={voiceMode ? 'تعطيل الصوت' : 'تفعيل الصوت'}
                 >
-                  {voiceMode ? '🔊 صوت' : '🔇 صامت'}
+                  {voiceMode ? '🔊' : '🔇'}
                 </button>
                 <button
                   onClick={() => setOpen(false)}
-                  className="rounded-full border border-white/20 px-2.5 py-1 text-xs text-white/80 hover:bg-white/10"
-                  aria-label="Close Basma assistant"
+                  className="flex h-8 w-8 items-center justify-center rounded-xl text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
+                  style={{ border: '1px solid rgba(255,255,255,0.12)' }}
+                  aria-label="Close"
                 >
                   ✕
                 </button>
@@ -361,47 +380,57 @@ export default function BasmaAssistant() {
             </div>
           </div>
 
-          <div className="border-b px-4 py-3" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--surface-muted)' }}>
-            <div className="mb-2 text-[11px] font-semibold text-muted">اقتراحات سريعة · Quick actions</div>
+          {/* Quick actions */}
+          <div
+            className="flex-shrink-0 px-4 py-2.5 border-b"
+            style={{ borderColor: 'var(--border)', backgroundColor: 'var(--surface-muted)' }}
+          >
             <div className="flex flex-wrap gap-1.5">
-            {[
-              { label: 'حجز موعد', en: 'book appointment P001 cardiology' },
-              { label: 'فحص صحي', en: 'health screening P001' },
-              { label: 'مطالبة', en: 'adjudicate claim CLM-001' },
-            ].map(chip => (
-              <button
-                key={chip.en}
-                onClick={() => setInput(chip.en)}
-                className="rounded-full border px-2.5 py-1 text-[11px] font-medium hover:-translate-y-[1px]"
-                style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)', color: 'var(--primary)' }}
-              >
-                {chip.label}
-              </button>
-            ))}
+              {[
+                { label: '📅 حجز موعد',  en: 'book appointment P001 cardiology' },
+                { label: '🔬 فحص صحي',   en: 'health screening P001' },
+                { label: '💳 مطالبة',     en: 'adjudicate claim CLM-001' },
+                { label: '💊 وصفة',       en: 'prescription P001' },
+              ].map(chip => (
+                <button
+                  key={chip.en}
+                  onClick={() => setInput(chip.en)}
+                  className="rounded-full px-2.5 py-1 text-[11px] font-semibold transition-all hover:-translate-y-px"
+                  style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--primary)' }}
+                >
+                  {chip.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          <div className="flex-1 space-y-3 overflow-y-auto p-4" style={{ backgroundColor: 'var(--surface)' }}>
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-3" style={{ backgroundColor: 'var(--surface)' }}>
             {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-start' : 'justify-end'}`}>
+              <div
+                key={i}
+                className={`flex animate-fade-in ${msg.role === 'user' ? 'justify-start' : 'justify-end'}`}
+                style={{ animationDelay: `${i * 20}ms` }}
+              >
                 <div
-                  className={`group relative max-w-[88%] whitespace-pre-wrap rounded-2xl p-3 text-sm leading-7 ${
-                    msg.role === 'user'
-                      ? 'border text-[var(--text)]'
-                      : 'border text-[var(--text)]'
-                  }`}
-                  style={msg.role === 'user'
-                    ? { backgroundColor: 'var(--surface-muted)', borderColor: 'var(--border)' }
-                    : { backgroundColor: 'color-mix(in srgb, var(--primary) 8%, var(--surface))', borderColor: 'var(--border)' }}
+                  className="group relative max-w-[88%] text-sm leading-relaxed"
+                  style={{
+                    padding: '0.65rem 0.875rem',
+                    borderRadius: msg.role === 'user' ? '1.25rem 1.25rem 0.35rem 1.25rem' : '1.25rem 1.25rem 1.25rem 0.35rem',
+                    ...(msg.role === 'user'
+                      ? { backgroundColor: 'var(--surface-strong)', color: 'var(--text)', border: '1px solid var(--border)' }
+                      : { background: 'linear-gradient(135deg, color-mix(in srgb, var(--primary) 10%, var(--surface)), var(--surface-muted))', color: 'var(--text)', border: '1px solid color-mix(in srgb, var(--primary) 15%, var(--border))' }
+                    ),
+                  }}
                 >
-                  {msg.content}
+                  <p className="whitespace-pre-wrap">{msg.content}</p>
 
                   {msg.workflowResult && (
                     <details className="mt-3">
                       <summary className="cursor-pointer text-[11px] font-semibold" style={{ color: 'var(--primary)' }}>
-                        🔧 Workflow result
+                        ⚙️ Workflow result
                       </summary>
-                      <pre className="mt-2 max-h-28 overflow-x-auto rounded-xl p-2 text-[10px]" style={{ backgroundColor: 'var(--surface)', color: 'var(--text-secondary)' }}>
+                      <pre className="mt-2 max-h-28 overflow-x-auto rounded-xl p-2 text-[10px]" style={{ backgroundColor: 'var(--surface)', color: 'var(--text-tertiary)' }}>
                         {JSON.stringify(msg.workflowResult, null, 2).slice(0, 600)}
                       </pre>
                     </details>
@@ -411,8 +440,8 @@ export default function BasmaAssistant() {
                     <button
                       onClick={() => handleSpeak(msg.content)}
                       disabled={speaking}
-                      className="absolute -bottom-2 -left-2 h-7 w-7 rounded-full text-[11px] opacity-0 transition group-hover:opacity-100 disabled:opacity-30"
-                      style={{ backgroundColor: 'var(--surface)', color: 'var(--primary)', border: '1px solid var(--border)' }}
+                      className="absolute -bottom-2.5 -left-2 flex h-7 w-7 items-center justify-center rounded-full text-[11px] opacity-0 transition-all group-hover:opacity-100 disabled:opacity-30 hover:scale-105"
+                      style={{ backgroundColor: 'var(--surface)', color: 'var(--primary)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-xs)' }}
                       title="استمع | Listen"
                     >
                       🔊
@@ -421,42 +450,57 @@ export default function BasmaAssistant() {
                 </div>
               </div>
             ))}
+
             {loading && (
               <div className="flex justify-end">
-                <div className="flex items-center gap-1 rounded-2xl border p-3 text-sm" style={{ backgroundColor: 'var(--surface-muted)', borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
-                  <span className="inline-block w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:0ms]" />
-                  <span className="inline-block w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:150ms]" />
-                  <span className="inline-block w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:300ms]" />
+                <div
+                  className="flex items-center gap-1.5 px-4 py-3 text-sm"
+                  style={{ borderRadius: '1.25rem 1.25rem 1.25rem 0.35rem', backgroundColor: 'var(--surface-muted)', border: '1px solid var(--border)' }}
+                >
+                  {[0, 150, 300].map(d => (
+                    <span
+                      key={d}
+                      className="inline-block h-2 w-2 rounded-full animate-bounce"
+                      style={{ backgroundColor: 'var(--primary)', animationDelay: `${d}ms` }}
+                    />
+                  ))}
                 </div>
               </div>
             )}
+
             {speaking && (
-              <div className="text-center text-[11px] animate-pulse" style={{ color: 'var(--primary)' }}>🔊 بسمة تتحدث...</div>
+              <p className="text-center text-[11px] font-semibold animate-pulse" style={{ color: 'var(--primary)' }}>
+                🔊 بسمة تتحدث…
+              </p>
             )}
             <div ref={endRef} />
           </div>
 
-          <div className="border-t p-3" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--surface-muted)' }}>
-            <div className="flex gap-2">
-            <input
-              type="text"
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSend()}
-              placeholder="اسأل بسمة... | Ask Basma..."
-              className="input-field flex-1 text-sm"
-              dir="auto"
-              disabled={loading}
-            />
-            <button
-              onClick={handleSend}
-              disabled={loading || !input.trim()}
-              className="rounded-xl px-4 py-2 text-sm font-semibold text-white transition disabled:opacity-40"
-              style={{ backgroundColor: 'var(--primary)' }}
-              aria-label="Send"
-            >
-              ➤
-            </button>
+          {/* Input bar */}
+          <div
+            className="flex-shrink-0 p-3 border-t"
+            style={{ borderColor: 'var(--border)', backgroundColor: 'var(--surface-muted)' }}
+          >
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && !e.shiftKey && void handleSend()}
+                placeholder="اسأل بسمة… | Ask Basma…"
+                className="input-field flex-1 text-sm"
+                dir="auto"
+                disabled={loading}
+              />
+              <button
+                onClick={() => void handleSend()}
+                disabled={loading || !input.trim()}
+                className="btn-primary flex-shrink-0 px-4 py-2 text-sm disabled:opacity-40"
+                style={{ minHeight: '40px', borderRadius: '0.875rem', boxShadow: '0 4px 12px rgba(37,99,235,0.3)' }}
+                aria-label="Send"
+              >
+                ➤
+              </button>
             </div>
           </div>
         </div>
