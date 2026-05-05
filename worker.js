@@ -1040,10 +1040,10 @@ async function health(env) {
       academy: academyStatus.status === "fulfilled" ? academyStatus.value : "offline",
       
       // AI & Communication Services (configuration status)
-      elevenlabs: checkElevenLabs(env),
-      deepseek: checkDeepSeek(env),
-      twilio: checkTwilio(env),
-      whatsapp: checkWhatsApp(env)
+      elevenlabs: await checkElevenLabs(env),
+      deepseek: await checkDeepSeek(env),
+      twilio: await checkTwilio(env),
+      whatsapp: await checkWhatsApp(env)
     },
     oracle_tunnel: "Oracle Cloud@Riyadh",
     nphies_mirror: nphiesMirror,
