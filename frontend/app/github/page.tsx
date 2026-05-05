@@ -96,25 +96,53 @@ export default function GitHubPage() {
   const [activeTab, setActiveTab] = useState<'activity' | 'repo' | 'notifications'>('activity')
   const [error, setError] = useState<string | null>(null)
 
+  const fetchJson = async (url: string) => {
+    const response = await fetch(url)
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status} for ${url}`)
+    }
+    return response.json()
+  }
+
   const fetchAll = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
       const [evRes, repoRes, notifRes] = await Promise.allSettled([
-        fetch(`${API}/api/github/activity`).then(r => r.json()),
-        fetch(`${API}/api/github/repo`).then(r => r.json()),
-        fetch(`${API}/api/github/notifications`).then(r => r.json()),
+        fetchJson(`${API}/api/github/activity`),
+        fetchJson(`${API}/api/github/repo`),
+        fetchJson(`${API}/api/github/notifications`),
       ])
+
+      const hasFailures =
+        evRes.status === 'rejected' ||
+        repoRes.status === 'rejected' ||
+        notifRes.status === 'rejected' ||
+        (evRes.status === 'fulfilled' && !evRes.value.success) ||
+        (repoRes.status === 'fulfilled' && !repoRes.value.success) ||
+        (notifRes.status === 'fulfilled' && !notifRes.value.success)
 
       if (evRes.status === 'fulfilled' && evRes.value.success) {
         setEvents(evRes.value.events || [])
+      } else if (evRes.status === 'rejected') {
+        console.error(evRes.reason)
       }
+
       if (repoRes.status === 'fulfilled' && repoRes.value.success) {
         setRepo(repoRes.value.repo)
         setWorkflows(repoRes.value.workflows || [])
+      } else if (repoRes.status === 'rejected') {
+        console.error(repoRes.reason)
       }
+
       if (notifRes.status === 'fulfilled' && notifRes.value.success) {
         setNotifications(notifRes.value.notifications || [])
+      } else if (notifRes.status === 'rejected') {
+        console.error(notifRes.reason)
+      }
+
+      if (hasFailures) {
+        setError('Failed to load GitHub data. Check API connectivity.')
       }
     } catch (e) {
       setError('Failed to load GitHub data. Check API connectivity.')
