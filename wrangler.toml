@@ -90,13 +90,7 @@ HUB_VERSION        = "9.2.0"
 
 [env.production]
 name = "hnh-unified"
-vars = { 
-  HUB_VERSION = "9.2.0", 
-  ORACLE_BRIDGE_URL = "https://oracle-bridge.brainsait.org", 
-  NPHIES_MIRROR_URL = "https://nphies-mirror.brainsait-fadil.workers.dev", 
-  FACILITY_LICENSE = "10000000000988", 
-  MAILLINC_URL = "https://maillinc.brainsait-fadil.workers.dev" 
-}
+vars = { HUB_VERSION = "9.2.0", ORACLE_BRIDGE_URL = "https://oracle-bridge.brainsait.org", NPHIES_MIRROR_URL = "https://nphies-mirror.brainsait-fadil.workers.dev", FACILITY_LICENSE = "10000000000988", MAILLINC_URL = "https://maillinc.brainsait-fadil.workers.dev" }
 
 [[env.production.d1_databases]]
 binding = "DB"
