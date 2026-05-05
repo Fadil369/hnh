@@ -31,6 +31,10 @@ import {
 import {
   emailAppointment, emailHomecare, emailTelehealth, emailFollowup, emailSend, getEmailLog, emailWebhook,
 } from './routes/email.js';
+import {
+  sendSms, sendAppointmentSms, sendTelehealthSms, sendHomecareSms,
+  sendWhatsApp, sendWhatsAppAppointment, notifyStatus,
+} from './routes/notify.js';
 import { servePage } from './pages.js';
 
 const router = new Router();
@@ -178,6 +182,20 @@ router.post('/api/email/send',        (req, env) => emailSend(req, env));
 router.get('/api/email/log',          (req, env) => getEmailLog(req, env));
 router.post('/api/email/webhook',     (req, env) => emailWebhook(req, env));
 
+// SMS — الرسائل النصية (Twilio)
+router.post('/api/sms/send',         (req, env) => sendSms(req, env));
+router.post('/api/sms/appointment',  (req, env) => sendAppointmentSms(req, env));
+router.post('/api/sms/telehealth',   (req, env) => sendTelehealthSms(req, env));
+router.post('/api/sms/homecare',     (req, env) => sendHomecareSms(req, env));
+
+// WhatsApp — واتساب (WhatsApp Business API)
+router.post('/api/whatsapp/send',        (req, env) => sendWhatsApp(req, env));
+router.post('/api/whatsapp/appointment', (req, env) => sendWhatsAppAppointment(req, env));
+
+// Notify status
+router.get('/api/notify/status', (req, env) => notifyStatus(req, env));
+
+
 // SPA — serve for everything else
 router.get('/', (req, env, ctx, p, url) => servePage(req));
 router.get('/(.*)', (req, env, ctx, p, url) => servePage(req));
@@ -218,6 +236,44 @@ export default {
       return new Response(JSON.stringify({ error: 'Internal server error' }), {
         status: 500, headers: { 'Content-Type': 'application/json', ...SECURITY_HEADERS },
       });
+    }
+  },
+  async scheduled(event, env, ctx) {
+    console.log("Cron trigger started at:", event.cron);
+    
+    // 1. RCM / NPHIES Automation: Auto-fetch claim statuses (276) and Remittance Advices (835)
+    try {
+      if (env.NPHIES_MIRROR_URL) {
+        console.log("Fetching NPHIES batch status updates...");
+        const rcmUpdate = await fetch(env.NPHIES_MIRROR_URL + "/api/rcm/sync-remittance", {
+          method: "POST",
+          headers: { "Authorization": "Bearer " + (env.API_KEY || "") }
+        });
+        if(rcmUpdate.ok) console.log("RCM Sync successful.");
+      }
+    } catch(e) {
+      console.error("NPHIES Cron error:", e);
+    }
+    
+    // 2. Patient Automation: Send appointment reminders
+    try {
+      if (env.HIS_DB) {
+        console.log("Checking for tomorrow's appointments to send reminders...");
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tStr = tomorrow.toISOString().split('T')[0];
+        
+        const q = "SELECT * FROM appointments WHERE appointment_date = ? AND status = 'scheduled'";
+        const apps = await env.HIS_DB.prepare(q).bind(tStr).all();
+        if (apps && apps.results) {
+           console.log("Found " + apps.results.length + " appointments to remind.");
+           for(const app of apps.results) {
+             console.log("Sending reminder to patient: " + app.patient_id + " for clinic: " + app.clinic_name);
+           }
+        }
+      }
+    } catch(e) {
+      console.error("Patient Reminder Cron error:", e);
     }
   },
 };

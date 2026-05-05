@@ -959,7 +959,7 @@ async function health(env) {
           (SELECT COUNT(*) FROM claims WHERE status = 'pending') as pending_claims,
           (SELECT COUNT(*) FROM givc_doctors WHERE givc_status = 'active') as givc_network_count,
           (SELECT COUNT(*) FROM telehealth_sessions WHERE date(created_at) = date('now')) as today_telehealth,
-          (SELECT COUNT(*) FROM homecare_requests WHERE date(created_at) = date('now')) as today_homecare`
+          (SELECT COUNT(*) FROM homecare_visits WHERE date(created_at) = date('now')) as today_homecare`
   ).first() : {};
   const oracleBase = env.ORACLE_BRIDGE_URL || "https://oracle-bridge.brainsait.org";
   const mirrorBase = env.NPHIES_MIRROR_URL || "https://nphies-mirror.brainsait-fadil.workers.dev";
@@ -1007,7 +1007,7 @@ async function health(env) {
   if (env.DB) {
     try {
       homecareStats = await env.DB.prepare(
-        `SELECT status, COUNT(*) as count FROM homecare_requests GROUP BY status`
+        `SELECT status, COUNT(*) as count FROM homecare_visits GROUP BY status`
       ).all();
     } catch {}
   }
@@ -10389,6 +10389,160 @@ router.get("/api/telehealth/sessions/([^/]+)/prescriptions", (req, env, ctx, p) 
 router.get("/api/telehealth/providers/([^/]+)/availability", (req, env, ctx, p) => getProviderAvailability(req, env, ctx, p));
 router.get("/api/telehealth/stats", (_, env) => getTelehealthStats(_, env));
 router.get("/api/telehealth/ice-servers", (req, env) => getIceConfig(req, env));
+// ── Notify Routes: SMS (Twilio) + WhatsApp Business API ─────────────────────
+// src/routes/notify.js — HNH Portal v9.2.0
+var TWILIO_API2 = "https://api.twilio.com/2010-04-01";
+var WHATSAPP_GRAPH_API = "https://graph.facebook.com/v20.0";
+
+function normalizeSaudiPhone(phone) {
+  const digits = String(phone || "").replace(/\D/g, "");
+  if (digits.startsWith("966")) return "+" + digits;
+  if (digits.startsWith("05") || digits.startsWith("5")) return "+966" + digits.replace(/^0/, "");
+  return "+" + digits;
+}
+
+function twilioAuth2(env) {
+  const sid = env.TWILIO_ACCOUNT_SID || "";
+  const token = env.TWILIO_AUTH_TOKEN || "";
+  if (!sid || !token) return null;
+  return "Basic " + btoa(sid + ":" + token);
+}
+
+async function sendTwilioSms2(env, to, body2) {
+  const auth = twilioAuth2(env);
+  if (!auth) return { success: false, error: "Twilio not configured", code: "NOT_CONFIGURED" };
+  const from = env.TWILIO_PHONE_NUMBER || "";
+  if (!from) return { success: false, error: "TWILIO_PHONE_NUMBER not set", code: "NO_SENDER" };
+  const params = new URLSearchParams({ To: normalizeSaudiPhone(to), From: from, Body: body2 });
+  try {
+    const res = await fetch(`${TWILIO_API2}/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, {
+      method: "POST",
+      headers: { "Authorization": auth, "Content-Type": "application/x-www-form-urlencoded" },
+      body: params.toString(),
+      signal: AbortSignal.timeout(10000),
+    });
+    const data = await res.json();
+    if (res.ok && data.sid) return { success: true, sid: data.sid, status: data.status, to: data.to };
+    return { success: false, error: data.message || "Twilio error", code: data.code };
+  } catch (e) {
+    return { success: false, error: e.message || "Network error", code: "NETWORK_ERROR" };
+  }
+}
+
+async function sendWhatsAppText2(env, to, text) {
+  const token = env.WHATSAPP_TOKEN || "";
+  const phoneId = env.WHATSAPP_PHONE_ID || "";
+  if (!token || !phoneId) return { success: false, error: "WhatsApp not configured", code: "NOT_CONFIGURED" };
+  const payload = {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to: normalizeSaudiPhone(to),
+    type: "text",
+    text: { preview_url: false, body: text },
+  };
+  try {
+    const res = await fetch(`${WHATSAPP_GRAPH_API}/${phoneId}/messages`, {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(10000),
+    });
+    const data = await res.json();
+    if (res.ok && data.messages?.[0]?.id) return { success: true, message_id: data.messages[0].id, to: normalizeSaudiPhone(to) };
+    return { success: false, error: data.error?.message || "WhatsApp error", code: data.error?.code };
+  } catch (e) {
+    return { success: false, error: e.message || "Network error", code: "NETWORK_ERROR" };
+  }
+}
+
+function apptSmsAr(p) { return `مرحباً ${p.name}،\nتذكير بموعدك في مستشفيات الحياة الوطنية\nالتاريخ: ${p.date}\nالوقت: ${p.time}\nالعيادة: ${p.clinic}\nللاستفسار: 920000094`; }
+function apptSmsEn(p) { return `Hello ${p.name},\nReminder: Your appointment at Hayat National Hospital\nDate: ${p.date} | Time: ${p.time}\nClinic: ${p.clinic}\nInquiries: 920000094`; }
+function telehealthSmsAr2(p) { return `مرحباً ${p.name}،\nموعد استشارتك الافتراضية\nالتاريخ: ${p.date} | الوقت: ${p.time}\nرابط الجلسة: ${p.url}\nمستشفيات الحياة الوطنية`; }
+function homecareSmsAr2(p) { return `مرحباً ${p.name}،\nتم تأكيد زيارة الرعاية المنزلية\nالتاريخ: ${p.date} | الوقت: ${p.time}\nالعنوان: ${p.address}\nمستشفيات الحياة الوطنية`; }
+
+async function notifySendSms(request, env) {
+  try {
+    const { to, message } = await request.json();
+    if (!to || !message) return json2({ success: false, error: "to and message are required" }, 400);
+    const result = await sendTwilioSms2(env, to, message);
+    return json2(result, result.success ? 200 : 502);
+  } catch (e) { return json2({ success: false, error: e.message }, 500); }
+}
+__name(notifySendSms, "notifySendSms");
+
+async function notifyAppointmentSms(request, env) {
+  try {
+    const body2 = await request.json();
+    const { to, patientName, date, time, clinic } = body2;
+    if (!to || !patientName || !date) return json2({ success: false, error: "to, patientName, date required" }, 400);
+    const lang = body2.lang || "ar";
+    const msg = lang === "en" ? apptSmsEn({ name: patientName, date, time: time || "10:00", clinic: clinic || "Clinic" }) : apptSmsAr({ name: patientName, date, time: time || "10:00", clinic: clinic || "العيادة" });
+    const result = await sendTwilioSms2(env, to, msg);
+    return json2({ ...result, template: "appointment", lang }, result.success ? 200 : 502);
+  } catch (e) { return json2({ success: false, error: e.message }, 500); }
+}
+__name(notifyAppointmentSms, "notifyAppointmentSms");
+
+async function notifyTelehealthSms(request, env) {
+  try {
+    const body2 = await request.json();
+    const { to, patientName, date, time, joinUrl } = body2;
+    if (!to || !patientName || !date) return json2({ success: false, error: "to, patientName, date required" }, 400);
+    const msg = telehealthSmsAr2({ name: patientName, date, time: time || "10:00", url: joinUrl || "https://hnh.brainsait.org" });
+    const result = await sendTwilioSms2(env, to, msg);
+    return json2({ ...result, template: "telehealth" }, result.success ? 200 : 502);
+  } catch (e) { return json2({ success: false, error: e.message }, 500); }
+}
+__name(notifyTelehealthSms, "notifyTelehealthSms");
+
+async function notifyHomecareSms(request, env) {
+  try {
+    const body2 = await request.json();
+    const { to, patientName, date, time, address } = body2;
+    if (!to || !patientName || !date || !address) return json2({ success: false, error: "to, patientName, date, address required" }, 400);
+    const msg = homecareSmsAr2({ name: patientName, date, time: time || "10:00", address });
+    const result = await sendTwilioSms2(env, to, msg);
+    return json2({ ...result, template: "homecare" }, result.success ? 200 : 502);
+  } catch (e) { return json2({ success: false, error: e.message }, 500); }
+}
+__name(notifyHomecareSms, "notifyHomecareSms");
+
+async function notifySendWhatsApp(request, env) {
+  try {
+    const { to, message } = await request.json();
+    if (!to || !message) return json2({ success: false, error: "to and message are required" }, 400);
+    const result = await sendWhatsAppText2(env, to, message);
+    return json2(result, result.success ? 200 : 502);
+  } catch (e) { return json2({ success: false, error: e.message }, 500); }
+}
+__name(notifySendWhatsApp, "notifySendWhatsApp");
+
+async function notifyWhatsAppAppointment(request, env) {
+  try {
+    const body2 = await request.json();
+    const { to, patientName, date, time, clinic } = body2;
+    if (!to || !patientName || !date) return json2({ success: false, error: "to, patientName, date required" }, 400);
+    const lang = body2.lang || "ar";
+    const msg = lang === "en" ? apptSmsEn({ name: patientName, date, time: time || "10:00", clinic: clinic || "Clinic" }) : apptSmsAr({ name: patientName, date, time: time || "10:00", clinic: clinic || "العيادة" });
+    const result = await sendWhatsAppText2(env, to, msg);
+    return json2({ ...result, template: "appointment", channel: "whatsapp", lang }, result.success ? 200 : 502);
+  } catch (e) { return json2({ success: false, error: e.message }, 500); }
+}
+__name(notifyWhatsAppAppointment, "notifyWhatsAppAppointment");
+
+async function notifyStatus2(request, env) {
+  return json2({
+    success: true,
+    sms: env.TWILIO_ACCOUNT_SID ? "configured" : "not_configured",
+    whatsapp: env.WHATSAPP_TOKEN ? "configured" : "not_configured",
+    email: (env.SENDGRID_API_KEY || env.MAILLINC_URL) ? "configured" : "not_configured",
+    channels: ["sms", "whatsapp", "email"],
+  });
+}
+__name(notifyStatus2, "notifyStatus2");
+
+// ── End notify routes ────────────────────────────────────────────────────────
+
 router.post("/api/email/appointment", (req, env) => emailAppointment(req, env));
 router.post("/api/email/homecare", (req, env) => emailHomecare(req, env));
 router.post("/api/email/telehealth", (req, env) => emailTelehealth(req, env));
@@ -10396,6 +10550,16 @@ router.post("/api/email/followup", (req, env) => emailFollowup(req, env));
 router.post("/api/email/send", (req, env) => emailSend(req, env));
 router.get("/api/email/log", (req, env) => getEmailLog(req, env));
 router.post("/api/email/webhook", (req, env) => emailWebhook(req, env));
+// SMS — رسائل نصية
+router.post("/api/sms/send", (req, env) => notifySendSms(req, env));
+router.post("/api/sms/appointment", (req, env) => notifyAppointmentSms(req, env));
+router.post("/api/sms/telehealth", (req, env) => notifyTelehealthSms(req, env));
+router.post("/api/sms/homecare", (req, env) => notifyHomecareSms(req, env));
+// WhatsApp — واتساب
+router.post("/api/whatsapp/send", (req, env) => notifySendWhatsApp(req, env));
+router.post("/api/whatsapp/appointment", (req, env) => notifyWhatsAppAppointment(req, env));
+// Notify status
+router.get("/api/notify/status", (req, env) => notifyStatus2(req, env));
 router.get("/", (req, env, ctx, p, url) => servePage(req));
 router.get("/(.*)", (req, env, ctx, p, url) => servePage(req));
 var index_default = {
