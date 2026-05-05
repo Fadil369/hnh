@@ -27,6 +27,6 @@ jobs:
       - name: Smoke test
         run: |
           sleep 8
-          VERSION=$(curl -sf --max-time 15 https://hnh.brainsait.org/health | python3 -c "import sys,json; print(json.load(sys.stdin).get('version','?'))")
+          VERSION=$(curl -sf --max-time 15 https://hnh.brainsait.org/api/health | python3 -c "import sys,json; print(json.load(sys.stdin).get('version','?'))" || echo "?")
           echo "Deployed version: $VERSION"
           if [ "$VERSION" = "?" ]; then echo "Health check failed"; exit 1; fi

@@ -10,7 +10,7 @@ interface Integration {
   status: string
   url?: string
   icon: string
-  category: 'core' | 'ai' | 'communication' | 'digital' | 'government'
+  category: 'core' | 'ai' | 'communication' | 'digital' | 'government' | 'developer'
 }
 
 interface HealthData {
@@ -68,6 +68,8 @@ export default function IntegrationsPage() {
     { name: 'DeepSeek', nameAr: 'ديب سيك', description: 'AI language model configuration', descriptionAr: 'تهيئة نموذج اللغة الذكي', status: health?.integrations?.deepseek || 'unknown', icon: '🧠', category: 'ai' },
     { name: 'Twilio', nameAr: 'تويليو', description: 'SMS and voice communication', descriptionAr: 'رسائل واتصالات صوتية', status: health?.integrations?.twilio || 'unknown', icon: '📱', category: 'communication' },
     { name: 'WhatsApp', nameAr: 'واتساب', description: 'Business messaging channel', descriptionAr: 'قناة المراسلة للأعمال', status: health?.integrations?.whatsapp || 'unknown', icon: '💬', category: 'communication' },
+    { name: 'GitHub REST API', nameAr: 'واجهة GitHub', description: 'Activity, Models AI inference, Notifications & Feeds', descriptionAr: 'نشاط المنصة، نماذج الذكاء الاصطناعي، الإشعارات والتغذية', status: health?.integrations?.github || 'unknown', url: 'https://github.com/Fadil369/hnh', icon: '🐙', category: 'developer' },
+    { name: 'GitHub Models', nameAr: 'نماذج GitHub', description: 'GPT-4o, Llama, Mistral via GitHub Marketplace', descriptionAr: 'نماذج AI المتاحة عبر GitHub Marketplace', status: health?.integrations?.github || 'unknown', icon: '🤖', category: 'ai' },
   ]
 
   const categories = [
@@ -77,6 +79,7 @@ export default function IntegrationsPage() {
     { id: 'ai', name: 'AI services', nameAr: 'خدمات الذكاء', icon: '🤖' },
     { id: 'digital', name: 'Digital health', nameAr: 'الصحة الرقمية', icon: '🏥' },
     { id: 'communication', name: 'Communication', nameAr: 'الاتصالات', icon: '📡' },
+    { id: 'developer', name: 'Developer', nameAr: 'المطورون', icon: '🐙' },
   ]
 
   const filteredIntegrations = useMemo(

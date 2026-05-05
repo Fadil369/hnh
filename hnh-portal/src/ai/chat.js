@@ -157,7 +157,32 @@ export async function handleChat(req, env) {
           aiResponse = getFallbackResponse(message, language);
         }
       } else {
-        aiResponse = getFallbackResponse(message, language);
+        // GitHub Models as additional AI fallback
+        if (env.GITHUB_TOKEN) {
+          try {
+            const ghRes = await fetch('https://models.inference.ai.azure.com/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${env.GITHUB_TOKEN}`,
+              },
+              body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                messages,
+                max_tokens: CONFIG.AI_MAX_TOKENS,
+                temperature: CONFIG.AI_TEMPERATURE,
+              }),
+              signal: AbortSignal.timeout(20000),
+            });
+            const ghData = await ghRes.json();
+            aiResponse = ghData.choices?.[0]?.message?.content || getFallbackResponse(message, language);
+          } catch (e4) {
+            console.error('GitHub Models fallback error:', e4);
+            aiResponse = getFallbackResponse(message, language);
+          }
+        } else {
+          aiResponse = getFallbackResponse(message, language);
+        }
       }
     }
   }

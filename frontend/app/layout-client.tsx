@@ -26,6 +26,7 @@ const NAV_ITEMS = [
   { href: '/', label: 'الرئيسية', labelEn: 'Home', icon: '🏠' },
   { href: '/portal', label: 'المنافذ', labelEn: 'Portals', icon: '🌐' },
   { href: '/integrations', label: 'التكامل', labelEn: 'Integrations', icon: '🔗' },
+  { href: '/github', label: 'GitHub', labelEn: 'GitHub', icon: '🐙' },
   { href: '/workflows', label: 'سير العمل', labelEn: 'Workflows', icon: '⚙️' },
   { href: '/patients', label: 'المرضى', labelEn: 'Patients', icon: '👤' },
   { href: '/appointments', label: 'المواعيد', labelEn: 'Appointments', icon: '📅' },
@@ -302,6 +303,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
               <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
                 <a href="/portal" className="status-pill hover:translate-y-[-1px]" style={{ color: 'var(--primary)' }}>🌐 Hub</a>
                 <a href="/integrations" className="status-pill hover:translate-y-[-1px]" style={{ color: 'var(--primary)' }}>🔗 Integrations</a>
+                <a href="/github" className="status-pill hover:translate-y-[-1px]" style={{ color: 'var(--primary)' }}>🐙 GitHub</a>
                 <a href="/workflows" className="status-pill hover:translate-y-[-1px]" style={{ color: 'var(--primary)' }}>⚙️ Workflows</a>
                 <a href="https://bsma.elfadil.com" target="_blank" rel="noopener noreferrer" className="status-pill hover:translate-y-[-1px]" style={{ color: 'var(--primary)' }}>🤖 Basma</a>
                 <a href="https://sbs.elfadil.com" target="_blank" rel="noopener noreferrer" className="status-pill hover:translate-y-[-1px]" style={{ color: 'var(--primary)' }}>💰 SBS</a>
@@ -313,7 +315,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
 
             <div className="flex flex-col gap-2 text-sm md:flex-row md:items-center md:justify-between">
               <p className="text-muted">© 2026 HNH BrainSAIT Healthcare OS · Powered by BrainSAIT</p>
-              <p className="text-xs text-muted">Basma AI · GIVC · NPHIES · Oracle · SBS · ClaimLinc · Live Control Center v9.2</p>
+              <p className="text-xs text-muted">Basma AI · GIVC · NPHIES · Oracle · SBS · ClaimLinc · GitHub Models · Live Control Center v9.3</p>
             </div>
           </div>
         </div>

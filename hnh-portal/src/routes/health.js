@@ -63,7 +63,14 @@ async function checkAcademy(env) {
   return await checkIntegration('https://academy.hayathospitals.com/health', 3000);
 }
 
-// Configuration-only checks (no live ping needed)
+async function checkGitHub(env) {
+  if (env.GITHUB_TOKEN) {
+    return await checkIntegration('https://api.github.com/zen', 3000, {
+      headers: { 'Authorization': `Bearer ${env.GITHUB_TOKEN}`, 'User-Agent': 'HNH-BrainSAIT-OS' }
+    });
+  }
+  return 'not_configured';
+}
 async function checkTwilio(env) {
   return env.TWILIO_ACCOUNT_SID ? 'configured' : 'not_configured';
 }
@@ -100,7 +107,7 @@ export async function health(env) {
   // Check all services in parallel
   const [
     oracleStatus, nphiesStatus, claimlincStatus, basmaStatus, sbsStatus, givcStatus,
-    homecareStatus, telehealthStatus, maillincStatus, academyStatus,
+    homecareStatus, telehealthStatus, maillincStatus, academyStatus, githubStatus,
   ] = await Promise.allSettled([
     checkOracle(env),
     checkNPHIESMirror(env),
@@ -112,6 +119,7 @@ export async function health(env) {
     checkTelehealth(env),
     checkMaillinc(env),
     checkAcademy(env),
+    checkGitHub(env),
   ]);
 
   // Fetch NPHIES mirror stats
@@ -175,6 +183,8 @@ export async function health(env) {
       deepseek: checkDeepSeek(env),
       twilio: checkTwilio(env),
       whatsapp: checkWhatsApp(env),
+      // Developer platform
+      github: githubStatus.status === 'fulfilled' ? githubStatus.value : 'offline',
     },
     oracle_tunnel: 'Oracle Cloud@Riyadh',
     nphies_mirror: nphiesMirror,
@@ -194,7 +204,8 @@ export async function health(env) {
       sms: 'SMS Notifications (Twilio)',
       whatsapp: 'WhatsApp Business Notifications',
       voice: 'ElevenLabs Multilingual TTS',
-      ai: 'DeepSeek + Llama AI Models',
+      ai: 'DeepSeek + Llama + GitHub Models AI',
+      github: 'GitHub REST API — Activity, Models, Notifications',
     },
   };
 }
