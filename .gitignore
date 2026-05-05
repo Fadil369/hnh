@@ -5,3 +5,5 @@ out/
 *.tsbuildinfo
 .secrets
 integrations/nphies/__pycache__/
+opencode.json
+basma-portal/.wrangler/

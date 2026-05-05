@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#1193d4",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101c22",
+            "text-light": "#111618",
+            "text-dark": "#ffffff",
+            "text-subtle-light": "#617c89",
+            "text-subtle-dark": "#a0b4bc",
+            "surface-light": "#ffffff",
+            "surface-dark": "#19272e",
+            "border-light": "#f0f3f4",
+            "border-dark": "#2d3f48"
+          },
+          fontFamily: {
+            "display": ["Inter"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col justify-between overflow-x-hidden">
+<div class="flex-grow">
+<header class="sticky top-0 z-10 flex items-center justify-between border-b border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark p-4">
+<div class="w-12"></div>
+<h1 class="flex-1 text-center text-lg font-bold">Dashboard</h1>
+<div class="flex w-12 items-center justify-end">
+<button class="rounded-full p-2 text-text-subtle-light dark:text-text-subtle-dark hover:bg-primary/10">
+<span class="material-symbols-outlined">
+              notifications
+            </span>
+</button>
+</div>
+</header>
+<main class="p-4 space-y-6">
+<section>
+<h2 class="text-lg font-bold mb-4">Today's Appointments</h2>
+<div class="space-y-2">
+<div class="flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-3 rounded-lg">
+<img alt="Sarah Miller" class="h-14 w-14 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBkgwnHuB7HRjE3thE5uEUhmDyYOBadLrto7iyniH-ui1b7D2XAFgCtYfZG2CmEJ4-qtTPc-RY5nMZEVXfzjT8Ka_rDpTcAsHOr8HkZmf8R0LAcJiZX7JJDYCEinpwk4ur12M18HLdQgmsNuY7Q8mpYxDBFzllqs0QJwVBocx1y9thyGLa4xyVuic5e9UYMCX_bypX-v7uymDB9iuAG_6bgzTaXHD7ej9V-fGZcG99mS5lF1UUB-2zj9VXKnSLspebhsqI-sMQHAk"/>
+<div class="flex-1">
+<p class="font-medium">Patient: Sarah Miller</p>
+<p class="text-sm text-text-subtle-light dark:text-text-subtle-dark">10:00 AM - 10:30 AM</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-3 rounded-lg">
+<img alt="David Lee" class="h-14 w-14 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvSfnRgxo-_xQ_gdcp8xv2OJ6Pv8WG8AO2C9PKfcbrv6vKulobQ0mlZ6yNU634W3CUqvCNecFb8qaryGpDoXUgrMXlVIm21aRl6DW0wWLBTzVkmOzoFZHARUzGubB23TPv4e9C3Heiba2D5DPnLFYV00drhjqM2sSKociwQBxCi0JxniM0IZPFvx2fU5nUx9g8HdC91_JCVebxGJ8kjBmiNqJ0ZwZrVudRs3zQ_h7QEn--t85hlBQqXELno2d5EaLTE9cUXWpakso"/>
+<div class="flex-1">
+<p class="font-medium">Patient: David Lee</p>
+<p class="text-sm text-text-subtle-light dark:text-text-subtle-dark">11:00 AM - 11:30 AM</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-3 rounded-lg">
+<img alt="Emily Chen" class="h-14 w-14 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHpDSLh4Cbg3pAFY4pPyXgn-0n1LIJNpv6nPE4KNZcrphpO02c0c8EUu6Soc-rw9h5BIkhv8kUDqboUH2tHllKTThql2dP-uNtCR_pN0dmmKTPhGmCgWb4zSiWyk5CdRwmY1Md_PReo5e5AJedAu151ah3icBFkV4a1lvz0Pd2k3e8jUyFsk64NCw18CL2rZsKDVnbCY84AzZDUGfVDjNhe7DvlJOe6htsJQWm84jt4HK94wgaQL8iokoJiJ7M6qq_7KzvOvuWO7A"/>
+<div class="flex-1">
+<p class="font-medium">Patient: Emily Chen</p>
+<p class="text-sm text-text-subtle-light dark:text-text-subtle-dark">12:00 PM - 12:30 PM</p>
+</div>
+</div>
+</div>
+</section>
+<section>
+<h2 class="text-lg font-bold mb-4">Patient Summaries</h2>
+<div class="space-y-4">
+<div class="flex items-stretch gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-lg">
+<div class="flex flex-[2_2_0px] flex-col justify-between">
+<div>
+<p class="text-sm text-text-subtle-light dark:text-text-subtle-dark">Recent Visit</p>
+<p class="text-base font-bold">Sarah Miller</p>
+<p class="text-sm text-text-subtle-light dark:text-text-subtle-dark">Hypertension, Follow-up</p>
+</div>
+<button class="mt-4 flex h-9 w-fit items-center justify-center rounded-lg bg-primary/10 px-4 text-sm font-medium text-primary hover:bg-primary/20">View</button>
+</div>
+<div class="w-full flex-1 aspect-video bg-cover bg-center rounded-lg" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCwOG_G97lr5z0URy-4coqaWUSji78sB7ln3QbkOVDrwDRpAAL-B87Y-p3QWFtnzmKr_Htkg11EhxEGEqxnpuWxAwh6JObXqKjTyUCxqUa48peYV78zcbfdZAAes-IdTEge-w33szYXAe8wb0A6k8iswfNU6bLsslOSroEEv6jVQ6bHM9-iwoLpQM8hKE2WaAuBAD5jdiKjYy9pHSbfx32dyYLCQATewjbxVCPZWlwoZhSTfQgCs3ZKEeG47IwnwuXvkGWiO9oRcfU");'></div>
+</div>
+<div class="flex items-stretch gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-lg">
+<div class="flex flex-[2_2_0px] flex-col justify-between">
+<div>
+<p class="text-sm text-text-subtle-light dark:text-text-subtle-dark">New Patient</p>
+<p class="text-base font-bold">David Lee</p>
+<p class="text-sm text-text-subtle-light dark:text-text-subtle-dark">Initial Consultation</p>
+</div>
+<button class="mt-4 flex h-9 w-fit items-center justify-center rounded-lg bg-primary/10 px-4 text-sm font-medium text-primary hover:bg-primary/20">View</button>
+</div>
+<div class="w-full flex-1 aspect-video bg-cover bg-center rounded-lg" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB12sPra4lDrcTTLFaqwC4x7no1szxm5qUcR0R6VrQXevrqHL_a4YcxE02N3xICw3NSIEPQSvYvqk7XBOMgEXOZLzKOi5x0EXIUGitMBB_ooPzJOPjsO9JSwJtoA4a7k24y5pTnGVLmVkWgdKSi4CGKrM_Nwf4jR8-O01EQ2QYlVVCEeENnRMXkoTwMfi-CtyJ8f_SWMN3BZ4widybVvbYIFRXMcsFbSovyQeWuMCy3NqnVvM-yjp0jQKhO1fvDA6rIl3s591lCT0Q");'></div>
+</div>
+<div class="flex items-stretch gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-lg">
+<div class="flex flex-[2_2_0px] flex-col justify-between">
+<div>
+<p class="text-sm text-text-subtle-light dark:text-text-subtle-dark">Follow-up</p>
+<p class="text-base font-bold">Emily Chen</p>
+<p class="text-sm text-text-subtle-light dark:text-text-subtle-dark">Diabetes Management</p>
+</div>
+<button class="mt-4 flex h-9 w-fit items-center justify-center rounded-lg bg-primary/10 px-4 text-sm font-medium text-primary hover:bg-primary/20">View</button>
+</div>
+<div class="w-full flex-1 aspect-video bg-cover bg-center rounded-lg" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCRScoM4UKeGDgKRMspys7-oqdg_WAL-KQ-obtbg0nKzmpCtRCv-1Nlz04QeMKtDc4n3tYE6BlwCXC26PbEM6r9E0pQWlL7YIK3fmoS60nvtI931EAxLQQTwOe23GXgDjkW4jqRsAQuTA-PC5Vt6HoZXS1B5NKSjP_x6Qx5DkA0G84sdG9JyFyYdwzbdsDOPsJMdSdEMLimyeU0Dn20La452HQZ_T4u9OAheGtgHVIA9V0YLQCqkvQWdICVIaLPHjnjzKcc3V6ntBU");'></div>
+</div>
+</div>
+</section>
+<section>
+<h2 class="text-lg font-bold mb-4">Quick Actions</h2>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex h-12 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-bold text-white">New Appointment</button>
+<button class="flex h-12 w-full items-center justify-center rounded-lg bg-primary/10 px-4 text-sm font-bold text-primary hover:bg-primary/20">Search Patients</button>
+</div>
+</section>
+</main>
+</div>
+<footer class="sticky bottom-0 z-10 border-t border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark pb-3 pt-2">
+<nav class="flex justify-around">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-xs font-medium">Dashboard</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-text-subtle-light dark:text-text-subtle-dark" href="#">
+<span class="material-symbols-outlined">groups</span>
+<p class="text-xs font-medium">Patients</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-text-subtle-light dark:text-text-subtle-dark" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<p class="text-xs font-medium">Schedule</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-text-subtle-light dark:text-text-subtle-dark" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-xs font-medium">Settings</p>
+</a>
+</nav>
+</footer>
+</div>
+
+</body></html>

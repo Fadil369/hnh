@@ -53,7 +53,7 @@ export async function handleVoiceSpeak(request, env) {
     if (!apiKey) {
       return new Response(JSON.stringify({ error: 'Voice API not configured' }), {
         status: 503,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://hnh.brainsait.org' },
       });
     }
 
@@ -65,7 +65,7 @@ export async function handleVoiceSpeak(request, env) {
     if (!text) {
       return new Response(JSON.stringify({ error: 'Text is required' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://hnh.brainsait.org' },
       });
     }
 
@@ -99,7 +99,7 @@ export async function handleVoiceSpeak(request, env) {
       const errText = await ttsRes.text().catch(() => 'Unknown');
       return new Response(JSON.stringify({ error: `TTS failed: ${ttsRes.status}`, detail: errText }), {
         status: 502,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://hnh.brainsait.org' },
       });
     }
 
@@ -109,7 +109,7 @@ export async function handleVoiceSpeak(request, env) {
       headers: {
         'Content-Type': 'audio/mpeg',
         'Cache-Control': 'public, max-age=600',
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': 'https://hnh.brainsait.org',
         'Access-Control-Expose-Headers': 'X-Audio-Length, X-Voice',
         'X-Audio-Length': audioBlob.size.toString(),
         'X-Voice': voiceId,
@@ -119,7 +119,7 @@ export async function handleVoiceSpeak(request, env) {
   } catch (e) {
     return new Response(JSON.stringify({ error: e.message }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://hnh.brainsait.org' },
     });
   }
 }
@@ -138,7 +138,7 @@ export async function handleVoiceChat(request, env) {
     if (!text) {
       return new Response(JSON.stringify({ error: 'Message is required' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://hnh.brainsait.org' },
       });
     }
 
@@ -222,13 +222,13 @@ export async function handleVoiceChat(request, env) {
     }), {
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': 'https://hnh.brainsait.org',
       },
     });
   } catch (e) {
     return new Response(JSON.stringify({ error: e.message }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://hnh.brainsait.org' },
     });
   }
 }
@@ -248,7 +248,7 @@ export async function handleVoiceVoices() {
     headers: {
       'Content-Type': 'application/json',
       'Cache-Control': 'public, max-age=3600',
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': 'https://hnh.brainsait.org',
     },
   });
 }
@@ -259,7 +259,7 @@ export async function handleVoiceVoices() {
 export function handleVoiceOptions() {
   return new Response(null, {
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': 'https://hnh.brainsait.org',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, xi-api-key',
       'Access-Control-Max-Age': '86400',

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#1193d4",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101c22",
+            },
+            fontFamily: {
+              display: ["Inter"],
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+          },
+        },
+      };
+    </script>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col font-display justify-between group/design-root overflow-x-hidden">
+<div class="flex-grow">
+<header class="flex items-center justify-between p-4 bg-background-light dark:bg-background-dark border-b border-background-light dark:border-background-dark/20 sticky top-0 z-10">
+<div class="w-10"></div>
+<h1 class="text-lg font-bold text-slate-800 dark:text-white flex-1 text-center">Appointments</h1>
+<button class="flex items-center justify-center h-10 w-10 text-slate-800 dark:text-white hover:bg-primary/10 rounded-full">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path>
+</svg>
+</button>
+</header>
+<main class="p-4">
+<div class="bg-white dark:bg-background-dark/50 rounded-lg p-4 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<button class="flex items-center justify-center h-10 w-10 text-slate-500 dark:text-slate-400 hover:bg-primary/10 rounded-full">
+<svg fill="currentColor" height="18" viewBox="0 0 256 256" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"></path>
+</svg>
+</button>
+<h3 class="text-base font-bold text-slate-800 dark:text-white">October 2024</h3>
+<button class="flex items-center justify-center h-10 w-10 text-slate-500 dark:text-slate-400 hover:bg-primary/10 rounded-full">
+<svg fill="currentColor" height="18" viewBox="0 0 256 256" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path>
+</svg>
+</button>
+</div>
+<div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-500 dark:text-slate-400">
+<div class="h-10 flex items-center justify-center">S</div>
+<div class="h-10 flex items-center justify-center">M</div>
+<div class="h-10 flex items-center justify-center">T</div>
+<div class="h-10 flex items-center justify-center">W</div>
+<div class="h-10 flex items-center justify-center">T</div>
+<div class="h-10 flex items-center justify-center">F</div>
+<div class="h-10 flex items-center justify-center">S</div>
+</div>
+<div class="grid grid-cols-7 gap-1 mt-2 text-sm">
+<div class="col-start-4"></div>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">1</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">2</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">3</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">4</button>
+<button class="h-10 flex items-center justify-center bg-primary text-white rounded-full font-semibold">5</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">6</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">7</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">8</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">9</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">10</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">11</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">12</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">13</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">14</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">15</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">16</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">17</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">18</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">19</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">20</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">21</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">22</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">23</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">24</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">25</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">26</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">27</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">28</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">29</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">30</button>
+<button class="h-10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-primary/10 rounded-full">31</button>
+</div>
+</div>
+<h2 class="text-xl font-bold text-slate-800 dark:text-white px-0 pb-3 pt-6">Today</h2>
+<div class="space-y-3">
+<div class="flex items-center gap-4 bg-white dark:bg-background-dark/50 p-3 rounded-lg shadow-sm">
+<img alt="Patient photo" class="h-14 w-14 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDThz8Upo7Py6c4Yt930cEbl-pSR3CzIEbfQmRuzyhIDMKHw-tBdpfvQrXYRzs1R9TPoiFPdz1hvMrOvdQhGfFEHOUWcLE0pDm_IhdMru4A012FtyxSlDcrwgzlJ1b_-38ZUfU2aA1GtfZF2mqDqj0JpnebB4dA2F0p5JSh-4HvEqCvXyTHEmbbs_zrOHWPdX0XifEChirKSa2UlG8Rf7ck1wZBZJPQ_Ph_tceQ_blOv_QbMNOGMr5JCH48dQJQ9WqpOfyRuJYGyBQ"/>
+<div class="flex-grow">
+<p class="font-medium text-slate-800 dark:text-white">Patient Consultation</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">10:00 AM - 11:00 AM</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white dark:bg-background-dark/50 p-3 rounded-lg shadow-sm">
+<img alt="Patient photo" class="h-14 w-14 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDl7SkVX7WWgJsaPfhlHF726mQ0pUaWD2u915dVEqc-o18N5rpIKFOWkYAYQGm6kZwHUxrCa7PibUIA9RYz_CKJiJH-U8zDm0ngTHsPa96U5xu7D02Ej8e8s07s6RHjgoPayQX2GsCsZEtH14vROvZbTxKhzbZ4i2UlBwV3fxbwQdJXg_skp8khNV8c7Hy5ROsu_DgWYIFMnQqHM8ilsKeCUJKyk1yKRfsNB5qZ5u-OB9KZdNeFUko7coEjztaOaT4SAF9xtHFKaKA"/>
+<div class="flex-grow">
+<p class="font-medium text-slate-800 dark:text-white">Follow-up Appointment</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">11:30 AM - 12:30 PM</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white dark:bg-background-dark/50 p-3 rounded-lg shadow-sm">
+<img alt="Patient photo" class="h-14 w-14 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc2s97ASp1RJOrhXhDM6vLqbTwPjl9cI95hpKIdGdhptzg8cvDu8JzeIH3imMHGUdNM0GjcU-jROfBanGBn2dGXA1p-PXdIpl6AMKRGL2mytD9NKzZLp7GpjhbVN8WzQluqfWQcgwExM3XQvyiEHIlGUa6PchQgrOg1hALI9UDQSnjFHDU1Zix-9SQK7FQCJRxLON-mOge_GTq2GMv8nInB-u0sct5EFCMaZIBxsnc8GyBge9V2-MNsfqcZE2v3O1N-Hksxb2LIzY"/>
+<div class="flex-grow">
+<p class="font-medium text-slate-800 dark:text-white">New Patient Intake</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">2:00 PM - 3:00 PM</p>
+</div>
+</div>
+</div>
+</main>
+</div>
+<footer class="sticky bottom-0 bg-white dark:bg-background-dark/80 backdrop-blur-sm border-t border-slate-200 dark:border-slate-800">
+<nav class="flex justify-around items-center h-16">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 w-full h-full hover:bg-primary/10" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M218.83,103.77l-80-75.48a1.14,1.14,0,0,1-.11-.11,16,16,0,0,0-21.53,0l-.11.11L37.17,103.77A16,16,0,0,0,32,115.55V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V160h32v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V115.55A16,16,0,0,0,218.83,103.77ZM208,208H160V160a16,16,0,0,0-16-16H112a16,16,0,0,0-16,16v48H48V115.55l.11-.1L128,40l79.9,75.43.11.1Z"></path>
+</svg>
+<span class="text-xs font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary w-full h-full bg-primary/10" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM112,184a8,8,0,0,1-16,0V132.94l-4.42,2.22a8,8,0,0,1-7.16-14.32l16-8A8,8,0,0,1,112,120Zm56-8a8,8,0,0,1,0,16H136a8,8,0,0,1-6.4-12.8l28.78-38.37A8,8,0,1,0,145.07,132a8,8,0,1,1-13.85-8A24,24,0,0,1,176,136a23.76,23.76,0,0,1-4.84,14.45L152,176ZM48,80V48H72v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80Z"></path>
+</svg>
+<span class="text-xs font-medium">Appointments</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 w-full h-full hover:bg-primary/10" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z"></path>
+</svg>
+<span class="text-xs font-medium">Patients</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 w-full h-full hover:bg-primary/10" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"></path>
+</svg>
+<span class="text-xs font-medium">Settings</span>
+</a>
+</nav>
+</footer>
+</div>
+
+</body></html>
