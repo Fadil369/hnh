@@ -43,7 +43,8 @@ export async function health(env) {
           (SELECT COUNT(*) FROM appointments WHERE date(appointment_date) = date('now')) as today_appointments,
           (SELECT COUNT(*) FROM providers) as total_providers,
           (SELECT COUNT(*) FROM claims) as total_claims,
-          (SELECT COUNT(*) FROM claims WHERE status = 'pending') as pending_claims`
+          (SELECT COUNT(*) FROM claims WHERE status = 'pending') as pending_claims,
+          (SELECT COUNT(*) FROM givc_doctors WHERE givc_status = 'active') as givc_network_count`
       ).first()
     : {};
 
@@ -87,7 +88,9 @@ export async function health(env) {
       claimlinc: claimlincStatus.status === 'fulfilled' ? claimlincStatus.value : 'offline',
       basma_portal: basmaStatus.status === 'fulfilled' ? basmaStatus.value : 'offline',
       sbs_portal: sbsStatus.status === 'fulfilled' ? sbsStatus.value : 'offline',
-      givc_portal: givcStatus.status === 'fulfilled' ? givcStatus.value : 'offline',
+      givc_portal: givcStatus.status === 'fulfilled'
+        ? { status: givcStatus.value, network_count: stats?.givc_network_count ?? 0 }
+        : { status: 'offline', network_count: 0 },
     },
     oracle_tunnel: 'Oracle Cloud@Riyadh',
     nphies_mirror: nphiesMirror,
