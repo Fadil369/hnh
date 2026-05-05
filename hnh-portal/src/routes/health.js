@@ -64,12 +64,11 @@ async function checkAcademy(env) {
 }
 
 async function checkGitHub(env) {
-  if (env.GITHUB_TOKEN) {
-    return await checkIntegration('https://api.github.com/zen', 3000, {
-      headers: { 'Authorization': `Bearer ${env.GITHUB_TOKEN}`, 'User-Agent': 'HNH-BrainSAIT-OS' }
-    });
-  }
-  return 'not_configured';
+  if (!env.GITHUB_TOKEN) return 'not_configured';
+  // Token sent only in Authorization header (not URL) — catch block prevents any leakage
+  return await checkIntegration('https://api.github.com/zen', 3000, {
+    headers: { 'Authorization': `Bearer ${env.GITHUB_TOKEN}`, 'User-Agent': 'HNH-BrainSAIT-OS' },
+  });
 }
 async function checkTwilio(env) {
   return env.TWILIO_ACCOUNT_SID ? 'configured' : 'not_configured';

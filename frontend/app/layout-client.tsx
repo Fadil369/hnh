@@ -1,48 +1,70 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type ComponentType } from 'react'
 import { usePathname } from 'next/navigation'
+import {
+  Home, Globe, Link2, Github, Workflow, Users, CalendarDays,
+  ShieldCheck, ClipboardList, Sun, Moon, Menu, X, ChevronDown,
+  Stethoscope, CreditCard, Building2, MoreHorizontal,
+  ArrowUpRight, Hospital,
+} from 'lucide-react'
 import BasmaAssistant from './components/BasmaAssistant'
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+interface NavItem {
+  href: string
+  label: string
+  labelEn: string
+  Icon: ComponentType<{ size?: number; strokeWidth?: number; className?: string }>
+}
+
+interface PortalItem {
+  href: string
+  label: string
+  labelAr: string
+  desc: string
+  Icon: ComponentType<{ size?: number; strokeWidth?: number; className?: string }>
+}
+
+// ─── Navigation config ────────────────────────────────────────────────────────
+const NAV_ITEMS: NavItem[] = [
+  { href: '/',             label: 'الرئيسية',   labelEn: 'Home',          Icon: Home },
+  { href: '/portal',       label: 'المنافذ',     labelEn: 'Portals',       Icon: Globe },
+  { href: '/integrations', label: 'التكامل',     labelEn: 'Integrations',  Icon: Link2 },
+  { href: '/github',       label: 'GitHub',      labelEn: 'GitHub',        Icon: Github },
+  { href: '/workflows',    label: 'سير العمل',   labelEn: 'Workflows',     Icon: Workflow },
+  { href: '/patients',     label: 'المرضى',      labelEn: 'Patients',      Icon: Users },
+  { href: '/appointments', label: 'المواعيد',    labelEn: 'Appointments',  Icon: CalendarDays },
+  { href: '/eligibility',  label: 'الأهلية',     labelEn: 'Eligibility',   Icon: ShieldCheck },
+  { href: '/claims',       label: 'المطالبات',   labelEn: 'Claims',        Icon: ClipboardList },
+]
+
+const MOBILE_PRIMARY = NAV_ITEMS.slice(0, 5)
+
+const PORTAL_NAV: PortalItem[] = [
+  { href: '/givc',   label: 'GIVC',   labelAr: 'بوابة جيفك',   desc: 'Provider clinical workstation', Icon: Stethoscope },
+  { href: '/sbs',    label: 'SBS',    labelAr: 'بوابة الفوترة', desc: 'Saudi billing & RCM',           Icon: CreditCard },
+  { href: '/nphies', label: 'NPHIES', labelAr: 'بوابة نفيز',    desc: 'Insurance exchange',             Icon: Building2 },
+]
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
 function ThemeToggle({ dark, onToggle }: { dark: boolean; onToggle: () => void }) {
   return (
     <button
       onClick={onToggle}
-      className="flex h-10 w-10 items-center justify-center rounded-full border text-base transition-all hover:scale-105"
-      style={{
-        backgroundColor: 'rgba(255,255,255,0.10)',
-        borderColor: 'rgba(255,255,255,0.14)',
-        color: 'white',
-      }}
-      title={dark ? 'الوضع النهاري | Light Mode' : 'الوضع الليلي | Dark Mode'}
+      className="flex h-9 w-9 items-center justify-center rounded-xl border transition-all hover:scale-105 hover:bg-white/15 active:scale-95"
+      style={{ borderColor: 'rgba(255,255,255,0.14)', color: 'rgba(255,255,255,0.85)' }}
+      title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
       aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
-      {dark ? '☀️' : '🌙'}
+      {dark
+        ? <Sun size={16} strokeWidth={2} />
+        : <Moon size={16} strokeWidth={2} />}
     </button>
   )
 }
 
-const NAV_ITEMS = [
-  { href: '/',            label: 'الرئيسية',  labelEn: 'Home',         icon: '🏠' },
-  { href: '/portal',      label: 'المنافذ',    labelEn: 'Portals',      icon: '🌐' },
-  { href: '/integrations',label: 'التكامل',    labelEn: 'Integrations', icon: '🔗' },
-  { href: '/github',      label: 'GitHub',     labelEn: 'GitHub',       icon: '🐙' },
-  { href: '/workflows',   label: 'سير العمل',  labelEn: 'Workflows',    icon: '⚙️' },
-  { href: '/patients',    label: 'المرضى',     labelEn: 'Patients',     icon: '👤' },
-  { href: '/appointments',label: 'المواعيد',   labelEn: 'Appointments', icon: '📅' },
-  { href: '/eligibility', label: 'الأهلية',    labelEn: 'Eligibility',  icon: '✅' },
-  { href: '/claims',      label: 'المطالبات',  labelEn: 'Claims',       icon: '📋' },
-]
-
-// Primary nav shown in mobile bottom bar (most used)
-const MOBILE_PRIMARY = NAV_ITEMS.slice(0, 5)
-
-const PORTAL_NAV = [
-  { href: '/givc',   label: 'GIVC',   labelAr: 'بوابة جيفك',   icon: '🩺', desc: 'Provider clinical workstation' },
-  { href: '/sbs',    label: 'SBS',    labelAr: 'بوابة الفوترة', icon: '💰', desc: 'Saudi billing & RCM' },
-  { href: '/nphies', label: 'NPHIES', labelAr: 'بوابة نفيز',    icon: '🏛️', desc: 'Insurance exchange' },
-]
-
+// ─── Main layout ──────────────────────────────────────────────────────────────
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const [dark, setDark] = useState(false)
@@ -57,16 +79,16 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
     setDark(isDark)
     document.documentElement.classList.toggle('dark', isDark)
 
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') { setPortalMenu(false); setMobileMenu(false) }
     }
-    const handleScroll = () => setScrolled(window.scrollY > 12)
+    const onScroll = () => setScrolled(window.scrollY > 12)
 
-    document.addEventListener('keydown', handleKeyDown)
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    document.addEventListener('keydown', onKey)
+    window.addEventListener('scroll', onScroll, { passive: true })
     return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-      window.removeEventListener('scroll', handleScroll)
+      document.removeEventListener('keydown', onKey)
+      window.removeEventListener('scroll', onScroll)
     }
   }, [])
 
@@ -80,9 +102,8 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
   }
 
   const activeSection = useMemo(() => {
-    const current = NAV_ITEMS.find(item => item.href !== '/' && pathname?.startsWith(item.href))
-    if (current) return current
-    return NAV_ITEMS.find(item => item.href === pathname) ?? NAV_ITEMS[0]
+    const match = NAV_ITEMS.find(item => item.href !== '/' && pathname?.startsWith(item.href))
+    return match ?? NAV_ITEMS.find(item => item.href === pathname) ?? NAV_ITEMS[0]
   }, [pathname])
 
   const isActive = (href: string) =>
@@ -90,95 +111,109 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
 
   return (
     <div className="app-shell">
-      {/* ─── Header ──────────────────────────────────────────────────────── */}
+
+      {/* ─── Header ──────────────────────────────────────────────────────────── */}
       <header
         className="sticky top-0 z-40 transition-all duration-300"
         style={{
           background: scrolled
             ? 'rgba(5, 13, 31, 0.94)'
             : 'linear-gradient(150deg, #050f24 0%, #0e1e3e 100%)',
-          backdropFilter: scrolled ? 'blur(24px) saturate(160%)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(160%)' : 'none',
+          backdropFilter: scrolled ? 'blur(24px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(180%)' : 'none',
           borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
-          boxShadow: scrolled ? '0 8px 32px rgba(5,13,31,0.28)' : 'none',
+          boxShadow: scrolled ? '0 4px 24px rgba(5,13,31,0.32)' : 'none',
         }}
       >
-        <div className="mx-auto max-w-screen-xl px-4 py-3 md:py-4">
-          {/* Top bar — version / status */}
-          <div className="mb-2 flex items-center justify-between text-[11px] text-white/50">
-            <div className="flex items-center gap-2">
+        <div className="mx-auto max-w-screen-xl px-4">
+
+          {/* Status bar */}
+          <div className="flex items-center justify-between py-2 text-[11px]" style={{ color: 'rgba(255,255,255,0.45)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5">
-                <span className="live-dot" />
+                <span className="live-dot" style={{ width: 6, height: 6 }} />
                 Live Control Center
               </span>
-              <span className="hidden sm:inline text-white/30">·</span>
+              <span className="hidden sm:inline" style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
               <span className="hidden sm:inline">Saudi Vision 2030</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="hidden sm:inline">{activeSection.labelEn}</span>
-              <span className="status-pill border-white/10 bg-white/8 text-white/60">v9.3</span>
-            </div>
+            <span style={{ color: 'rgba(255,255,255,0.3)' }}>{activeSection.labelEn}</span>
           </div>
 
-          {/* Brand row */}
-          <div className="flex items-center justify-between gap-4">
-            <a href="/" className="flex items-center gap-3 group">
+          {/* Brand + actions */}
+          <div className="flex items-center justify-between gap-4 py-3">
+            <a href="/" className="group flex items-center gap-3">
               <div
-                className="flex h-11 w-11 items-center justify-center rounded-2xl text-2xl shadow-lg transition-transform group-hover:scale-105"
-                style={{ background: 'linear-gradient(135deg, rgba(37,99,235,0.55), rgba(6,182,212,0.4))', border: '1px solid rgba(255,255,255,0.14)' }}
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(37,99,235,0.6), rgba(6,182,212,0.45))',
+                  border: '1px solid rgba(255,255,255,0.16)',
+                  boxShadow: '0 4px 16px rgba(37,99,235,0.30)',
+                }}
               >
-                🏥
+                <Hospital size={20} strokeWidth={1.75} style={{ color: 'white' }} />
               </div>
               <div>
-                <h1 className="text-base font-bold leading-tight text-white md:text-lg">
-                  مستشفى حيات الوطني
-                </h1>
-                <p className="text-[11px] text-white/55">HNH BrainSAIT Healthcare OS</p>
+                <p className="text-sm font-bold leading-tight text-white md:text-base">
+                  مستشفيات الحياة الوطني
+                </p>
+                <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.50)' }}>
+                  HNH · BrainSAIT Healthcare OS
+                </p>
               </div>
             </a>
 
             <div className="flex items-center gap-2">
               <ThemeToggle dark={dark} onToggle={toggleDark} />
 
-              {/* Portal switcher (desktop) */}
+              {/* Portal switcher — desktop */}
               <div className="relative hidden md:block">
                 <button
-                  onClick={() => setPortalMenu(open => !open)}
+                  onClick={() => setPortalMenu(o => !o)}
                   aria-haspopup="menu"
                   aria-expanded={portalMenu}
-                  className="nav-chip border border-white/12 bg-white/8 text-white hover:bg-white/14"
+                  className="flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition-all hover:bg-white/10 active:scale-95"
+                  style={{ borderColor: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.80)' }}
                 >
-                  <span>🧭</span>
-                  <span>بوابات</span>
-                  <span className="text-[11px] opacity-60">{portalMenu ? '▲' : '▼'}</span>
+                  <Globe size={14} strokeWidth={2} />
+                  <span>Portals</span>
+                  <ChevronDown
+                    size={12}
+                    strokeWidth={2.5}
+                    className="transition-transform"
+                    style={{ transform: portalMenu ? 'rotate(180deg)' : 'rotate(0deg)', color: 'rgba(255,255,255,0.45)' }}
+                  />
                 </button>
 
                 {portalMenu && (
                   <div
                     role="menu"
-                    className="absolute right-0 top-full mt-2 w-64 overflow-hidden rounded-2xl border shadow-2xl animate-scale-in"
+                    className="animate-scale-in absolute right-0 top-full mt-2 w-64 overflow-hidden rounded-2xl border shadow-2xl"
                     style={{ background: 'var(--surface)', borderColor: 'var(--border)', boxShadow: 'var(--shadow-soft)' }}
                   >
-                    <div className="px-3 py-2.5 text-[11px] font-semibold text-faint" style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface-muted)' }}>
-                      Portal Switcher
-                    </div>
+                    <p className="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-tertiary)', borderBottom: '1px solid var(--border)', background: 'var(--surface-muted)' }}>
+                      Clinical Portals
+                    </p>
                     <div className="p-2">
-                      {PORTAL_NAV.map(portal => (
+                      {PORTAL_NAV.map(({ href, label, labelAr, desc, Icon }) => (
                         <a
-                          key={portal.href}
-                          href={portal.href}
+                          key={href}
+                          href={href}
                           role="menuitem"
-                          className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all hover:bg-[var(--surface-muted)]"
+                          className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-[var(--surface-muted)]"
                           style={{ color: 'var(--text)' }}
                         >
-                          <span className="flex h-9 w-9 items-center justify-center rounded-xl text-lg" style={{ background: 'var(--surface-strong)' }}>
-                            {portal.icon}
+                          <span
+                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+                            style={{ background: 'var(--surface-strong)', color: 'var(--primary)' }}
+                          >
+                            <Icon size={16} strokeWidth={1.75} />
                           </span>
-                          <div>
-                            <div className="font-semibold text-sm">{portal.labelAr}</div>
-                            <div className="text-[11px] text-faint">{portal.desc}</div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold">{labelAr}</p>
+                            <p className="text-[11px]" style={{ color: 'var(--text-tertiary)' }}>{desc}</p>
                           </div>
-                          <span className="ms-auto text-xs text-faint">↗</span>
+                          <ArrowUpRight size={14} strokeWidth={2} style={{ color: 'var(--text-tertiary)' }} />
                         </a>
                       ))}
                     </div>
@@ -188,10 +223,11 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
                       target="_blank"
                       rel="noopener noreferrer"
                       role="menuitem"
-                      className="flex items-center justify-between px-4 py-3 text-xs text-faint hover:bg-[var(--surface-muted)]"
+                      className="flex items-center justify-between px-4 py-3 text-xs transition-colors hover:bg-[var(--surface-muted)]"
+                      style={{ color: 'var(--text-tertiary)' }}
                     >
                       <span>NPHIES national portal</span>
-                      <span dir="ltr">portal.nphies.sa ↗</span>
+                      <span className="flex items-center gap-1">portal.nphies.sa <ArrowUpRight size={11} /></span>
                     </a>
                   </div>
                 )}
@@ -199,75 +235,85 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
 
               {/* Mobile hamburger */}
               <button
-                onClick={() => setMobileMenu(open => !open)}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/8 text-white md:hidden hover:bg-white/14 transition-all"
+                onClick={() => setMobileMenu(o => !o)}
+                className="flex h-9 w-9 items-center justify-center rounded-xl border transition-all hover:bg-white/10 active:scale-95 md:hidden"
+                style={{ borderColor: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.80)' }}
                 aria-label="Toggle navigation"
                 aria-expanded={mobileMenu}
               >
-                <span className="text-lg leading-none">{mobileMenu ? '✕' : '☰'}</span>
+                {mobileMenu
+                  ? <X size={16} strokeWidth={2} />
+                  : <Menu size={16} strokeWidth={2} />}
               </button>
             </div>
           </div>
 
-          {/* Desktop nav row */}
-          <nav className="mt-3 hidden flex-wrap items-center gap-1.5 md:flex">
-            {NAV_ITEMS.map(item => {
-              const active = isActive(item.href)
+          {/* Desktop nav */}
+          <nav className="hidden items-center gap-1 pb-3 md:flex" aria-label="Main navigation">
+            {NAV_ITEMS.map(({ href, label, labelEn, Icon }) => {
+              const active = isActive(href)
               return (
                 <a
-                  key={item.href}
-                  href={item.href}
-                  className="nav-chip text-sm transition-all"
+                  key={href}
+                  href={href}
+                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-all hover:bg-white/10 active:scale-95"
                   style={active
-                    ? { background: 'rgba(255,255,255,0.16)', color: 'white', border: '1px solid rgba(255,255,255,0.20)', boxShadow: '0 2px 8px rgba(37,99,235,0.25)' }
-                    : { background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.75)', border: '1px solid rgba(255,255,255,0.08)' }}
+                    ? { background: 'rgba(255,255,255,0.14)', color: 'white', border: '1px solid rgba(255,255,255,0.18)' }
+                    : { color: 'rgba(255,255,255,0.68)', border: '1px solid transparent' }}
+                  aria-current={active ? 'page' : undefined}
                 >
-                  <span>{item.icon}</span>
-                  <span>{item.label}</span>
-                  <span className="hidden lg:inline text-[11px] opacity-55">{item.labelEn}</span>
+                  <Icon size={14} strokeWidth={active ? 2.25 : 1.75} />
+                  <span>{label}</span>
+                  <span className="hidden lg:inline text-[11px]" style={{ color: active ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.35)' }}>
+                    {labelEn}
+                  </span>
                 </a>
               )
             })}
           </nav>
 
-          {/* Mobile expanded menu (full nav) */}
+          {/* Mobile expanded menu */}
           {mobileMenu && (
             <nav
-              className="mt-3 overflow-hidden rounded-2xl border p-3 md:hidden animate-slide-up"
-              style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.08)' }}
+              className="animate-slide-up mb-3 overflow-hidden rounded-2xl border p-3 md:hidden"
+              style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)' }}
+              aria-label="Mobile navigation"
             >
-              <div className="grid grid-cols-2 gap-2">
-                {NAV_ITEMS.map(item => {
-                  const active = isActive(item.href)
+              <div className="grid grid-cols-2 gap-1.5">
+                {NAV_ITEMS.map(({ href, label, labelEn, Icon }) => {
+                  const active = isActive(href)
                   return (
                     <a
-                      key={item.href}
-                      href={item.href}
-                      className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all"
+                      key={href}
+                      href={href}
+                      className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all"
                       style={active
-                        ? { background: 'rgba(37,99,235,0.35)', color: 'white', border: '1px solid rgba(255,255,255,0.14)' }
-                        : { background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.80)', border: '1px solid transparent' }}
+                        ? { background: 'rgba(37,99,235,0.30)', color: 'white', border: '1px solid rgba(255,255,255,0.14)' }
+                        : { background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.75)', border: '1px solid rgba(255,255,255,0.06)' }}
+                      aria-current={active ? 'page' : undefined}
                     >
-                      <span>{item.icon}</span>
-                      <div>
-                        <div>{item.label}</div>
-                        <div className="text-[10px] opacity-55">{item.labelEn}</div>
+                      <Icon size={15} strokeWidth={active ? 2.25 : 1.75} className="shrink-0" />
+                      <div className="min-w-0">
+                        <p className="truncate">{label}</p>
+                        <p className="truncate text-[10px]" style={{ color: 'rgba(255,255,255,0.40)' }}>{labelEn}</p>
                       </div>
                     </a>
                   )
                 })}
               </div>
+
               <div className="loud-divider my-3" />
-              <div className="grid grid-cols-3 gap-2">
-                {PORTAL_NAV.map(portal => (
+
+              <div className="grid grid-cols-3 gap-1.5">
+                {PORTAL_NAV.map(({ href, labelAr, Icon }) => (
                   <a
-                    key={portal.href}
-                    href={portal.href}
-                    className="flex flex-col items-center gap-1.5 rounded-xl px-2 py-3 text-center text-xs font-semibold"
-                    style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.80)', border: '1px solid rgba(255,255,255,0.08)' }}
+                    key={href}
+                    href={href}
+                    className="flex flex-col items-center gap-2 rounded-xl px-2 py-3 text-center text-xs font-medium transition-all hover:bg-white/10"
+                    style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.72)', border: '1px solid rgba(255,255,255,0.07)' }}
                   >
-                    <span className="text-xl">{portal.icon}</span>
-                    <span>{portal.labelAr}</span>
+                    <Icon size={18} strokeWidth={1.75} />
+                    <span>{labelAr}</span>
                   </a>
                 ))}
               </div>
@@ -276,86 +322,96 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
         </div>
       </header>
 
-      {/* ─── Main content ─────────────────────────────────────────────────── */}
-      <main className="mx-auto w-full max-w-screen-xl flex-1 px-4 py-5 md:py-7" style={{ minHeight: 'calc(100dvh - 200px)' }}>
+      {/* ─── Main content ──────────────────────────────────────────────────────── */}
+      <main
+        className="mx-auto w-full max-w-screen-xl flex-1 px-4 py-5 md:py-7"
+        style={{ minHeight: 'calc(100dvh - 200px)' }}
+      >
         {children}
       </main>
 
-      {/* ─── Footer ──────────────────────────────────────────────────────── */}
+      {/* ─── Footer — desktop only ─────────────────────────────────────────────── */}
       <footer
-        className="mt-12 border-t hidden md:block"
+        className="mt-12 hidden border-t md:block"
         style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
       >
         <div className="mx-auto max-w-screen-xl px-4 py-8">
           <div className="panel-soft p-5">
-            <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-              <div className="max-w-xl">
+            <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+              <div className="max-w-md">
                 <div className="section-kicker mb-3">Operational Surface</div>
-                <h2 className="text-lg font-bold">HNH BrainSAIT Healthcare OS</h2>
-                <p className="mt-2 text-sm text-muted leading-relaxed">
+                <h2 className="text-base font-bold">HNH BrainSAIT Healthcare OS</h2>
+                <p className="mt-2 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                   Unified access to Basma AI, claims orchestration, clinical portals,
                   workflow automation, and connected healthcare services across the HNH network.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
                 {[
-                  { href: '/portal',       label: '🌐 Hub' },
-                  { href: '/integrations', label: '🔗 Integrations' },
-                  { href: '/github',       label: '🐙 GitHub' },
-                  { href: '/workflows',    label: '⚙️ Workflows' },
-                  { href: 'https://bsma.elfadil.com', label: '🤖 Basma', external: true },
-                  { href: 'https://sbs.elfadil.com',  label: '💰 SBS',   external: true },
-                  { href: 'https://oracle-bridge.brainsait.org', label: '☁️ Oracle', external: true },
-                ].map(link => (
+                  { href: '/integrations', label: 'Integrations', Icon: Link2 },
+                  { href: '/github',       label: 'GitHub',       Icon: Github },
+                  { href: '/workflows',    label: 'Workflows',    Icon: Workflow },
+                  { href: 'https://bsma.elfadil.com', label: 'Basma AI', Icon: Globe, external: true },
+                  { href: 'https://sbs.elfadil.com',  label: 'SBS',      Icon: CreditCard, external: true },
+                ].map(({ href, label, Icon, external }) => (
                   <a
-                    key={link.href}
-                    href={link.href}
-                    {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className="status-pill hover:translate-y-[-1px] transition-transform"
+                    key={href}
+                    href={href}
+                    {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className="status-pill transition-transform hover:-translate-y-px"
                     style={{ color: 'var(--primary)' }}
                   >
-                    {link.label}
+                    <Icon size={12} strokeWidth={2} />
+                    {label}
                   </a>
                 ))}
               </div>
             </div>
             <div className="loud-divider my-5" />
-            <div className="flex flex-col gap-2 text-xs md:flex-row md:items-center md:justify-between">
-              <p className="text-muted">© 2026 HNH BrainSAIT Healthcare OS · Powered by BrainSAIT</p>
-              <p className="text-faint">Basma AI · GIVC · NPHIES · Oracle · SBS · ClaimLinc · GitHub Models · v9.3</p>
+            <div className="flex flex-col gap-1.5 text-xs md:flex-row md:items-center md:justify-between" style={{ color: 'var(--text-tertiary)' }}>
+              <p>© 2026 HNH · BrainSAIT Healthcare OS · All rights reserved</p>
+              <p>Basma AI · GIVC · NPHIES · Oracle · SBS · ClaimLinc · GitHub Models · v9.3</p>
             </div>
           </div>
         </div>
       </footer>
 
-      {/* ─── Mobile bottom navigation bar ─────────────────────────────────── */}
-      <nav className="mobile-bottom-nav md:hidden" aria-label="Mobile navigation">
-        <div className="flex items-center justify-around px-1 py-1.5">
-          {MOBILE_PRIMARY.map(item => {
-            const active = isActive(item.href)
+      {/* ─── Mobile bottom nav ─────────────────────────────────────────────────── */}
+      <nav className="mobile-bottom-nav md:hidden" aria-label="Mobile primary navigation">
+        <div className="flex items-center justify-around px-1 py-1">
+          {MOBILE_PRIMARY.map(({ href, label, Icon }) => {
+            const active = isActive(href)
             return (
               <a
-                key={item.href}
-                href={item.href}
-                className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all min-h-[52px] justify-center"
-                style={active
-                  ? { color: 'var(--primary)', background: 'color-mix(in srgb, var(--primary) 12%, transparent)' }
-                  : { color: 'var(--text-secondary)' }}
+                key={href}
+                href={href}
+                className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 transition-all"
+                style={{
+                  minWidth: 52,
+                  color: active ? 'var(--primary)' : 'var(--text-tertiary)',
+                  background: active ? 'color-mix(in srgb, var(--primary) 10%, transparent)' : 'transparent',
+                }}
+                aria-current={active ? 'page' : undefined}
               >
-                <span className="text-xl leading-none">{item.icon}</span>
-                <span className="text-[10px] font-semibold leading-tight">{item.label}</span>
+                <Icon size={20} strokeWidth={active ? 2.25 : 1.75} />
+                <span className="text-[10px] font-semibold leading-none">{label}</span>
               </a>
             )
           })}
-          {/* More button triggers overlay menu */}
           <button
-            onClick={() => setMobileMenu(open => !open)}
-            className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl min-h-[52px] justify-center transition-all"
-            style={{ color: mobileMenu ? 'var(--primary)' : 'var(--text-secondary)' }}
+            onClick={() => setMobileMenu(o => !o)}
+            className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 transition-all"
+            style={{
+              minWidth: 52,
+              color: mobileMenu ? 'var(--primary)' : 'var(--text-tertiary)',
+              background: mobileMenu ? 'color-mix(in srgb, var(--primary) 10%, transparent)' : 'transparent',
+            }}
             aria-label="More navigation"
           >
-            <span className="text-xl leading-none">{mobileMenu ? '✕' : '⋯'}</span>
-            <span className="text-[10px] font-semibold leading-tight">المزيد</span>
+            {mobileMenu
+              ? <X size={20} strokeWidth={2.25} />
+              : <MoreHorizontal size={20} strokeWidth={1.75} />}
+            <span className="text-[10px] font-semibold leading-none">المزيد</span>
           </button>
         </div>
       </nav>
@@ -364,4 +420,3 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
     </div>
   )
 }
-
