@@ -19,7 +19,7 @@ ENVIRONMENT          = "production"
 binding = "BASMA_CACHE"
 id = "d7db4659947e48a59b2153585e7676e5"
 
-# Secrets (wrangler secret put --config basma-portal/wrangler.toml <NAME>):
+# Secrets (wrangler secret put --config workers/basma-portal/wrangler.toml <NAME>):
 #   ELEVENLABS_API_KEY   ← ElevenLabs TTS — Arabic voice Salma
 #   CLAIMLINC_API_KEY    ← ClaimLinc network summary key
 #   ORACLE_BRIDGE_KEY    ← Oracle Bridge API key

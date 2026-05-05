@@ -6,23 +6,44 @@ on:
     paths:
       - 'worker.js'
       - 'wrangler.toml'
+      - 'apps/frontend/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
 
 jobs:
   deploy:
-    name: Deploy to Cloudflare Workers
+    name: Deploy hnh-unified to Cloudflare Workers
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: apps/frontend/package-lock.json
+
+      - name: Install frontend deps
+        working-directory: apps/frontend
+        run: npm ci
+
+      - name: Build Next.js static export
+        working-directory: apps/frontend
+        run: npm run build
 
       - name: Deploy via Wrangler
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: d7b99530559ab4f2545e9bdc72a7ab9b
-          command: deploy worker.js --name hnh-unified
+          # Reads wrangler.toml at repo root (name=hnh-unified, [site] bucket=apps/frontend/out)
+          command: deploy
 
       - name: Smoke test
         run: |

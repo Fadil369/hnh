@@ -22,8 +22,27 @@ hnh.brainsait.org → hnh-unified (Cloudflare Worker)
 ```
 
 ### Replaces
-- `hnh-portal` (frontend worker) — **deprecated**
+- `hnh-portal` (frontend worker) — **removed** (was in `hnh-portal/`; merged into root worker)
 - `hnh-gharnata-api` (API gateway worker) — **deprecated**
+
+### Repo layout
+```
+.
+├── worker.js, wrangler.toml      Canonical hnh-unified worker (root)
+├── index.html                    Marketing landing (GitHub Pages)
+├── apps/
+│   ├── frontend/                 Next.js app (built to apps/frontend/out, served via [site] bucket)
+│   └── site/                     Static info site (merged from former site/ + hnh-site/)
+├── workers/
+│   ├── basma-portal/             bsma.elfadil.com
+│   ├── basma-crm/                crm.brainsait.org
+│   └── givc/                     hnh.brainsait.org/givc/* + givc.elfadil.com
+├── integrations/                 External integration helpers (brainsait-voice, nphies-mirror, maillinc)
+├── migrations/                   D1 SQL migrations
+├── docs/                         Project documentation
+├── schema.sql                    Source-of-truth D1 schema
+└── .agent/                       Local agent runtime (AGENTS.md, SOUL.md, memory/)
+```
 
 ### Deploy
 ```bash
