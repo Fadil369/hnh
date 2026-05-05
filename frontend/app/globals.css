@@ -7,14 +7,19 @@
   --primary-light: #3b82f6;
   --primary-dark: #1e3a8a;
   --accent: #0ea5e9;
-  --bg: #f1f5f9;
+  --bg: #f4f7fb;
   --surface: #ffffff;
+  --surface-muted: #f8fafc;
+  --surface-strong: #e9eef8;
   --text: #0f172a;
   --text-secondary: #64748b;
   --border: #e2e8f0;
+  --border-strong: #cbd5e1;
   --success: #16a34a;
   --warning: #d97706;
   --danger: #dc2626;
+  --shadow-soft: 0 18px 48px rgba(15, 23, 42, 0.08);
+  --shadow-card: 0 8px 24px rgba(15, 23, 42, 0.08);
 }
 
 .dark {
@@ -22,33 +27,224 @@
   --primary-light: #60a5fa;
   --primary-dark: #1d4ed8;
   --accent: #38bdf8;
-  --bg: #0f172a;
-  --surface: #1e293b;
+  --bg: #081120;
+  --surface: #0f172a;
+  --surface-muted: #111c31;
+  --surface-strong: #16233b;
   --text: #f1f5f9;
   --text-secondary: #94a3b8;
-  --border: #334155;
+  --border: #22314d;
+  --border-strong: #314462;
   --success: #22c55e;
   --warning: #f59e0b;
   --danger: #ef4444;
+  --shadow-soft: 0 24px 64px rgba(2, 8, 23, 0.5);
+  --shadow-card: 0 12px 36px rgba(2, 8, 23, 0.35);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(59, 130, 246, 0.2);
+  color: var(--text);
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg);
+  font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 24%),
+    radial-gradient(circle at bottom left, rgba(14, 165, 233, 0.08), transparent 22%),
+    var(--bg);
   color: var(--text);
   transition: background-color 0.3s, color 0.3s;
+}
+
+a,
+button,
+input,
+textarea,
+select {
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+a {
+  color: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.45);
+  outline-offset: 2px;
 }
 
 .card {
   background-color: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  transition: box-shadow 0.2s, background-color 0.3s;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s, background-color 0.3s, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-soft);
+}
+
+.panel {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, white 8%), var(--surface));
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-card);
+}
+
+.panel-soft {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface-muted) 92%, white 8%), var(--surface));
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+}
+
+.panel-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.22), transparent 24%),
+    radial-gradient(circle at bottom left, rgba(34, 197, 94, 0.16), transparent 28%),
+    linear-gradient(145deg, #081120, #11203c 52%, #0f1c33);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 1.5rem;
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.25);
+}
+
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: color-mix(in srgb, var(--primary-dark) 72%, var(--text));
+}
+
+.metric-card {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 95%, white 5%), var(--surface));
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: var(--shadow-card);
+}
+
+.metric-value {
+  font-size: clamp(1.6rem, 2vw, 2.25rem);
+  line-height: 1;
+  font-weight: 800;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-muted) 90%, white 10%);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.bilingual-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.bilingual-label strong {
+  font-size: 0.95rem;
+}
+
+.bilingual-label span {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.nav-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.subtle-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(circle at center, black, transparent 78%);
+  pointer-events: none;
+}
+
+.surface-outline {
+  border: 1px solid var(--border-strong);
+}
+
+.text-muted {
+  color: var(--text-secondary);
+}
+
+.app-shell {
+  position: relative;
+}
+
+.app-shell::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 22%);
+}
+
+.loud-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+}
+
+html[dir='rtl'] .hidden.ltr\:inline {
+  display: none !important;
+}
+
+html[dir='rtl'] .ltr\:hidden {
+  display: inline !important;
+}
+
+html[dir='ltr'] .ltr\:hidden {
+  display: none !important;
+}
+
+html[dir='ltr'] .hidden.ltr\:inline {
+  display: inline !important;
 }
 
 .btn-primary {
@@ -101,4 +297,31 @@ body {
 
 .gradient-hero {
   background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--border-strong) 80%, transparent);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--primary) 28%, var(--border-strong));
+}
+
+@media (max-width: 768px) {
+  .panel,
+  .panel-hero,
+  .card,
+  .metric-card {
+    border-radius: 1rem;
+  }
 }

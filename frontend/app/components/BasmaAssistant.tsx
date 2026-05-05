@@ -305,10 +305,13 @@ export default function BasmaAssistant() {
 
   return (
     <>
-      {/* Floating trigger */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 left-6 w-14 h-14 bg-blue-700 text-white rounded-full shadow-xl hover:bg-blue-800 transition z-50 flex items-center justify-center text-2xl"
+        className="fixed bottom-6 left-6 z-50 flex h-16 w-16 items-center justify-center rounded-full border text-2xl text-white shadow-2xl transition hover:scale-[1.03]"
+        style={{
+          background: 'linear-gradient(135deg, #1d4ed8, #0f172a)',
+          borderColor: 'rgba(255,255,255,0.14)',
+        }}
         title="بسمة المساعد الذكي | Basma AI Assistant"
         aria-label="Open Basma AI Assistant"
       >
@@ -317,32 +320,50 @@ export default function BasmaAssistant() {
 
       {open && (
         <div
-          className="fixed bottom-24 left-6 w-80 sm:w-96 h-[30rem] bg-white rounded-xl shadow-2xl border border-blue-100 z-50 flex flex-col"
+          className="fixed bottom-24 left-6 z-50 flex h-[34rem] w-[calc(100vw-2rem)] max-w-[26rem] flex-col overflow-hidden rounded-[1.4rem] border shadow-2xl"
+          style={{
+            backgroundColor: 'var(--surface)',
+            borderColor: 'var(--border)',
+            boxShadow: '0 30px 80px rgba(15, 23, 42, 0.24)',
+          }}
           dir="rtl"
           role="dialog"
           aria-label="Basma AI Assistant"
         >
-          {/* Header */}
-          <div className="bg-gradient-to-l from-blue-900 to-blue-700 text-white p-3 rounded-t-xl flex justify-between items-center gap-2">
-            <div>
-              <div className="font-bold text-sm">بسمة | Basma AI</div>
-              <div className="text-[10px] text-blue-200">مستشفيات الحياة الوطنية · BrainSAIT</div>
+          <div className="relative overflow-hidden border-b p-4 text-white" style={{ background: 'linear-gradient(135deg, #0f172a, #1d4ed8)', borderColor: 'rgba(255,255,255,0.08)' }}>
+            <div className="subtle-grid opacity-30" />
+            <div className="relative z-10 flex items-start justify-between gap-3">
+              <div>
+                <div className="font-bold text-sm">بسمة | Basma AI</div>
+                <div className="text-[11px] text-blue-100/80">مستشفيات الحياة الوطنية · BrainSAIT</div>
+                <div className="mt-2 text-[11px] text-white/70">Appointments · Screening · Claims · Clinical support</div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setVoiceMode(v => !v)}
+                  className={`rounded-full border px-3 py-1 text-xs transition ${
+                    voiceMode
+                      ? 'bg-white text-blue-900 border-white'
+                      : 'border-blue-200/50 text-white hover:border-white hover:bg-white/10'
+                  }`}
+                  title={voiceMode ? 'تعطيل الصوت | Disable voice' : 'تفعيل الصوت | Enable voice'}
+                >
+                  {voiceMode ? '🔊 صوت' : '🔇 صامت'}
+                </button>
+                <button
+                  onClick={() => setOpen(false)}
+                  className="rounded-full border border-white/20 px-2.5 py-1 text-xs text-white/80 hover:bg-white/10"
+                  aria-label="Close Basma assistant"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
-            <button
-              onClick={() => setVoiceMode(v => !v)}
-              className={`text-xs px-2 py-1 rounded-full border transition ${
-                voiceMode
-                  ? 'bg-white text-blue-900 border-white'
-                  : 'border-blue-300 text-blue-200 hover:border-white hover:text-white'
-              }`}
-              title={voiceMode ? 'تعطيل الصوت | Disable voice' : 'تفعيل الصوت | Enable voice'}
-            >
-              {voiceMode ? '🔊 صوت' : '🔇 صامت'}
-            </button>
           </div>
 
-          {/* Quick action chips */}
-          <div className="px-3 pt-2 pb-0 flex gap-1.5 flex-wrap">
+          <div className="border-b px-4 py-3" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--surface-muted)' }}>
+            <div className="mb-2 text-[11px] font-semibold text-muted">اقتراحات سريعة · Quick actions</div>
+            <div className="flex flex-wrap gap-1.5">
             {[
               { label: 'حجز موعد', en: 'book appointment P001 cardiology' },
               { label: 'فحص صحي', en: 'health screening P001' },
@@ -351,44 +372,47 @@ export default function BasmaAssistant() {
               <button
                 key={chip.en}
                 onClick={() => setInput(chip.en)}
-                className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded-full px-2.5 py-0.5 hover:bg-blue-100 transition"
+                className="rounded-full border px-2.5 py-1 text-[11px] font-medium hover:-translate-y-[1px]"
+                style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)', color: 'var(--primary)' }}
               >
                 {chip.label}
               </button>
             ))}
+            </div>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-2">
+          <div className="flex-1 space-y-3 overflow-y-auto p-4" style={{ backgroundColor: 'var(--surface)' }}>
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-start' : 'justify-end'}`}>
                 <div
-                  className={`group relative max-w-[85%] p-2.5 rounded-xl text-sm whitespace-pre-wrap leading-relaxed ${
+                  className={`group relative max-w-[88%] whitespace-pre-wrap rounded-2xl p-3 text-sm leading-7 ${
                     msg.role === 'user'
-                      ? 'bg-blue-50 text-blue-900 border border-blue-100'
-                      : 'bg-gray-50 text-gray-800 border border-gray-100'
+                      ? 'border text-[var(--text)]'
+                      : 'border text-[var(--text)]'
                   }`}
+                  style={msg.role === 'user'
+                    ? { backgroundColor: 'var(--surface-muted)', borderColor: 'var(--border)' }
+                    : { backgroundColor: 'color-mix(in srgb, var(--primary) 8%, var(--surface))', borderColor: 'var(--border)' }}
                 >
                   {msg.content}
 
-                  {/* Workflow badge */}
                   {msg.workflowResult && (
-                    <details className="mt-2">
-                      <summary className="text-[10px] text-blue-400 cursor-pointer hover:text-blue-600">
+                    <details className="mt-3">
+                      <summary className="cursor-pointer text-[11px] font-semibold" style={{ color: 'var(--primary)' }}>
                         🔧 Workflow result
                       </summary>
-                      <pre className="mt-1 text-[9px] text-gray-400 bg-gray-50 p-1.5 rounded overflow-x-auto max-h-24">
+                      <pre className="mt-2 max-h-28 overflow-x-auto rounded-xl p-2 text-[10px]" style={{ backgroundColor: 'var(--surface)', color: 'var(--text-secondary)' }}>
                         {JSON.stringify(msg.workflowResult, null, 2).slice(0, 600)}
                       </pre>
                     </details>
                   )}
 
-                  {/* Speak button */}
                   {msg.role === 'assistant' && (
                     <button
                       onClick={() => handleSpeak(msg.content)}
                       disabled={speaking}
-                      className="absolute -bottom-2 -left-2 w-6 h-6 bg-blue-100 text-blue-600 rounded-full text-[10px] opacity-0 group-hover:opacity-100 transition hover:bg-blue-200 disabled:opacity-30"
+                      className="absolute -bottom-2 -left-2 h-7 w-7 rounded-full text-[11px] opacity-0 transition group-hover:opacity-100 disabled:opacity-30"
+                      style={{ backgroundColor: 'var(--surface)', color: 'var(--primary)', border: '1px solid var(--border)' }}
                       title="استمع | Listen"
                     >
                       🔊
@@ -399,7 +423,7 @@ export default function BasmaAssistant() {
             ))}
             {loading && (
               <div className="flex justify-end">
-                <div className="bg-gray-50 border border-gray-100 p-2.5 rounded-xl text-sm text-gray-400 flex items-center gap-1">
+                <div className="flex items-center gap-1 rounded-2xl border p-3 text-sm" style={{ backgroundColor: 'var(--surface-muted)', borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
                   <span className="inline-block w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:0ms]" />
                   <span className="inline-block w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:150ms]" />
                   <span className="inline-block w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:300ms]" />
@@ -407,31 +431,33 @@ export default function BasmaAssistant() {
               </div>
             )}
             {speaking && (
-              <div className="text-center text-[10px] text-blue-400 animate-pulse">🔊 بسمة تتحدث...</div>
+              <div className="text-center text-[11px] animate-pulse" style={{ color: 'var(--primary)' }}>🔊 بسمة تتحدث...</div>
             )}
             <div ref={endRef} />
           </div>
 
-          {/* Input */}
-          <div className="border-t border-gray-100 p-2.5 flex gap-2">
+          <div className="border-t p-3" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--surface-muted)' }}>
+            <div className="flex gap-2">
             <input
               type="text"
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSend()}
               placeholder="اسأل بسمة... | Ask Basma..."
-              className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-200"
+              className="input-field flex-1 text-sm"
               dir="auto"
               disabled={loading}
             />
             <button
               onClick={handleSend}
               disabled={loading || !input.trim()}
-              className="bg-blue-700 text-white px-3 py-2 rounded-lg hover:bg-blue-800 disabled:opacity-40 text-sm transition"
+              className="rounded-xl px-4 py-2 text-sm font-semibold text-white transition disabled:opacity-40"
+              style={{ backgroundColor: 'var(--primary)' }}
               aria-label="Send"
             >
               ➤
             </button>
+            </div>
           </div>
         </div>
       )}

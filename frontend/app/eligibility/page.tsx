@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 
-const API = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || ''
+const API = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'https://hnh.brainsait.org'
 
 type EligibilityResult = {
+  success?: boolean
   status?: string
   source?: string
   note?: string
@@ -30,11 +31,13 @@ export default function EligibilityPage() {
       setError('يرجى إدخال رقم الهوية أو رقم المريض')
       return
     }
+
     setLoading(true)
     setError('')
     setResult(null)
+
     try {
-      const res = await fetch(`${API}/api/eligibility`, {
+      const res = await fetch(`${API}/api/eligibility/check`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -43,8 +46,9 @@ export default function EligibilityPage() {
       setResult(data)
     } catch {
       setError('فشل الاتصال بخدمة التحقق من الأهلية')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   const eligStatus = result?.eligibility?.status || result?.status
@@ -52,89 +56,58 @@ export default function EligibilityPage() {
   const isPending = eligStatus === 'pending'
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
-      {/* Header */}
-      <div className="card p-6 gradient-hero text-white border-0">
-        <div className="flex items-center gap-3">
-          <span className="text-3xl">✅</span>
+    <div className="mx-auto max-w-3xl space-y-6">
+      <section className="panel-hero px-6 py-7 text-white md:px-8">
+        <div className="subtle-grid" />
+        <div className="relative z-10 flex items-start gap-4">
+          <div className="text-4xl">✅</div>
           <div>
-            <h2 className="text-2xl font-bold">التحقق من الأهلية التأمينية</h2>
-            <p className="opacity-80">Insurance Eligibility Verification · NPHIES + Oracle</p>
+            <div className="section-kicker border border-white/10 bg-white/10 text-white">Eligibility</div>
+            <h1 className="mt-3 text-3xl font-bold">التحقق من الأهلية التأمينية</h1>
+            <p className="mt-2 text-sm text-white/80">Insurance eligibility verification powered by the live HNH API layer.</p>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Form */}
-      <div className="card p-6">
-        <h3 className="text-lg font-bold mb-4">أدخل بيانات التحقق | Enter Verification Details</h3>
+      <section className="panel p-5 md:p-6">
+        <div className="mb-5">
+          <div className="section-kicker">Verification Form</div>
+          <h2 className="mt-3 text-xl font-bold">أدخل بيانات التحقق</h2>
+        </div>
+
         <form onSubmit={checkEligibility} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">
-              رقم الهوية الوطنية / الإقامة <span className="opacity-60">(National ID / Iqama)</span>
-            </label>
-            <input
-              type="text"
-              className="input-field"
-              placeholder="1234567890"
-              value={form.national_id}
-              onChange={e => setForm({ ...form, national_id: e.target.value })}
-            />
+            <label className="mb-1 block text-sm font-medium">رقم الهوية الوطنية / الإقامة</label>
+            <input type="text" className="input-field" placeholder="1234567890" value={form.national_id} onChange={(e) => setForm({ ...form, national_id: e.target.value })} />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">
-              رقم المريض <span className="opacity-60">(Patient ID — optional)</span>
-            </label>
-            <input
-              type="text"
-              className="input-field"
-              placeholder="HNH-..."
-              value={form.patient_id}
-              onChange={e => setForm({ ...form, patient_id: e.target.value })}
-            />
+            <label className="mb-1 block text-sm font-medium">رقم المريض</label>
+            <input type="text" className="input-field" placeholder="P001" value={form.patient_id} onChange={(e) => setForm({ ...form, patient_id: e.target.value })} />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">
-              رمز جهة التأمين <span className="opacity-60">(Payer Code — optional)</span>
-            </label>
-            <input
-              type="text"
-              className="input-field"
-              placeholder="INS-001"
-              value={form.payer_id}
-              onChange={e => setForm({ ...form, payer_id: e.target.value })}
-            />
+            <label className="mb-1 block text-sm font-medium">رمز جهة التأمين</label>
+            <input type="text" className="input-field" placeholder="INS-001" value={form.payer_id} onChange={(e) => setForm({ ...form, payer_id: e.target.value })} />
           </div>
 
-          {error && (
-            <div className="p-3 rounded-lg bg-red-50 text-red-700 text-sm border border-red-200">
-              ⚠️ {error}
-            </div>
-          )}
+          {error && <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">⚠️ {error}</div>}
 
           <button type="submit" className="btn-primary w-full" disabled={loading}>
             {loading ? 'جاري التحقق...' : '🔍 التحقق من الأهلية'}
           </button>
         </form>
-      </div>
+      </section>
 
-      {/* Result */}
       {result && (
-        <div className={`card p-6 border-2 ${
-          isEligible ? 'border-green-400' : isPending ? 'border-amber-400' : 'border-red-400'
-        }`}>
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-4xl">{isEligible ? '✅' : isPending ? '⏳' : '❌'}</span>
+        <section className="panel p-5 md:p-6" style={{ borderColor: isEligible ? '#4ade80' : isPending ? '#f59e0b' : '#f87171' }}>
+          <div className="mb-5 flex items-center gap-4">
+            <div className="text-4xl">{isEligible ? '✅' : isPending ? '⏳' : '❌'}</div>
             <div>
-              <h3 className="text-xl font-bold">
-                {isEligible ? 'مؤهل للتأمين' : isPending ? 'في الانتظار' : 'غير مؤهل'}
-              </h3>
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                {isEligible ? 'Eligible for Insurance Coverage' : isPending ? 'Pending Verification' : 'Not Eligible'}
-              </p>
+              <h2 className="text-xl font-bold">{isEligible ? 'مؤهل للتأمين' : isPending ? 'في الانتظار' : 'غير مؤهل'}</h2>
+              <p className="text-sm text-muted">{isEligible ? 'Eligible for coverage' : isPending ? 'Pending verification' : 'Not eligible'}</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {[
               { label: 'المصدر', labelEn: 'Source', value: result.source },
               { label: 'الحالة', labelEn: 'Status', value: eligStatus },
@@ -142,32 +115,31 @@ export default function EligibilityPage() {
               { label: 'رقم الوثيقة', labelEn: 'Policy No.', value: result.eligibility?.policy_number },
               { label: 'فئة التغطية', labelEn: 'Class', value: result.eligibility?.class_type },
               { label: 'حد التغطية', labelEn: 'Coverage Limit', value: result.eligibility?.coverage_limit?.toString() },
-            ].filter(item => item.value).map((item, i) => (
-              <div key={i}>
-                <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>{item.label} | {item.labelEn}</div>
-                <div className="text-sm font-medium mt-0.5">{item.value}</div>
+            ].filter((item) => item.value).map((item) => (
+              <div key={item.label} className="panel-soft p-4">
+                <div className="text-xs text-muted">{item.label} · {item.labelEn}</div>
+                <div className="mt-1 text-sm font-semibold">{item.value}</div>
               </div>
             ))}
           </div>
 
           {(result.note || result.eligibility?.note) && (
-            <div className="mt-4 p-3 rounded-lg text-sm" style={{ backgroundColor: 'var(--bg)' }}>
-              <span className="font-medium">ملاحظة: </span>
+            <div className="panel-soft mt-4 p-4 text-sm">
+              <span className="font-semibold">ملاحظة: </span>
               {result.note || result.eligibility?.note}
             </div>
           )}
-        </div>
+        </section>
       )}
 
-      {/* Info Box */}
-      <div className="card p-4 text-sm" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-secondary)' }}>
-        <p className="font-medium mb-1">معلومات الخدمة</p>
-        <ul className="space-y-1 list-disc list-inside">
-          <li>التحقق الفوري عبر Oracle Bridge + NPHIES</li>
-          <li>نتائج محفوظة لمدة 24 ساعة (كاش)</li>
-          <li>مدعوم بـ: NPHIES Portal · Oracle RAD</li>
+      <section className="panel-soft p-4 text-sm text-muted">
+        <p className="mb-2 font-semibold">معلومات الخدمة</p>
+        <ul className="list-inside list-disc space-y-1">
+          <li>التحقق يتم عبر المسار الحي في `hnh-unified`</li>
+          <li>يدعم رقم الهوية أو رقم المريض</li>
+          <li>يمكن استخدام رمز الدافع لتقييد التحقق عند الحاجة</li>
         </ul>
-      </div>
+      </section>
     </div>
   )
 }

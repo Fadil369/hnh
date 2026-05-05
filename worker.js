@@ -10277,6 +10277,48 @@ function servePage(req) {
 }
 __name(servePage, "servePage");
 
+var FRONTEND_ORIGIN = "https://hnh-brainsait.pages.dev";
+var FRONTEND_APP_ROUTES = /* @__PURE__ */ new Set([
+  "",
+  "/",
+  "/portal",
+  "/integrations",
+  "/workflows",
+  "/patients",
+  "/appointments",
+  "/eligibility",
+  "/claims",
+  "/providers",
+  "/givc",
+  "/nphies",
+  "/sbs",
+  "/knowledge",
+  "/stitch"
+]);
+function isFrontendAsset(pathname) {
+  return pathname.startsWith("/_next/") || pathname.startsWith("/stitch-assets/") || pathname === "/favicon.ico";
+}
+__name(isFrontendAsset, "isFrontendAsset");
+function isFrontendRoute(pathname) {
+  return FRONTEND_APP_ROUTES.has(pathname);
+}
+__name(isFrontendRoute, "isFrontendRoute");
+async function proxyFrontend(request) {
+  const url = new URL(request.url);
+  const targetPath = url.pathname;
+  const target = new URL(targetPath + url.search, FRONTEND_ORIGIN);
+  const proxied = new Request(target.toString(), request);
+  const response = await fetch(proxied, { cf: { cacheTtl: 120, cacheEverything: request.method === "GET" } });
+  const headers = new Headers(response.headers);
+  headers.set("Cache-Control", isFrontendAsset(url.pathname) ? "public, max-age=31536000, immutable" : "public, max-age=120");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers
+  });
+}
+__name(proxyFrontend, "proxyFrontend");
+
 // src/index.js
 var router = new Router();
 router.get("/api/health", async (_, env) => json(await health(env)));
@@ -11016,15 +11058,26 @@ router.get("/(.*)", (req, env, ctx, p, url) => servePage(req));
 var index_default = {
   async fetch(request, env, ctx) {
     if (request.method === "OPTIONS") return handleCors(request);
-    const ip = request.headers.get("CF-Connecting-IP") || "unknown";
-    if (!rateLimit(ip)) {
-      return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
-        status: 429,
-        headers: { "Content-Type": "application/json", "Retry-After": "60", ...SECURITY_HEADERS }
-      });
-    }
     const origin = getAllowedOrigin(request);
     try {
+      const url = new URL(request.url);
+      if ((request.method === "GET" || request.method === "HEAD") && (isFrontendAsset(url.pathname) || isFrontendRoute(url.pathname))) {
+        const frontendResponse = await proxyFrontend(request);
+        frontendResponse.headers.set("Access-Control-Allow-Origin", origin || "https://hnh.brainsait.org");
+        frontendResponse.headers.set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+        frontendResponse.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        frontendResponse.headers.set("Vary", "Origin");
+        return frontendResponse;
+      }
+      if (!(request.method === "GET" && url.pathname === "/api/health")) {
+        const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+        if (!rateLimit(ip)) {
+          return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
+            status: 429,
+            headers: { "Content-Type": "application/json", "Retry-After": "60", ...SECURITY_HEADERS }
+          });
+        }
+      }
       const response = await router.match(request, env, ctx);
       if (response && typeof response === "object" && response.headers) {
         const safeCors = {

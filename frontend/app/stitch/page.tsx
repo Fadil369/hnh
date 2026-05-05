@@ -86,12 +86,12 @@ export default function StitchDesigns() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="card p-6 bg-gradient-to-r from-slate-800 to-slate-900 text-white border-0">
+      <div className="panel p-6 bg-gradient-to-r from-slate-800 to-slate-900 text-white border-0">
         <div className="flex items-center gap-3 mb-2">
           <span className="text-3xl">🎨</span>
           <div>
-            <h2 className="text-2xl font-bold">HNH BrainSAIT Design System</h2>
-            <p className="text-slate-300">Stitch-generated UI designs for HNH Healthcare OS</p>
+            <h2 className="text-2xl font-bold">HNH BrainSAIT Visual Assets</h2>
+            <p className="text-slate-300">Reference assets and screen captures used by the current operational sections</p>
           </div>
         </div>
       </div>

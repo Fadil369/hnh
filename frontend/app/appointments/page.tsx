@@ -1,27 +1,36 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import type { CSSProperties } from 'react'
+import { useEffect, useState } from 'react'
+
+const API = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'https://hnh.brainsait.org'
 
 export default function AppointmentsPage() {
-  const [appointments, setAppointments] = useState([])
-  const [providers, setProviders] = useState([])
+  const [appointments, setAppointments] = useState<any[]>([])
+  const [providers, setProviders] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0])
   const [formData, setFormData] = useState({
-    patient_id: '', provider_id: '', clinic_code: '', clinic_name: '',
-    appointment_date: '', appointment_time: '', appointment_type: 'new', reason: '',
+    patient_id: '',
+    provider_id: '',
+    clinic_code: '',
+    clinic_name: '',
+    appointment_date: '',
+    appointment_time: '',
+    appointment_type: 'new',
+    reason: '',
   })
 
   useEffect(() => {
-    fetchAppointments()
-    fetchProviders()
+    void fetchAppointments()
+    void fetchProviders()
   }, [selectedDate])
 
   const fetchAppointments = async () => {
     setLoading(true)
     try {
-      const res = await fetch(`${process.env.API_URL}/api/appointments?date=${selectedDate}`)
+      const res = await fetch(`${API}/api/appointments?date=${selectedDate}`)
       const data = await res.json()
       setAppointments(data.appointments || [])
     } catch (error) {
@@ -33,7 +42,7 @@ export default function AppointmentsPage() {
 
   const fetchProviders = async () => {
     try {
-      const res = await fetch(`${process.env.API_URL}/api/providers`)
+      const res = await fetch(`${API}/api/providers`)
       const data = await res.json()
       setProviders(data.providers || [])
     } catch (error) {
@@ -44,118 +53,138 @@ export default function AppointmentsPage() {
   const createAppointment = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const res = await fetch(`${process.env.API_URL}/api/appointments`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+      const res = await fetch(`${API}/api/appointments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
       const data = await res.json()
       if (data.success) {
         setShowForm(false)
-        setFormData({ patient_id: '', provider_id: '', clinic_code: '', clinic_name: '', appointment_date: '', appointment_time: '', appointment_type: 'new', reason: '' })
-        fetchAppointments()
+        setFormData({
+          patient_id: '',
+          provider_id: '',
+          clinic_code: '',
+          clinic_name: '',
+          appointment_date: '',
+          appointment_time: '',
+          appointment_type: 'new',
+          reason: '',
+        })
+        void fetchAppointments()
       }
     } catch (error) {
       console.error('Error:', error)
     }
   }
 
-  const statusBadge = (status: string) => {
-    const styles: Record<string, string> = {
-      scheduled: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
-      confirmed: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
-      completed: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-      cancelled: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+  const statusBadge = (status: string): CSSProperties => {
+    const styles: Record<string, CSSProperties> = {
+      scheduled: { backgroundColor: '#fef3c7', color: '#92400e' },
+      confirmed: { backgroundColor: '#dcfce7', color: '#166534' },
+      completed: { backgroundColor: '#dbeafe', color: '#1d4ed8' },
+      cancelled: { backgroundColor: '#fee2e2', color: '#b91c1c' },
     }
-    return styles[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+    return styles[status] || { backgroundColor: '#e2e8f0', color: '#334155' }
   }
+
   const statusLabel: Record<string, string> = {
-    scheduled: 'مجدول', confirmed: 'مؤكد', completed: 'مكتمل', cancelled: 'ملغي',
+    scheduled: 'مجدول',
+    confirmed: 'مؤكد',
+    completed: 'مكتمل',
+    cancelled: 'ملغي',
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">
-          <span>المواعيد</span>
-          <span className="text-lg font-normal mr-2" style={{ color: 'var(--text-secondary)' }}>Appointments</span>
-        </h2>
-        <button onClick={() => setShowForm(!showForm)} className="btn-primary">
-          + {showForm ? 'إلغاء' : 'حجز موعد'}
-        </button>
-      </div>
-
-      <div className="card p-4">
-        <div className="flex gap-3 items-center flex-wrap">
-          <span className="font-medium">التاريخ | Date:</span>
-          <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="input-field w-auto" />
-          <button onClick={fetchAppointments} className="btn-success text-sm">📅 عرض</button>
+      <section className="panel p-5 md:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="section-kicker">Appointments</div>
+            <h1 className="mt-3 text-2xl font-bold">إدارة المواعيد</h1>
+            <p className="text-sm text-muted">Daily appointment view, provider matching, and new booking creation.</p>
+          </div>
+          <button onClick={() => setShowForm((open) => !open)} className="btn-primary">
+            + {showForm ? 'إلغاء' : 'حجز موعد'}
+          </button>
         </div>
-      </div>
+      </section>
+
+      <section className="panel p-5 md:p-6">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-sm font-medium">التاريخ | Date</span>
+          <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="input-field w-auto" />
+          <button onClick={() => void fetchAppointments()} className="btn-success text-sm">📅 عرض</button>
+        </div>
+      </section>
 
       {showForm && (
-        <div className="card p-6">
-          <h3 className="text-xl font-bold mb-4">حجز موعد جديد | New Appointment</h3>
-          <form onSubmit={createAppointment} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <section className="panel p-5 md:p-6">
+          <div className="mb-5">
+            <div className="section-kicker">New Appointment</div>
+            <h2 className="mt-3 text-xl font-bold">حجز موعد جديد</h2>
+          </div>
+
+          <form onSubmit={createAppointment} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium mb-1">رقم المريض *</label>
-              <input type="text" value={formData.patient_id} onChange={(e) => setFormData({...formData, patient_id: e.target.value})} className="input-field" required />
+              <label className="mb-1 block text-sm font-medium">رقم المريض *</label>
+              <input type="text" value={formData.patient_id} onChange={(e) => setFormData({ ...formData, patient_id: e.target.value })} className="input-field" required />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">الطبيب *</label>
-              <select value={formData.provider_id} onChange={(e) => setFormData({...formData, provider_id: e.target.value})} className="input-field" required>
+              <label className="mb-1 block text-sm font-medium">الطبيب *</label>
+              <select value={formData.provider_id} onChange={(e) => setFormData({ ...formData, provider_id: e.target.value })} className="input-field" required>
                 <option value="">اختر الطبيب</option>
-                {providers.map((p: any) => (
-                  <option key={p.id} value={p.id}>{p.first_name_en} {p.last_name_en} - {p.specialty}</option>
+                {providers.map((provider: any) => (
+                  <option key={provider.id} value={provider.id}>{provider.first_name_en} {provider.last_name_en} - {provider.specialty}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">التاريخ *</label>
-              <input type="date" value={formData.appointment_date} onChange={(e) => setFormData({...formData, appointment_date: e.target.value})} className="input-field" required />
+              <label className="mb-1 block text-sm font-medium">التاريخ *</label>
+              <input type="date" value={formData.appointment_date} onChange={(e) => setFormData({ ...formData, appointment_date: e.target.value })} className="input-field" required />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">الوقت *</label>
-              <input type="time" value={formData.appointment_time} onChange={(e) => setFormData({...formData, appointment_time: e.target.value})} className="input-field" required />
+              <label className="mb-1 block text-sm font-medium">الوقت *</label>
+              <input type="time" value={formData.appointment_time} onChange={(e) => setFormData({ ...formData, appointment_time: e.target.value })} className="input-field" required />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">نوع الموعد</label>
-              <select value={formData.appointment_type} onChange={(e) => setFormData({...formData, appointment_type: e.target.value})} className="input-field">
+              <label className="mb-1 block text-sm font-medium">نوع الموعد</label>
+              <select value={formData.appointment_type} onChange={(e) => setFormData({ ...formData, appointment_type: e.target.value })} className="input-field">
                 <option value="new">موعد جديد</option>
                 <option value="follow_up">متابعة</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">رمز العيادة</label>
-              <input type="text" value={formData.clinic_code} onChange={(e) => setFormData({...formData, clinic_code: e.target.value})} className="input-field" />
+              <label className="mb-1 block text-sm font-medium">رمز العيادة</label>
+              <input type="text" value={formData.clinic_code} onChange={(e) => setFormData({ ...formData, clinic_code: e.target.value })} className="input-field" />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-1">سبب الزيارة</label>
-              <input type="text" value={formData.reason} onChange={(e) => setFormData({...formData, reason: e.target.value})} className="input-field" />
+              <label className="mb-1 block text-sm font-medium">سبب الزيارة</label>
+              <input type="text" value={formData.reason} onChange={(e) => setFormData({ ...formData, reason: e.target.value })} className="input-field" />
             </div>
-            <div className="md:col-span-2 flex gap-3">
+            <div className="md:col-span-2 flex flex-wrap gap-3">
               <button type="submit" className="btn-primary">حجز الموعد</button>
-              <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 rounded-lg border" style={{ borderColor: 'var(--border)' }}>إلغاء</button>
+              <button type="button" onClick={() => setShowForm(false)} className="rounded-xl border px-4 py-2" style={{ borderColor: 'var(--border)' }}>إلغاء</button>
             </div>
           </form>
-        </div>
+        </section>
       )}
 
-      <div className="card p-4">
-        <h3 className="text-lg font-bold mb-4">
-          مواعيد {selectedDate}
-          <span className="text-sm font-normal mr-2" style={{ color: 'var(--text-secondary)' }}>
-            {appointments.length} موعد
-          </span>
-        </h3>
+      <section className="panel overflow-hidden">
+        <div className="border-b px-5 py-4 md:px-6" style={{ borderColor: 'var(--border)' }}>
+          <h2 className="text-lg font-bold">مواعيد {selectedDate}</h2>
+          <p className="text-sm text-muted">{appointments.length} appointments scheduled for the selected date.</p>
+        </div>
+
         {loading ? (
-          <p className="text-center py-8" style={{ color: 'var(--text-secondary)' }}>جاري التحميل...</p>
+          <div className="p-10 text-center text-sm text-muted">جاري التحميل...</div>
         ) : appointments.length === 0 ? (
-          <p className="text-center py-8" style={{ color: 'var(--text-secondary)' }}>لا يوجد مواعيد في هذا التاريخ</p>
+          <div className="p-10 text-center text-sm text-muted">لا يوجد مواعيد في هذا التاريخ</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[760px]">
               <thead>
-                <tr className="border-b" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg)' }}>
+                <tr style={{ backgroundColor: 'var(--surface-muted)' }}>
                   <th className="p-3 text-right text-sm font-medium">الوقت</th>
                   <th className="p-3 text-right text-sm font-medium">المريض</th>
                   <th className="p-3 text-right text-sm font-medium">العيادة</th>
@@ -164,24 +193,27 @@ export default function AppointmentsPage() {
                 </tr>
               </thead>
               <tbody>
-                {appointments.sort((a: any, b: any) => a.appointment_time?.localeCompare(b.appointment_time)).map((apt: any) => (
-                  <tr key={apt.id} className="border-b hover:opacity-80 transition-opacity" style={{ borderColor: 'var(--border)' }}>
-                    <td className="p-3 text-sm font-mono">{apt.appointment_time?.slice(0, 5)}</td>
-                    <td className="p-3 text-sm font-medium">{apt.patient_name}</td>
-                    <td className="p-3 text-sm">{apt.clinic_name}</td>
-                    <td className="p-3 text-sm">{apt.appointment_type === 'follow_up' ? 'متابعة' : 'جديد'}</td>
-                    <td className="p-3 text-sm">
-                      <span className={`status-badge ${statusBadge(apt.status)}`}>
-                        {statusLabel[apt.status] || apt.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {appointments
+                  .slice()
+                  .sort((a: any, b: any) => a.appointment_time?.localeCompare(b.appointment_time))
+                  .map((appointment: any) => (
+                    <tr key={appointment.id} className="border-t hover:opacity-85" style={{ borderColor: 'var(--border)' }}>
+                      <td className="p-3 text-sm font-mono">{appointment.appointment_time?.slice(0, 5)}</td>
+                      <td className="p-3 text-sm font-semibold">{appointment.patient_name}</td>
+                      <td className="p-3 text-sm">{appointment.clinic_name}</td>
+                      <td className="p-3 text-sm">{appointment.appointment_type === 'follow_up' ? 'متابعة' : 'جديد'}</td>
+                      <td className="p-3 text-sm">
+                        <span className="status-badge" style={statusBadge(appointment.status)}>
+                          {statusLabel[appointment.status] || appointment.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
         )}
-      </div>
+      </section>
     </div>
   )
 }
