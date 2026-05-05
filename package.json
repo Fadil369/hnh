@@ -1,5 +1,29 @@
 {
-  "dependencies": {
-    "playwright": "^1.59.1"
+  "name": "hnh",
+  "version": "9.1.0",
+  "private": true,
+  "description": "HNH × BrainSAIT Healthcare OS — unified Cloudflare Worker, Next.js frontend, satellite workers, and static sites.",
+  "homepage": "https://hnh.brainsait.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fadil369/hnh.git"
+  },
+  "license": "UNLICENSED",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "deploy:dry": "wrangler deploy --dry-run",
+    "frontend:install": "npm --prefix apps/frontend install",
+    "frontend:build": "npm --prefix apps/frontend run build",
+    "frontend:dev": "npm --prefix apps/frontend run dev",
+    "workers:basma-portal:deploy": "wrangler deploy --config workers/basma-portal/wrangler.toml",
+    "workers:basma-crm:deploy": "wrangler deploy --config workers/basma-crm/wrangler.toml",
+    "workers:givc:deploy": "wrangler deploy --config workers/givc/wrangler.toml",
+    "migrate:remote": "wrangler d1 migrations apply hnh-gharnata --remote",
+    "migrate:local": "wrangler d1 migrations apply hnh-gharnata --local",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "playwright": "^1.59.1",
+    "wrangler": "^4.0.0"
   }
 }
