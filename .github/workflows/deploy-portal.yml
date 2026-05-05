@@ -1,0 +1,38 @@
+name: Deploy HNH Portal (Modular)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'hnh-portal/**'
+
+jobs:
+  deploy-portal:
+    name: Deploy hnh-portal to Cloudflare Workers
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Deploy via Wrangler
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: d7b99530559ab4f2545e9bdc72a7ab9b
+          workingDirectory: hnh-portal
+
+      - name: Smoke test
+        run: |
+          sleep 8
+          STATUS=$(curl -sf --max-time 15 https://hnh.brainsait.org/api/health | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('status','?'))" || echo "?")
+          echo "Health status: $STATUS"
+          if [ "$STATUS" != "healthy" ]; then echo "Health check failed: $STATUS"; exit 1; fi

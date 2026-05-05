@@ -35,6 +35,10 @@ import {
   sendSms, sendAppointmentSms, sendTelehealthSms, sendHomecareSms,
   sendWhatsApp, sendWhatsAppAppointment, notifyStatus,
 } from './routes/notify.js';
+import {
+  getGitHubActivity, getGitHubFeeds, getGitHubNotifications,
+  githubModelsChat, githubModelsEmbeddings, getGitHubRepo,
+} from './routes/github.js';
 import { servePage } from './pages.js';
 
 const router = new Router();
@@ -194,6 +198,14 @@ router.post('/api/whatsapp/appointment', (req, env) => sendWhatsAppAppointment(r
 
 // Notify status
 router.get('/api/notify/status', (req, env) => notifyStatus(req, env));
+
+// GitHub REST API Integration
+router.get('/api/github/activity',                  (req, env, ctx, p, url) => getGitHubActivity(req, env, ctx, p, url));
+router.get('/api/github/feeds',                     (req, env) => getGitHubFeeds(req, env));
+router.get('/api/github/notifications',             (req, env, ctx, p, url) => getGitHubNotifications(req, env, ctx, p, url));
+router.get('/api/github/repo',                      (req, env, ctx, p, url) => getGitHubRepo(req, env, ctx, p, url));
+router.post('/api/github/models/chat',              (req, env) => githubModelsChat(req, env));
+router.post('/api/github/models/embeddings',        (req, env) => githubModelsEmbeddings(req, env));
 
 
 // SPA — serve for everything else
