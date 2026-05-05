@@ -19,6 +19,7 @@ function ThemeToggle({ dark, onToggle }: { dark: boolean; onToggle: () => void }
 const NAV_ITEMS = [
   { href: '/', label: 'الرئيسية', labelEn: 'Home', icon: '🏠' },
   { href: '/portal', label: 'المنافذ', labelEn: 'Portals', icon: '🌐' },
+  { href: '/stitch', label: 'التصاميم', labelEn: 'Designs', icon: '🎨' },
   { href: '/patients', label: 'المرضى', labelEn: 'Patients', icon: '👤' },
   { href: '/appointments', label: 'المواعيد', labelEn: 'Appointments', icon: '📅' },
   { href: '/eligibility', label: 'الأهلية', labelEn: 'Eligibility', icon: '✅' },
@@ -67,8 +68,8 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
             <div className="flex items-center gap-3">
               <span className="text-2xl">🏥</span>
               <div>
-                <h1 className="text-lg font-bold leading-tight">مستشفى حيات الوطني</h1>
-                <p className="text-xs opacity-80 leading-tight">Hayat National Hospital · غرنطا</p>
+                <h1 className="text-lg font-bold leading-tight">مستشفى حيات الوطني - نظام التشغيل</h1>
+                <p className="text-xs opacity-80 leading-tight">HNH BrainSAIT Healthcare OS · Live Control Center</p>
               </div>
             </div>
 
@@ -188,13 +189,13 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
             <a href="https://oracle-bridge.brainsait.org" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--primary)' }}>🔷 Oracle</a>
           </div>
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            © 2026 مستشفى حيات الوطني - غرنطا | Powered by{' '}
+            © 2026 HNH BrainSAIT Healthcare OS | Powered by{' '}
             <a href="https://brainsait.org" className="underline hover:opacity-80" style={{ color: 'var(--primary)' }}>
-              BrainSAIT Healthcare OS
+              BrainSAIT
             </a>
           </p>
           <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>
-            Hayat National Hospital · Gharnata Branch · Unified Hub v3.0 · جميع الحقوق محفوظة
+            Basma AI · GIVC · NPHIES · Oracle · SBS · ClaimLinc · Live Control Center v9.1 · جميع الحقوق محفوظة
           </p>
         </div>
       </footer>

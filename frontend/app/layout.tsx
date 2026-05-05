@@ -3,8 +3,8 @@ import './globals.css'
 import LayoutClient from './layout-client'
 
 export const metadata: Metadata = {
-  title: 'مستشفى حيات الوطني - غرنطا | Hayat National Hospital - Gharnata',
-  description: 'بوابة خدمات المرضى لنظام معلومات مستشفى حيات - Hayat National Hospital Patient Portal powered by BrainSAIT Healthcare OS',
+  title: 'HNH BrainSAIT Healthcare OS | مركز التحكم الحيوي',
+  description: 'HNH Operating System - Live Control Center for Al Hayat National Hospitals. Powered by BrainSAIT: Basma AI, GIVC, NPHIES, Oracle, SBS, ClaimLinc',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
