@@ -945,7 +945,8 @@ async function checkDeepSeek(env) {
 __name(checkDeepSeek, "checkDeepSeek");
 
 async function checkWhatsApp(env) {
-  return env.WHATSAPP_TOKEN ? "configured" : "not_configured";
+  // WhatsApp now runs over Twilio — same creds as SMS
+  return (env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN) ? "configured" : "not_configured";
 }
 __name(checkWhatsApp, "checkWhatsApp");
 
@@ -10392,7 +10393,7 @@ router.get("/api/telehealth/ice-servers", (req, env) => getIceConfig(req, env));
 // ── Notify Routes: SMS (Twilio) + WhatsApp Business API ─────────────────────
 // src/routes/notify.js — HNH Portal v9.2.0
 var TWILIO_API2 = "https://api.twilio.com/2010-04-01";
-var WHATSAPP_GRAPH_API = "https://graph.facebook.com/v20.0";
+// WhatsApp via Twilio (sandbox: +14155238886 / production: WHATSAPP_FROM secret)
 
 function normalizeSaudiPhone(phone) {
   const digits = String(phone || "").replace(/\D/g, "");
@@ -10430,26 +10431,22 @@ async function sendTwilioSms2(env, to, body2) {
 }
 
 async function sendWhatsAppText2(env, to, text) {
-  const token = env.WHATSAPP_TOKEN || "";
-  const phoneId = env.WHATSAPP_PHONE_ID || "";
-  if (!token || !phoneId) return { success: false, error: "WhatsApp not configured", code: "NOT_CONFIGURED" };
-  const payload = {
-    messaging_product: "whatsapp",
-    recipient_type: "individual",
-    to: normalizeSaudiPhone(to),
-    type: "text",
-    text: { preview_url: false, body: text },
-  };
+  const auth = twilioAuth2(env);
+  if (!auth) return { success: false, error: "Twilio not configured", code: "NOT_CONFIGURED" };
+  // Use WHATSAPP_FROM secret (production number) or fall back to Twilio sandbox
+  const from = env.WHATSAPP_FROM || "whatsapp:+14155238886";
+  const toWa = "whatsapp:" + normalizeSaudiPhone(to);
+  const params = new URLSearchParams({ To: toWa, From: from, Body: text });
   try {
-    const res = await fetch(`${WHATSAPP_GRAPH_API}/${phoneId}/messages`, {
+    const res = await fetch(`${TWILIO_API2}/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, {
       method: "POST",
-      headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      headers: { "Authorization": auth, "Content-Type": "application/x-www-form-urlencoded" },
+      body: params.toString(),
       signal: AbortSignal.timeout(10000),
     });
     const data = await res.json();
-    if (res.ok && data.messages?.[0]?.id) return { success: true, message_id: data.messages[0].id, to: normalizeSaudiPhone(to) };
-    return { success: false, error: data.error?.message || "WhatsApp error", code: data.error?.code };
+    if (res.ok && data.sid) return { success: true, sid: data.sid, status: data.status, to: data.to, channel: "whatsapp" };
+    return { success: false, error: data.message || "WhatsApp/Twilio error", code: data.code };
   } catch (e) {
     return { success: false, error: e.message || "Network error", code: "NETWORK_ERROR" };
   }
@@ -10534,7 +10531,7 @@ async function notifyStatus2(request, env) {
   return json2({
     success: true,
     sms: env.TWILIO_ACCOUNT_SID ? "configured" : "not_configured",
-    whatsapp: env.WHATSAPP_TOKEN ? "configured" : "not_configured",
+    whatsapp: env.TWILIO_ACCOUNT_SID ? "configured" : "not_configured",
     email: (env.SENDGRID_API_KEY || env.MAILLINC_URL) ? "configured" : "not_configured",
     channels: ["sms", "whatsapp", "email"],
   });
