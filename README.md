@@ -61,6 +61,9 @@ curl https://hnh-unified.brainsait-fadil.workers.dev/health
 - **Name:** `hnh-gharnata`
 - **UUID:** `d6960732-d5d0-4271-84e9-ba988c9c32dc`
 - **Schema:** `schema.sql`
+- **Migrations:** `migrations/`
+- **Architecture:** [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+- **Agent runtime:** [`.agent/AGENTS.md`](.agent/AGENTS.md)
 
 ### Status
 - **Phase 1:** ✅ Foundation (D1, Worker, Schema)
