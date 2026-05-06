@@ -10281,9 +10281,11 @@ function servePage(req) {
 __name(servePage, "servePage");
 
 var FRONTEND_ORIGIN = "https://hnh-brainsait.pages.dev";
+var LANDING_PAGE_URL = "https://fadil369.github.io/hnh/";
 var FRONTEND_APP_ROUTES = /* @__PURE__ */ new Set([
   "",
   "/",
+  "/index.html",
   "/portal",
   "/integrations",
   "/workflows",
@@ -10313,6 +10315,19 @@ function isFrontendRoute(pathname) {
 __name(isFrontendRoute, "isFrontendRoute");
 async function proxyFrontend(request) {
   const url = new URL(request.url);
+  if (url.pathname === "/" || url.pathname === "/index.html") {
+    const landing = new URL(LANDING_PAGE_URL);
+    landing.search = url.search;
+    const response = await fetch(landing.toString(), { cf: { cacheTtl: 120, cacheEverything: request.method === "GET" } });
+    const headers = new Headers(response.headers);
+    headers.set("Content-Type", "text/html; charset=utf-8");
+    headers.set("Cache-Control", "public, max-age=120");
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers
+    });
+  }
   const targetPath = url.pathname;
   const target = new URL(targetPath + url.search, FRONTEND_ORIGIN);
   const proxied = new Request(target.toString(), request);
@@ -11307,7 +11322,7 @@ __name(appointmentIcs, "appointmentIcs");
 
 
 async function notifyStatus2(request, env) {
-  return json2({
+  return json({
     success: true,
     sms: env.TWILIO_ACCOUNT_SID ? "configured" : "not_configured",
     whatsapp: env.TWILIO_ACCOUNT_SID ? "configured" : "not_configured",
@@ -11830,7 +11845,7 @@ var index_default = {
           "Vary": "Origin"
         };
         for (const [k, v] of Object.entries(safeCors)) {
-          if (!response.headers.has(k)) response.headers.set(k, v);
+          response.headers.set(k, v);
         }
       }
       return response;

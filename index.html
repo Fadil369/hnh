@@ -2095,8 +2095,16 @@ function BookingModal({ lang, open, onClose }) {
 
   async function handleConfirm() {
     setSubmitting(true); setErrorMsg(''); setBookingPhase(1);
-    const result = { eligibility:null, patientId:null, appointmentId:null, waSid:null, copay:null };
+    const result = { eligibility:null, patientId:null, appointmentId:null, waSid:null, copay:null, waOk:false, emailSent:false };
     const withTimeout = (ms) => { const c = new AbortController(); setTimeout(()=>c.abort(), ms); return c.signal; };
+    const failText = (label) => lang === 'ar' ? `تعذر إكمال ${label}` : `Could not complete ${label}`;
+    const parseRequired = async (response, label) => {
+      const payload = await response.json().catch(()=>({}));
+      if (!response.ok || payload?.success === false) {
+        throw new Error(payload?.error || payload?.message || failText(label));
+      }
+      return payload;
+    };
     try {
       const phone = (form.phone || '').trim();
       const phoneE164 = phone.startsWith('+') ? phone : (phone.startsWith('00') ? '+' + phone.slice(2) : (phone.startsWith('05') ? '+966' + phone.slice(1) : (phone.startsWith('5') && phone.length === 9 ? '+966' + phone : '+' + phone)));
@@ -2137,35 +2145,33 @@ function BookingModal({ lang, open, onClose }) {
           }),
           signal: withTimeout(10000),
         });
-        const cj = await cr.json().catch(()=>({}));
+        const cj = await parseRequired(cr, lang === 'ar' ? 'حفظ بيانات المريض' : 'patient registration');
         patientId = cj.patient_id || cj.id || cj.patient?.id || null;
       }
+      if (!patientId) throw new Error(failText(lang === 'ar' ? 'حفظ بيانات المريض' : 'patient registration'));
       result.patientId = patientId;
 
       // 3) Persist appointment under provider OID tree
-      if (patientId) {
-        setBookingPhase(3);
-        try {
-          const ar = await fetch(`${API}/api/appointments`, {
-            method:'POST', headers:{'content-type':'application/json'},
-            body: JSON.stringify({
-              patient_id: patientId,
-              clinic_name: form.branch || form.dept,
-              speciality: form.dept,
-              provider_name: form.doctor || null,
-              appointment_date: form.date,
-              appointment_time: form.time || '10:00',
-              reason: form.notes || form.dept,
-              appointment_type: 'outpatient',
-              status: 'scheduled',
-              source: 'hnh-landing',
-            }),
-            signal: withTimeout(10000),
-          });
-          const aj = await ar.json().catch(()=>({}));
-          result.appointmentId = aj.appointment_id || aj.id || aj.appointment?.id || null;
-        } catch {}
-      }
+      setBookingPhase(3);
+      const ar = await fetch(`${API}/api/appointments`, {
+        method:'POST', headers:{'content-type':'application/json'},
+        body: JSON.stringify({
+          patient_id: patientId,
+          clinic_name: form.branch || form.dept,
+          speciality: form.dept,
+          provider_name: form.doctor || null,
+          appointment_date: form.date,
+          appointment_time: form.time || '10:00',
+          reason: form.notes || form.dept,
+          appointment_type: 'outpatient',
+          status: 'scheduled',
+          source: 'hnh-landing',
+        }),
+        signal: withTimeout(10000),
+      });
+      const aj = await parseRequired(ar, lang === 'ar' ? 'حجز الموعد' : 'appointment booking');
+      result.appointmentId = aj.appointment_id || aj.id || aj.appointment?.id || null;
+      if (!result.appointmentId) throw new Error(failText(lang === 'ar' ? 'حجز الموعد' : 'appointment booking'));
 
       // 4) WhatsApp confirmation — best-effort, do NOT throw
       setBookingPhase(4);
@@ -2181,25 +2187,30 @@ function BookingModal({ lang, open, onClose }) {
         const wj = await wr.json().catch(()=>({}));
         result.waSid = wj?.sid || wj?.message?.sid || '';
         result.waOk = wr.ok && wj?.success !== false;
+        if (!result.waOk) result.waError = wj?.error || wj?.message || `HTTP ${wr.status}`;
       } catch { result.waOk = false; }
       result.phone = phoneE164;
 
-      // 5) Email confirmation (fire-and-forget)
+      // 5) Email confirmation (best-effort, awaited so progress stays honest)
       if (form.email) {
         setBookingPhase(5);
         result.icsUrl = `${API}/api/appointments/${encodeURIComponent(result.appointmentId || 'tmp')}/ics?lang=${lang}&date=${encodeURIComponent(form.date)}&time=${encodeURIComponent(form.time||'10:00')}&clinic=${encodeURIComponent(form.branch||'')}&doctor=${encodeURIComponent(form.doctor||'')}&name=${encodeURIComponent(form.name||'')}`;
-        fetch(`${API}/api/booking/email`, {
-          method:'POST', headers:{'content-type':'application/json'},
-          body: JSON.stringify({
-            email: form.email, patientName: form.name,
-            doctor: form.doctor, clinic: form.branch,
-            date: form.date, time: form.time,
-            appointmentId: result.appointmentId, lang,
-          }),
-        }).then(r=>r.json()).then(j=>{
-          setBookingResult(prev => prev ? {...prev, emailSent: !!j?.success, emailChannel: j?.channel} : prev);
-        }).catch(()=>{});
-        result.emailPending = true;
+        try {
+          const emailResponse = await fetch(`${API}/api/booking/email`, {
+            method:'POST', headers:{'content-type':'application/json'},
+            body: JSON.stringify({
+              email: form.email, patientName: form.name,
+              doctor: form.doctor, clinic: form.branch,
+              date: form.date, time: form.time,
+              appointmentId: result.appointmentId, lang,
+            }),
+            signal: withTimeout(10000),
+          });
+          const emailPayload = await emailResponse.json().catch(()=>({}));
+          result.emailSent = emailResponse.ok && emailPayload?.success !== false;
+          result.emailChannel = emailPayload?.channel;
+          if (!result.emailSent) result.emailError = emailPayload?.error || emailPayload?.message || `HTTP ${emailResponse.status}`;
+        } catch { result.emailSent = false; }
       }
 
       // 6) Stash for context-aware Basma chat
