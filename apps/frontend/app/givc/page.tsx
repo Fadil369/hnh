@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Stethoscope, Loader2, Sparkles, Users, Calendar } from 'lucide-react'
+import { Stethoscope, Loader2, Sparkles, Users, Calendar, Search, FileText, FlaskConical, Image as ImageIcon, ScrollText } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,8 +11,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useT } from '@/lib/i18n'
-import { useProviders, useAppointments, useRunWorkflow } from '@/hooks/useApi'
+import { useProviders, useAppointments, useRunWorkflow, usePatientHistory } from '@/hooks/useApi'
 
 interface ClinicalForm {
   patient_id: string
@@ -143,6 +144,21 @@ export default function GivcPage() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
+            <Search className="h-4 w-4" />
+            {t('history.title')}
+          </CardTitle>
+          <CardDescription>
+            {locale === 'ar' ? 'بحث AutoRAG عبر السجلات والمختبرات والأشعة.' : 'AutoRAG search across encounters, labs, radiology, and reports.'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <PatientHistoryPanel />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
             <Sparkles className="h-4 w-4" />
             {t('givc.assist.title')}
           </CardTitle>
@@ -185,5 +201,108 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <Label>{label}</Label>
       {children}
     </div>
+  )
+}
+
+function PatientHistoryPanel() {
+  const { t, locale } = useT()
+  const [input, setInput] = useState('')
+  const [activeId, setActiveId] = useState('')
+  const { data, isLoading, isError } = usePatientHistory(activeId)
+
+  const encounters = (data as any)?.encounters ?? []
+  const labs = (data as any)?.labs ?? []
+  const radiology = (data as any)?.radiology ?? []
+  const reports = (data as any)?.reports ?? []
+  const rag = (data as any)?.rag_results ?? []
+
+  return (
+    <div className="space-y-4">
+      <form
+        onSubmit={(e) => { e.preventDefault(); setActiveId(input.trim()) }}
+        className="flex flex-col gap-2 sm:flex-row sm:items-end"
+      >
+        <div className="grid flex-1 gap-1.5">
+          <Label>{t('history.lookup')}</Label>
+          <Input dir="ltr" value={input} onChange={(e) => setInput(e.target.value)} placeholder="1XXXXXXXXX" />
+        </div>
+        <Button type="submit" disabled={!input.trim() || isLoading}>
+          {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+          {t('history.lookup')}
+        </Button>
+      </form>
+
+      {!activeId ? null : isError ? (
+        <p className="text-sm text-destructive">
+          {locale === 'ar' ? 'تعذر جلب السجل' : 'Failed to fetch history'}
+        </p>
+      ) : (
+        <Tabs defaultValue="encounters">
+          <TabsList>
+            <TabsTrigger value="encounters">
+              <ScrollText className="h-3.5 w-3.5" />{t('history.encounters')} ({encounters.length})
+            </TabsTrigger>
+            <TabsTrigger value="labs">
+              <FlaskConical className="h-3.5 w-3.5" />{t('history.labs')} ({labs.length})
+            </TabsTrigger>
+            <TabsTrigger value="radiology">
+              <ImageIcon className="h-3.5 w-3.5" />{t('history.radiology')} ({radiology.length})
+            </TabsTrigger>
+            <TabsTrigger value="reports">
+              <FileText className="h-3.5 w-3.5" />{t('history.reports')} ({reports.length})
+            </TabsTrigger>
+            <TabsTrigger value="rag">
+              <Sparkles className="h-3.5 w-3.5" />{t('history.rag')}
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="encounters"><HistoryList items={encounters} fields={['date','provider','diagnosis']} /></TabsContent>
+          <TabsContent value="labs"><HistoryList items={labs} fields={['date','test','result','flag']} /></TabsContent>
+          <TabsContent value="radiology"><HistoryList items={radiology} fields={['date','modality','impression']} /></TabsContent>
+          <TabsContent value="reports"><HistoryList items={reports} fields={['date','title','summary']} /></TabsContent>
+          <TabsContent value="rag" className="space-y-2">
+            {rag.length === 0 ? (
+              <p className="p-6 text-center text-sm text-muted-foreground">
+                {locale === 'ar' ? 'لا نتائج' : 'No matches'}
+              </p>
+            ) : rag.map((r: any, i: number) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.03 }}>
+                <Card>
+                  <CardContent className="p-3">
+                    <p className="text-xs text-muted-foreground">{r.source ?? r.title ?? `Match #${i + 1}`}</p>
+                    <p className="mt-1 text-sm">{r.text ?? r.snippet ?? r.content ?? JSON.stringify(r).slice(0, 300)}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </TabsContent>
+        </Tabs>
+      )}
+    </div>
+  )
+}
+
+function HistoryList({ items, fields }: { items: any[]; fields: string[] }) {
+  if (!items || items.length === 0) {
+    return <p className="p-6 text-center text-sm text-muted-foreground">—</p>
+  }
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          {fields.map((f) => <TableHead key={f} className="capitalize">{f}</TableHead>)}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {items.slice(0, 30).map((it, i) => (
+          <TableRow key={it.id ?? i}>
+            {fields.map((f) => (
+              <TableCell key={f} className="text-sm">{String(it[f] ?? '—').slice(0, 120)}</TableCell>
+            ))}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   )
 }

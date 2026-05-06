@@ -232,3 +232,84 @@ export function useRagSearch() {
     onError: (e: any) => toast.error(e?.message ?? 'Search failed'),
   })
 }
+
+// ─── Notifications (Twilio: SMS / WhatsApp / Voice) ─────────────────────────
+export function useNotify() {
+  return useMutation({
+    mutationFn: async (input: { channel: 'sms' | 'whatsapp' | 'voice'; to: string; message: string; locale?: 'ar' | 'en' }) =>
+      api<any>(`/api/notify/${input.channel}`, {
+        method: 'POST',
+        body: { to: input.to, message: input.message, locale: input.locale },
+      }),
+    onSuccess: (_, v) => toast.success(`Sent via ${v.channel}`),
+    onError: (e: any) => toast.error(e?.message ?? 'Notify failed'),
+  })
+}
+
+// ─── Patient history (Oracle EHR + AutoRAG) ─────────────────────────────────
+export function usePatientHistory(patientId: string) {
+  return useQuery({
+    queryKey: ['patient', 'history', patientId],
+    queryFn: async () => {
+      const [ehr, rag] = await Promise.allSettled([
+        api<any>(`/api/patients/${patientId}/history`),
+        api<any>(`${BSMA_API}/basma/rag/search`, {
+          method: 'POST',
+          body: { query: `patient ${patientId} history labs radiology reports`, limit: 10 },
+        }),
+      ])
+      return {
+        encounters: ehr.status === 'fulfilled' ? ehr.value?.encounters ?? [] : [],
+        labs: ehr.status === 'fulfilled' ? ehr.value?.labs ?? [] : [],
+        radiology: ehr.status === 'fulfilled' ? ehr.value?.radiology ?? [] : [],
+        reports: ehr.status === 'fulfilled' ? ehr.value?.reports ?? [] : [],
+        rag_results: rag.status === 'fulfilled' ? rag.value?.results ?? [] : [],
+      }
+    },
+    enabled: patientId.length > 0,
+  })
+}
+
+// ─── Telehealth & Homecare ──────────────────────────────────────────────────
+export function useStartTelehealth() {
+  return useMutation({
+    mutationFn: async (input: { appointment_id: string; provider_id?: string }) =>
+      api<any>('/api/telehealth/session', { method: 'POST', body: input }),
+    onError: (e: any) => toast.error(e?.message ?? 'Session start failed'),
+  })
+}
+
+export function useScheduleHomecare() {
+  return useMutation({
+    mutationFn: async (input: {
+      patient_id: string; service_type: string; visit_date: string; visit_time: string; address?: string
+    }) => api<any>('/api/homecare/schedule', { method: 'POST', body: input }),
+    onSuccess: () => toast.success('Homecare visit scheduled'),
+    onError: (e: any) => toast.error(e?.message ?? 'Schedule failed'),
+  })
+}
+
+// ─── Claims pipeline (normalize → validate → submit) ────────────────────────
+export function useNormalizeClaim() {
+  return useMutation({
+    mutationFn: async (input: { claim_id: string }) =>
+      api<any>('/api/claims/normalize', { method: 'POST', body: input }),
+    onError: (e: any) => toast.error(e?.message ?? 'Normalization failed'),
+  })
+}
+
+export function useValidateClaim() {
+  return useMutation({
+    mutationFn: async (input: { claim_id: string }) =>
+      api<any>('/api/claims/validate', { method: 'POST', body: input }),
+    onError: (e: any) => toast.error(e?.message ?? 'Validation failed'),
+  })
+}
+
+export function useSubmitClaim() {
+  return useMutation({
+    mutationFn: async (input: { claim_id: string }) =>
+      api<any>('/api/nphies/837', { method: 'POST', body: input }),
+    onError: (e: any) => toast.error(e?.message ?? 'Submission failed'),
+  })
+}

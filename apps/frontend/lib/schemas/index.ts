@@ -210,3 +210,23 @@ export const GithubNotificationSchema = z.object({
   updated_at: z.string().optional(),
 }).passthrough()
 export type GithubNotification = z.infer<typeof GithubNotificationSchema>
+
+// ─── Notifications (Twilio) ─────────────────────────────────────────────────
+export const NotifyRequestSchema = z.object({
+  channel: z.enum(['sms', 'whatsapp', 'voice']),
+  to: z.string().min(1, 'Required'),
+  message: z.string().min(1, 'Required'),
+  locale: z.enum(['ar', 'en']).optional(),
+})
+export type NotifyRequest = z.infer<typeof NotifyRequestSchema>
+
+// ─── Patient history (Oracle EHR + AutoRAG) ─────────────────────────────────
+export const PatientHistorySchema = z.object({
+  patient: z.unknown().optional(),
+  encounters: z.array(z.unknown()).default([]),
+  labs: z.array(z.unknown()).default([]),
+  radiology: z.array(z.unknown()).default([]),
+  reports: z.array(z.unknown()).default([]),
+  rag_summary: z.string().optional(),
+}).passthrough()
+export type PatientHistory = z.infer<typeof PatientHistorySchema>

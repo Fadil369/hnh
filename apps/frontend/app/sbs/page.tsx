@@ -2,15 +2,20 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Database, FileWarning, Sparkles, Loader2 } from 'lucide-react'
+import { Database, FileWarning, Sparkles, Loader2, Wand2, ShieldCheck, Send, Check } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useT } from '@/lib/i18n'
-import { useLoadRcm, useGenerateAppeal } from '@/hooks/useApi'
+import {
+  useLoadRcm, useGenerateAppeal,
+  useNormalizeClaim, useValidateClaim, useSubmitClaim,
+} from '@/hooks/useApi'
 
 const BRANCHES = [
   { id: 'r001', label: 'Riyadh' },
@@ -62,6 +67,7 @@ export default function SbsPage() {
           <TabsTrigger value="dashboard">{t('sbs.tab.dashboard')}</TabsTrigger>
           <TabsTrigger value="claims">{t('sbs.tab.claims')}</TabsTrigger>
           <TabsTrigger value="appeals">{t('sbs.tab.appeals')}</TabsTrigger>
+          <TabsTrigger value="submit">{t('sbs.tab.submit')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="dashboard" className="space-y-4">
@@ -146,7 +152,94 @@ export default function SbsPage() {
             ))
           )}
         </TabsContent>
+
+        <TabsContent value="submit">
+          <SubmissionPanel />
+        </TabsContent>
       </Tabs>
+    </div>
+  )
+}
+
+function SubmissionPanel() {
+  const { t, locale } = useT()
+  const [claimId, setClaimId] = useState('')
+  const normalize = useNormalizeClaim()
+  const validate = useValidateClaim()
+  const submit = useSubmitClaim()
+  const [results, setResults] = useState<Record<string, any>>({})
+
+  const stages = [
+    { key: 'normalize', icon: Wand2,        label: t('sbs.submit.normalize'), mut: normalize, tone: 'from-sky-500 to-cyan-500' },
+    { key: 'validate',  icon: ShieldCheck,  label: t('sbs.submit.validate'),  mut: validate,  tone: 'from-emerald-500 to-teal-500' },
+    { key: 'send',      icon: Send,         label: t('sbs.submit.send'),      mut: submit,    tone: 'from-fuchsia-500 to-purple-500' },
+  ] as const
+
+  async function run(key: string, mut: any) {
+    if (!claimId) return
+    try {
+      const r = await mut.mutateAsync({ claim_id: claimId })
+      setResults((prev) => ({ ...prev, [key]: r }))
+    } catch (e: any) {
+      setResults((prev) => ({ ...prev, [key]: { error: e?.message ?? 'failed' } }))
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">{t('sbs.tab.submit')}</CardTitle>
+          <CardDescription>
+            {locale === 'ar'
+              ? 'تطبيع المطالبة، التحقق منها، ثم إرسالها إلى نفيس 837.'
+              : 'Normalize, validate, then transmit the claim to NPHIES 837.'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
+            <div className="grid gap-1.5">
+              <Label>{locale === 'ar' ? 'رقم المطالبة' : 'Claim ID'}</Label>
+              <Input dir="ltr" value={claimId} onChange={(e) => setClaimId(e.target.value)} placeholder="CLM-XXXXXX" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+            {stages.map((s) => {
+              const r = results[s.key]
+              const Icon = s.icon
+              const done = r && !r.error
+              return (
+                <Card key={s.key} className="overflow-hidden">
+                  <div className={`bg-gradient-to-r ${s.tone} p-4 text-white`}>
+                    <div className="flex items-center gap-2">
+                      <Icon className="h-4 w-4" />
+                      <span className="text-sm font-semibold">{s.label}</span>
+                      {done ? <Check className="ms-auto h-4 w-4" /> : null}
+                    </div>
+                  </div>
+                  <CardContent className="space-y-2 p-4">
+                    <Button
+                      size="sm"
+                      variant={done ? 'outline' : 'default'}
+                      onClick={() => run(s.key, s.mut)}
+                      disabled={!claimId || s.mut.isPending}
+                    >
+                      {s.mut.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Icon className="h-4 w-4" />}
+                      {s.label}
+                    </Button>
+                    {r ? (
+                      <pre className="max-h-48 overflow-auto rounded-md border bg-muted/40 p-2 text-[11px]">
+                        {JSON.stringify(r, null, 2)}
+                      </pre>
+                    ) : null}
+                  </CardContent>
+                </Card>
+              )
+            })}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
