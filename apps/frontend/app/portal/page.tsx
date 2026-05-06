@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import {
-  ArrowRight, Hospital, Stethoscope, Wallet, Landmark, Database, ExternalLink, CircleDot,
+  ArrowRight, Hospital, Stethoscope, Wallet, Landmark, Database, ExternalLink, CircleDot, Video, GraduationCap,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -60,6 +60,24 @@ const PORTALS: Portal[] = [
     icon: Landmark, href: '/nphies',
     features: ['التحقق من الأهلية', 'التفويض المسبق', 'تقديم المطالبات', 'تتبع الحالة'],
     tone: 'from-amber-500 to-amber-700',
+  },
+  {
+    id: 'telehealth', name: 'Telehealth', nameAr: 'التطبيب',
+    title: 'Virtual Care Console', titleAr: 'لوحة الاستشارة عن بعد',
+    desc: 'Schedule sessions, start secure rooms, and track ICE readiness.',
+    descAr: 'جدولة الجلسات، بدء الغرف الآمنة، وتتبع جاهزية ICE.',
+    icon: Video, href: '/telehealth',
+    features: ['جلسات مباشرة', 'روابط آمنة', 'ICE/TURN', 'متابعة بعد الزيارة'],
+    tone: 'from-cyan-500 to-blue-700',
+  },
+  {
+    id: 'academy', name: 'Academy', nameAr: 'الأكاديمية',
+    title: 'Life Academy', titleAr: 'أكاديمية الحياة',
+    desc: 'Training tracks tied to clinical operations, SBS, NPHIES, and Basma.',
+    descAr: 'مسارات تدريب مرتبطة بالتشغيل السريري وSBS ونفيس وبسمة.',
+    icon: GraduationCap, href: '/academy',
+    features: ['تشغيل التطبيب', 'ترميز SBS', 'جاهزية نفيس', 'تواصل بسمة'],
+    tone: 'from-fuchsia-500 to-violet-700',
   },
   {
     id: 'oracle', name: 'Oracle HIS', nameAr: 'أوراكل',

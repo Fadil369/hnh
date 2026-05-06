@@ -22,27 +22,29 @@ interface IntegrationDef {
 }
 
 const INTEGRATIONS: IntegrationDef[] = [
-  { key: 'd1', label: 'Cloudflare D1', labelAr: 'كلاودفلير D1', category: 'core', path: ['core', 'd1'] },
-  { key: 'kv', label: 'Cloudflare KV', labelAr: 'كلاودفلير KV', category: 'core', path: ['core', 'kv'] },
-  { key: 'r2', label: 'Cloudflare R2', labelAr: 'كلاودفلير R2', category: 'core', path: ['core', 'r2'] },
-  { key: 'queue', label: 'Cloudflare Queues', labelAr: 'طوابير كلاودفلير', category: 'core', path: ['core', 'queue'] },
+  { key: 'database', label: 'HNH D1 Database', labelAr: 'قاعدة HNH D1', category: 'core', path: ['database'] },
+  { key: 'his_database', label: 'HIS Database', labelAr: 'قاعدة HIS', category: 'core', path: ['his_database'] },
+  { key: 'basma_database', label: 'Basma Database', labelAr: 'قاعدة بسمة', category: 'core', path: ['basma_database'] },
 
-  { key: 'nphies', label: 'NPHIES', labelAr: 'نفيز', category: 'government', path: ['government', 'nphies'] },
-  { key: 'wasfaty', label: 'Wasfaty', labelAr: 'وصفتي', category: 'government', path: ['government', 'wasfaty'] },
-  { key: 'sehhaty', label: 'Sehhaty', labelAr: 'صحتي', category: 'government', path: ['government', 'sehhaty'] },
+  { key: 'oracle_bridge', label: 'Oracle Bridge', labelAr: 'جسر أوراكل', category: 'government', path: ['integrations', 'oracle_bridge'] },
+  { key: 'nphies_mirror', label: 'NPHIES Mirror', labelAr: 'مرآة نفيس', category: 'government', path: ['integrations', 'nphies_mirror'] },
+  { key: 'claimlinc', label: 'ClaimLinc', labelAr: 'كليم لنك', category: 'government', path: ['integrations', 'claimlinc'] },
+  { key: 'givc_portal', label: 'GIVC Portal', labelAr: 'بوابة GIVC', category: 'government', path: ['integrations', 'givc_portal'] },
 
-  { key: 'openai', label: 'OpenAI', labelAr: 'أوبن إيه آي', category: 'ai', path: ['ai', 'openai'] },
-  { key: 'anthropic', label: 'Anthropic', labelAr: 'أنثروبيك', category: 'ai', path: ['ai', 'anthropic'] },
-  { key: 'azure', label: 'Azure AI', labelAr: 'أزور AI', category: 'ai', path: ['ai', 'azure'] },
+  { key: 'basma_portal', label: 'Basma Portal', labelAr: 'بوابة بسمة', category: 'ai', path: ['integrations', 'basma_portal'] },
+  { key: 'elevenlabs', label: 'ElevenLabs Voice', labelAr: 'صوت ElevenLabs', category: 'ai', path: ['integrations', 'elevenlabs'] },
+  { key: 'deepseek', label: 'DeepSeek AI', labelAr: 'ديب سيك', category: 'ai', path: ['integrations', 'deepseek'] },
 
-  { key: 'fhir', label: 'FHIR R4', labelAr: 'FHIR R4', category: 'digital', path: ['digital', 'fhir'] },
-  { key: 'hl7', label: 'HL7 v2', labelAr: 'HL7 v2', category: 'digital', path: ['digital', 'hl7'] },
+  { key: 'homecare', label: 'Homecare', labelAr: 'الرعاية المنزلية', category: 'digital', path: ['integrations', 'homecare'] },
+  { key: 'telehealth', label: 'Telehealth', labelAr: 'الاستشارة عن بعد', category: 'digital', path: ['integrations', 'telehealth'] },
+  { key: 'academy', label: 'Life Academy', labelAr: 'أكاديمية الحياة', category: 'digital', path: ['integrations', 'academy'] },
+  { key: 'sbs_portal', label: 'SBS Portal', labelAr: 'بوابة SBS', category: 'digital', path: ['integrations', 'sbs_portal'] },
 
-  { key: 'twilio', label: 'Twilio', labelAr: 'تويليو', category: 'communication', path: ['communication', 'twilio'] },
-  { key: 'sendgrid', label: 'SendGrid', labelAr: 'سيند جريد', category: 'communication', path: ['communication', 'sendgrid'] },
+  { key: 'twilio', label: 'Twilio SMS', labelAr: 'رسائل Twilio', category: 'communication', path: ['integrations', 'twilio'] },
+  { key: 'whatsapp', label: 'WhatsApp', labelAr: 'واتساب', category: 'communication', path: ['integrations', 'whatsapp'] },
+  { key: 'maillinc', label: 'MailLinc', labelAr: 'ميل لنك', category: 'communication', path: ['integrations', 'maillinc'] },
 
-  { key: 'github', label: 'GitHub', labelAr: 'جيت هاب', category: 'developer', path: ['developer', 'github'] },
-  { key: 'sentry', label: 'Sentry', labelAr: 'سنتري', category: 'developer', path: ['developer', 'sentry'] },
+  { key: 'hub_version', label: 'HNH Hub Version', labelAr: 'إصدار منصة HNH', category: 'developer', path: ['version'] },
 ]
 
 function statusOf(value: any): { variant: 'success' | 'destructive' | 'secondary'; icon: typeof CheckCircle2; label: string } {

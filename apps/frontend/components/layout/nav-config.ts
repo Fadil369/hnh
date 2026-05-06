@@ -1,7 +1,7 @@
 import {
   Home, Globe, Link2, Github, Workflow, Users, CalendarDays,
   ShieldCheck, ClipboardList, Stethoscope, CreditCard, Building2,
-  Hospital, BookOpen, Sparkles, Mic, HeartPulse, Video, Network, type LucideIcon,
+  Hospital, BookOpen, Sparkles, Mic, HeartPulse, Video, Network, GraduationCap, type LucideIcon,
 } from 'lucide-react'
 import type { TranslationKey } from '@/lib/i18n'
 
@@ -28,6 +28,7 @@ export const NAV: NavItem[] = [
   { href: '/nphies', labelKey: 'nav.nphies', icon: Building2,   group: 'portal', hint: 'Insurance exchange' },
   { href: '/homecare',   labelKey: 'nav.homecare',   icon: HeartPulse, group: 'portal', hint: 'Home visits' },
   { href: '/telehealth', labelKey: 'nav.telehealth', icon: Video,      group: 'portal', hint: 'Virtual consults' },
+  { href: '/academy',    labelKey: 'nav.academy',    icon: GraduationCap, group: 'portal', hint: 'Training academy' },
   { href: '/oid',        labelKey: 'nav.oid',        icon: Network,    group: 'portal', hint: 'Provider OID tree' },
 
   { href: '/integrations', labelKey: 'nav.integrations', icon: Link2,    group: 'secondary' },

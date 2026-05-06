@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
   Users, CalendarDays, Hospital, ClipboardList, ShieldCheck,
-  ArrowRight, Sparkles, Activity, Workflow, BookOpen, Stethoscope, CreditCard, Building2,
+  ArrowRight, Sparkles, Activity, Workflow, BookOpen, Stethoscope, CreditCard, Building2, Video, GraduationCap,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -46,6 +46,8 @@ export default function HomePage() {
     { href: '/givc',   icon: Stethoscope, label: t('nav.givc'),   desc: 'Provider clinical workstation', tone: 'from-emerald-500/20 to-emerald-500/5' },
     { href: '/sbs',    icon: CreditCard,  label: t('nav.sbs'),    desc: 'Saudi billing & RCM',           tone: 'from-amber-500/20 to-amber-500/5' },
     { href: '/nphies', icon: Building2,   label: t('nav.nphies'), desc: 'Insurance exchange',            tone: 'from-sky-500/20 to-sky-500/5' },
+    { href: '/telehealth', icon: Video, label: t('nav.telehealth'), desc: 'Virtual care console', tone: 'from-cyan-500/20 to-cyan-500/5' },
+    { href: '/academy', icon: GraduationCap, label: t('nav.academy'), desc: 'Training and enablement', tone: 'from-fuchsia-500/20 to-fuchsia-500/5' },
   ]
 
   const features = [
@@ -139,7 +141,7 @@ export default function HomePage() {
             <Link href="/portal">{t('common.viewAll')} <ArrowRight className={locale === 'ar' ? 'rotate-180' : ''} /></Link>
           </Button>
         </div>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
           {portals.map(({ href, icon: Icon, label, desc, tone }) => (
             <Link key={href} href={href} className="group">
               <Card className="relative h-full overflow-hidden transition-all hover:-translate-y-1 hover:shadow-card">

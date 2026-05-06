@@ -304,12 +304,66 @@ export function usePatientHistory(patientId: string) {
 }
 
 // ─── Telehealth & Homecare ──────────────────────────────────────────────────
-export function useStartTelehealth() {
+export function useTelehealthSessions(opts: { date?: string; status?: string; limit?: number } = {}) {
+  return useQuery({
+    queryKey: ['telehealth', 'sessions', opts],
+    queryFn: async () => {
+      const r = await api<{ sessions?: any[]; total?: number }>('/api/telehealth/sessions', {
+        query: { date: opts.date, status: opts.status, limit: opts.limit ?? 25 },
+      })
+      return r.sessions ?? []
+    },
+    refetchInterval: 30_000,
+  })
+}
+
+export function useTelehealthStats() {
+  return useQuery({
+    queryKey: ['telehealth', 'stats'],
+    queryFn: async () => {
+      const r = await api<any>('/api/telehealth/stats')
+      return r.stats ?? r
+    },
+    refetchInterval: 30_000,
+  })
+}
+
+export function useTelehealthIceServers() {
+  return useQuery({
+    queryKey: ['telehealth', 'ice'],
+    queryFn: async () => api<any>('/api/telehealth/ice-servers'),
+  })
+}
+
+export function useCreateTelehealthSession() {
+  const qc = useQueryClient()
   return useMutation({
-    mutationFn: async (input: { appointment_id: string; provider_id?: string }) => {
-      const id = encodeURIComponent(input.appointment_id)
+    mutationFn: async (input: {
+      patient_id: string
+      provider_id?: string
+      branch_id?: string
+      session_date: string
+      session_time: string
+      session_type?: string
+      chief_complaint?: string
+      duration_min?: number
+    }) => api<any>('/api/telehealth/sessions', { method: 'POST', body: input }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['telehealth'] })
+      toast.success('Telehealth session scheduled')
+    },
+    onError: (e: any) => toast.error(e?.message ?? 'Telehealth schedule failed'),
+  })
+}
+
+export function useStartTelehealth() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (input: { session_id: string }) => {
+      const id = encodeURIComponent(input.session_id)
       return api<any>(`/api/telehealth/sessions/${id}/start`, { method: 'POST', body: input })
     },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['telehealth'] }),
     onError: (e: any) => toast.error(e?.message ?? 'Session start failed'),
   })
 }
