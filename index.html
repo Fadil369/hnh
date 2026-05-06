@@ -1982,8 +1982,26 @@ function BookingModal({ lang, open, onClose }) {
       const wj = await wr.json().catch(()=>({}));
       if (!wr.ok || wj?.success === false) throw new Error(wj?.error || ('HTTP ' + wr.status));
       result.waSid = wj?.sid || wj?.message?.sid || '';
+      result.phone = phoneE164;
 
-      // 5) Stash for context-aware Basma chat
+      // 5) Email confirmation (fire-and-forget)
+      if (form.email) {
+        result.icsUrl = `${API}/api/appointments/${encodeURIComponent(result.appointmentId || 'tmp')}/ics?lang=${lang}&date=${encodeURIComponent(form.date)}&time=${encodeURIComponent(form.time||'10:00')}&clinic=${encodeURIComponent(form.branch||'')}&doctor=${encodeURIComponent(form.doctor||'')}&name=${encodeURIComponent(form.name||'')}`;
+        fetch(`${API}/api/booking/email`, {
+          method:'POST', headers:{'content-type':'application/json'},
+          body: JSON.stringify({
+            email: form.email, patientName: form.name,
+            doctor: form.doctor, clinic: form.branch,
+            date: form.date, time: form.time,
+            appointmentId: result.appointmentId, lang,
+          }),
+        }).then(r=>r.json()).then(j=>{
+          setBookingResult(prev => prev ? {...prev, emailSent: !!j?.success, emailChannel: j?.channel} : prev);
+        }).catch(()=>{});
+        result.emailPending = true;
+      }
+
+      // 6) Stash for context-aware Basma chat
       try {
         localStorage.setItem('hnh_patient', JSON.stringify({
           patientId, phone: phoneE164, name: form.name, lang,
@@ -2038,15 +2056,38 @@ function BookingModal({ lang, open, onClose }) {
                 {waSid && <span style={{display:'block',marginTop:4,fontFamily:'monospace',fontSize:'0.7rem',opacity:0.7}}>SID: {waSid}</span>}
               </p>
               {bookingResult && (
-                <div style={{background:'var(--cream)',borderRadius:'var(--r-md)',padding:'14px 18px',marginBottom:24,fontSize:'0.85rem',color:'var(--text-soft)',textAlign:lang==='ar'?'right':'left'}}>
+                <div style={{background:'var(--cream)',borderRadius:'var(--r-md)',padding:'14px 18px',marginBottom:16,fontSize:'0.85rem',color:'var(--text-soft)',textAlign:lang==='ar'?'right':'left'}}>
                   {bookingResult.eligibility && (
                     <div>✅ {lang==='ar'?'الأهلية:':'NPHIES Eligibility:'} <strong style={{color:'var(--ink)'}}>{bookingResult.eligibility}</strong>{bookingResult.copay!=null && <span> · {lang==='ar'?'المشاركة:':'Copay:'} <strong style={{color:'var(--ink)'}}>{bookingResult.copay} SAR</strong></span>}</div>
                   )}
                   {bookingResult.patientId && <div>👤 {lang==='ar'?'رقم المريض:':'Patient ID:'} <strong style={{color:'var(--ink)',fontFamily:'monospace'}}>{bookingResult.patientId}</strong></div>}
                   {bookingResult.appointmentId && <div>📅 {lang==='ar'?'رقم الموعد:':'Appointment:'} <strong style={{color:'var(--ink)',fontFamily:'monospace'}}>{bookingResult.appointmentId}</strong></div>}
+                  {form.email && <div>✉️ {lang==='ar'?'البريد:':'Email:'} <strong style={{color:'var(--ink)'}}>{bookingResult.emailSent ? (lang==='ar'?'تم الإرسال ✓':'Sent ✓') : (lang==='ar'?'جارٍ الإرسال...':'Sending...')}</strong></div>}
                   <div style={{marginTop:8,fontSize:'0.78rem',opacity:0.7}}>{lang==='ar'?'سيظهر موعدك مباشرة في لوحة الطبيب · GIVC':'Your appointment is now live on the provider dashboard · GIVC'}</div>
                 </div>
               )}
+              <div style={{display:'flex',gap:8,justifyContent:'center',flexWrap:'wrap',marginBottom:16}}>
+                {bookingResult?.icsUrl && (
+                  <a href={bookingResult.icsUrl} download className="btn btn-outline-gold" style={{textDecoration:'none',fontSize:'0.82rem',padding:'8px 14px'}}>
+                    📅 {lang==='ar'?'إضافة إلى التقويم':'Add to calendar'}
+                  </a>
+                )}
+                <button
+                  className="btn btn-outline-gold"
+                  style={{fontSize:'0.82rem',padding:'8px 14px'}}
+                  onClick={async()=>{
+                    try {
+                      const phoneE164 = bookingResult?.phone || form.phone;
+                      const r = await fetch(`${API}/api/whatsapp/appointment`, {
+                        method:'POST', headers:{'content-type':'application/json'},
+                        body: JSON.stringify({ to: phoneE164, patientName: form.name, date: form.date, time: form.time, clinic: form.branch, lang }),
+                      });
+                      const j = await r.json().catch(()=>({}));
+                      if (j?.sid) setWaSid(j.sid);
+                    } catch {}
+                  }}
+                >🔁 {lang==='ar'?'لم تصل؟ إعادة إرسال':"Didn't get it? Resend"}</button>
+              </div>
               <div style={{display:'flex',gap:12,justifyContent:'center'}}>
                 <button className="btn btn-outline-gold" onClick={()=>{setConfirmed(false);setStep(1);}}>{t.step4.newBook}</button>
                 <button className="btn btn-gold" onClick={onClose}>{t.step4.close}</button>

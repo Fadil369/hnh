@@ -10763,6 +10763,27 @@ async function notifySendWhatsApp(request, env) {
 }
 __name(notifySendWhatsApp, "notifySendWhatsApp");
 
+async function sendWhatsAppContent2(env, to, contentSid, variables) {
+  const auth = twilioAuth2(env);
+  if (!auth) return { success: false, error: "Twilio not configured", code: "NOT_CONFIGURED" };
+  const from = env.WHATSAPP_FROM || "whatsapp:+14155238886";
+  const toWa = "whatsapp:" + normalizeSaudiPhone(to);
+  const params = new URLSearchParams({ To: toWa, From: from, ContentSid: contentSid });
+  if (variables) params.set("ContentVariables", JSON.stringify(variables));
+  try {
+    const res = await fetch(`${TWILIO_API2}/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, {
+      method: "POST",
+      headers: { "Authorization": auth, "Content-Type": "application/x-www-form-urlencoded" },
+      body: params.toString(),
+      signal: AbortSignal.timeout(10000),
+    });
+    const data = await res.json();
+    if (res.ok && data.sid) return { success: true, sid: data.sid, status: data.status, to: data.to, channel: "whatsapp", interactive: true };
+    return { success: false, error: data.message || "Twilio Content error", code: data.code };
+  } catch (e) { return { success: false, error: e.message || "Network error", code: "NETWORK_ERROR" }; }
+}
+__name(sendWhatsAppContent2, "sendWhatsAppContent2");
+
 async function notifyWhatsAppAppointment(request, env) {
   const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
   try {
@@ -10770,6 +10791,14 @@ async function notifyWhatsAppAppointment(request, env) {
     const { to, patientName, date, time, clinic } = body2;
     if (!to || !patientName || !date) return json2({ success: false, error: "to, patientName, date required" }, 400);
     const lang = body2.lang || "ar";
+    const tplSid = env.WHATSAPP_APPT_TEMPLATE_SID;
+    if (tplSid) {
+      // Interactive Confirm/Reschedule/Cancel buttons via Twilio Content API
+      const vars = { 1: patientName || "", 2: date || "", 3: time || "10:00", 4: clinic || "" };
+      const r = await sendWhatsAppContent2(env, to, tplSid, vars);
+      if (r.success) return json2({ ...r, template: "appointment_interactive", lang }, 200);
+      // fall through to plain text on failure
+    }
     const msg = lang === "en" ? apptSmsEn({ name: patientName, date, time: time || "10:00", clinic: clinic || "Clinic" }) : apptSmsAr({ name: patientName, date, time: time || "10:00", clinic: clinic || "العيادة" });
     const result = await sendWhatsAppText2(env, to, msg);
     return json2({ ...result, template: "appointment", channel: "whatsapp", lang }, result.success ? 200 : 502);
@@ -11029,6 +11058,253 @@ async function basmaChat(request, env) {
 }
 __name(basmaChat, "basmaChat");
 
+function _icsEscape(s) { return String(s || "").replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n"); }
+function _icsDt(date, time) {
+  const d = (date || "").trim();
+  const t = (time || "10:00").trim();
+  const m = d.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return null;
+  const hm = t.match(/^(\d{1,2}):(\d{2})/) || ["","10","00"];
+  const yyyy = m[1], mm = m[2], dd = m[3];
+  const HH = String(hm[1]).padStart(2, "0"), MM = String(hm[2]).padStart(2, "0");
+  return { start: `${yyyy}${mm}${dd}T${HH}${MM}00`, end: `${yyyy}${mm}${dd}T${String((parseInt(HH,10)+1)%24).padStart(2,"0")}${MM}00` };
+}
+function buildIcs({ id, patientName, doctor, clinic, date, time, lang }) {
+  const dt = _icsDt(date, time);
+  if (!dt) return null;
+  const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+  const title = lang === "en"
+    ? `HNH Appointment — ${doctor || "Provider"}`
+    : `موعد في مستشفيات الحياة الوطني — ${doctor || "الطبيب"}`;
+  const desc = lang === "en"
+    ? `Patient: ${patientName}\\nClinic: ${clinic || ""}\\nProvider: ${doctor || ""}\\nAppointment ID: ${id || ""}\\nSupport: 920000094`
+    : `المريض: ${patientName}\\nالعيادة: ${clinic || ""}\\nالطبيب: ${doctor || ""}\\nرقم الحجز: ${id || ""}\\nالدعم: 920000094`;
+  const uid = `appt-${id || Math.random().toString(36).slice(2)}@hnh.brainsait.org`;
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//BrainSAIT//HNH//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:REQUEST",
+    "BEGIN:VEVENT",
+    `UID:${uid}`,
+    `DTSTAMP:${now}`,
+    `DTSTART;TZID=Asia/Riyadh:${dt.start}`,
+    `DTEND;TZID=Asia/Riyadh:${dt.end}`,
+    `SUMMARY:${_icsEscape(title)}`,
+    `DESCRIPTION:${_icsEscape(desc)}`,
+    `LOCATION:${_icsEscape(clinic || "Hayat National Hospitals")}`,
+    "STATUS:CONFIRMED",
+    "END:VEVENT",
+    "END:VCALENDAR"
+  ];
+  return lines.join("\r\n");
+}
+__name(buildIcs, "buildIcs");
+
+function _emailHtml({ patientName, doctor, clinic, date, time, appointmentId, icsUrl, lang }) {
+  const isAr = lang === "ar";
+  const safe = (s) => String(s || "").replace(/[<>&"]/g, (c) => ({ "<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;" }[c]));
+  const title = isAr ? "تأكيد موعدك" : "Your appointment is confirmed";
+  const greet = isAr ? `مرحباً ${safe(patientName)} 👋` : `Hello ${safe(patientName)} 👋`;
+  const intro = isAr
+    ? "تم تأكيد موعدك في مستشفيات الحياة الوطني. التفاصيل أدناه:"
+    : "Your appointment at Hayat National Hospitals is confirmed. Details below:";
+  const lblDate = isAr ? "التاريخ" : "Date";
+  const lblTime = isAr ? "الوقت" : "Time";
+  const lblClinic = isAr ? "العيادة" : "Clinic";
+  const lblDoctor = isAr ? "الطبيب" : "Provider";
+  const lblId = isAr ? "رقم الحجز" : "Appointment ID";
+  const calBtn = isAr ? "إضافة إلى التقويم 📅" : "Add to calendar 📅";
+  const portal = isAr ? "بوابة بسمة" : "Basma Portal";
+  const support = isAr ? "للاستفسار: 920000094" : "Support: 920000094";
+  const dir = isAr ? "rtl" : "ltr";
+  return `<!doctype html><html lang="${isAr?'ar':'en'}" dir="${dir}"><head><meta charset="utf-8"><title>${title}</title></head>
+<body style="margin:0;padding:0;background:#0a1220;font-family:'Tajawal','Helvetica Neue',Arial,sans-serif;color:#f5efe2;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0a1220;padding:32px 16px;">
+<tr><td align="center">
+  <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:linear-gradient(180deg,#101a2c 0%,#0a1220 100%);border:1px solid rgba(201,168,76,0.25);border-radius:16px;overflow:hidden;">
+    <tr><td style="padding:28px 32px 8px 32px;border-bottom:1px solid rgba(201,168,76,0.15);">
+      <div style="font-size:12px;letter-spacing:2px;color:#c9a84c;text-transform:uppercase;">BrainSAIT × HNH</div>
+      <h1 style="margin:8px 0 0 0;font-size:22px;color:#f5efe2;font-weight:600;">${title}</h1>
+    </td></tr>
+    <tr><td style="padding:24px 32px;">
+      <p style="margin:0 0 16px 0;font-size:16px;color:#f5efe2;">${greet}</p>
+      <p style="margin:0 0 24px 0;font-size:14px;color:#a9b1c2;line-height:1.6;">${intro}</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:12px;">
+        <tr><td style="padding:18px 22px;font-size:14px;line-height:1.9;color:#f5efe2;">
+          <div><span style="color:#a9b1c2;width:90px;display:inline-block;">${lblDate}</span><strong>${safe(date)}</strong></div>
+          <div><span style="color:#a9b1c2;width:90px;display:inline-block;">${lblTime}</span><strong>${safe(time)}</strong></div>
+          <div><span style="color:#a9b1c2;width:90px;display:inline-block;">${lblClinic}</span><strong>${safe(clinic)}</strong></div>
+          ${doctor?`<div><span style="color:#a9b1c2;width:90px;display:inline-block;">${lblDoctor}</span><strong>${safe(doctor)}</strong></div>`:""}
+          ${appointmentId?`<div><span style="color:#a9b1c2;width:90px;display:inline-block;">${lblId}</span><strong style="font-family:monospace;color:#c9a84c;">${safe(appointmentId)}</strong></div>`:""}
+        </td></tr>
+      </table>
+      ${icsUrl?`<div style="text-align:center;margin:28px 0 8px 0;"><a href="${icsUrl}" style="display:inline-block;padding:14px 28px;background:linear-gradient(180deg,#c9a84c,#9d8338);color:#0a1220;text-decoration:none;border-radius:999px;font-weight:700;font-size:14px;letter-spacing:0.5px;">${calBtn}</a></div>`:""}
+      <p style="margin:24px 0 0 0;font-size:12px;color:#a9b1c2;text-align:center;">
+        <a href="https://bsma.brainsait.de" style="color:#c9a84c;text-decoration:none;">${portal}</a>
+        &nbsp;·&nbsp; ${support}
+      </p>
+    </td></tr>
+    <tr><td style="padding:16px 32px;background:rgba(0,0,0,0.3);border-top:1px solid rgba(201,168,76,0.1);text-align:center;">
+      <div style="font-size:11px;color:#6b7488;">© Hayat National Hospitals · مستشفيات الحياة الوطني</div>
+    </td></tr>
+  </table>
+</td></tr></table></body></html>`;
+}
+
+async function sendBookingEmail(request, env) {
+  const cors = { "access-control-allow-origin": "*" };
+  const json3 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", ...cors } });
+  try {
+    const body = await request.json().catch(() => ({}));
+    const { email, patientName, doctor, clinic, date, time, appointmentId, lang } = body;
+    if (!email || !patientName || !date) return json3({ success: false, error: "email, patientName, date required" }, 400);
+    const icsUrl = appointmentId
+      ? `https://hnh.brainsait.org/api/appointments/${encodeURIComponent(appointmentId)}/ics`
+      : null;
+    const subject = lang === "en"
+      ? `HNH · Appointment confirmed — ${date} ${time || ""}`.trim()
+      : `مستشفيات الحياة الوطني · تأكيد موعد — ${date} ${time || ""}`.trim();
+    const html = _emailHtml({ patientName, doctor, clinic, date, time, appointmentId, icsUrl, lang });
+    const ics = buildIcs({ id: appointmentId || "tmp", patientName, doctor, clinic, date, time, lang });
+    const fromAddr = env.EMAIL_FROM || "info.book@noreply.hnh.brainsait.org";
+    const fromName = "Hayat National Hospitals";
+
+    // Primary: Cloudflare Workers send_email binding (info.book@noreply.hnh.brainsait.org)
+    if (env.EMAIL && typeof env.EMAIL.send === "function") {
+      try {
+        const { EmailMessage } = await import("cloudflare:email");
+        const raw = _buildBookingMime({ from: fromAddr, fromName, to: email, subject, html, ics, appointmentId });
+        const msg = new EmailMessage(fromAddr, email, raw);
+        await env.EMAIL.send(msg);
+        return json3({ success: true, channel: "cf_email", from: fromAddr, ics_url: icsUrl }, 200);
+      } catch (e) {
+        // Fall through to maillinc on failure (e.g. destination not verified)
+        const errMsg = String(e?.message || e);
+        const maillincUrl = env.MAILLINC_URL || "https://maillinc.brainsait-fadil.workers.dev";
+        try {
+          const r = await fetch(`${maillincUrl}/email`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", ...(env.MAILLINC_API_KEY ? { "X-API-Key": env.MAILLINC_API_KEY } : {}) },
+            body: JSON.stringify({ from: fromAddr, from_name: fromName, to: email, subject, html }),
+          });
+          const data = await r.json().catch(() => ({}));
+          return json3({ success: r.ok, channel: "maillinc_fallback", cf_email_error: errMsg, status: r.status, maillinc: data, ics_url: icsUrl }, r.ok ? 200 : 502);
+        } catch (e2) {
+          return json3({ success: false, error: errMsg, fallback_error: String(e2?.message || e2), ics_url: icsUrl }, 502);
+        }
+      }
+    }
+
+    // Fallback: maillinc only (no EMAIL binding)
+    const maillincUrl = env.MAILLINC_URL || "https://maillinc.brainsait-fadil.workers.dev";
+    const r = await fetch(`${maillincUrl}/email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...(env.MAILLINC_API_KEY ? { "X-API-Key": env.MAILLINC_API_KEY } : {}) },
+      body: JSON.stringify({ from: fromAddr, from_name: fromName, to: email, subject, html }),
+    });
+    const data = await r.json().catch(() => ({}));
+    return json3({ success: r.ok, channel: "maillinc", status: r.status, maillinc: data, ics_url: icsUrl }, r.ok ? 200 : 502);
+  } catch (e) {
+    return json3({ success: false, error: String(e?.message || e) }, 500);
+  }
+}
+__name(sendBookingEmail, "sendBookingEmail");
+
+function _b64(str) {
+  // Workers btoa works on latin1 — use TextEncoder for UTF-8 safe base64
+  const bytes = new TextEncoder().encode(str);
+  let bin = "";
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+__name(_b64, "_b64");
+
+function _b64Wrap(b64, width = 76) {
+  const out = [];
+  for (let i = 0; i < b64.length; i += width) out.push(b64.slice(i, i + width));
+  return out.join("\r\n");
+}
+__name(_b64Wrap, "_b64Wrap");
+
+function _buildBookingMime({ from, fromName, to, subject, html, ics, appointmentId }) {
+  const boundary = "----hnh-boundary-" + Math.random().toString(36).slice(2);
+  const subjectB64 = "=?UTF-8?B?" + _b64(subject) + "?=";
+  const fromHdr = `${fromName} <${from}>`;
+  const lines = [];
+  lines.push(`From: ${fromHdr}`);
+  lines.push(`To: ${to}`);
+  lines.push(`Subject: ${subjectB64}`);
+  lines.push(`MIME-Version: 1.0`);
+  lines.push(`Date: ${new Date().toUTCString()}`);
+  lines.push(`Message-ID: <appt-${appointmentId || Math.random().toString(36).slice(2)}@hnh.brainsait.org>`);
+  lines.push(`Content-Type: multipart/mixed; boundary="${boundary}"`);
+  lines.push("");
+  lines.push(`--${boundary}`);
+  lines.push(`Content-Type: text/html; charset=UTF-8`);
+  lines.push(`Content-Transfer-Encoding: base64`);
+  lines.push("");
+  lines.push(_b64Wrap(_b64(html)));
+  if (ics) {
+    lines.push(`--${boundary}`);
+    lines.push(`Content-Type: text/calendar; charset=UTF-8; method=REQUEST; name="appointment.ics"`);
+    lines.push(`Content-Disposition: attachment; filename="appointment.ics"`);
+    lines.push(`Content-Transfer-Encoding: base64`);
+    lines.push("");
+    lines.push(_b64Wrap(_b64(ics)));
+  }
+  lines.push(`--${boundary}--`);
+  lines.push("");
+  return lines.join("\r\n");
+}
+__name(_buildBookingMime, "_buildBookingMime");
+
+async function appointmentIcs(request, env, ctx, params) {
+  const id = decodeURIComponent(params?.[0] || "");
+  const url = new URL(request.url);
+  const lang = url.searchParams.get("lang") === "en" ? "en" : "ar";
+  let appt = null;
+  try {
+    if (env.DB) {
+      // simple query first (no joins) to avoid silent failures on missing schema
+      appt = await env.DB.prepare(`SELECT * FROM appointments WHERE id = ? LIMIT 1`).bind(id).first();
+      if (appt && appt.patient_id) {
+        try {
+          const p = await env.DB.prepare(`SELECT full_name_ar, full_name_en FROM patients WHERE id = ? LIMIT 1`).bind(appt.patient_id).first();
+          if (p) { appt.p_name_ar = p.full_name_ar; appt.p_name_en = p.full_name_en; }
+        } catch {}
+      }
+      if (appt && appt.provider_id) {
+        try {
+          const pr = await env.DB.prepare(`SELECT name FROM providers WHERE id = ? LIMIT 1`).bind(appt.provider_id).first();
+          if (pr) appt.provider_name = pr.name;
+        } catch {}
+      }
+    }
+  } catch {}
+
+  // Allow query params to override / supply when DB row missing
+  const date = url.searchParams.get("date") || (appt?.appointment_date || "").slice(0, 10);
+  const time = url.searchParams.get("time") || appt?.appointment_time || "10:00";
+  const clinic = url.searchParams.get("clinic") || appt?.clinic_name || "";
+  const doctor = url.searchParams.get("doctor") || appt?.provider_name || "";
+  const patientName = url.searchParams.get("name") || appt?.p_name_ar || appt?.p_name_en || "Patient";
+
+  const ics = buildIcs({ id, patientName, doctor, clinic, date, time, lang });
+  if (!ics) return new Response("Appointment not found", { status: 404, headers: { "access-control-allow-origin": "*" } });
+  return new Response(ics, {
+    status: 200,
+    headers: {
+      "content-type": "text/calendar; charset=utf-8",
+      "content-disposition": `attachment; filename="hnh-appointment-${id}.ics"`,
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+    },
+  });
+}
+__name(appointmentIcs, "appointmentIcs");
+
 
 async function notifyStatus2(request, env) {
   return json2({
@@ -11062,6 +11338,8 @@ router.post("/api/whatsapp/webhook", (req, env, ctx) => whatsappInboundWebhook(r
 router.get("/api/whatsapp/webhook", () => new Response("ok", { status: 200 }));
 router.get("/api/voice/wa/([^/]+)", (req, env, ctx, p) => voiceReplyAudio(p[0], env));
 router.post("/api/basma/chat", (req, env) => basmaChat(req, env));
+router.post("/api/booking/email", (req, env) => sendBookingEmail(req, env));
+router.get("/api/appointments/([^/]+)/ics", (req, env, ctx, p) => appointmentIcs(req, env, ctx, p));
 // Notify status
 router.get("/api/notify/status", (req, env) => notifyStatus2(req, env));
 

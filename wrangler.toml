@@ -11,6 +11,11 @@ bucket = "apps/frontend/out"
 [ai]
 binding = "AI"
 
+# Cloudflare Email Send binding (sends from info.book@noreply.hnh.brainsait.org)
+# Destinations must be verified in Email Routing → Destination addresses.
+[[send_email]]
+name = "EMAIL"
+
 # Primary: HNH Gharnata schema (patients, appointments, claims, providers)
 [[d1_databases]]
 binding = "DB"
@@ -122,6 +127,9 @@ service = "givc-portal"
 
 [env.production.ai]
 binding = "AI"
+
+[[env.production.send_email]]
+name = "EMAIL"
 
 # Cron triggers
 [triggers]
