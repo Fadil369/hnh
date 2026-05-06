@@ -10395,6 +10395,8 @@ router.get("/api/providers", async (req, env, ctx, p, url) => {
   if (!url) url = new URL(req.url);
   const branch = url?.searchParams?.get("branch") || "";
   const dept = url?.searchParams?.get("department") || "";
+  const rawLimit = Number.parseInt(url?.searchParams?.get("limit") || "", 10);
+  const limit = Number.isFinite(rawLimit) && rawLimit > 0 ? Math.min(rawLimit, 100) : 0;
   let list = await getProviders(env);
   if (branch) {
     const b = branch.toLowerCase();
@@ -10424,7 +10426,9 @@ router.get("/api/providers", async (req, env, ctx, p, url) => {
     });
   }
   if (dept) list = list.filter((p2) => p2.department === dept || p2.department_id === dept);
-  return json({ success: true, providers: list, total: list.length });
+  const total = list.length;
+  if (limit) list = list.slice(0, limit);
+  return json({ success: true, providers: list, total, limit: limit || null });
 });
 router.get("/api/providers/([^/]+)", async (req, env, ctx, p) => {
   const prov = await getProvider(p[0], env);
