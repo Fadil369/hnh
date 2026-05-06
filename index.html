@@ -1858,12 +1858,10 @@ function BookingModal({ lang, open, onClose }) {
         headers: {'content-type': 'application/json'},
         body: JSON.stringify({
           to: phoneE164,
-          patient_name: form.name,
-          provider_name: form.doctor,
-          appointment_date: form.date,
-          appointment_time: form.time,
-          clinic_name: form.branch,
-          reason: form.notes || form.dept,
+          patientName: form.name,
+          date: form.date,
+          time: form.time,
+          clinic: form.branch,
           lang,
         }),
       });
