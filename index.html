@@ -765,7 +765,7 @@
     }
     .modal-overlay.open { opacity: 1; visibility: visible; }
 
-    .modal {
+    .modal { position: relative;
       background: white; border-radius: var(--r-xl);
       width: 100%; max-width: 620px;
       max-height: 90vh; overflow-y: auto;
@@ -866,6 +866,129 @@
       padding: 24px 36px; border-top: 1px solid var(--cream-dk);
       display: flex; justify-content: space-between; align-items: center;
     }
+
+    /* Booking loader (creative full-overlay during /api calls) */
+    .booking-loader {
+      position: absolute; inset: 0; z-index: 10;
+      border-radius: var(--r-xl);
+      background: radial-gradient(circle at 50% 30%, rgba(201,168,76,0.18), rgba(10,18,32,0.96) 65%);
+      backdrop-filter: blur(14px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 36px 32px; text-align: center;
+      animation: bl-fade-in 0.35s var(--ease) both;
+      overflow: hidden;
+    }
+    .booking-loader::before {
+      content: ''; position: absolute; inset: -50%;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(201,168,76,0.10), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(201,168,76,0.08), transparent 40%);
+      animation: bl-drift 12s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes bl-fade-in { from{opacity:0;transform:scale(.98)} to{opacity:1;transform:scale(1)} }
+    @keyframes bl-drift { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
+
+    .bl-orb {
+      position: relative; width: 140px; height: 140px;
+      margin-bottom: 20px;
+    }
+    .bl-ring {
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 2px solid transparent;
+      border-top-color: var(--gold);
+      border-right-color: rgba(201,168,76,0.4);
+      animation: bl-spin 2.4s linear infinite;
+    }
+    .bl-ring-1 { inset: 0; }
+    .bl-ring-2 { inset: 14px; border-top-color: rgba(201,168,76,0.6); border-right-color: transparent; border-left-color: rgba(201,168,76,0.5); animation-duration: 3.6s; animation-direction: reverse; }
+    .bl-ring-3 { inset: 28px; border-top-color: transparent; border-bottom-color: var(--gold); animation-duration: 1.8s; }
+    @keyframes bl-spin { to { transform: rotate(360deg); } }
+
+    .bl-core {
+      position: absolute; inset: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(201,168,76,0.35), rgba(10,18,32,0.6) 70%);
+      box-shadow: 0 0 30px rgba(201,168,76,0.4), inset 0 0 20px rgba(201,168,76,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      animation: bl-pulse 2s ease-in-out infinite;
+    }
+    @keyframes bl-pulse { 0%,100%{box-shadow:0 0 30px rgba(201,168,76,0.4),inset 0 0 20px rgba(201,168,76,0.2)} 50%{box-shadow:0 0 50px rgba(201,168,76,0.65),inset 0 0 30px rgba(201,168,76,0.35)} }
+    .bl-pct { font-size: 1.4rem; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+    .bl-pct span { font-size: 0.75rem; opacity: 0.6; margin-inline-start: 2px; }
+    .bl-check { color: var(--gold); animation: bl-check-pop 0.6s var(--ease) both; }
+    @keyframes bl-check-pop { 0%{transform:scale(0) rotate(-45deg);opacity:0} 60%{transform:scale(1.2) rotate(0);opacity:1} 100%{transform:scale(1) rotate(0)} }
+
+    .bl-spark {
+      position: absolute; width: 4px; height: 4px; border-radius: 50%;
+      background: var(--gold); box-shadow: 0 0 8px var(--gold);
+      animation: bl-orbit 4s linear infinite;
+    }
+    .bl-spark-1 { animation-delay: 0s; }
+    .bl-spark-2 { animation-delay: -1s; animation-duration: 5s; }
+    .bl-spark-3 { animation-delay: -2s; animation-duration: 3.5s; }
+    .bl-spark-4 { animation-delay: -3s; animation-duration: 4.5s; }
+    @keyframes bl-orbit {
+      0%   { transform: rotate(0deg) translateX(70px) rotate(0deg); opacity: 0.9; }
+      50%  { opacity: 0.3; }
+      100% { transform: rotate(360deg) translateX(70px) rotate(-360deg); opacity: 0.9; }
+    }
+
+    .bl-title {
+      color: #fff; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.3px;
+      margin-bottom: 6px;
+    }
+    .bl-sub {
+      color: rgba(255,255,255,0.65); font-size: 0.8rem;
+      margin-bottom: 22px; max-width: 280px;
+    }
+    .bl-steps {
+      list-style: none; padding: 0; margin: 0 0 18px;
+      display: flex; flex-direction: column; gap: 8px;
+      width: 100%; max-width: 320px;
+    }
+    .bl-step {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.82rem; color: rgba(255,255,255,0.45);
+      padding: 6px 10px; border-radius: 999px;
+      transition: all 0.35s var(--ease);
+    }
+    .bl-step.active {
+      color: var(--gold); background: rgba(201,168,76,0.10);
+      box-shadow: inset 0 0 0 1px rgba(201,168,76,0.25);
+    }
+    .bl-step.done { color: rgba(255,255,255,0.85); }
+    .bl-step-dot {
+      flex: 0 0 22px; width: 22px; height: 22px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.5); font-size: 0.7rem; font-weight: 700;
+    }
+    .bl-step.active .bl-step-dot { background: rgba(201,168,76,0.18); border-color: var(--gold); color: var(--gold); }
+    .bl-step.done .bl-step-dot { background: var(--gold); border-color: var(--gold); color: #0a1220; }
+    .bl-step-spinner {
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 2px solid rgba(201,168,76,0.3);
+      border-top-color: var(--gold);
+      animation: bl-spin 0.8s linear infinite;
+    }
+    .bl-step-label { flex: 1; text-align: start; }
+
+    .bl-bar {
+      width: 100%; max-width: 320px; height: 4px; border-radius: 999px;
+      background: rgba(255,255,255,0.08); overflow: hidden;
+    }
+    .bl-bar-fill {
+      height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, transparent, var(--gold), #fff5cc, var(--gold), transparent);
+      background-size: 200% 100%;
+      transition: width 0.5s var(--ease);
+      animation: bl-shimmer 1.6s linear infinite;
+    }
+    @keyframes bl-shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
     /* Booking success */
     .booking-success {
@@ -1882,6 +2005,72 @@ function Footer({ lang }) {
 }
 
 /* BOOKING MODAL */
+function BookingLoader({ phase, lang, hasEmail }) {
+  const labels = lang === 'ar' ? [
+    'التحقق من الأهلية · NPHIES',
+    'حفظ بيانات المريض · HIS',
+    'حجز الموعد · GIVC',
+    'إرسال تأكيد واتساب 📱',
+    'إرسال البريد الإلكتروني ✉️',
+  ] : [
+    'Verifying eligibility · NPHIES',
+    'Saving patient · HIS',
+    'Booking appointment · GIVC',
+    'Sending WhatsApp 📱',
+    'Sending email ✉️',
+  ];
+  const subtitle = lang === 'ar'
+    ? 'لحظات من فضلك… نهيئ لك تجربة كاملة'
+    : 'Just a moment… we\'re wiring up your full experience';
+  const total = hasEmail ? 5 : 4;
+  const done = Math.min(phase >= 6 ? total : Math.max(0, phase - 1), total);
+  const progressPct = Math.round((done / total) * 100);
+  return (
+    <div className="booking-loader" role="status" aria-live="polite">
+      <div className="bl-orb">
+        <div className="bl-ring bl-ring-1"></div>
+        <div className="bl-ring bl-ring-2"></div>
+        <div className="bl-ring bl-ring-3"></div>
+        <div className="bl-core">
+          {phase >= 6 ? (
+            <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="bl-check"><path d="M20 6L9 17l-5-5"/></svg>
+          ) : (
+            <div className="bl-pct">{progressPct}<span>%</span></div>
+          )}
+        </div>
+        <div className="bl-spark bl-spark-1"></div>
+        <div className="bl-spark bl-spark-2"></div>
+        <div className="bl-spark bl-spark-3"></div>
+        <div className="bl-spark bl-spark-4"></div>
+      </div>
+      <div className="bl-title">{phase >= 6 ? (lang==='ar'?'تم بنجاح ✓':'Confirmed ✓') : (lang==='ar'?'جارٍ التأكيد':'Confirming')}</div>
+      <div className="bl-sub">{subtitle}</div>
+      <ul className="bl-steps" dir={lang==='ar'?'rtl':'ltr'}>
+        {labels.slice(0, total).map((lbl, i) => {
+          const idx = i + 1;
+          const isDone = phase > idx || phase >= 6;
+          const isActive = phase === idx;
+          return (
+            <li key={i} className={`bl-step${isDone?' done':''}${isActive?' active':''}`}>
+              <span className="bl-step-dot">
+                {isDone ? (
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                ) : isActive ? (
+                  <span className="bl-step-spinner"></span>
+                ) : (
+                  <span className="bl-step-num">{idx}</span>
+                )}
+              </span>
+              <span className="bl-step-label">{lbl}</span>
+            </li>
+          );
+        })}
+      </ul>
+      <div className="bl-bar"><div className="bl-bar-fill" style={{width: progressPct + '%'}}></div></div>
+    </div>
+  );
+}
+
 function BookingModal({ lang, open, onClose }) {
   const t = T[lang].booking;
   const [step, setStep] = useState(1);
@@ -1891,6 +2080,7 @@ function BookingModal({ lang, open, onClose }) {
   const [errorMsg, setErrorMsg] = useState('');
   const [waSid, setWaSid] = useState('');
   const [bookingResult, setBookingResult] = useState(null);
+  const [bookingPhase, setBookingPhase] = useState(0); // 0=idle 1=eligibility 2=patient 3=appointment 4=whatsapp 5=email 6=done
 
   const times = ['08:00','09:00','10:00','11:00','13:00','14:00','15:00','16:00'];
   const depts = DEPARTMENTS.map(d=>lang==='ar'?d.nameAr:d.nameEn);
@@ -1898,13 +2088,13 @@ function BookingModal({ lang, open, onClose }) {
   const payers = ['Bupa','Tawuniya','MedGulf','Al Rajhi Takaful','GlobeMed','Walaa','Cash / نقدي'];
 
   useEffect(() => {
-    if (!open) { setStep(1); setConfirmed(false); setSubmitting(false); setErrorMsg(''); setWaSid(''); setBookingResult(null); setForm({dept:'',branch:'',doctor:'',date:'',time:'',name:'',phone:'',email:'',notes:'',nationalId:'',payer:''}); }
+    if (!open) { setStep(1); setConfirmed(false); setSubmitting(false); setErrorMsg(''); setWaSid(''); setBookingResult(null); setBookingPhase(0); setForm({dept:'',branch:'',doctor:'',date:'',time:'',name:'',phone:'',email:'',notes:'',nationalId:'',payer:''}); }
   }, [open]);
 
   const API = 'https://hnh.brainsait.org';
 
   async function handleConfirm() {
-    setSubmitting(true); setErrorMsg('');
+    setSubmitting(true); setErrorMsg(''); setBookingPhase(1);
     const result = { eligibility:null, patientId:null, appointmentId:null, waSid:null, copay:null };
     const withTimeout = (ms) => { const c = new AbortController(); setTimeout(()=>c.abort(), ms); return c.signal; };
     try {
@@ -1929,6 +2119,7 @@ function BookingModal({ lang, open, onClose }) {
       }
 
       // 2) Find or create patient (HIS_DB)
+      setBookingPhase(2);
       let patientId = null;
       try {
         const pr = await fetch(`${API}/api/patients?search=${encodeURIComponent(phoneE164)}`, { signal: withTimeout(8000) });
@@ -1953,6 +2144,7 @@ function BookingModal({ lang, open, onClose }) {
 
       // 3) Persist appointment under provider OID tree
       if (patientId) {
+        setBookingPhase(3);
         try {
           const ar = await fetch(`${API}/api/appointments`, {
             method:'POST', headers:{'content-type':'application/json'},
@@ -1976,6 +2168,7 @@ function BookingModal({ lang, open, onClose }) {
       }
 
       // 4) WhatsApp confirmation — best-effort, do NOT throw
+      setBookingPhase(4);
       try {
         const wr = await fetch(`${API}/api/whatsapp/appointment`, {
           method:'POST', headers:{'content-type':'application/json'},
@@ -1993,6 +2186,7 @@ function BookingModal({ lang, open, onClose }) {
 
       // 5) Email confirmation (fire-and-forget)
       if (form.email) {
+        setBookingPhase(5);
         result.icsUrl = `${API}/api/appointments/${encodeURIComponent(result.appointmentId || 'tmp')}/ics?lang=${lang}&date=${encodeURIComponent(form.date)}&time=${encodeURIComponent(form.time||'10:00')}&clinic=${encodeURIComponent(form.branch||'')}&doctor=${encodeURIComponent(form.doctor||'')}&name=${encodeURIComponent(form.name||'')}`;
         fetch(`${API}/api/booking/email`, {
           method:'POST', headers:{'content-type':'application/json'},
@@ -2018,9 +2212,13 @@ function BookingModal({ lang, open, onClose }) {
 
       setWaSid(result.waSid);
       setBookingResult(result);
+      setBookingPhase(6);
+      // brief pause to let the success ring finish drawing before flipping view
+      await new Promise(r=>setTimeout(r,650));
       setConfirmed(true);
     } catch (e) {
       setErrorMsg(String(e.message || e));
+      setBookingPhase(0);
     } finally {
       setSubmitting(false);
     }
@@ -2029,6 +2227,9 @@ function BookingModal({ lang, open, onClose }) {
   return (
     <div className={`modal-overlay${open?' open':''}`} onClick={e=>e.target===e.currentTarget&&onClose()}>
       <div className="modal">
+        {submitting && (
+          <BookingLoader phase={bookingPhase} lang={lang} hasEmail={!!form.email} />
+        )}
         <div className="modal-header">
           <h3>{t.title}</h3>
           <p>{t.sub}</p>
