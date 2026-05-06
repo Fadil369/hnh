@@ -10663,6 +10663,7 @@ function telehealthSmsAr2(p) { return `مرحباً ${p.name}،\nموعد است
 function homecareSmsAr2(p) { return `مرحباً ${p.name}،\nتم تأكيد زيارة الرعاية المنزلية\nالتاريخ: ${p.date} | الوقت: ${p.time}\nالعنوان: ${p.address}\nمستشفيات الحياة الوطنية`; }
 
 async function notifySendSms(request, env) {
+  const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
   try {
     const { to, message } = await request.json();
     if (!to || !message) return json2({ success: false, error: "to and message are required" }, 400);
@@ -10673,6 +10674,7 @@ async function notifySendSms(request, env) {
 __name(notifySendSms, "notifySendSms");
 
 async function notifyAppointmentSms(request, env) {
+  const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
   try {
     const body2 = await request.json();
     const { to, patientName, date, time, clinic } = body2;
@@ -10686,6 +10688,7 @@ async function notifyAppointmentSms(request, env) {
 __name(notifyAppointmentSms, "notifyAppointmentSms");
 
 async function notifyTelehealthSms(request, env) {
+  const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
   try {
     const body2 = await request.json();
     const { to, patientName, date, time, joinUrl } = body2;
@@ -10698,6 +10701,7 @@ async function notifyTelehealthSms(request, env) {
 __name(notifyTelehealthSms, "notifyTelehealthSms");
 
 async function notifyHomecareSms(request, env) {
+  const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
   try {
     const body2 = await request.json();
     const { to, patientName, date, time, address } = body2;
@@ -10710,6 +10714,7 @@ async function notifyHomecareSms(request, env) {
 __name(notifyHomecareSms, "notifyHomecareSms");
 
 async function notifySendWhatsApp(request, env) {
+  const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
   try {
     const { to, message } = await request.json();
     if (!to || !message) return json2({ success: false, error: "to and message are required" }, 400);
@@ -10720,6 +10725,7 @@ async function notifySendWhatsApp(request, env) {
 __name(notifySendWhatsApp, "notifySendWhatsApp");
 
 async function notifyWhatsAppAppointment(request, env) {
+  const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
   try {
     const body2 = await request.json();
     const { to, patientName, date, time, clinic } = body2;
