@@ -1,183 +1,199 @@
 'use client'
 
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ShieldCheck, Send, Cloud, Loader2 } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useT } from '@/lib/i18n'
+import { useCheckEligibility, useNphiesSubmit, useGssMirror } from '@/hooks/useApi'
+import { EligibilityRequestSchema, type EligibilityRequest } from '@/lib/schemas'
 import { useState } from 'react'
 
-const API = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'https://hnh.brainsait.org'
+const PAYERS = [
+  { id: 'BUPA', label: 'Bupa Arabia' },
+  { id: 'TAWUNIYA', label: 'Tawuniya' },
+  { id: 'MEDGULF', label: 'MedGulf' },
+]
 
 export default function NphiesPage() {
-  const [tab, setTab] = useState<'eligibility' | 'transactions' | 'gss'>('eligibility')
-  const [eligCheck, setEligCheck] = useState({ national_id: '', payer_id: '' })
-  const [eligResult, setEligResult] = useState<any>(null)
-  const [eligLoading, setEligLoading] = useState(false)
-  const [transactionBody, setTransactionBody] = useState('{\n  "member_id": "P001"\n}')
-  const [transactionType, setTransactionType] = useState<'270' | '278' | '837'>('270')
-  const [transactionResult, setTransactionResult] = useState<any>(null)
-  const [transactionLoading, setTransactionLoading] = useState(false)
-  const [gssData, setGssData] = useState<any>(null)
-  const [gssLoading, setGssLoading] = useState(false)
+  const { t, locale } = useT()
+  const eligibility = useCheckEligibility()
+  const submit = useNphiesSubmit()
+  const gss = useGssMirror()
 
-  const checkEligibility = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setEligLoading(true)
-    setEligResult(null)
+  const [txType, setTxType] = useState<'270' | '278' | '837'>('270')
+  const [payload, setPayload] = useState<string>('{\n  "patient_id": "",\n  "service_date": ""\n}')
+
+  const form = useForm<EligibilityRequest>({
+    resolver: zodResolver(EligibilityRequestSchema),
+    defaultValues: {
+      national_id: '', payer_id: 'BUPA',
+      service_date: new Date().toISOString().split('T')[0],
+      service_type: 'consultation',
+    },
+  })
+
+  const onSubmitTx = async () => {
     try {
-      const res = await fetch(`${API}/api/eligibility/check`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(eligCheck),
-      })
-      setEligResult(await res.json())
+      const parsed = JSON.parse(payload)
+      await submit.mutateAsync({ type: txType, payload: parsed })
     } catch {
-      setEligResult({ success: false, error: 'Network error' })
-    } finally {
-      setEligLoading(false)
-    }
-  }
-
-  const submitTransaction = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setTransactionLoading(true)
-    setTransactionResult(null)
-    try {
-      const parsed = JSON.parse(transactionBody)
-      const res = await fetch(`${API}/api/nphies/${transactionType}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(parsed),
-      })
-      setTransactionResult(await res.json())
-    } catch (error) {
-      setTransactionResult({ success: false, error: error instanceof Error ? error.message : 'Invalid payload' })
-    } finally {
-      setTransactionLoading(false)
-    }
-  }
-
-  const loadGss = async () => {
-    setGssLoading(true)
-    try {
-      const res = await fetch('https://nphies-mirror.brainsait-fadil.workers.dev/mirror/status')
-      setGssData(await res.json())
-    } catch {
-      setGssData({ success: false, error: 'Unable to load GSS mirror status' })
-    } finally {
-      setGssLoading(false)
+      // toast already wired via mutation onError; JSON parse handled below
+      submit.reset?.()
     }
   }
 
   return (
-    <div className="space-y-6">
-      <section className="panel-hero px-6 py-7 text-white md:px-8">
-        <div className="subtle-grid" />
-        <div className="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <div className="section-kicker border border-white/10 bg-white/10 text-white">NPHIES Control</div>
-            <h1 className="mt-4 text-3xl font-bold md:text-4xl">المنصة الوطنية لتبادل التأمين الصحي</h1>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-white/80 md:text-base">
-              تشغيل التحقق من الأهلية، معاملات 270/278/837، ومراجعة حالة المرآة الحكومية من نفس مساحة العمل.
-            </p>
-          </div>
-          <a href="https://portal.nphies.sa" target="_blank" rel="noopener noreferrer" className="status-pill border-white/10 bg-white/10 text-white">
-            portal.nphies.sa ↗
-          </a>
-        </div>
-      </section>
+    <div className="mx-auto w-full max-w-screen-2xl px-6 py-10 space-y-6">
+      <header>
+        <Badge variant="info">NPHIES</Badge>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight">{t('nphies.title')}</h1>
+        <p className="text-sm text-muted-foreground">{t('nphies.subtitle')}</p>
+      </header>
 
-      <section className="panel p-5 md:p-6">
-        <div className="flex flex-wrap gap-2">
-          {[
-            { id: 'eligibility', label: 'Eligibility', labelAr: 'التحقق من الأهلية' },
-            { id: 'transactions', label: 'Transactions', labelAr: 'المعاملات' },
-            { id: 'gss', label: 'GSS Mirror', labelAr: 'مرآة GSS' },
-          ].map((item) => {
-            const active = tab === item.id
-            return (
-              <button
-                key={item.id}
-                onClick={() => setTab(item.id as typeof tab)}
-                className="rounded-full px-4 py-2 text-sm font-semibold"
-                style={active
-                  ? { backgroundColor: 'var(--primary)', color: 'white' }
-                  : { backgroundColor: 'var(--surface-muted)', color: 'var(--text)', border: '1px solid var(--border)' }}
+      <Tabs defaultValue="eligibility">
+        <TabsList>
+          <TabsTrigger value="eligibility">{t('nphies.tab.eligibility')}</TabsTrigger>
+          <TabsTrigger value="transactions">{t('nphies.tab.transactions')}</TabsTrigger>
+          <TabsTrigger value="gss">{t('nphies.tab.gss')}</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="eligibility">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">{t('nphies.tab.eligibility')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form
+                onSubmit={form.handleSubmit((v) => eligibility.mutate(v))}
+                className="grid grid-cols-1 gap-4 sm:grid-cols-2"
               >
-                <div>{item.labelAr}</div>
-                <div className="text-[11px] opacity-75">{item.label}</div>
-              </button>
-            )
-          })}
-        </div>
-      </section>
+                <Field label={locale === 'ar' ? 'رقم الهوية' : 'National ID'} error={form.formState.errors.national_id?.message}>
+                  <Input dir="ltr" {...form.register('national_id')} />
+                </Field>
+                <Field label={locale === 'ar' ? 'جهة الدفع' : 'Payer'}>
+                  <Select value={form.watch('payer_id')} onValueChange={(v) => form.setValue('payer_id', v)}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {PAYERS.map((p) => <SelectItem key={p.id} value={p.id}>{p.label}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </Field>
+                <Field label={locale === 'ar' ? 'تاريخ الخدمة' : 'Service date'}>
+                  <Input type="date" {...form.register('service_date')} />
+                </Field>
+                <Field label={locale === 'ar' ? 'نوع الخدمة' : 'Service type'}>
+                  <Input {...form.register('service_type')} />
+                </Field>
+                <div className="sm:col-span-2">
+                  <Button type="submit" disabled={eligibility.isPending}>
+                    {eligibility.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
+                    {locale === 'ar' ? 'فحص الأهلية' : 'Check eligibility'}
+                  </Button>
+                </div>
+              </form>
 
-      {tab === 'eligibility' && (
-        <section className="panel p-5 md:p-6">
-          <div className="mb-5">
-            <div className="section-kicker">Eligibility</div>
-            <h2 className="mt-3 text-xl font-bold">فحص الأهلية عبر المسار الحي</h2>
-          </div>
+              <AnimatePresence>
+                {eligibility.data ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="mt-6 rounded-lg border bg-muted/40 p-4"
+                  >
+                    <pre className="overflow-x-auto text-xs">{JSON.stringify(eligibility.data, null, 2)}</pre>
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-          <form onSubmit={checkEligibility} className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-sm font-medium">رقم الهوية / الإقامة</label>
-              <input value={eligCheck.national_id} onChange={(e) => setEligCheck({ ...eligCheck, national_id: e.target.value })} className="input-field" placeholder="1234567890" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium">رمز الدافع</label>
-              <input value={eligCheck.payer_id} onChange={(e) => setEligCheck({ ...eligCheck, payer_id: e.target.value })} className="input-field" placeholder="INS-001" />
-            </div>
-            <div className="md:col-span-2">
-              <button type="submit" className="btn-primary" disabled={eligLoading}>{eligLoading ? 'جاري التحقق...' : 'التحقق من الأهلية'}</button>
-            </div>
-          </form>
+        <TabsContent value="transactions">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">{t('nphies.tab.transactions')}</CardTitle>
+              <CardDescription>{t('nphies.transaction.payload')}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <Field label={t('nphies.transaction.type')}>
+                  <Select value={txType} onValueChange={(v) => setTxType(v as typeof txType)}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="270">270 — Eligibility</SelectItem>
+                      <SelectItem value="278">278 — Authorization</SelectItem>
+                      <SelectItem value="837">837 — Claim</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </Field>
+              </div>
+              <div className="grid gap-1.5">
+                <Label>{t('nphies.transaction.payload')}</Label>
+                <textarea
+                  dir="ltr"
+                  value={payload}
+                  onChange={(e) => setPayload(e.target.value)}
+                  rows={10}
+                  className="flex min-h-[200px] w-full rounded-md border border-input bg-background px-3 py-2 font-mono text-xs ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                />
+              </div>
+              <Button onClick={onSubmitTx} disabled={submit.isPending}>
+                {submit.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                {t('nphies.transaction.submit')}
+              </Button>
+              <AnimatePresence>
+                {submit.data ? (
+                  <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                    className="rounded-lg border bg-muted/40 p-4">
+                    <pre className="overflow-x-auto text-xs">{JSON.stringify(submit.data, null, 2)}</pre>
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-          {eligResult && (
-            <pre className="panel-soft mt-4 overflow-x-auto p-4 text-sm">{JSON.stringify(eligResult, null, 2)}</pre>
-          )}
-        </section>
-      )}
+        <TabsContent value="gss">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">{t('nphies.tab.gss')}</CardTitle>
+              <CardDescription>{t('nphies.subtitle')}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button onClick={() => gss.mutate()} disabled={gss.isPending} variant="outline">
+                {gss.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Cloud className="h-4 w-4" />}
+                {t('nphies.gss.load')}
+              </Button>
+              <AnimatePresence>
+                {gss.data ? (
+                  <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                    className="rounded-lg border bg-muted/40 p-4">
+                    <pre className="overflow-x-auto text-xs">{JSON.stringify(gss.data, null, 2)}</pre>
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
+}
 
-      {tab === 'transactions' && (
-        <section className="panel p-5 md:p-6">
-          <div className="mb-5">
-            <div className="section-kicker">Transactions</div>
-            <h2 className="mt-3 text-xl font-bold">إرسال المعاملات</h2>
-          </div>
-
-          <form onSubmit={submitTransaction} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium">نوع المعاملة</label>
-              <select value={transactionType} onChange={(e) => setTransactionType(e.target.value as typeof transactionType)} className="input-field w-full md:w-auto">
-                <option value="270">270 Eligibility</option>
-                <option value="278">278 Prior Auth</option>
-                <option value="837">837 Claim</option>
-              </select>
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium">Payload JSON</label>
-              <textarea value={transactionBody} onChange={(e) => setTransactionBody(e.target.value)} className="input-field min-h-56 font-mono text-sm" dir="ltr" />
-            </div>
-            <button type="submit" className="btn-primary" disabled={transactionLoading}>{transactionLoading ? 'جاري الإرسال...' : 'إرسال المعاملة'}</button>
-          </form>
-
-          {transactionResult && (
-            <pre className="panel-soft mt-4 overflow-x-auto p-4 text-sm">{JSON.stringify(transactionResult, null, 2)}</pre>
-          )}
-        </section>
-      )}
-
-      {tab === 'gss' && (
-        <section className="panel p-5 md:p-6">
-          <div className="mb-5">
-            <div className="section-kicker">Mirror Status</div>
-            <h2 className="mt-3 text-xl font-bold">حالة مرآة GSS</h2>
-          </div>
-
-          <button onClick={() => void loadGss()} className="btn-primary" disabled={gssLoading}>{gssLoading ? 'جاري الجلب...' : 'جلب حالة المرآة'}</button>
-
-          {gssData && (
-            <pre className="panel-soft mt-4 overflow-x-auto p-4 text-sm">{JSON.stringify(gssData, null, 2)}</pre>
-          )}
-        </section>
-      )}
+function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
+  return (
+    <div className="grid gap-1.5">
+      <Label>{label}</Label>
+      {children}
+      {error ? <p className="text-xs text-destructive">{error}</p> : null}
     </div>
   )
 }

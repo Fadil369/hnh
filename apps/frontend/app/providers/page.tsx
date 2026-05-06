@@ -1,96 +1,113 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-
-const API = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'https://hnh.brainsait.org'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { CalendarPlus, Mail, Stethoscope, UserCircle2 } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useT } from '@/lib/i18n'
+import { useProviders } from '@/hooks/useApi'
 
 export default function ProvidersPage() {
-  const [providers, setProviders] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    void fetchProviders()
-  }, [])
-
-  const fetchProviders = async () => {
-    try {
-      const res = await fetch(`${API}/api/providers`)
-      const data = await res.json()
-      setProviders(data.providers || [])
-    } catch (error) {
-      console.error('Error:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const { t, locale } = useT()
+  const { data: providers = [], isLoading } = useProviders()
 
   return (
-    <div className="space-y-6">
-      <section className="panel p-5 md:p-6">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <div className="section-kicker">Providers</div>
-            <h1 className="mt-3 text-2xl font-bold">الأطباء ومقدمو الخدمة</h1>
-            <p className="text-sm text-muted">Provider directory with specialty, department, and contact context.</p>
-          </div>
-          {!loading && <div className="status-pill">{providers.length} providers</div>}
+    <div className="mx-auto w-full max-w-screen-2xl px-6 py-10 space-y-6">
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <Badge variant="info">Providers</Badge>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight">{t('providers.title')}</h1>
+          <p className="text-sm text-muted-foreground">{t('providers.subtitle')}</p>
         </div>
-      </section>
+        {!isLoading && (
+          <Badge variant="secondary" className="font-mono">
+            {providers.length} {providers.length === 1 ? 'provider' : 'providers'}
+          </Badge>
+        )}
+      </header>
 
-      {loading ? (
+      {isLoading ? (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {[1, 2, 3].map((item) => (
-            <div key={item} className="panel p-6 animate-pulse">
-              <div className="mb-4 h-16 w-16 rounded-full" style={{ backgroundColor: 'var(--border)' }} />
-              <div className="mb-2 h-5 w-2/3 rounded" style={{ backgroundColor: 'var(--border)' }} />
-              <div className="h-4 w-1/2 rounded" style={{ backgroundColor: 'var(--border)' }} />
-            </div>
-          ))}
+          {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-56 w-full rounded-2xl" />)}
         </div>
       ) : providers.length === 0 ? (
-        <div className="panel p-10 text-center text-muted">لا يوجد أطباء مسجلون | No providers registered</div>
+        <Card>
+          <CardContent className="p-10 text-center text-sm text-muted-foreground">
+            {t('providers.empty')}
+          </CardContent>
+        </Card>
       ) : (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {providers.map((provider: any) => (
-            <div key={provider.id} className="panel p-6 hover:-translate-y-0.5">
-              <div className="mb-5 flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full text-2xl" style={{ backgroundColor: 'var(--surface-strong)' }}>
-                  {provider.gender === 'F' ? '👩‍⚕️' : '👨‍⚕️'}
-                </div>
-                <div>
-                  <h2 className="text-lg font-bold">{provider.first_name_ar} {provider.last_name_ar}</h2>
-                  <p className="text-sm text-muted">{provider.first_name_en} {provider.last_name_en}</p>
-                </div>
-              </div>
-
-              <div className="space-y-3 border-t pt-4 text-sm" style={{ borderColor: 'var(--border)' }}>
-                <div className="flex items-center justify-between gap-3">
-                  <span className="font-medium">التخصص</span>
-                  <span>{provider.specialty}</span>
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <span className="font-medium">القسم</span>
-                  <span>{provider.department}</span>
-                </div>
-                {provider.license_number && (
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="font-medium">الترخيص</span>
-                    <span className="font-mono text-xs">{provider.license_number}</span>
-                  </div>
-                )}
-                {provider.email && (
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="font-medium">البريد</span>
-                    <span className="text-xs text-muted" dir="ltr">{provider.email}</span>
-                  </div>
-                )}
-              </div>
-
-              <a href="/appointments" className="btn-primary mt-5 block text-center text-sm">📅 حجز موعد</a>
-            </div>
-          ))}
+          {providers.map((p: any, idx: number) => {
+            const nameAr = `${p.first_name_ar ?? ''} ${p.last_name_ar ?? ''}`.trim()
+            const nameEn = `${p.first_name_en ?? ''} ${p.last_name_en ?? ''}`.trim()
+            return (
+              <motion.div
+                key={p.id ?? idx}
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.03 }}
+              >
+                <Card className="h-full hover:-translate-y-0.5 transition-transform">
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <div className="grid h-14 w-14 place-items-center rounded-full bg-muted">
+                        <UserCircle2 className="h-8 w-8 text-muted-foreground" />
+                      </div>
+                      <div className="min-w-0">
+                        <CardTitle className="truncate text-lg">
+                          {locale === 'ar' ? nameAr || nameEn : nameEn || nameAr}
+                        </CardTitle>
+                        <p className="truncate text-xs text-muted-foreground">
+                          {locale === 'ar' ? nameEn : nameAr}
+                        </p>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    <Row label={locale === 'ar' ? 'التخصص' : 'Specialty'} icon={<Stethoscope className="h-4 w-4" />}>
+                      <Badge variant="outline">{p.specialty || '—'}</Badge>
+                    </Row>
+                    <Row label={locale === 'ar' ? 'القسم' : 'Department'}>
+                      <span>{p.department || '—'}</span>
+                    </Row>
+                    {p.license_number && (
+                      <Row label={locale === 'ar' ? 'الترخيص' : 'License'}>
+                        <span className="font-mono text-xs">{p.license_number}</span>
+                      </Row>
+                    )}
+                    {p.email && (
+                      <Row label={locale === 'ar' ? 'البريد' : 'Email'} icon={<Mail className="h-4 w-4" />}>
+                        <span className="truncate text-xs" dir="ltr">{p.email}</span>
+                      </Row>
+                    )}
+                    <Button asChild className="mt-2 w-full" size="sm">
+                      <Link href="/appointments">
+                        <CalendarPlus className="h-4 w-4" />
+                        {t('providers.book')}
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )
+          })}
         </div>
       )}
+    </div>
+  )
+}
+
+function Row({ label, icon, children }: { label: string; icon?: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between gap-3 border-b pb-2 last:border-0 last:pb-0">
+      <span className="flex items-center gap-1.5 text-muted-foreground">
+        {icon}
+        {label}
+      </span>
+      <div className="text-end">{children}</div>
     </div>
   )
 }

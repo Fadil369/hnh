@@ -1,162 +1,180 @@
 'use client'
 
-import { useState } from 'react'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import {
+  ArrowRight, Hospital, Stethoscope, Wallet, Landmark, Database, ExternalLink, CircleDot,
+} from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useT } from '@/lib/i18n'
 
-const PORTALS = [
+type Portal = {
+  id: string
+  name: string
+  nameAr: string
+  title: string
+  titleAr: string
+  desc: string
+  descAr: string
+  icon: any
+  href: string
+  features: string[]
+  tone: string
+}
+
+const PORTALS: Portal[] = [
   {
-    id: 'bsma',
-    name: 'BSMA',
-    nameAr: 'بسمة',
-    title: 'Patient Portal',
-    titleAr: 'بوابة المرضى',
+    id: 'bsma', name: 'BSMA', nameAr: 'بسمة',
+    title: 'Patient Portal', titleAr: 'بوابة المرضى',
     desc: 'Appointments, eligibility, health records, and digital registration.',
     descAr: 'المواعيد، الأهلية، السجلات الصحية، والتسجيل الرقمي.',
-    icon: '🙂',
-    color: 'from-blue-500 to-blue-700',
-    href: 'https://bsma.elfadil.com',
+    icon: Hospital, href: 'https://bsma.elfadil.com',
     features: ['حجز المواعيد', 'التحقق من الأهلية', 'السجلات الصحية', 'الموافقة الرقمية'],
+    tone: 'from-sky-500 to-blue-700',
   },
   {
-    id: 'givc',
-    name: 'GIVC',
-    nameAr: 'جيفك',
-    title: 'Provider Portal',
-    titleAr: 'بوابة مقدمي الخدمة',
+    id: 'givc', name: 'GIVC', nameAr: 'جيفك',
+    title: 'Provider Portal', titleAr: 'بوابة مقدمي الخدمة',
     desc: 'Clinical workstation, CPOE orders, lab results, and nursing documentation.',
     descAr: 'محطة العمل السريرية، الطلبات الطبية، نتائج المختبر، والتوثيق التمريضي.',
-    icon: '🩺',
-    color: 'from-emerald-500 to-emerald-700',
-    href: '/givc',
+    icon: Stethoscope, href: '/givc',
     features: ['ملاحظات سريرية', 'طلبات CPOE', 'نتائج المختبر', 'وصفات الدواء'],
+    tone: 'from-emerald-500 to-emerald-700',
   },
   {
-    id: 'sbs',
-    name: 'SBS',
-    nameAr: 'سبس',
-    title: 'Billing & Insurance',
-    titleAr: 'الفواتير والتأمين',
+    id: 'sbs', name: 'SBS', nameAr: 'سبس',
+    title: 'Billing & Insurance', titleAr: 'الفواتير والتأمين',
     desc: 'Revenue cycle management, claims, prior authorization, and contracts.',
     descAr: 'إدارة دورة الإيرادات، المطالبات، التفويض المسبق، والعقود.',
-    icon: '💰',
-    color: 'from-violet-500 to-violet-700',
-    href: '/sbs',
+    icon: Wallet, href: '/sbs',
     features: ['لوحة RCM', 'المطالبات', 'التفويض المسبق', 'العقود'],
+    tone: 'from-violet-500 to-violet-700',
   },
   {
-    id: 'nphies',
-    name: 'NPHIES',
-    nameAr: 'نفيز',
-    title: 'Gov Insurance Exchange',
-    titleAr: 'منصة التأمين الحكومية',
+    id: 'nphies', name: 'NPHIES', nameAr: 'نفيز',
+    title: 'Gov Insurance Exchange', titleAr: 'منصة التأمين الحكومية',
     desc: 'National health insurance exchange for eligibility, PA, and claims.',
     descAr: 'المنصة الوطنية لتبادل التأمين الصحي للأهلية والتفويض والمطالبات.',
-    icon: '🏛️',
-    color: 'from-amber-500 to-amber-700',
-    href: '/nphies',
+    icon: Landmark, href: '/nphies',
     features: ['التحقق من الأهلية', 'التفويض المسبق', 'تقديم المطالبات', 'تتبع الحالة'],
+    tone: 'from-amber-500 to-amber-700',
   },
   {
-    id: 'oracle',
-    name: 'Oracle HIS',
-    nameAr: 'أوراكل',
-    title: 'Hospital Information System',
-    titleAr: 'نظام معلومات المستشفى',
+    id: 'oracle', name: 'Oracle HIS', nameAr: 'أوراكل',
+    title: 'Hospital Information System', titleAr: 'نظام معلومات المستشفى',
     desc: 'Oracle RAD integration across patient, clinic, lab, radiology, and pharmacy domains.',
     descAr: 'تكامل Oracle RAD عبر المرضى والعيادات والمختبر والأشعة والصيدلية.',
-    icon: '🔷',
-    color: 'from-rose-500 to-red-700',
-    href: 'https://oracle-bridge.brainsait.org',
+    icon: Database, href: 'https://oracle-bridge.brainsait.org',
     features: ['PMI المرضى', 'OPD العيادات', 'ADT الدخول', 'Lab & Radiology'],
+    tone: 'from-rose-500 to-red-700',
   },
 ]
 
+const SNAPSHOT = [
+  { name: 'Oracle Bridge', tone: 'success' as const },
+  { name: 'NPHIES Mirror', tone: 'success' as const },
+  { name: 'D1 Database', tone: 'success' as const },
+  { name: 'Operational UI', tone: 'info' as const },
+]
+
 export default function PortalHub() {
-  const [hovered, setHovered] = useState<string | null>(null)
+  const { t, locale } = useT()
 
   return (
-    <div className="space-y-6">
-      <section className="panel-hero px-6 py-7 text-white md:px-8 text-center">
-        <div className="subtle-grid" />
-        <div className="relative z-10">
-          <div className="text-5xl">🏥</div>
-          <h1 className="mt-4 text-4xl font-bold">المركز الموحد</h1>
-          <p className="mt-2 text-lg text-white/85">Unified Healthcare Hub</p>
-          <p className="text-sm text-white/65">HNH BrainSAIT Healthcare OS · operational access across core portals</p>
-          <div className="mt-5 flex flex-wrap justify-center gap-2 text-sm">
-            {['Oracle RAD', 'NPHIES', 'BSMA', 'GIVC', 'SBS'].map((item) => (
-              <span key={item} className="status-pill border-white/10 bg-white/10 text-white">{item}</span>
-            ))}
-          </div>
+    <div className="mx-auto w-full max-w-screen-2xl px-6 py-10 space-y-8">
+      <header className="space-y-3 text-center">
+        <Badge variant="info">HNH × BrainSAIT · Healthcare OS</Badge>
+        <motion.h1
+          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+          className="text-3xl font-semibold tracking-tight md:text-4xl"
+        >
+          {t('portal.title')}
+        </motion.h1>
+        <p className="mx-auto max-w-2xl text-sm text-muted-foreground">{t('portal.subtitle')}</p>
+        <div className="flex flex-wrap justify-center gap-2 pt-1">
+          {['Oracle RAD', 'NPHIES', 'BSMA', 'GIVC', 'SBS'].map((id) => (
+            <Badge key={id} variant="outline">{id}</Badge>
+          ))}
         </div>
-      </section>
+      </header>
 
       <section className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {PORTALS.map((portal) => {
+        {PORTALS.map((portal, idx) => {
           const external = portal.href.startsWith('http')
+          const Icon = portal.icon
           return (
-            <a
+            <motion.div
               key={portal.id}
-              href={portal.href}
-              target={external ? '_blank' : undefined}
-              rel={external ? 'noopener noreferrer' : undefined}
-              onMouseEnter={() => setHovered(portal.id)}
-              onMouseLeave={() => setHovered(null)}
-              className="panel p-6 block hover:-translate-y-0.5"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.04 }}
             >
-              <div className="mb-5 flex items-start justify-between gap-3">
-                <div>
-                  <div className="mb-3 text-4xl">{portal.icon}</div>
-                  <div className="bilingual-label">
-                    <strong>{portal.titleAr}</strong>
-                    <span>{portal.title}</span>
-                  </div>
-                </div>
-                <div className={`rounded-full bg-gradient-to-r ${portal.color} px-3 py-1 text-xs font-bold text-white`}>
-                  {portal.name}
-                </div>
-              </div>
-
-              <p className="text-sm text-muted">{portal.descAr}</p>
-              <p className="text-xs text-muted">{portal.desc}</p>
-
-              <div className="mt-4 grid grid-cols-2 gap-2">
-                {portal.features.map((feature) => (
-                  <div key={feature} className="text-xs text-muted">✓ {feature}</div>
-                ))}
-              </div>
-
-              <div className="mt-5 flex items-center justify-between text-sm">
-                <span className="text-muted">{portal.nameAr}</span>
-                <span style={{ color: 'var(--primary)' }}>{hovered === portal.id ? 'فتح ←' : 'دخول →'}</span>
-              </div>
-            </a>
+              <Link
+                href={portal.href}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noopener noreferrer' : undefined}
+                className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-2xl"
+              >
+                <Card className="h-full transition-all hover:-translate-y-0.5 hover:shadow-md">
+                  <CardHeader>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className={`grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ${portal.tone} text-white shadow-sm`}>
+                        <Icon className="h-6 w-6" />
+                      </div>
+                      <Badge variant="secondary" className="font-semibold">{portal.name}</Badge>
+                    </div>
+                    <CardTitle className="mt-2">
+                      {locale === 'ar' ? portal.titleAr : portal.title}
+                    </CardTitle>
+                    <CardDescription>
+                      {locale === 'ar' ? portal.descAr : portal.desc}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="grid grid-cols-2 gap-1.5 text-xs text-muted-foreground">
+                      {portal.features.map((f) => (
+                        <li key={f} className="flex items-center gap-1.5">
+                          <CircleDot className="h-3 w-3 text-emerald-500" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-5 flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">{portal.nameAr}</span>
+                      <span className="inline-flex items-center gap-1 font-semibold text-primary">
+                        {t('portal.open')}
+                        {external ? <ExternalLink className="h-3.5 w-3.5" /> : <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
           )
         })}
       </section>
 
-      <section className="panel p-5 md:p-6">
-        <div className="mb-5">
-          <div className="section-kicker">Integration Snapshot</div>
-          <h2 className="mt-3 text-xl font-bold">حالة التكاملات</h2>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          {[
-            { name: 'Oracle Bridge', status: 'active', tone: 'text-emerald-600' },
-            { name: 'NPHIES Mirror', status: 'active', tone: 'text-emerald-600' },
-            { name: 'D1 Database', status: 'active', tone: 'text-emerald-600' },
-            { name: 'Operational UI', status: 'live', tone: 'text-blue-600' },
-          ].map((item) => (
-            <div key={item.name} className="panel-soft flex items-center gap-3 p-4">
-              <span className={`text-lg ${item.tone}`}>●</span>
-              <div>
-                <div className="text-sm font-semibold">{item.name}</div>
-                <div className="text-xs text-muted">{item.status}</div>
+      <Card>
+        <CardHeader>
+          <Badge variant="outline" className="w-fit">{t('portal.snapshot')}</Badge>
+          <CardTitle className="text-xl">{t('portal.snapshot')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            {SNAPSHOT.map((s) => (
+              <div key={s.name} className="flex items-center gap-3 rounded-xl border bg-muted/30 p-4">
+                <span className={`h-2.5 w-2.5 rounded-full ${s.tone === 'success' ? 'bg-emerald-500' : 'bg-blue-500'}`} />
+                <div>
+                  <div className="text-sm font-semibold">{s.name}</div>
+                  <div className="text-xs text-muted-foreground">{s.tone === 'success' ? 'active' : 'live'}</div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 import dynamic from 'next/dynamic'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, Search, Hospital } from 'lucide-react'
 
 const BasmaAssistant = dynamic(() => import('@/app/components/BasmaAssistant'), { ssr: false })
@@ -122,8 +123,18 @@ export default function LayoutShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main id="main" className="flex-1 animate-fade-up">
-        {children}
+      <main id="main" className="flex-1">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={pathname ?? 'root'}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       <footer className="border-t bg-card/40">

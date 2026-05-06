@@ -1,198 +1,189 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Stethoscope, Loader2, Sparkles, Users, Calendar } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { useT } from '@/lib/i18n'
+import { useProviders, useAppointments, useRunWorkflow } from '@/hooks/useApi'
 
-const API = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'https://hnh.brainsait.org'
+interface ClinicalForm {
+  patient_id: string
+  provider_id: string
+  chief_complaint: string
+}
 
-export default function GIVCPage() {
-  const [providers, setProviders] = useState<any[]>([])
-  const [appointments, setAppointments] = useState<any[]>([])
-  const [health, setHealth] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0])
-  const [form, setForm] = useState({ patient_id: '', provider_id: '', complaint: '' })
-  const [workflowLoading, setWorkflowLoading] = useState(false)
-  const [workflowResult, setWorkflowResult] = useState<any>(null)
+export default function GivcPage() {
+  const { t, locale } = useT()
+  const { data: providers = [], isLoading: provLoading } = useProviders()
+  const today = new Date().toISOString().split('T')[0]
+  const { data: appointments = [], isLoading: apptLoading } = useAppointments(today)
+  const run = useRunWorkflow()
 
-  useEffect(() => {
-    void loadData()
-  }, [selectedDate])
+  const form = useForm<ClinicalForm>({
+    defaultValues: { patient_id: '', provider_id: '', chief_complaint: '' },
+  })
 
-  const loadData = async () => {
-    setLoading(true)
+  const [result, setResult] = useState<string>('')
+
+  const metrics = useMemo(() => {
+    const provs = (providers as any[]).length
+    const appts = (appointments as any[]).length
+    const confirmed = (appointments as any[]).filter((a) => a.status === 'confirmed').length
+    return [
+      { label: locale === 'ar' ? 'الأطباء' : 'Providers', value: provs, icon: Users },
+      { label: locale === 'ar' ? 'مواعيد اليوم' : "Today's appointments", value: appts, icon: Calendar },
+      { label: locale === 'ar' ? 'المؤكدة' : 'Confirmed', value: confirmed, icon: Stethoscope },
+      { label: locale === 'ar' ? 'متاحة' : 'Available', value: Math.max(0, provs - confirmed), icon: Users },
+    ]
+  }, [providers, appointments, locale])
+
+  const onSubmit = form.handleSubmit(async (values) => {
     try {
-      const [providersRes, appointmentsRes, healthRes] = await Promise.all([
-        fetch(`${API}/api/providers`),
-        fetch(`${API}/api/appointments?date=${selectedDate}`),
-        fetch(`${API}/api/health`),
-      ])
-
-      const providersData = await providersRes.json()
-      const appointmentsData = await appointmentsRes.json()
-      const healthData = await healthRes.json()
-
-      setProviders(providersData.providers || [])
-      setAppointments(appointmentsData.appointments || [])
-      setHealth(healthData)
-    } catch (error) {
-      console.error('Failed to load GIVC data', error)
-      setProviders([])
-      setAppointments([])
-      setHealth(null)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const runClinicalDecision = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setWorkflowLoading(true)
-    setWorkflowResult(null)
-    try {
-      const res = await fetch(`${API}/api/workflows/provider/clinical-decision`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          patient_id: form.patient_id,
-          provider_id: form.provider_id,
-          chief_complaint: form.complaint,
-        }),
+      const r: any = await run.mutateAsync({
+        endpoint: '/api/workflows/provider/clinical-decision',
+        payload: values,
       })
-      setWorkflowResult(await res.json())
-    } catch (error) {
-      console.error('Failed to run provider workflow', error)
-      setWorkflowResult({ success: false, error: 'Failed to run workflow' })
-    } finally {
-      setWorkflowLoading(false)
+      setResult(r?.ai_summary || r?.summary || r?.error || JSON.stringify(r, null, 2))
+    } catch (e: any) {
+      setResult(e?.message ?? 'Failed')
     }
-  }
-
-  const todayScheduled = useMemo(
-    () => appointments.filter((item) => item.status === 'scheduled' || item.status === 'confirmed'),
-    [appointments]
-  )
+  })
 
   return (
-    <div className="space-y-6">
-      <section className="panel-hero px-6 py-7 text-white md:px-8">
-        <div className="subtle-grid" />
-        <div className="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <div className="section-kicker border border-white/10 bg-white/10 text-white">GIVC Provider Operations</div>
-            <h1 className="mt-4 text-3xl font-bold md:text-4xl">بوابة مقدمي الخدمة الطبية</h1>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-white/80 md:text-base">
-              سطح تشغيل موحد للمزودين يتابع شبكة الأطباء، جدول اليوم، ومساعد القرار السريري المرتبط بمسارات الذكاء الاصطناعي.
-            </p>
-          </div>
-          <div className="status-pill border-white/10 bg-white/10 text-white">
-            {health?.integrations?.givc_portal?.status || 'connected'} · {health?.stats?.total_providers || providers.length} providers
-          </div>
-        </div>
-      </section>
+    <div className="mx-auto w-full max-w-screen-2xl px-6 py-10 space-y-6">
+      <header>
+        <Badge variant="info">GIVC</Badge>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight">{t('givc.title')}</h1>
+        <p className="text-sm text-muted-foreground">{t('givc.subtitle')}</p>
+      </header>
 
-      <section className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <div className="metric-card"><div className="text-2xl">👨‍⚕️</div><div className="metric-value mt-3 text-emerald-600">{loading ? '-' : providers.length}</div><div className="mt-2 text-xs text-muted">Provider directory</div></div>
-        <div className="metric-card"><div className="text-2xl">📅</div><div className="metric-value mt-3 text-blue-600">{loading ? '-' : appointments.length}</div><div className="mt-2 text-xs text-muted">Appointments on {selectedDate}</div></div>
-        <div className="metric-card"><div className="text-2xl">✅</div><div className="metric-value mt-3 text-violet-600">{loading ? '-' : todayScheduled.length}</div><div className="mt-2 text-xs text-muted">Scheduled or confirmed</div></div>
-        <div className="metric-card"><div className="text-2xl">🔗</div><div className="metric-value mt-3 text-amber-600">{health?.integrations?.oracle_bridge === 'connected' ? 'Live' : '-'}</div><div className="mt-2 text-xs text-muted">Oracle bridge status</div></div>
-      </section>
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        {metrics.map((m, i) => (
+          <motion.div key={m.label} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
+            <Card>
+              <CardHeader>
+                <CardDescription className="flex items-center gap-2">
+                  <m.icon className="h-4 w-4" />{m.label}
+                </CardDescription>
+                <CardTitle className="text-2xl">{m.value}</CardTitle>
+              </CardHeader>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
 
-      <section className="panel p-5 md:p-6">
-        <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div>
-            <div className="section-kicker">Today's Schedule</div>
-            <h2 className="mt-3 text-xl font-bold">جدول العيادات والزيارات</h2>
-          </div>
-          <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="input-field w-auto" />
-        </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">{locale === 'ar' ? 'مواعيد اليوم' : "Today's appointments"}</CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          {apptLoading ? (
+            <div className="space-y-2 p-4">
+              {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-10" />)}
+            </div>
+          ) : (appointments as any[]).length === 0 ? (
+            <div className="p-10 text-center text-sm text-muted-foreground">
+              {locale === 'ar' ? 'لا توجد مواعيد لليوم' : 'No appointments today'}
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{locale === 'ar' ? 'الوقت' : 'Time'}</TableHead>
+                  <TableHead>{locale === 'ar' ? 'المريض' : 'Patient'}</TableHead>
+                  <TableHead>{locale === 'ar' ? 'الطبيب' : 'Provider'}</TableHead>
+                  <TableHead>{locale === 'ar' ? 'الحالة' : 'Status'}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {(appointments as any[]).slice(0, 12).map((a) => (
+                  <TableRow key={a.id}>
+                    <TableCell className="font-mono text-xs">{a.appointment_time?.slice(0, 5)}</TableCell>
+                    <TableCell>{a.patient_name ?? `#${a.patient_id}`}</TableCell>
+                    <TableCell>{a.provider_name ?? `#${a.provider_id}`}</TableCell>
+                    <TableCell><Badge variant="outline">{a.status}</Badge></TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
 
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[760px]">
-            <thead>
-              <tr style={{ backgroundColor: 'var(--surface-muted)' }}>
-                <th className="p-3 text-right text-sm font-medium">الوقت</th>
-                <th className="p-3 text-right text-sm font-medium">المريض</th>
-                <th className="p-3 text-right text-sm font-medium">العيادة</th>
-                <th className="p-3 text-right text-sm font-medium">النوع</th>
-                <th className="p-3 text-right text-sm font-medium">الحالة</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr><td colSpan={5} className="p-10 text-center text-sm text-muted">جاري التحميل...</td></tr>
-              ) : appointments.length === 0 ? (
-                <tr><td colSpan={5} className="p-10 text-center text-sm text-muted">لا توجد مواعيد في هذا اليوم</td></tr>
-              ) : (
-                appointments.map((item) => (
-                  <tr key={item.id} className="border-t" style={{ borderColor: 'var(--border)' }}>
-                    <td className="p-3 text-sm font-mono">{item.appointment_time?.slice(0, 5)}</td>
-                    <td className="p-3 text-sm font-semibold">{item.patient_name}</td>
-                    <td className="p-3 text-sm">{item.clinic_name}</td>
-                    <td className="p-3 text-sm">{item.appointment_type}</td>
-                    <td className="p-3 text-sm"><span className="status-pill">{item.status}</span></td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <div className="panel p-5 md:p-6">
-          <div className="mb-5">
-            <div className="section-kicker">Provider Directory</div>
-            <h2 className="mt-3 text-xl font-bold">شبكة المزودين</h2>
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-            {providers.slice(0, 8).map((provider) => (
-              <div key={provider.id} className="panel-soft p-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full" style={{ backgroundColor: 'var(--surface-strong)' }}>
-                    {provider.gender === 'F' ? '👩‍⚕️' : '👨‍⚕️'}
-                  </div>
-                  <div>
-                    <div className="font-semibold">{provider.first_name_ar} {provider.last_name_ar}</div>
-                    <div className="text-xs text-muted">{provider.specialty || 'Provider'}</div>
-                  </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">{locale === 'ar' ? 'شبكة الأطباء' : 'Provider network'}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {provLoading ? (
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-20" />)}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
+              {(providers as any[]).slice(0, 8).map((p) => (
+                <div key={p.id} className="rounded-lg border bg-card p-3">
+                  <p className="text-sm font-medium">{p.first_name_en} {p.last_name_en}</p>
+                  <p className="text-xs text-muted-foreground">{p.specialty}</p>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="panel p-5 md:p-6">
-          <div className="mb-5">
-            <div className="section-kicker">AI Quick Assist</div>
-            <h2 className="mt-3 text-xl font-bold">مساعد القرار السريري</h2>
-          </div>
-
-          <form onSubmit={runClinicalDecision} className="space-y-3">
-            <div>
-              <label className="mb-1 block text-sm font-medium">رقم المريض</label>
-              <input value={form.patient_id} onChange={(e) => setForm({ ...form, patient_id: e.target.value })} className="input-field" placeholder="P001" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium">رقم المزود</label>
-              <input value={form.provider_id} onChange={(e) => setForm({ ...form, provider_id: e.target.value })} className="input-field" placeholder="DR001" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium">الشكوى الرئيسية</label>
-              <input value={form.complaint} onChange={(e) => setForm({ ...form, complaint: e.target.value })} className="input-field" placeholder="chest pain" />
-            </div>
-            <button type="submit" className="btn-primary w-full" disabled={workflowLoading}>
-              {workflowLoading ? 'جاري التحليل...' : 'تشغيل المسار السريري'}
-            </button>
-          </form>
-
-          {workflowResult && (
-            <div className="panel-soft mt-4 p-4 text-sm leading-7">
-              {workflowResult.ai_summary || workflowResult.summary || workflowResult.error || JSON.stringify(workflowResult, null, 2)}
+              ))}
             </div>
           )}
-        </div>
-      </section>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <Sparkles className="h-4 w-4" />
+            {t('givc.assist.title')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <Field label={locale === 'ar' ? 'رقم المريض' : 'Patient ID'}>
+              <Input dir="ltr" {...form.register('patient_id', { required: true })} />
+            </Field>
+            <Field label={locale === 'ar' ? 'رقم الطبيب' : 'Provider ID'}>
+              <Input dir="ltr" {...form.register('provider_id', { required: true })} />
+            </Field>
+            <Field label={locale === 'ar' ? 'الشكوى الرئيسية' : 'Chief complaint'}>
+              <Input {...form.register('chief_complaint', { required: true })} />
+            </Field>
+            <div className="sm:col-span-3">
+              <Button type="submit" disabled={run.isPending}>
+                {run.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                {t('givc.assist.run')}
+              </Button>
+            </div>
+          </form>
+          <AnimatePresence>
+            {result ? (
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                className="mt-4 rounded-lg border bg-muted/40 p-4">
+                <pre className="whitespace-pre-wrap text-xs">{result}</pre>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="grid gap-1.5">
+      <Label>{label}</Label>
+      {children}
     </div>
   )
 }

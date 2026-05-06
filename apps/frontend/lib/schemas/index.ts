@@ -142,3 +142,71 @@ export const EligibilityResponseSchema = z.object({
   message: z.string().optional(),
   raw: z.unknown().optional(),
 }).passthrough()
+
+// ─── Appointment / Claim creation ───────────────────────────────────────────
+export const AppointmentCreateSchema = z.object({
+  patient_id: z.string().min(1, 'Required'),
+  provider_id: z.string().min(1, 'Required'),
+  appointment_date: z.string().min(1, 'Required'),
+  appointment_time: z.string().min(1, 'Required'),
+  appointment_type: z.enum(['new', 'follow_up']),
+  clinic_code: z.string().optional().or(z.literal('')),
+  clinic_name: z.string().optional().or(z.literal('')),
+  reason: z.string().optional().or(z.literal('')),
+})
+export type AppointmentCreate = z.infer<typeof AppointmentCreateSchema>
+
+export const ClaimCreateSchema = z.object({
+  patient_id: z.string().min(1, 'Required'),
+  claim_type: z.enum(['professional', 'institutional', 'pharmacy']),
+  payer_id: z.string().min(1, 'Required'),
+  payer_name: z.string().min(1, 'Required'),
+  total_amount: z.number().positive('Must be > 0'),
+})
+export type ClaimCreate = z.infer<typeof ClaimCreateSchema>
+
+// ─── Knowledge base (BSMA RAG) ──────────────────────────────────────────────
+export const RagDocSchema = z.object({
+  title: z.string().default(''),
+  content: z.string().default(''),
+  category: z.string().default(''),
+  source: z.string().default(''),
+  lang: z.string().optional(),
+}).passthrough()
+export type RagDoc = z.infer<typeof RagDocSchema>
+
+// ─── GitHub integration ─────────────────────────────────────────────────────
+export const GithubEventSchema = z.object({
+  id: z.string(),
+  type: z.string(),
+  actor: z.object({ login: z.string(), avatar_url: z.string() }).passthrough(),
+  repo: z.object({ name: z.string(), url: z.string().optional() }).passthrough(),
+  payload_summary: z.unknown().optional(),
+  created_at: z.string(),
+  public: z.boolean().optional(),
+}).passthrough()
+export type GithubEvent = z.infer<typeof GithubEventSchema>
+
+export const GithubRepoSchema = z.object({
+  name: z.string(),
+  full_name: z.string(),
+  description: z.string().optional().default(''),
+  html_url: z.string(),
+  stars: z.number().default(0),
+  forks: z.number().default(0),
+  open_issues: z.number().default(0),
+  language: z.string().optional().default(''),
+  topics: z.array(z.string()).default([]),
+  updated_at: z.string().optional(),
+}).passthrough()
+export type GithubRepo = z.infer<typeof GithubRepoSchema>
+
+export const GithubNotificationSchema = z.object({
+  id: z.string(),
+  unread: z.boolean().optional(),
+  reason: z.string().default(''),
+  subject: z.object({ title: z.string(), type: z.string(), url: z.string().optional() }).passthrough(),
+  repository: z.object({ full_name: z.string(), html_url: z.string().optional() }).passthrough(),
+  updated_at: z.string().optional(),
+}).passthrough()
+export type GithubNotification = z.infer<typeof GithubNotificationSchema>

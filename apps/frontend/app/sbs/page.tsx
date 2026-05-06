@@ -1,160 +1,152 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { Database, FileWarning, Sparkles, Loader2 } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { useT } from '@/lib/i18n'
+import { useLoadRcm, useGenerateAppeal } from '@/hooks/useApi'
 
-const API = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'https://hnh.brainsait.org'
+const BRANCHES = [
+  { id: 'r001', label: 'Riyadh' },
+  { id: 'm001', label: 'Makkah' },
+  { id: 'j001', label: 'Jeddah' },
+  { id: 'k001', label: 'Khobar' },
+  { id: 'u001', label: 'Unayzah' },
+]
 
-export default function SBSPage() {
-  const [tab, setTab] = useState<'dashboard' | 'claims' | 'appeals'>('dashboard')
+export default function SbsPage() {
+  const { t, locale } = useT()
   const [branch, setBranch] = useState('r001')
-  const [dashboard, setDashboard] = useState<any>(null)
-  const [rejectedClaims, setRejectedClaims] = useState<any[]>([])
-  const [appealClaimId, setAppealClaimId] = useState('')
-  const [appealResult, setAppealResult] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
+  const load = useLoadRcm(branch)
+  const appeal = useGenerateAppeal()
+  const [appeals, setAppeals] = useState<Record<string, string>>({})
 
-  const loadDashboard = async () => {
-    setLoading(true)
-    try {
-      const [dashboardRes, rejectedRes] = await Promise.all([
-        fetch(`${API}/api/rcm/dashboard/${branch}`),
-        fetch(`${API}/api/rcm/claims/rejected?branch=${branch}`),
-      ])
-      setDashboard(await dashboardRes.json())
-      const rejectedData = await rejectedRes.json()
-      setRejectedClaims(rejectedData.claims || rejectedData.rejected_claims || [])
-    } catch (error) {
-      console.error('Failed to load RCM data', error)
-      setDashboard(null)
-      setRejectedClaims([])
-    } finally {
-      setLoading(false)
-    }
-  }
+  const dashboard = load.data?.dashboard
+  const rejected = load.data?.rejected ?? []
 
-  const generateAppeal = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    try {
-      const res = await fetch(`${API}/api/rcm/appeal/generate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ claim_id: appealClaimId }),
-      })
-      setAppealResult(await res.json())
-    } catch (error) {
-      console.error('Failed to generate appeal', error)
-      setAppealResult({ success: false, error: 'Failed to generate appeal' })
-    } finally {
-      setLoading(false)
-    }
+  const onAppeal = async (id: string) => {
+    const r: any = await appeal.mutateAsync(id)
+    setAppeals((prev) => ({ ...prev, [id]: r?.appeal_text || r?.text || JSON.stringify(r).slice(0, 400) }))
   }
 
   return (
-    <div className="space-y-6">
-      <section className="panel-hero px-6 py-7 text-white md:px-8">
-        <div className="subtle-grid" />
-        <div className="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <div className="section-kicker border border-white/10 bg-white/10 text-white">SBS Revenue Cycle</div>
-            <h1 className="mt-4 text-3xl font-bold md:text-4xl">الفواتير والتأمين وإدارة دورة الإيرادات</h1>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-white/80 md:text-base">
-              واجهة تشغيل مخصصة للـ RCM، مراجعة المطالبات المرفوضة، وتوليد مسودات الاستئناف من نفس مساحة العمل.
-            </p>
-          </div>
-          <div className="status-pill border-white/10 bg-white/10 text-white">RCM · Appeals · Claims QA</div>
+    <div className="mx-auto w-full max-w-screen-2xl px-6 py-10 space-y-6">
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <Badge variant="info">SBS · RCM</Badge>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight">{t('sbs.title')}</h1>
+          <p className="text-sm text-muted-foreground">{t('sbs.subtitle')}</p>
         </div>
-      </section>
-
-      <section className="panel p-5 md:p-6">
-        <div className="flex flex-wrap items-center gap-3">
-          <select value={branch} onChange={(e) => setBranch(e.target.value)} className="input-field w-full md:w-auto">
-            <option value="r001">Riyadh</option>
-            <option value="m001">Madinah</option>
-            <option value="j001">Jazan</option>
-            <option value="k001">Khamis</option>
-            <option value="u001">Unayzah</option>
-          </select>
-          <button onClick={() => void loadDashboard()} className="btn-primary" disabled={loading}>{loading ? 'جاري التحميل...' : 'تحميل لوحة RCM'}</button>
-          <a href="/claims" className="status-pill" style={{ color: 'var(--primary)' }}>Open claims page</a>
+        <div className="flex items-center gap-2">
+          <Select value={branch} onValueChange={setBranch}>
+            <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {BRANCHES.map((b) => <SelectItem key={b.id} value={b.id}>{b.label}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Button onClick={() => load.mutate()} disabled={load.isPending}>
+            {load.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Database className="h-4 w-4" />}
+            {t('sbs.load')}
+          </Button>
         </div>
-      </section>
+      </header>
 
-      <section className="panel p-5 md:p-6">
-        <div className="flex flex-wrap gap-2">
-          {[
-            { id: 'dashboard', label: 'Dashboard', labelAr: 'لوحة RCM' },
-            { id: 'claims', label: 'Rejected Claims', labelAr: 'المطالبات المرفوضة' },
-            { id: 'appeals', label: 'Appeals', labelAr: 'الاستئناف' },
-          ].map((item) => {
-            const active = tab === item.id
-            return (
-              <button
-                key={item.id}
-                onClick={() => setTab(item.id as typeof tab)}
-                className="rounded-full px-4 py-2 text-sm font-semibold"
-                style={active
-                  ? { backgroundColor: 'var(--primary)', color: 'white' }
-                  : { backgroundColor: 'var(--surface-muted)', color: 'var(--text)', border: '1px solid var(--border)' }}
-              >
-                <div>{item.labelAr}</div>
-                <div className="text-[11px] opacity-75">{item.label}</div>
-              </button>
-            )
-          })}
-        </div>
-      </section>
+      <Tabs defaultValue="dashboard">
+        <TabsList>
+          <TabsTrigger value="dashboard">{t('sbs.tab.dashboard')}</TabsTrigger>
+          <TabsTrigger value="claims">{t('sbs.tab.claims')}</TabsTrigger>
+          <TabsTrigger value="appeals">{t('sbs.tab.appeals')}</TabsTrigger>
+        </TabsList>
 
-      {tab === 'dashboard' && (
-        <section className="panel p-5 md:p-6">
-          <div className="mb-5">
-            <div className="section-kicker">Dashboard</div>
-            <h2 className="mt-3 text-xl font-bold">مؤشرات دورة الإيرادات</h2>
-          </div>
-
+        <TabsContent value="dashboard" className="space-y-4">
           {!dashboard ? (
-            <div className="text-sm text-muted">قم بتحميل لوحة RCM لعرض البيانات.</div>
+            <Card><CardContent className="p-10 text-center text-sm text-muted-foreground">
+              {locale === 'ar' ? 'اضغط على "تحميل بيانات RCM" لعرض اللوحة.' : 'Press "Load RCM data" to populate the dashboard.'}
+            </CardContent></Card>
           ) : (
-            <pre className="panel-soft overflow-x-auto p-4 text-sm">{JSON.stringify(dashboard, null, 2)}</pre>
-          )}
-        </section>
-      )}
-
-      {tab === 'claims' && (
-        <section className="panel p-5 md:p-6">
-          <div className="mb-5">
-            <div className="section-kicker">Rejected Claims</div>
-            <h2 className="mt-3 text-xl font-bold">المطالبات المرفوضة</h2>
-          </div>
-
-          {rejectedClaims.length === 0 ? (
-            <div className="text-sm text-muted">لا توجد مطالبات مرفوضة محملة حالياً.</div>
-          ) : (
-            <pre className="panel-soft overflow-x-auto p-4 text-sm">{JSON.stringify(rejectedClaims, null, 2)}</pre>
-          )}
-        </section>
-      )}
-
-      {tab === 'appeals' && (
-        <section className="panel p-5 md:p-6">
-          <div className="mb-5">
-            <div className="section-kicker">Appeal Drafting</div>
-            <h2 className="mt-3 text-xl font-bold">توليد الاستئناف</h2>
-          </div>
-
-          <form onSubmit={generateAppeal} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium">Claim ID</label>
-              <input value={appealClaimId} onChange={(e) => setAppealClaimId(e.target.value)} className="input-field" placeholder="CLM-001" dir="ltr" />
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {Object.entries(dashboard).slice(0, 8).map(([k, v]) => (
+                <Card key={k}>
+                  <CardHeader>
+                    <CardDescription className="capitalize">{k.replace(/_/g, ' ')}</CardDescription>
+                    <CardTitle className="text-2xl">
+                      {typeof v === 'number' ? v.toLocaleString() : String(v).slice(0, 40)}
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              ))}
             </div>
-            <button type="submit" className="btn-primary" disabled={loading}>{loading ? 'جاري التوليد...' : 'توليد الاستئناف'}</button>
-          </form>
-
-          {appealResult && (
-            <pre className="panel-soft mt-4 overflow-x-auto p-4 text-sm">{JSON.stringify(appealResult, null, 2)}</pre>
           )}
-        </section>
-      )}
+        </TabsContent>
+
+        <TabsContent value="claims">
+          <Card>
+            <CardContent className="p-0">
+              {rejected.length === 0 ? (
+                <div className="p-10 text-center text-sm text-muted-foreground">
+                  <FileWarning className="mx-auto mb-3 h-6 w-6" />
+                  {locale === 'ar' ? 'لا توجد مطالبات مرفوضة' : 'No rejected claims'}
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>ID</TableHead>
+                      <TableHead>{locale === 'ar' ? 'المريض' : 'Patient'}</TableHead>
+                      <TableHead>{locale === 'ar' ? 'السبب' : 'Reason'}</TableHead>
+                      <TableHead className="text-end">{locale === 'ar' ? 'المبلغ' : 'Amount'}</TableHead>
+                      <TableHead></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {rejected.map((c: any) => (
+                      <TableRow key={c.id ?? c.claim_id}>
+                        <TableCell className="font-mono text-xs">{c.claim_number ?? c.id}</TableCell>
+                        <TableCell>{c.patient_name ?? `#${c.patient_id ?? '—'}`}</TableCell>
+                        <TableCell className="max-w-md truncate text-muted-foreground">{c.rejection_reason ?? c.reason ?? '—'}</TableCell>
+                        <TableCell className="text-end font-mono">{Number(c.total_amount ?? c.amount ?? 0).toLocaleString()}</TableCell>
+                        <TableCell>
+                          <Button size="sm" variant="outline" onClick={() => onAppeal(c.id ?? c.claim_id)} disabled={appeal.isPending}>
+                            <Sparkles className="h-4 w-4" />
+                            {t('sbs.appeal.generate')}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="appeals" className="space-y-3">
+          {Object.keys(appeals).length === 0 ? (
+            <Card><CardContent className="p-10 text-center text-sm text-muted-foreground">
+              {locale === 'ar' ? 'لا توجد طعون مولدة بعد' : 'No appeals generated yet'}
+            </CardContent></Card>
+          ) : (
+            Object.entries(appeals).map(([id, text]) => (
+              <motion.div key={id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">Appeal · {id}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <pre className="whitespace-pre-wrap text-xs">{text}</pre>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
