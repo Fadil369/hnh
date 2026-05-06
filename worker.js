@@ -10619,7 +10619,8 @@ async function sendTwilioSms2(env, to, body2) {
   if (!auth) return { success: false, error: "Twilio not configured", code: "NOT_CONFIGURED" };
   const from = env.TWILIO_PHONE_NUMBER || "";
   if (!from) return { success: false, error: "TWILIO_PHONE_NUMBER not set", code: "NO_SENDER" };
-  const params = new URLSearchParams({ To: normalizeSaudiPhone(to), From: from, Body: body2 });
+  const cleanBody = sanitizeMessageBody(body2);
+  const params = new URLSearchParams({ To: normalizeSaudiPhone(to), From: from, Body: cleanBody });
   try {
     const res = await fetch(`${TWILIO_API2}/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, {
       method: "POST",
@@ -10641,7 +10642,8 @@ async function sendWhatsAppText2(env, to, text) {
   // Use WHATSAPP_FROM secret (production number) or fall back to Twilio sandbox
   const from = env.WHATSAPP_FROM || "whatsapp:+14155238886";
   const toWa = "whatsapp:" + normalizeSaudiPhone(to);
-  const params = new URLSearchParams({ To: toWa, From: from, Body: text });
+  const cleanText = sanitizeMessageBody(text);
+  const params = new URLSearchParams({ To: toWa, From: from, Body: cleanText });
   try {
     const res = await fetch(`${TWILIO_API2}/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, {
       method: "POST",
@@ -10657,10 +10659,44 @@ async function sendWhatsAppText2(env, to, text) {
   }
 }
 
-function apptSmsAr(p) { return `مرحباً ${p.name}،\nتذكير بموعدك في مستشفيات الحياة الوطنية\nالتاريخ: ${p.date}\nالوقت: ${p.time}\nالعيادة: ${p.clinic}\nللاستفسار: 920000094`; }
-function apptSmsEn(p) { return `Hello ${p.name},\nReminder: Your appointment at Hayat National Hospital\nDate: ${p.date} | Time: ${p.time}\nClinic: ${p.clinic}\nInquiries: 920000094`; }
-function telehealthSmsAr2(p) { return `مرحباً ${p.name}،\nموعد استشارتك الافتراضية\nالتاريخ: ${p.date} | الوقت: ${p.time}\nرابط الجلسة: ${p.url}\nمستشفيات الحياة الوطنية`; }
-function homecareSmsAr2(p) { return `مرحباً ${p.name}،\nتم تأكيد زيارة الرعاية المنزلية\nالتاريخ: ${p.date} | الوقت: ${p.time}\nالعنوان: ${p.address}\nمستشفيات الحياة الوطنية`; }
+function sanitizeTplField(v, max = 120) {
+  if (v == null) return "";
+  let s = String(v);
+  s = s.replace(/[\u0000-\u001F\u007F]/g, " ");
+  s = s.replace(/_BEGIN_COMMAND_[A-Z_]*MARKER_*\d*/gi, "");
+  s = s.replace(/_+BEGIN_+|_+DONE_+|MARKER_+/gi, "");
+  s = s.replace(/PS[12]\s*=/gi, "");
+  s = s.replace(/unset\s+HISTFILE/gi, "");
+  s = s.replace(/HISTFILE\s*=/gi, "");
+  s = s.replace(/\bEC\s*=\s*\d+/gi, "");
+  s = s.replace(/\becho\s+_+\S*/gi, "");
+  s = s.replace(/[`$;|<>{}]/g, "");
+  s = s.replace(/\\[a-z]/gi, "");
+  s = s.replace(/\s{2,}/g, " ").trim();
+  return s.slice(0, max);
+}
+function sanitizeMessageBody(s) {
+  if (s == null) return "";
+  let out = String(s);
+  out = out.replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g, "");
+  out = out.replace(/_BEGIN_COMMAND_[A-Z_]*MARKER_*\d*/gi, "");
+  out = out.replace(/_+BEGIN_+\S*|_+DONE_+\S*|MARKER_+\S*/gi, "");
+  out = out.replace(/(^|\s);\s*PS[12]\s*=\s*;?/gi, " ");
+  out = out.replace(/unset\s+HISTFILE\s*;?/gi, "");
+  out = out.replace(/\bEC\s*=\s*\d+\s*;?/gi, "");
+  out = out.replace(/\becho\s+_+\S*\s*;?/gi, "");
+  out = out.replace(/^\s*[{}]\s*/g, "");
+  return out.slice(0, 1500);
+}
+function sanitizeTpl(p) {
+  const o = {};
+  for (const k of Object.keys(p || {})) o[k] = sanitizeTplField(p[k]);
+  return o;
+}
+function apptSmsAr(p) { p = sanitizeTpl(p); return `مرحباً ${p.name}،\nتذكير بموعدك في مستشفيات الحياة الوطنية\nالتاريخ: ${p.date}\nالوقت: ${p.time}\nالعيادة: ${p.clinic}\nللاستفسار: 920000094`; }
+function apptSmsEn(p) { p = sanitizeTpl(p); return `Hello ${p.name},\nReminder: Your appointment at Hayat National Hospital\nDate: ${p.date} | Time: ${p.time}\nClinic: ${p.clinic}\nInquiries: 920000094`; }
+function telehealthSmsAr2(p) { p = sanitizeTpl(p); return `مرحباً ${p.name}،\nموعد استشارتك الافتراضية\nالتاريخ: ${p.date} | الوقت: ${p.time}\nرابط الجلسة: ${p.url}\nمستشفيات الحياة الوطنية`; }
+function homecareSmsAr2(p) { p = sanitizeTpl(p); return `مرحباً ${p.name}،\nتم تأكيد زيارة الرعاية المنزلية\nالتاريخ: ${p.date} | الوقت: ${p.time}\nالعنوان: ${p.address}\nمستشفيات الحياة الوطنية`; }
 
 async function notifySendSms(request, env) {
   const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
@@ -10738,6 +10774,239 @@ async function notifyWhatsAppAppointment(request, env) {
 }
 __name(notifyWhatsAppAppointment, "notifyWhatsAppAppointment");
 
+// ─── Inbound WhatsApp webhook (Twilio → DeepSeek + AutoRAG + Oracle/D1 context) ──
+// Twilio sends application/x-www-form-urlencoded with: From, Body, NumMedia,
+// MediaUrl0, MediaContentType0, ProfileName, WaId. We respond with TwiML
+// or send out-of-band via the Messages API (we use Messages API for richer flow).
+async function whatsappInboundWebhook(request, env, ctx) {
+  const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
+  const twiml = (xml) => new Response(`<?xml version="1.0" encoding="UTF-8"?><Response>${xml || ""}</Response>`, { status: 200, headers: { "content-type": "text/xml" } });
+  try {
+    const ct = request.headers.get("content-type") || "";
+    const form = ct.includes("application/json") ? await request.json() : Object.fromEntries((await request.formData()).entries());
+    const from = String(form.From || "").trim();           // e.g. "whatsapp:+966..."
+    const profileName = sanitizeTplField(form.ProfileName || "");
+    const numMedia = parseInt(form.NumMedia || "0", 10) || 0;
+    const mediaUrl = form.MediaUrl0 || "";
+    const mediaType = form.MediaContentType0 || "";
+    let userText = sanitizeTplField(form.Body || "", 800);
+    let wasVoice = false;
+    if (numMedia > 0 && mediaUrl && /^audio\//i.test(mediaType)) {
+      wasVoice = true;
+      userText = await transcribeTwilioMedia(mediaUrl, env) || userText || "";
+    }
+    if (!from) return twiml("");
+    if (!userText) {
+      await sendWhatsAppText2(env, from.replace(/^whatsapp:/, ""), "أرسل رسالة نصية أو ملاحظة صوتية وسأساعدك. / Please send a message and I will help.");
+      return twiml("");
+    }
+
+    const lang = /[\u0600-\u06FF]/.test(userText) ? "ar" : "en";
+    const phoneE164 = from.replace(/^whatsapp:/, "");
+    const ctxData = await loadPatientContext(env, phoneE164).catch(() => null);
+    const ragHits = await autoRagSearch(env, userText).catch(() => []);
+    const reply = await deepseekReply(env, { userText, lang, profileName, ctx: ctxData, rag: ragHits });
+
+    // store reply for optional voice fetch and audit
+    const token = await persistVoiceReply(env, { phone: phoneE164, text: reply, lang });
+
+    // text reply first (always)
+    await sendWhatsAppText2(env, phoneE164, reply);
+
+    // if user sent a voice note, also send an audio reply via ElevenLabs
+    if (wasVoice && env.ELEVENLABS_API_KEY && token) {
+      const origin = new URL(request.url).origin;
+      const audioUrl = `${origin}/api/voice/wa/${token}.mp3`;
+      ctx?.waitUntil?.(sendWhatsAppMedia(env, phoneE164, audioUrl, reply.slice(0, 300)));
+    }
+    return twiml("");
+  } catch (e) {
+    console.error("inbound webhook error", e);
+    return twiml("");
+  }
+}
+__name(whatsappInboundWebhook, "whatsappInboundWebhook");
+
+async function transcribeTwilioMedia(url, env) {
+  try {
+    const auth = twilioAuth2(env);
+    if (!auth) return "";
+    const r = await fetch(url, { headers: { Authorization: auth }, signal: AbortSignal.timeout(15000) });
+    if (!r.ok) return "";
+    const buf = await r.arrayBuffer();
+    if (env.AI && typeof env.AI.run === "function") {
+      try {
+        const out = await env.AI.run("@cf/openai/whisper-large-v3-turbo", { audio: [...new Uint8Array(buf)] });
+        return sanitizeTplField(out?.text || "", 800);
+      } catch {
+        try {
+          const out2 = await env.AI.run("@cf/openai/whisper", { audio: [...new Uint8Array(buf)] });
+          return sanitizeTplField(out2?.text || "", 800);
+        } catch {}
+      }
+    }
+    return "";
+  } catch { return ""; }
+}
+__name(transcribeTwilioMedia, "transcribeTwilioMedia");
+
+async function loadPatientContext(env, phoneE164) {
+  if (!env.DB) return null;
+  const phone = phoneE164.replace(/^\+/, "");
+  let patient = null;
+  try {
+    patient = await env.DB.prepare(
+      "SELECT id, full_name_ar, full_name_en, national_id, phone, mrn FROM patients WHERE phone LIKE ? OR phone LIKE ? LIMIT 1"
+    ).bind(`%${phone}`, `%${phone.slice(-9)}`).first();
+  } catch {}
+  if (!patient) return { matched: false };
+  const safe = async (q) => { try { const r = await q; return r.results || []; } catch { return []; } };
+  const [appts, claims2] = await Promise.all([
+    safe(env.DB.prepare("SELECT id, appointment_date, appointment_time, status, reason FROM appointments WHERE patient_id = ? ORDER BY appointment_date DESC LIMIT 5").bind(patient.id).all()),
+    safe(env.DB.prepare("SELECT id, claim_number, total_amount, status FROM claims WHERE patient_id = ? ORDER BY created_at DESC LIMIT 5").bind(patient.id).all()),
+  ]);
+  return { matched: true, patient, appointments: appts, claims: claims2 };
+}
+__name(loadPatientContext, "loadPatientContext");
+
+async function autoRagSearch(env, query) {
+  try {
+    if (env.AI && typeof env.AI.autorag === "function") {
+      const r = await env.AI.autorag("brainsait-ai-search").search({ query }).catch(() => null);
+      const docs = r?.data?.slice?.(0, 4) || r?.matches?.slice?.(0, 4) || [];
+      return docs.map((d) => ({ text: d?.content || d?.text || d?.score || "", src: d?.filename || d?.source || "kb" }));
+    }
+  } catch {}
+  try {
+    const r = await fetch("https://bsma.elfadil.com/basma/rag/search", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ query, top_k: 4 }), signal: AbortSignal.timeout(8000),
+    });
+    if (r.ok) {
+      const j = await r.json().catch(() => null);
+      const arr = j?.results || j?.matches || [];
+      return arr.slice(0, 4).map((d) => ({ text: d?.content || d?.text || "", src: d?.source || "bsma" }));
+    }
+  } catch {}
+  return [];
+}
+__name(autoRagSearch, "autoRagSearch");
+
+async function deepseekReply(env, { userText, lang, profileName, ctx, rag }) {
+  const sys = lang === "ar"
+    ? `أنت "بسمة"، المساعد الذكي لمستشفيات الحياة الوطني × BrainSAIT. أجب باختصار، بلهجة سعودية مهذبة، بحد أقصى 5 أسطر. استخدم سياق المريض إن وُجد. لا تخترع معلومات؛ إن لم تعرف، اقترح حجز موعد أو الاتصال بـ 920000094.`
+    : `You are "Basma", the AI concierge for HNH × BrainSAIT. Reply briefly (max 5 lines), warmly. Use patient context when available. Never invent data; if unsure suggest booking or call 920000094.`;
+  const ctxLines = [];
+  if (ctx?.matched && ctx.patient) {
+    ctxLines.push(`Patient: ${ctx.patient.full_name_ar || ctx.patient.full_name_en || ""} (MRN ${ctx.patient.mrn || ctx.patient.id})`);
+    if (ctx.appointments?.length) ctxLines.push("Recent appointments: " + ctx.appointments.slice(0, 3).map((a) => `${a.appointment_date} ${a.appointment_time || ""} (${a.status})`).join("; "));
+    if (ctx.claims?.length) ctxLines.push("Recent claims: " + ctx.claims.slice(0, 3).map((c) => `${c.claim_number} ${c.status} SAR ${c.total_amount || 0}`).join("; "));
+  } else if (profileName) {
+    ctxLines.push(`Caller: ${profileName} (no patient record matched)`);
+  }
+  if (rag?.length) ctxLines.push("KB:\n" + rag.map((r) => "- " + String(r.text).slice(0, 220)).join("\n"));
+  const messages = [
+    { role: "system", content: sys + (ctxLines.length ? `\n\nContext:\n${ctxLines.join("\n")}` : "") },
+    { role: "user", content: userText },
+  ];
+
+  if (env.DEEPSEEK_API_KEY) {
+    try {
+      const r = await fetch("https://api.deepseek.com/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${env.DEEPSEEK_API_KEY}` },
+        body: JSON.stringify({ model: "deepseek-chat", messages, max_tokens: 400, temperature: 0.4 }),
+        signal: AbortSignal.timeout(15000),
+      });
+      const j = await r.json().catch(() => null);
+      const t = j?.choices?.[0]?.message?.content;
+      if (t) return sanitizeMessageBody(t);
+    } catch {}
+  }
+  if (env.AI && typeof env.AI.run === "function") {
+    try {
+      const r = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", { messages, max_tokens: 400, temperature: 0.4 });
+      const t = r?.response || r?.choices?.[0]?.message?.content || "";
+      if (t) return sanitizeMessageBody(t);
+    } catch {}
+  }
+  return lang === "ar"
+    ? "شكراً لرسالتك 🌷 سيتم تحويل طلبك للفريق المختص. للحجز السريع: 920000094"
+    : "Thank you for reaching out. Our team will follow up shortly. For booking: 920000094";
+}
+__name(deepseekReply, "deepseekReply");
+
+async function persistVoiceReply(env, { phone, text, lang }) {
+  try {
+    const token = (crypto.randomUUID?.() || (Math.random().toString(36).slice(2) + Date.now())).replace(/-/g, "").slice(0, 24);
+    if (env.BASMA_DB) {
+      try {
+        await env.BASMA_DB.prepare("CREATE TABLE IF NOT EXISTS wa_voice_replies (token TEXT PRIMARY KEY, phone TEXT, lang TEXT, text TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP)").run();
+        await env.BASMA_DB.prepare("INSERT INTO wa_voice_replies (token, phone, lang, text) VALUES (?, ?, ?, ?)").bind(token, phone, lang, text.slice(0, 1500)).run();
+        return token;
+      } catch {}
+    }
+    if (env.DB) {
+      try {
+        await env.DB.prepare("CREATE TABLE IF NOT EXISTS wa_voice_replies (token TEXT PRIMARY KEY, phone TEXT, lang TEXT, text TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP)").run();
+        await env.DB.prepare("INSERT INTO wa_voice_replies (token, phone, lang, text) VALUES (?, ?, ?, ?)").bind(token, phone, lang, text.slice(0, 1500)).run();
+        return token;
+      } catch {}
+    }
+  } catch {}
+  return null;
+}
+__name(persistVoiceReply, "persistVoiceReply");
+
+async function voiceReplyAudio(tokenRaw, env) {
+  const token = String(tokenRaw || "").replace(/\.(mp3|mpeg)$/i, "");
+  let row = null;
+  try { row = await env.BASMA_DB?.prepare("SELECT text, lang FROM wa_voice_replies WHERE token = ?").bind(token).first(); } catch {}
+  if (!row) {
+    try { row = await env.DB?.prepare("SELECT text, lang FROM wa_voice_replies WHERE token = ?").bind(token).first(); } catch {}
+  }
+  if (!row) return new Response("not found", { status: 404 });
+  const apiKey = env.ELEVENLABS_API_KEY;
+  if (!apiKey) return new Response("voice not configured", { status: 503 });
+  const voiceId = row.lang === "ar" ? "KxMRrXEjbJ6kZ93yT3fq" : "EXAVITQu4vr4xnSDxMaL";
+  const modelId = row.lang === "ar" ? "eleven_multilingual_v2" : "eleven_turbo_v2_5";
+  try {
+    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream?output_format=mp3_44100_128`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "xi-api-key": apiKey, "Accept": "audio/mpeg" },
+      body: JSON.stringify({
+        text: String(row.text).slice(0, 1500),
+        model_id: modelId,
+        voice_settings: { stability: 0.45, similarity_boost: 0.85, style: 0.35, use_speaker_boost: true },
+      }),
+      signal: AbortSignal.timeout(20000),
+    });
+    if (!r.ok) return new Response("tts upstream " + r.status, { status: 502 });
+    return new Response(r.body, { status: 200, headers: { "content-type": "audio/mpeg", "cache-control": "public, max-age=86400", "access-control-allow-origin": "*" } });
+  } catch (e) { return new Response("tts error", { status: 502 }); }
+}
+__name(voiceReplyAudio, "voiceReplyAudio");
+
+async function sendWhatsAppMedia(env, to, mediaUrl, caption) {
+  const auth = twilioAuth2(env);
+  if (!auth) return { success: false, code: "NOT_CONFIGURED" };
+  const from = env.WHATSAPP_FROM || "whatsapp:+14155238886";
+  const params = new URLSearchParams({ To: "whatsapp:" + normalizeSaudiPhone(to), From: from, MediaUrl: mediaUrl });
+  if (caption) params.set("Body", sanitizeMessageBody(caption));
+  try {
+    const r = await fetch(`${TWILIO_API2}/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, {
+      method: "POST",
+      headers: { Authorization: auth, "Content-Type": "application/x-www-form-urlencoded" },
+      body: params.toString(),
+      signal: AbortSignal.timeout(15000),
+    });
+    const j = await r.json().catch(() => ({}));
+    return { success: r.ok, sid: j.sid, status: j.status, code: j.code };
+  } catch (e) { return { success: false, error: e.message }; }
+}
+__name(sendWhatsAppMedia, "sendWhatsAppMedia");
+
+
 async function notifyStatus2(request, env) {
   return json2({
     success: true,
@@ -10766,6 +11035,9 @@ router.post("/api/sms/homecare", (req, env) => notifyHomecareSms(req, env));
 // WhatsApp — واتساب
 router.post("/api/whatsapp/send", (req, env) => notifySendWhatsApp(req, env));
 router.post("/api/whatsapp/appointment", (req, env) => notifyWhatsAppAppointment(req, env));
+router.post("/api/whatsapp/webhook", (req, env, ctx) => whatsappInboundWebhook(req, env, ctx));
+router.get("/api/whatsapp/webhook", () => new Response("ok", { status: 200 }));
+router.get("/api/voice/wa/([^/]+)", (req, env, ctx, p) => voiceReplyAudio(p[0], env));
 // Notify status
 router.get("/api/notify/status", (req, env) => notifyStatus2(req, env));
 
