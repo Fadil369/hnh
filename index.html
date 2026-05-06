@@ -1135,7 +1135,7 @@ const T = {
       steps: ['القسم والفرع','التاريخ والوقت','بياناتك','التأكيد'],
       step1: { deptLabel:'القسم الطبي', branchLabel:'الفرع', doctorLabel:'الطبيب', selectDept:'اختر القسم', selectBranch:'اختر الفرع', selectDoctor:'اختر الطبيب' },
       step2: { dateLabel:'التاريخ', timeLabel:'الوقت المفضل' },
-      step3: { nameLabel:'الاسم الكامل', phoneLabel:'رقم الجوال', emailLabel:'البريد الإلكتروني', notesLabel:'ملاحظات (اختياري)' },
+      step3: { nameLabel:'الاسم الكامل', phoneLabel:'رقم الجوال', emailLabel:'البريد الإلكتروني', notesLabel:'ملاحظات (اختياري)', nationalLabel:'رقم الهوية / الإقامة', payerLabel:'شركة التأمين' },
       step4: { title:'تم تأكيد الحجز!', sub:'سيتم التواصل معك قريباً', close:'إغلاق', newBook:'حجز جديد' },
       next:'التالي', prev:'السابق', confirm:'تأكيد الحجز'
     },
@@ -1205,7 +1205,7 @@ const T = {
       steps: ['Dept & Branch','Date & Time','Your Info','Confirm'],
       step1: { deptLabel:'Medical Department', branchLabel:'Branch', doctorLabel:'Doctor', selectDept:'Select Department', selectBranch:'Select Branch', selectDoctor:'Select Doctor' },
       step2: { dateLabel:'Date', timeLabel:'Preferred Time' },
-      step3: { nameLabel:'Full Name', phoneLabel:'Phone Number', emailLabel:'Email', notesLabel:'Notes (optional)' },
+      step3: { nameLabel:'Full Name', phoneLabel:'Phone Number', emailLabel:'Email', notesLabel:'Notes (optional)', nationalLabel:'National ID / Iqama', payerLabel:'Insurance Payer' },
       step4: { title:'Appointment Confirmed!', sub:'We will contact you shortly', close:'Close', newBook:'New Booking' },
       next:'Next', prev:'Back', confirm:'Confirm Booking'
     },
@@ -1885,40 +1885,114 @@ function Footer({ lang }) {
 function BookingModal({ lang, open, onClose }) {
   const t = T[lang].booking;
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState({ dept:'', branch:'', doctor:'', date:'', time:'', name:'', phone:'', email:'', notes:'' });
+  const [form, setForm] = useState({ dept:'', branch:'', doctor:'', date:'', time:'', name:'', phone:'', email:'', notes:'', nationalId:'', payer:'' });
   const [confirmed, setConfirmed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [waSid, setWaSid] = useState('');
+  const [bookingResult, setBookingResult] = useState(null);
 
   const times = ['08:00','09:00','10:00','11:00','13:00','14:00','15:00','16:00'];
   const depts = DEPARTMENTS.map(d=>lang==='ar'?d.nameAr:d.nameEn);
   const branches = BRANCHES.map(b=>lang==='ar'?b.nameAr:b.nameEn);
+  const payers = ['Bupa','Tawuniya','MedGulf','Al Rajhi Takaful','GlobeMed','Walaa','Cash / نقدي'];
 
   useEffect(() => {
-    if (!open) { setStep(1); setConfirmed(false); setSubmitting(false); setErrorMsg(''); setWaSid(''); setForm({dept:'',branch:'',doctor:'',date:'',time:'',name:'',phone:'',email:'',notes:''}); }
+    if (!open) { setStep(1); setConfirmed(false); setSubmitting(false); setErrorMsg(''); setWaSid(''); setBookingResult(null); setForm({dept:'',branch:'',doctor:'',date:'',time:'',name:'',phone:'',email:'',notes:'',nationalId:'',payer:''}); }
   }, [open]);
+
+  const API = 'https://hnh.brainsait.org';
 
   async function handleConfirm() {
     setSubmitting(true); setErrorMsg('');
+    const result = { eligibility:null, patientId:null, appointmentId:null, waSid:null, copay:null };
     try {
       const phone = (form.phone || '').trim();
-      const phoneE164 = phone.startsWith('+') ? phone : (phone.startsWith('00') ? '+' + phone.slice(2) : (phone.startsWith('05') ? '+966' + phone.slice(1) : '+' + phone));
-      const res = await fetch('https://hnh.brainsait.org/api/whatsapp/appointment', {
-        method: 'POST',
-        headers: {'content-type': 'application/json'},
+      const phoneE164 = phone.startsWith('+') ? phone : (phone.startsWith('00') ? '+' + phone.slice(2) : (phone.startsWith('05') ? '+966' + phone.slice(1) : (phone.startsWith('5') && phone.length === 9 ? '+966' + phone : '+' + phone)));
+
+      // 1) Eligibility (best-effort) — non-blocking
+      if (form.nationalId && form.payer && !/cash|نقدي/i.test(form.payer)) {
+        try {
+          const er = await fetch(`${API}/api/eligibility/check`, {
+            method:'POST', headers:{'content-type':'application/json'},
+            body: JSON.stringify({ insurance_id: form.payer, national_id: form.nationalId, service_type:'medical' }),
+          });
+          const ej = await er.json().catch(()=>({}));
+          if (ej && ej.success !== false) {
+            const e = ej.eligibility || ej;
+            result.eligibility = e.status || e.eligible || 'verified';
+            result.copay = e.copay_amount ?? e.copay ?? null;
+          }
+        } catch {}
+      }
+
+      // 2) Find or create patient (HIS_DB)
+      let patientId = null;
+      try {
+        const pr = await fetch(`${API}/api/patients?search=${encodeURIComponent(phoneE164)}`);
+        const pj = await pr.json().catch(()=>({}));
+        const found = (pj.patients || pj.data || [])[0];
+        patientId = found?.id || found?.patient_id || null;
+      } catch {}
+      if (!patientId) {
+        const cr = await fetch(`${API}/api/patients`, {
+          method:'POST', headers:{'content-type':'application/json'},
+          body: JSON.stringify({
+            full_name_ar: form.name, full_name_en: form.name,
+            phone: phoneE164, email: form.email || null,
+            national_id: form.nationalId || null, payer_name: form.payer || null,
+          }),
+        });
+        const cj = await cr.json().catch(()=>({}));
+        patientId = cj.patient_id || cj.id || cj.patient?.id || null;
+      }
+      result.patientId = patientId;
+
+      // 3) Persist appointment under provider OID tree
+      if (patientId) {
+        try {
+          const ar = await fetch(`${API}/api/appointments`, {
+            method:'POST', headers:{'content-type':'application/json'},
+            body: JSON.stringify({
+              patient_id: patientId,
+              clinic_name: form.branch || form.dept,
+              speciality: form.dept,
+              provider_name: form.doctor || null,
+              appointment_date: form.date,
+              appointment_time: form.time || '10:00',
+              reason: form.notes || form.dept,
+              appointment_type: 'outpatient',
+              status: 'scheduled',
+              source: 'hnh-landing',
+            }),
+          });
+          const aj = await ar.json().catch(()=>({}));
+          result.appointmentId = aj.appointment_id || aj.id || aj.appointment?.id || null;
+        } catch {}
+      }
+
+      // 4) WhatsApp confirmation
+      const wr = await fetch(`${API}/api/whatsapp/appointment`, {
+        method:'POST', headers:{'content-type':'application/json'},
         body: JSON.stringify({
-          to: phoneE164,
-          patientName: form.name,
-          date: form.date,
-          time: form.time,
-          clinic: form.branch,
-          lang,
+          to: phoneE164, patientName: form.name,
+          date: form.date, time: form.time, clinic: form.branch, lang,
         }),
       });
-      const data = await res.json().catch(()=>({}));
-      if (!res.ok || data?.success === false) throw new Error(data?.error || ('HTTP ' + res.status));
-      setWaSid(data?.sid || data?.message?.sid || '');
+      const wj = await wr.json().catch(()=>({}));
+      if (!wr.ok || wj?.success === false) throw new Error(wj?.error || ('HTTP ' + wr.status));
+      result.waSid = wj?.sid || wj?.message?.sid || '';
+
+      // 5) Stash for context-aware Basma chat
+      try {
+        localStorage.setItem('hnh_patient', JSON.stringify({
+          patientId, phone: phoneE164, name: form.name, lang,
+          appointmentId: result.appointmentId, ts: Date.now(),
+        }));
+      } catch {}
+
+      setWaSid(result.waSid);
+      setBookingResult(result);
       setConfirmed(true);
     } catch (e) {
       setErrorMsg(String(e.message || e));
@@ -1959,10 +2033,20 @@ function BookingModal({ lang, open, onClose }) {
               </div>
               <h3 style={{color:'var(--ink)',marginBottom:8}}>{t.step4.title}</h3>
               <p style={{color:'var(--text-soft)',marginBottom:8}}>{t.step4.sub}</p>
-              <p style={{color:'var(--text-soft)',marginBottom:24,fontSize:'0.85rem'}}>
+              <p style={{color:'var(--text-soft)',marginBottom:16,fontSize:'0.85rem'}}>
                 {lang==='ar'?'تم إرسال تأكيد على واتساب 📱':'A WhatsApp confirmation has been sent 📱'}
                 {waSid && <span style={{display:'block',marginTop:4,fontFamily:'monospace',fontSize:'0.7rem',opacity:0.7}}>SID: {waSid}</span>}
               </p>
+              {bookingResult && (
+                <div style={{background:'var(--cream)',borderRadius:'var(--r-md)',padding:'14px 18px',marginBottom:24,fontSize:'0.85rem',color:'var(--text-soft)',textAlign:lang==='ar'?'right':'left'}}>
+                  {bookingResult.eligibility && (
+                    <div>✅ {lang==='ar'?'الأهلية:':'NPHIES Eligibility:'} <strong style={{color:'var(--ink)'}}>{bookingResult.eligibility}</strong>{bookingResult.copay!=null && <span> · {lang==='ar'?'المشاركة:':'Copay:'} <strong style={{color:'var(--ink)'}}>{bookingResult.copay} SAR</strong></span>}</div>
+                  )}
+                  {bookingResult.patientId && <div>👤 {lang==='ar'?'رقم المريض:':'Patient ID:'} <strong style={{color:'var(--ink)',fontFamily:'monospace'}}>{bookingResult.patientId}</strong></div>}
+                  {bookingResult.appointmentId && <div>📅 {lang==='ar'?'رقم الموعد:':'Appointment:'} <strong style={{color:'var(--ink)',fontFamily:'monospace'}}>{bookingResult.appointmentId}</strong></div>}
+                  <div style={{marginTop:8,fontSize:'0.78rem',opacity:0.7}}>{lang==='ar'?'سيظهر موعدك مباشرة في لوحة الطبيب · GIVC':'Your appointment is now live on the provider dashboard · GIVC'}</div>
+                </div>
+              )}
               <div style={{display:'flex',gap:12,justifyContent:'center'}}>
                 <button className="btn btn-outline-gold" onClick={()=>{setConfirmed(false);setStep(1);}}>{t.step4.newBook}</button>
                 <button className="btn btn-gold" onClick={onClose}>{t.step4.close}</button>
@@ -2036,6 +2120,19 @@ function BookingModal({ lang, open, onClose }) {
                     <label className="form-label">{t.step3.notesLabel}</label>
                     <textarea className="form-input" rows="3" value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} style={{resize:'vertical'}}/>
                   </div>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label">{t.step3.nationalLabel}</label>
+                      <input type="text" inputMode="numeric" maxLength="10" className="form-input" value={form.nationalId} onChange={e=>setForm({...form,nationalId:e.target.value.replace(/\D/g,'')})} placeholder={lang==='ar'?'1xxxxxxxxx':'1xxxxxxxxx'} />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">{t.step3.payerLabel}</label>
+                      <select className="form-input" value={form.payer} onChange={e=>setForm({...form,payer:e.target.value})}>
+                        <option value="">{lang==='ar'?'— اختر —':'— select —'}</option>
+                        {payers.map(p=> <option key={p} value={p}>{p}</option>)}
+                      </select>
+                    </div>
+                  </div>
                   {form.dept && (
                     <div style={{background:'var(--cream)',borderRadius:'var(--r-md)',padding:'16px',fontSize:'0.88rem',color:'var(--text-soft)'}}>
                       <div style={{fontWeight:600,color:'var(--ink)',marginBottom:6}}>{lang==='ar'?'ملخص الحجز:':'Booking Summary:'}</div>
@@ -2098,10 +2195,12 @@ function ChatWidget({ lang }) {
     setMsgs(m=>[...m, userMsg]);
     setInput('');
     setMsgs(m=>[...m, {role:'bot',text:'…',pending:true}]);
+    let stash = null;
+    try { stash = JSON.parse(localStorage.getItem('hnh_patient') || 'null'); } catch {}
     fetch('https://hnh.brainsait.org/api/basma/chat', {
       method: 'POST',
       headers: {'content-type':'application/json'},
-      body: JSON.stringify({ message: text, lang }),
+      body: JSON.stringify({ message: text, lang, phone: stash?.phone || undefined, name: stash?.name || undefined }),
     })
       .then(r => r.json())
       .then(data => {
