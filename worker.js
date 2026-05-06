@@ -10297,7 +10297,8 @@ var FRONTEND_APP_ROUTES = /* @__PURE__ */ new Set([
   "/basma",
   "/homecare",
   "/telehealth",
-  "/github"
+  "/github",
+  "/oid"
 ]);
 function isFrontendAsset(pathname) {
   return pathname.startsWith("/_next/") || pathname.startsWith("/stitch-assets/") || pathname === "/favicon.ico";
@@ -10416,6 +10417,90 @@ router.get("/api/appointments/([^/]+)", (req, env, ctx, p) => getAppointment(req
 router.post("/api/appointments", (req, env) => createAppointment(req, env));
 router.patch("/api/appointments/([^/]+)", (req, env, ctx, p) => updateAppointment(req, env, ctx, p));
 router.delete("/api/appointments/([^/]+)", (req, env, ctx, p) => cancelAppointment(req, env, ctx, p));
+
+// ─── Provider OID Tree (HL7-style hierarchical artifact tree under doctor.OID) ──
+// Root arc: 1.3.6.1.4.1.61026.{provider_suffix}
+// Sub-arcs:  .1 encounters | .2 claims | .3 telehealth | .4 homecare
+//            .5 labs       | .6 radiology | .7 reports | .8 prescriptions
+router.get("/api/providers/([^/]+)/oid", async (req, env, ctx, p) => {
+  const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
+  const id = p[0];
+  const provider = await getProvider(id, env);
+  if (!provider) return json2({ success: false, message: "provider not found" }, 404);
+  const oid = provider.givc_oid || deriveProviderOid(provider);
+  return json2({ success: true, provider_id: provider.id, db_id: provider.db_id, name: provider.name_en || provider.name_ar, specialty: provider.specialty, oid, oid_arcs: oidArcs() });
+});
+
+router.post("/api/providers/([^/]+)/oid/register", async (req, env, ctx, p) => {
+  const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
+  const id = p[0];
+  const provider = await getProvider(id, env);
+  if (!provider) return json2({ success: false, message: "provider not found" }, 404);
+  if (provider.givc_oid) return json2({ success: true, provider_id: provider.id, oid: provider.givc_oid, message: "already registered" });
+  const oid = deriveProviderOid(provider);
+  if (env.DB && provider.db_id) {
+    try {
+      await env.DB.prepare("UPDATE providers SET givc_oid = ?, givc_registered = 1 WHERE id = ?").bind(oid, provider.db_id).run();
+    } catch {}
+  }
+  return json2({ success: true, provider_id: provider.id, oid, registered_at: new Date().toISOString() });
+});
+
+router.get("/api/providers/([^/]+)/tree", async (req, env, ctx, p) => {
+  const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
+  const id = p[0];
+  const provider = await getProvider(id, env);
+  if (!provider) return json2({ success: false, message: "provider not found" }, 404);
+  const oid = provider.givc_oid || deriveProviderOid(provider);
+  const dbId = provider.db_id;
+  const safe = async (q) => { try { const r = await q; return r.results || []; } catch { return []; } };
+  const [appts, claims2, tele, hc] = await Promise.all([
+    safe(env.DB?.prepare("SELECT id, patient_id, appointment_date, appointment_time, status, reason FROM appointments WHERE provider_id = ? ORDER BY appointment_date DESC LIMIT 25").bind(dbId ?? id).all()),
+    safe(env.DB?.prepare("SELECT id, claim_number, patient_id, total_amount, status, created_at FROM claims WHERE provider_id = ? ORDER BY created_at DESC LIMIT 25").bind(dbId ?? id).all()),
+    safe(env.DB?.prepare("SELECT id, patient_id, status, created_at FROM telehealth_sessions WHERE provider_id = ? ORDER BY created_at DESC LIMIT 25").bind(dbId ?? id).all()),
+    safe(env.DB?.prepare("SELECT id, patient_id, visit_date, status FROM homecare_visits WHERE provider_id = ? ORDER BY visit_date DESC LIMIT 25").bind(dbId ?? id).all()),
+  ]);
+  const node = (arc, label, items, key = "id") => ({
+    arc, oid: `${oid}.${arc}`, label, count: items.length,
+    children: items.slice(0, 25).map((it) => ({
+      oid: `${oid}.${arc}.${it[key]}`,
+      ref: it[key], label: it.appointment_date || it.claim_number || it.visit_date || it.created_at || String(it[key]),
+      meta: it,
+    })),
+  });
+  return json2({
+    success: true,
+    provider: { id: provider.id, db_id: provider.db_id, name: provider.name_en || provider.name_ar, specialty: provider.specialty, branch: provider.branch },
+    oid,
+    tree: [
+      node(1, "Encounters", appts),
+      node(2, "Claims", claims2),
+      node(3, "Telehealth Sessions", tele),
+      node(4, "Homecare Visits", hc),
+      { arc: 5, oid: `${oid}.5`, label: "Labs", count: 0, children: [] },
+      { arc: 6, oid: `${oid}.6`, label: "Radiology", count: 0, children: [] },
+      { arc: 7, oid: `${oid}.7`, label: "Reports", count: 0, children: [] },
+      { arc: 8, oid: `${oid}.8`, label: "Prescriptions", count: 0, children: [] },
+    ],
+    generated_at: new Date().toISOString(),
+  });
+});
+
+function deriveProviderOid(p) {
+  const root = "1.3.6.1.4.1.61026";
+  const branchSeg = String(p.givc_branch_code || p.branch_id || p.branch || "0").replace(/[^0-9]/g, "") || "0";
+  const specSeg = String(p.givc_specialty_code || "").replace(/[^0-9]/g, "") || hashSeg(p.specialty || "X", 3);
+  const provSeg = String(p.db_id || p.id || "").replace(/[^A-Z0-9]/gi, "").slice(-6).toUpperCase() || hashSeg(p.id || "P", 6);
+  return `${root}.${branchSeg}.${specSeg}.${provSeg}`;
+}
+function hashSeg(s, len) {
+  let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return String(h).padStart(len, "0").slice(0, len);
+}
+function oidArcs() {
+  return { 1: "Encounters", 2: "Claims", 3: "Telehealth", 4: "Homecare", 5: "Labs", 6: "Radiology", 7: "Reports", 8: "Prescriptions" };
+}
+
 router.get("/api/claims", (req, env, ctx, p, url) => getClaims(req, env, ctx, p, url));
 router.get("/api/claims/([^/]+)", (req, env, ctx, p) => getClaim(req, env, ctx, p));
 router.post("/api/claims", (req, env) => createClaim(req, env));

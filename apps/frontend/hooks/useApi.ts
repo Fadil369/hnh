@@ -323,3 +323,21 @@ export function useSubmitClaim() {
     onError: (e: any) => toast.error(e?.message ?? 'Submission failed'),
   })
 }
+
+// ─── Provider OID Tree (HL7-style hierarchical artifact tree) ───────────────
+export function useProviderOidTree(providerId: string) {
+  return useQuery({
+    queryKey: ['provider', 'tree', providerId],
+    queryFn: async () => api<any>(`/api/providers/${encodeURIComponent(providerId)}/tree`),
+    enabled: providerId.length > 0,
+  })
+}
+
+export function useRegisterProviderOid() {
+  return useMutation({
+    mutationFn: async (providerId: string) =>
+      api<any>(`/api/providers/${encodeURIComponent(providerId)}/oid/register`, { method: 'POST', body: {} }),
+    onSuccess: (r: any) => toast.success(`OID ${r?.oid ?? 'registered'}`),
+    onError: (e: any) => toast.error(e?.message ?? 'OID registration failed'),
+  })
+}
