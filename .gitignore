@@ -39,3 +39,7 @@ __pycache__/
 # Playwright
 playwright-report/
 test-results/
+
+# Frontend backups during refactor
+apps/frontend/app/**/*.bak
+apps/frontend/app/globals.css.bak
