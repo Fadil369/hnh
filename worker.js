@@ -238,12 +238,15 @@ var init_response = __esm({
       "https://stitch-doctor-dashboard.brainsait-fadil.workers.dev",
       "https://brainsait-realtime-hub.brainsait-fadil.workers.dev",
       "https://nphies-mirror.brainsait-fadil.workers.dev",
-      "https://maillinc.brainsait-fadil.workers.dev"
+      "https://maillinc.brainsait-fadil.workers.dev",
+      "https://fadil369.github.io"
     ];
     ALLOWED_SUFFIXES = [
       ".brainsait.org",
       ".brainsait-fadil.workers.dev",
-      ".elfadil.com"
+      ".elfadil.com",
+      ".github.io",
+      ".pages.dev"
     ];
     __name(getAllowedOrigin, "getAllowedOrigin");
     __name(corsHeaders, "corsHeaders");
@@ -11006,6 +11009,26 @@ async function sendWhatsAppMedia(env, to, mediaUrl, caption) {
 }
 __name(sendWhatsAppMedia, "sendWhatsAppMedia");
 
+async function basmaChat(request, env) {
+  const cors = { "access-control-allow-origin": "*" };
+  const json3 = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json", ...cors } });
+  try {
+    const body = await request.json().catch(() => ({}));
+    const message = String(body?.message || "").trim();
+    const phone = String(body?.phone || "").trim();
+    const profileName = String(body?.name || "").trim();
+    if (!message) return json3({ success: false, error: "message required" }, 400);
+    const lang = body?.lang === "ar" || body?.lang === "en" ? body.lang : (/[\u0600-\u06FF]/.test(message) ? "ar" : "en");
+    const ctxData = phone ? await loadPatientContext(env, phone).catch(() => null) : null;
+    const ragHits = await autoRagSearch(env, message).catch(() => []);
+    const reply = await deepseekReply(env, { userText: message, lang, profileName, ctx: ctxData, rag: ragHits });
+    return json3({ success: true, reply, lang, has_context: !!ctxData, sources: (ragHits || []).slice(0, 3).map((h) => h.filename || h.source).filter(Boolean) });
+  } catch (e) {
+    return json3({ success: false, error: String(e?.message || e) }, 500);
+  }
+}
+__name(basmaChat, "basmaChat");
+
 
 async function notifyStatus2(request, env) {
   return json2({
@@ -11038,6 +11061,7 @@ router.post("/api/whatsapp/appointment", (req, env) => notifyWhatsAppAppointment
 router.post("/api/whatsapp/webhook", (req, env, ctx) => whatsappInboundWebhook(req, env, ctx));
 router.get("/api/whatsapp/webhook", () => new Response("ok", { status: 200 }));
 router.get("/api/voice/wa/([^/]+)", (req, env, ctx, p) => voiceReplyAudio(p[0], env));
+router.post("/api/basma/chat", (req, env) => basmaChat(req, env));
 // Notify status
 router.get("/api/notify/status", (req, env) => notifyStatus2(req, env));
 

@@ -134,6 +134,37 @@ export function useCheckEligibility() {
   })
 }
 
+// ─── Provider availability + WhatsApp notify ────────────────────────────────
+export function useProviderAvailability(providerId?: string | number, date?: string) {
+  return useQuery({
+    queryKey: ['availability', providerId ?? null, date ?? null],
+    queryFn: async () => {
+      const r = await api<{ available_slots?: string[]; date?: string }>(
+        `/api/telehealth/providers/${providerId}/availability`,
+        { query: date ? { date } : undefined },
+      )
+      return r
+    },
+    enabled: !!providerId,
+  })
+}
+
+export function useNotifyWhatsAppAppointment() {
+  return useMutation({
+    mutationFn: async (input: {
+      to: string
+      patient_name?: string
+      provider_name?: string
+      appointment_date: string
+      appointment_time: string
+      clinic_name?: string
+      reason?: string
+      lang?: 'ar' | 'en'
+    }) => api<any>('/api/whatsapp/appointment', { method: 'POST', body: input }),
+    onError: (e: any) => toast.error(e?.message ?? 'WhatsApp confirmation failed'),
+  })
+}
+
 // ─── NPHIES ──────────────────────────────────────────────────────────────────
 export function useNphiesSubmit() {
   return useMutation({

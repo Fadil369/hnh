@@ -1836,16 +1836,47 @@ function BookingModal({ lang, open, onClose }) {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({ dept:'', branch:'', doctor:'', date:'', time:'', name:'', phone:'', email:'', notes:'' });
   const [confirmed, setConfirmed] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [waSid, setWaSid] = useState('');
 
   const times = ['08:00','09:00','10:00','11:00','13:00','14:00','15:00','16:00'];
   const depts = DEPARTMENTS.map(d=>lang==='ar'?d.nameAr:d.nameEn);
   const branches = BRANCHES.map(b=>lang==='ar'?b.nameAr:b.nameEn);
 
   useEffect(() => {
-    if (!open) { setStep(1); setConfirmed(false); setForm({dept:'',branch:'',doctor:'',date:'',time:'',name:'',phone:'',email:'',notes:''}); }
+    if (!open) { setStep(1); setConfirmed(false); setSubmitting(false); setErrorMsg(''); setWaSid(''); setForm({dept:'',branch:'',doctor:'',date:'',time:'',name:'',phone:'',email:'',notes:''}); }
   }, [open]);
 
-  function handleConfirm() { setConfirmed(true); }
+  async function handleConfirm() {
+    setSubmitting(true); setErrorMsg('');
+    try {
+      const phone = (form.phone || '').trim();
+      const phoneE164 = phone.startsWith('+') ? phone : (phone.startsWith('00') ? '+' + phone.slice(2) : (phone.startsWith('05') ? '+966' + phone.slice(1) : '+' + phone));
+      const res = await fetch('https://hnh.brainsait.org/api/whatsapp/appointment', {
+        method: 'POST',
+        headers: {'content-type': 'application/json'},
+        body: JSON.stringify({
+          to: phoneE164,
+          patient_name: form.name,
+          provider_name: form.doctor,
+          appointment_date: form.date,
+          appointment_time: form.time,
+          clinic_name: form.branch,
+          reason: form.notes || form.dept,
+          lang,
+        }),
+      });
+      const data = await res.json().catch(()=>({}));
+      if (!res.ok || data?.success === false) throw new Error(data?.error || ('HTTP ' + res.status));
+      setWaSid(data?.sid || data?.message?.sid || '');
+      setConfirmed(true);
+    } catch (e) {
+      setErrorMsg(String(e.message || e));
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <div className={`modal-overlay${open?' open':''}`} onClick={e=>e.target===e.currentTarget&&onClose()}>
@@ -1878,7 +1909,11 @@ function BookingModal({ lang, open, onClose }) {
                 <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
               </div>
               <h3 style={{color:'var(--ink)',marginBottom:8}}>{t.step4.title}</h3>
-              <p style={{color:'var(--text-soft)',marginBottom:32}}>{t.step4.sub}</p>
+              <p style={{color:'var(--text-soft)',marginBottom:8}}>{t.step4.sub}</p>
+              <p style={{color:'var(--text-soft)',marginBottom:24,fontSize:'0.85rem'}}>
+                {lang==='ar'?'تم إرسال تأكيد على واتساب 📱':'A WhatsApp confirmation has been sent 📱'}
+                {waSid && <span style={{display:'block',marginTop:4,fontFamily:'monospace',fontSize:'0.7rem',opacity:0.7}}>SID: {waSid}</span>}
+              </p>
               <div style={{display:'flex',gap:12,justifyContent:'center'}}>
                 <button className="btn btn-outline-gold" onClick={()=>{setConfirmed(false);setStep(1);}}>{t.step4.newBook}</button>
                 <button className="btn btn-gold" onClick={onClose}>{t.step4.close}</button>
@@ -1976,8 +2011,15 @@ function BookingModal({ lang, open, onClose }) {
             {step < 3 ? (
               <button className="btn btn-gold" onClick={()=>setStep(s=>s+1)}>{t.next}</button>
             ) : (
-              <button className="btn btn-gold" onClick={handleConfirm}>{t.confirm}</button>
+              <button className="btn btn-gold" onClick={handleConfirm} disabled={submitting || !form.name || !form.phone || !form.date || !form.time}>
+                {submitting ? (lang==='ar'?'…جاري التأكيد':'Confirming…') : t.confirm}
+              </button>
             )}
+          </div>
+        )}
+        {errorMsg && (
+          <div style={{padding:'12px 24px',color:'#a33',fontSize:'0.85rem',textAlign:'center',borderTop:'1px solid var(--cream-dk)'}}>
+            {lang==='ar'?'تعذر إرسال التأكيد:':'Confirmation failed:'} {errorMsg}
           </div>
         )}
       </div>
@@ -2006,9 +2048,33 @@ function ChatWidget({ lang }) {
     const userMsg = {role:'user',text};
     setMsgs(m=>[...m, userMsg]);
     setInput('');
-    setTimeout(() => {
-      setMsgs(m=>[...m, {role:'bot',text:getChatResponse(text,lang)}]);
-    }, 700);
+    setMsgs(m=>[...m, {role:'bot',text:'…',pending:true}]);
+    fetch('https://hnh.brainsait.org/api/basma/chat', {
+      method: 'POST',
+      headers: {'content-type':'application/json'},
+      body: JSON.stringify({ message: text, lang }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        const reply = (data && data.reply) ? data.reply : getChatResponse(text, lang);
+        setMsgs(m => {
+          const next = [...m];
+          const i = next.map(x=>x.pending).lastIndexOf(true);
+          if (i >= 0) next[i] = {role:'bot', text: reply};
+          else next.push({role:'bot', text: reply});
+          return next;
+        });
+      })
+      .catch(() => {
+        setMsgs(m => {
+          const next = [...m];
+          const i = next.map(x=>x.pending).lastIndexOf(true);
+          const fallback = getChatResponse(text, lang);
+          if (i >= 0) next[i] = {role:'bot', text: fallback};
+          else next.push({role:'bot', text: fallback});
+          return next;
+        });
+      });
   }
 
   return (

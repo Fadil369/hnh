@@ -76,12 +76,15 @@ export default function HomePage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Button asChild size="lg">
-                <Link href="/portal">
-                  {t('home.hero.cta.portal')}
+                <Link href="/book">
+                  {locale === 'ar' ? 'احجز موعدك' : 'Book an appointment'}
                   <ArrowRight className={locale === 'ar' ? 'rotate-180' : ''} />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
+                <Link href="/portal">{t('home.hero.cta.portal')}</Link>
+              </Button>
+              <Button asChild size="lg" variant="ghost">
                 <Link href="/knowledge">{t('home.hero.cta.docs')}</Link>
               </Button>
               <Badge variant={statusVariant} className="gap-1.5">
