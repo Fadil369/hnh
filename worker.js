@@ -10293,7 +10293,11 @@ var FRONTEND_APP_ROUTES = /* @__PURE__ */ new Set([
   "/nphies",
   "/sbs",
   "/knowledge",
-  "/stitch"
+  "/stitch",
+  "/basma",
+  "/homecare",
+  "/telehealth",
+  "/github"
 ]);
 function isFrontendAsset(pathname) {
   return pathname.startsWith("/_next/") || pathname.startsWith("/stitch-assets/") || pathname === "/favicon.ico";
@@ -10332,6 +10336,42 @@ router.get("/api/patients", (req, env, ctx, p, url) => getPatients(req, env, ctx
 router.get("/api/patients/([^/]+)", (req, env, ctx, p) => getPatient(req, env, ctx, p));
 router.post("/api/patients", (req, env) => createPatient(req, env));
 router.patch("/api/patients/([^/]+)", (req, env, ctx, p) => updatePatient(req, env, ctx, p));
+router.get("/api/patients/([^/]+)/history", async (req, env, ctx, p) => {
+  const id = p[0];
+  const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
+  try {
+    const enc = await env.DB.prepare(
+      "SELECT id, appointment_date AS date, provider_id, status, reason AS diagnosis FROM appointments WHERE patient_id = ? ORDER BY appointment_date DESC LIMIT 50"
+    ).bind(id).all().catch(() => ({ results: [] }));
+    const cl = await env.DB.prepare(
+      "SELECT id, claim_number, total_amount, status, created_at AS date FROM claims WHERE patient_id = ? ORDER BY created_at DESC LIMIT 50"
+    ).bind(id).all().catch(() => ({ results: [] }));
+    let rag = [];
+    try {
+      const r = await fetch("https://bsma.elfadil.com/basma/rag/search", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ query: `patient ${id} history labs radiology reports`, limit: 10 }),
+      });
+      if (r.ok) {
+        const j = await r.json().catch(() => ({}));
+        rag = j.results || j.matches || [];
+      }
+    } catch {}
+    return json2({
+      success: true,
+      patient_id: id,
+      encounters: enc.results || [],
+      labs: [],
+      radiology: [],
+      reports: cl.results || [],
+      rag_results: rag,
+      source: "hnh-unified",
+    });
+  } catch (e) {
+    return json2({ success: false, message: e?.message || "history failed" }, 500);
+  }
+});
 router.get("/api/providers", async (req, env, ctx, p, url) => {
   if (!url) url = new URL(req.url);
   const branch = url?.searchParams?.get("branch") || "";
@@ -10380,6 +10420,44 @@ router.get("/api/claims", (req, env, ctx, p, url) => getClaims(req, env, ctx, p,
 router.get("/api/claims/([^/]+)", (req, env, ctx, p) => getClaim(req, env, ctx, p));
 router.post("/api/claims", (req, env) => createClaim(req, env));
 router.post("/api/claims/([^/]+)/submit", (req, env, ctx, p) => submitClaimToNPHIES(req, env, ctx, p));
+router.post("/api/claims/([^/]+)/normalize", async (req, env, ctx, p) => {
+  const id = p[0];
+  const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
+  try {
+    const claim = await env.DB.prepare("SELECT * FROM claims WHERE id = ? OR claim_number = ? LIMIT 1").bind(id, id).first().catch(() => null);
+    if (!claim) return json2({ success: false, claim_id: id, message: "claim not found" }, 404);
+    const normalized = {
+      claim_id: claim.id ?? id,
+      claim_number: claim.claim_number,
+      patient_id: claim.patient_id,
+      provider_id: claim.provider_id,
+      total_amount: Number(claim.total_amount ?? 0),
+      currency: "SAR",
+      diagnosis: claim.diagnosis_codes ? String(claim.diagnosis_codes).split(",").map((s) => s.trim()) : [],
+      procedures: claim.procedure_codes ? String(claim.procedure_codes).split(",").map((s) => s.trim()) : [],
+      payer_id: claim.payer_id,
+    };
+    return json2({ success: true, stage: "normalize", claim_id: id, normalized, source: "hnh-unified" });
+  } catch (e) {
+    return json2({ success: false, message: e?.message || "normalize failed" }, 500);
+  }
+});
+router.post("/api/claims/([^/]+)/validate", async (req, env, ctx, p) => {
+  const id = p[0];
+  const json2 = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
+  try {
+    const claim = await env.DB.prepare("SELECT * FROM claims WHERE id = ? OR claim_number = ? LIMIT 1").bind(id, id).first().catch(() => null);
+    if (!claim) return json2({ success: false, claim_id: id, message: "claim not found" }, 404);
+    const issues = [];
+    if (!claim.patient_id) issues.push({ severity: "error", field: "patient_id", message: "missing patient" });
+    if (!claim.provider_id) issues.push({ severity: "error", field: "provider_id", message: "missing provider" });
+    if (!Number(claim.total_amount)) issues.push({ severity: "warning", field: "total_amount", message: "amount is zero" });
+    if (!claim.diagnosis_codes) issues.push({ severity: "warning", field: "diagnosis_codes", message: "no diagnosis codes" });
+    return json2({ success: issues.filter((i) => i.severity === "error").length === 0, stage: "validate", claim_id: id, issues, source: "hnh-unified" });
+  } catch (e) {
+    return json2({ success: false, message: e?.message || "validate failed" }, 500);
+  }
+});
 router.get("/api/claims/([^/]+)/nphies-status", (req, env, ctx, p) => getClaimNPHIESStatus(req, env, ctx, p));
 router.post("/api/eligibility/check", (req, env) => checkEligibility(req, env));
 router.post("/api/eligibility/verify", (req, env) => verifyInsurance(req, env));
