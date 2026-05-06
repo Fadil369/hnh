@@ -1906,16 +1906,18 @@ function BookingModal({ lang, open, onClose }) {
   async function handleConfirm() {
     setSubmitting(true); setErrorMsg('');
     const result = { eligibility:null, patientId:null, appointmentId:null, waSid:null, copay:null };
+    const withTimeout = (ms) => { const c = new AbortController(); setTimeout(()=>c.abort(), ms); return c.signal; };
     try {
       const phone = (form.phone || '').trim();
       const phoneE164 = phone.startsWith('+') ? phone : (phone.startsWith('00') ? '+' + phone.slice(2) : (phone.startsWith('05') ? '+966' + phone.slice(1) : (phone.startsWith('5') && phone.length === 9 ? '+966' + phone : '+' + phone)));
 
-      // 1) Eligibility (best-effort) — non-blocking
+      // 1) Eligibility (best-effort) — non-blocking, 5s timeout
       if (form.nationalId && form.payer && !/cash|نقدي/i.test(form.payer)) {
         try {
           const er = await fetch(`${API}/api/eligibility/check`, {
             method:'POST', headers:{'content-type':'application/json'},
             body: JSON.stringify({ insurance_id: form.payer, national_id: form.nationalId, service_type:'medical' }),
+            signal: withTimeout(5000),
           });
           const ej = await er.json().catch(()=>({}));
           if (ej && ej.success !== false) {
@@ -1929,7 +1931,7 @@ function BookingModal({ lang, open, onClose }) {
       // 2) Find or create patient (HIS_DB)
       let patientId = null;
       try {
-        const pr = await fetch(`${API}/api/patients?search=${encodeURIComponent(phoneE164)}`);
+        const pr = await fetch(`${API}/api/patients?search=${encodeURIComponent(phoneE164)}`, { signal: withTimeout(8000) });
         const pj = await pr.json().catch(()=>({}));
         const found = (pj.patients || pj.data || [])[0];
         patientId = found?.id || found?.patient_id || null;
@@ -1942,6 +1944,7 @@ function BookingModal({ lang, open, onClose }) {
             phone: phoneE164, email: form.email || null,
             national_id: form.nationalId || null, payer_name: form.payer || null,
           }),
+          signal: withTimeout(10000),
         });
         const cj = await cr.json().catch(()=>({}));
         patientId = cj.patient_id || cj.id || cj.patient?.id || null;
@@ -1965,23 +1968,27 @@ function BookingModal({ lang, open, onClose }) {
               status: 'scheduled',
               source: 'hnh-landing',
             }),
+            signal: withTimeout(10000),
           });
           const aj = await ar.json().catch(()=>({}));
           result.appointmentId = aj.appointment_id || aj.id || aj.appointment?.id || null;
         } catch {}
       }
 
-      // 4) WhatsApp confirmation
-      const wr = await fetch(`${API}/api/whatsapp/appointment`, {
-        method:'POST', headers:{'content-type':'application/json'},
-        body: JSON.stringify({
-          to: phoneE164, patientName: form.name,
-          date: form.date, time: form.time, clinic: form.branch, lang,
-        }),
-      });
-      const wj = await wr.json().catch(()=>({}));
-      if (!wr.ok || wj?.success === false) throw new Error(wj?.error || ('HTTP ' + wr.status));
-      result.waSid = wj?.sid || wj?.message?.sid || '';
+      // 4) WhatsApp confirmation — best-effort, do NOT throw
+      try {
+        const wr = await fetch(`${API}/api/whatsapp/appointment`, {
+          method:'POST', headers:{'content-type':'application/json'},
+          body: JSON.stringify({
+            to: phoneE164, patientName: form.name,
+            date: form.date, time: form.time, clinic: form.branch, lang,
+          }),
+          signal: withTimeout(10000),
+        });
+        const wj = await wr.json().catch(()=>({}));
+        result.waSid = wj?.sid || wj?.message?.sid || '';
+        result.waOk = wr.ok && wj?.success !== false;
+      } catch { result.waOk = false; }
       result.phone = phoneE164;
 
       // 5) Email confirmation (fire-and-forget)
