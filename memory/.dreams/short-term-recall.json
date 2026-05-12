@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "updatedAt": "2026-05-12T10:26:29.436Z",
+  "entries": {
+    "memory:memory/2026-05-11.md:79:91": {
+      "key": "memory:memory/2026-05-11.md:79:91",
+      "path": "memory/2026-05-11.md",
+      "startLine": 79,
+      "endLine": 91,
+      "source": "memory",
+      "snippet": "- `USER.md` — updated with full Dr. Mohammed profile, family (MacKey), expertise, personality - `AGENTS.md` — updated to load BRAINSAIT.md and INTEGRATIONS.md at startup ### Key operational alerts noted - Basma offline: bsma.elfadil.com HTTP 522 — needs investigation - Oracle scanner feed degraded: HTTP 404 on batch chunks - 63 claims ready for appeal — window at 0 days (URGENT as of 2026-05-11) - All 6 hospital Oracle portals: OPERATIONAL ### Credentials: populate CHANGE_ME values Run: `openclaw browser navigate <url>` + skill:authenticated-browse to populate real passwords Or: use `npx wrangler secret put <KEY> --name penguin-secrets`",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.6324406208669128,
+      "maxScore": 0.6324406208669128,
+      "firstRecalledAt": "2026-05-12T10:26:29.436Z",
+      "lastRecalledAt": "2026-05-12T10:26:29.436Z",
+      "queryHashes": [
+        "e3e60097877d"
+      ],
+      "recallDays": [
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "user.md",
+        "agents.md",
+        "brainsait.md",
+        "integrations.md",
+        "bsma.elfadil.com",
+        "change-me",
+        "authenticated-browse",
+        "penguin-secrets"
+      ]
+    },
+    "memory:memory/2026-05-11.md:54:84": {
+      "key": "memory:memory/2026-05-11.md:54:84",
+      "path": "memory/2026-05-11.md",
+      "startLine": 54,
+      "endLine": 84,
+      "source": "memory",
+      "snippet": "- Screenshots return `MEDIA:` paths — Telegram auto-attaches them ## CF Secrets Vault + Browser Run + Platform Awareness (same session) ### New CF Workers deployed (account: d7b99530 / Brainsait) - **penguin-secrets** → https://penguin-secrets.brainsait-fadil.workers.dev - Encrypted credential vault for all platform sites - 11 secrets pre-loaded (portals, 6 oracle hospitals, NPHIES, MOH, Basma, ElevenLabs, Twilio, 3CX) - Gateway token stored in TOOLS.md - `GET /secret/:name` · `GET /list` · `GET /health` - **penguin-browser-run** → https://penguin-browser-run.brainsait-fadil.workers.dev - CF Browser Rendering (Puppeteer) with credential injection - `POST /run` — steps[], crede",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.6314830165552958,
+      "maxScore": 0.6314830165552958,
+      "firstRecalledAt": "2026-05-12T10:26:29.436Z",
+      "lastRecalledAt": "2026-05-12T10:26:29.436Z",
+      "queryHashes": [
+        "e3e60097877d"
+      ],
+      "recallDays": [
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "gateway",
+        "auto-attaches",
+        "penguin-secrets",
+        "pre-loaded",
+        "tools.md",
+        "penguin-browser-run",
+        "screenshots",
+        "return"
+      ]
+    }
+  }
+}

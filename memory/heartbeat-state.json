@@ -1,0 +1,13 @@
+{
+  "lastChecks": {
+    "system_health": 1747040054,
+    "email": null,
+    "telegram": 1747040054,
+    "cloudflare": null
+  },
+  "status": {
+    "gateway": "active",
+    "errors_today": false,
+    "notes": "MCP servers failed at startup (00:28) - non-critical. Gateway healthy."
+  }
+}

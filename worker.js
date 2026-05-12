@@ -11366,6 +11366,9 @@ router.post("/api/whatsapp/webhook", (req, env, ctx) => whatsappInboundWebhook(r
 router.get("/api/whatsapp/webhook", () => new Response("ok", { status: 200 }));
 router.get("/api/voice/wa/([^/]+)", (req, env, ctx, p) => voiceReplyAudio(p[0], env));
 router.post("/api/basma/chat", (req, env) => basmaChat(req, env));
+// Basma ↔ Oracle Integration (Patient Registration + Appointment Booking)
+router.post("/api/basma/booking", (req, env, ctx) => handleBasmaBooking(req, env, ctx));
+router.get("/api/basma/patient/lookup", (req, env) => handlePatientLookup(req, env));
 router.post("/api/booking/email", (req, env) => sendBookingEmail(req, env));
 router.get("/api/appointments/([^/]+)/ics", (req, env, ctx, p) => appointmentIcs(req, env, ctx, p));
 // Notify status
@@ -11904,6 +11907,148 @@ var index_default = {
     }
   }
 };
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// BASMA ↔ ORACLE INTEGRATION — Patient Registration + Appointment Booking
+// ═══════════════════════════════════════════════════════════════════════════════
+
+async function handleBasmaBooking(request, env, ctx) {
+  try {
+    const body = await request.json();
+    const {
+      firstName, lastName, firstNameAr, lastNameAr, nationalId, dateOfBirth, gender,
+      mobile, email, insurancePayer, policyNumber, memberId, city, nationality = "SA",
+      clinic, doctorId, preferredDate, preferredTime, appointmentType = "NEW", notes,
+      branch = "RIYADH", language = "ar", existingMrn
+    } = body;
+
+    if (!firstName || !lastName || !nationalId || !dateOfBirth || !gender || !mobile) {
+      return json({ success: false, error: "Missing required patient fields: firstName, lastName, nationalId, dateOfBirth, gender, mobile" }, 400);
+    }
+    if (!clinic || !preferredDate) {
+      return json({ success: false, error: "Missing required booking fields: clinic, preferredDate" }, 400);
+    }
+
+    const apiKey = env.ORACLE_API_KEY;
+    if (!apiKey) {
+      return json({ success: false, error: "Oracle API key not configured (ORACLE_API_KEY)" }, 500);
+    }
+
+    const oracleBase = env.ORACLE_BRIDGE_URL || "https://oracle-bridge.brainsait.org";
+    let mrn = existingMrn;
+    let oraclePatientId = null;
+    let patientBasmaId = null;
+
+    // Step 1: Register patient in Oracle if no existing MRN
+    if (!mrn) {
+      const regResponse = await fetch(`${oracleBase}/api/patients/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+        body: JSON.stringify({
+          branch,
+          patient: { firstName, lastName, firstNameAr: firstNameAr || firstName, lastNameAr: lastNameAr || lastName,
+            nationalId, dateOfBirth, gender, mobile, email, insurancePayer, policyNumber, memberId, city, nationality }
+        }),
+      });
+      if (!regResponse.ok) {
+        const errorText = await regResponse.text();
+        return json({ success: false, error: `Oracle patient registration failed: ${regResponse.status} - ${errorText}` }, 502);
+      }
+      const regResult = await regResponse.json();
+      mrn = regResult.mrn;
+      oraclePatientId = regResult.patientId;
+    }
+
+    // Step 2: Store patient in Basma DB
+    if (env.BASMA_DB) {
+      const basmaResult = await env.BASMA_DB.prepare(`
+        INSERT INTO patients (oracle_mrn, oracle_patient_id, first_name, last_name, first_name_ar, last_name_ar,
+          national_id, date_of_birth, gender, mobile, email, insurance_payer, policy_number, member_id, city, nationality,
+          registration_source, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+        ON CONFLICT(oracle_mrn) DO UPDATE SET
+          mobile = excluded.mobile, email = excluded.email, insurance_payer = excluded.insurance_payer,
+          policy_number = excluded.policy_number, member_id = excluded.member_id, updated_at = datetime('now')
+        RETURNING id
+      `).bind(mrn, oraclePatientId, firstName, lastName, firstNameAr || firstName, lastNameAr || lastName,
+        nationalId, dateOfBirth, gender, mobile, email || null, insurancePayer || null, policyNumber || null,
+        memberId || null, city || null, nationality, "hnh_booking_form").first();
+      patientBasmaId = basmaResult?.id;
+    }
+
+    // Step 3: Book appointment in Oracle
+    const apptResponse = await fetch(`${oracleBase}/api/appointments/book`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+      body: JSON.stringify({ branch, appointment: { mrn, clinic, doctorId, preferredDate, preferredTime, appointmentType, notes } }),
+    });
+    if (!apptResponse.ok) {
+      const errorText = await apptResponse.text();
+      return json({ success: false, error: `Oracle appointment booking failed: ${apptResponse.status} - ${errorText}`, patient: { mrn } }, 502);
+    }
+    const apptResult = await apptResponse.json();
+
+    // Step 4: Store appointment in Basma DB
+    let appointmentBasmaId = null;
+    if (env.BASMA_DB && patientBasmaId) {
+      const apptBasmaResult = await env.BASMA_DB.prepare(`
+        INSERT INTO appointments (patient_id, oracle_appointment_id, oracle_appointment_number, appointment_date,
+          appointment_time, clinic, doctor_name, appointment_type, notes, status, source, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+        RETURNING id
+      `).bind(patientBasmaId, apptResult.appointmentId, apptResult.appointmentNumber,
+        apptResult.appointmentDate || preferredDate, apptResult.appointmentTime || preferredTime || null,
+        apptResult.clinicName || clinic, apptResult.doctorName || null, appointmentType, notes || null,
+        apptResult.status || "CONFIRMED", "hnh_booking_form").first();
+      appointmentBasmaId = apptBasmaResult?.id;
+    }
+
+    // Generate confirmation message
+    const isAr = language === "ar";
+    const confirmationMessage = isAr 
+      ? `تم تأكيد حجز موعدك بنجاح في ${apptResult.clinicName || clinic} بتاريخ ${apptResult.appointmentDate || preferredDate} الساعة ${apptResult.appointmentTime || preferredTime || "غير محدد"}. رقم الملف الطبي: ${mrn}، ورقم الموعد: ${apptResult.appointmentNumber}.`
+      : `Your appointment has been confirmed at ${apptResult.clinicName || clinic} on ${apptResult.appointmentDate || preferredDate} at ${apptResult.appointmentTime || preferredTime || "TBD"}. MRN: ${mrn}, Appointment #: ${apptResult.appointmentNumber}.`;
+
+    return json({
+      success: true, message: confirmationMessage,
+      patient: { mrn, basmaId: patientBasmaId, oraclePatientId, name: isAr ? `${firstNameAr || firstName} ${lastNameAr || lastName}` : `${firstName} ${lastName}` },
+      appointment: { appointmentNumber: apptResult.appointmentNumber, basmaId: appointmentBasmaId, oracleAppointmentId: apptResult.appointmentId,
+        date: apptResult.appointmentDate || preferredDate, time: apptResult.appointmentTime || preferredTime,
+        clinic: apptResult.clinicName || clinic, doctor: apptResult.doctorName, status: apptResult.status || "CONFIRMED" },
+      language, branch
+    });
+
+  } catch (e) {
+    console.error("Basma booking error:", e);
+    return json({ success: false, error: e.message }, 500);
+  }
+}
+
+async function handlePatientLookup(request, env) {
+  try {
+    const url = new URL(request.url);
+    const nationalId = url.searchParams.get("nationalId");
+    const branch = url.searchParams.get("branch") || "RIYADH";
+    if (!nationalId) return json({ success: false, error: "nationalId required" }, 400);
+
+    const apiKey = env.ORACLE_API_KEY;
+    if (!apiKey) return json({ success: false, error: "Oracle API key not configured" }, 500);
+
+    const oracleBase = env.ORACLE_BRIDGE_URL || "https://oracle-bridge.brainsait.org";
+    const response = await fetch(`${oracleBase}/api/patients/lookup?nationalId=${encodeURIComponent(nationalId)}&branch=${branch}`,
+      { headers: { "Authorization": `Bearer ${apiKey}` } });
+
+    if (response.status === 404) return json({ success: true, found: false, message: "Patient not found in Oracle" });
+    if (!response.ok) return json({ success: false, error: `Oracle lookup failed: ${response.status}` }, 502);
+
+    const patient = await response.json();
+    return json({ success: true, found: true, patient: { mrn: patient.mrn, firstName: patient.firstName, lastName: patient.lastName,
+      nationalId: patient.nationalId, dateOfBirth: patient.dateOfBirth, gender: patient.gender, mobile: patient.mobile, email: patient.email } });
+  } catch (e) {
+    return json({ success: false, error: e.message }, 500);
+  }
+}
+
 export {
   index_default as default
 };
