@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "skills": {
+    "cloudflare-toolkit": {
+      "version": "1.5.0",
+      "installedAt": 1778495741983
+    },
+    "cloudflare-dns": {
+      "version": "1.0.0",
+      "installedAt": 1778495748495
+    },
+    "cloudflare-image-gen": {
+      "version": "1.0.0",
+      "installedAt": 1778495755011
+    },
+    "cloudflare-mcp": {
+      "version": "1.0.0",
+      "installedAt": 1778495762374
+    },
+    "web-search-plus": {
+      "version": "3.0.3",
+      "installedAt": 1778496620150
+    },
+    "in-depth-research": {
+      "version": "1.0.0",
+      "installedAt": 1778496626382
+    },
+    "autonomous-research": {
+      "version": "1.0.0",
+      "installedAt": 1778496632523
+    },
+    "site-monitor": {
+      "version": "1.0.0",
+      "installedAt": 1778496638805
+    },
+    "docker": {
+      "version": "1.0.4",
+      "installedAt": 1778496688357
+    },
+    "database-manager": {
+      "version": "1.0.0",
+      "installedAt": 1778496694764
+    },
+    "agentic-security-audit": {
+      "version": "1.0.0",
+      "installedAt": 1778496700810
+    },
+    "telegram-compose": {
+      "version": "1.0.4",
+      "installedAt": 1778496706996
+    },
+    "deploy": {
+      "version": "1.0.0",
+      "installedAt": 1778496713064
+    },
+    "long-task-handler": {
+      "version": "1.0.0",
+      "installedAt": 1778496720854
+    },
+    "agent-deploy": {
+      "version": "2.4.0",
+      "installedAt": 1778496727457
+    },
+    "system-monitor-pro": {
+      "version": "1.0.0",
+      "installedAt": 1778496773192
+    },
+    "ping-monitor": {
+      "version": "1.0.0",
+      "installedAt": 1778496779448
+    },
+    "smart-cron": {
+      "version": "1.0.0",
+      "installedAt": 1778496786232
+    },
+    "web-search": {
+      "version": "1.0.0",
+      "installedAt": 1778497239325
+    }
+  }
+}
