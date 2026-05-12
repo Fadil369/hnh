@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>أطباؤنا | مستشفيات الحياة الوطني</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body>
+
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html" data-i18n="nav.home">الرئيسية</a><span>/</span><span data-i18n="nav.doctors">أطباؤنا</span></div>
+      <h1 data-i18n="doctors.title">أطباؤنا</h1>
+      <p id="doctorsPageSub">فريق من أمهر الأطباء والاستشاريين — أكثر من 700 طبيب</p>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="container">
+      <div class="filter-bar animate-on-scroll">
+        <input type="text" id="doctorSearch" placeholder="ابحث عن طبيب..." oninput="filterDoctors()">
+        <select id="deptFilter" onchange="filterDoctors()">
+          <option value="">جميع الأقسام</option>
+          <option value="الجلدية">الجلدية</option>
+          <option value="التجميل">التجميل</option>
+          <option value="النساء">النساء والولادة</option>
+          <option value="العظام">العظام</option>
+          <option value="القلب">القلب</option>
+          <option value="الباطنية">الباطنية</option>
+          <option value="الأطفال">الأطفال</option>
+          <option value="الأنف">الأنف والأذن</option>
+          <option value="المسالك">المسالك البولية</option>
+          <option value="الأعصاب">الأعصاب</option>
+        </select>
+        <select id="branchFilter" onchange="filterDoctors()">
+          <option value="">جميع الفروع</option>
+          <option value="الرياض">الرياض</option>
+          <option value="المدينة">المدينة المنورة</option>
+          <option value="جازان">جازان</option>
+          <option value="خميس">خميس مشيط</option>
+          <option value="عنيزة">عنيزة</option>
+        </select>
+      </div>
+      <div class="grid-4" id="doctorsGrid"></div>
+      <div class="text-center" style="margin-top:32px;" id="loadMoreWrap">
+        <button class="btn btn-outline" id="loadMoreBtn" onclick="loadMoreDoctors()">عرض المزيد</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2 data-i18n="cta.title">صحتك أولاً</h2>
+      <p data-i18n="cta.subtitle">احجز موعدك الآن واحصل على أفضل رعاية طبية</p>
+      <div class="cta-buttons">
+        <a href="contact.html" class="btn btn-accent btn-lg" data-i18n="cta.bookBtn">احجز موعد</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/common.js"></script>
+  <script>
+    // API-backed: fetch live data, fallback to static
+    const API_URL = 'https://hnh-portal.brainsait-fadil.workers.dev';
+    let allDoctors = [...staticDoctors];
+    const staticDoctors = [
+      {ar:'د. معاوية دبورة',en:'Dr. Muawiya Daboura',specAr:'جراحة التجميل',specEn:'Plastic Surgery',branchAr:'الرياض',branchEn:'Riyadh',years:15,langs:'العربية، الإنجليزية'},
+      {ar:'د. نهله طالب ديب',en:'Dr. Nahla Taleb Deeb',specAr:'النساء والولادة',specEn:'OB/GYN',branchAr:'الرياض',branchEn:'Riyadh',years:21,langs:'العربية'},
+      {ar:'د. وسام فاروق',en:'Dr. Wisam Farouk',specAr:'النساء والولادة',specEn:'OB/GYN',branchAr:'الرياض',branchEn:'Riyadh',years:18,langs:'العربية، الإنجليزية'},
+      {ar:'د. أميرة البيلي',en:'Dr. Amira Al-Bili',specAr:'الجلدية',specEn:'Dermatology',branchAr:'الرياض',branchEn:'Riyadh',years:12,langs:'العربية، الإنجليزية'},
+      {ar:'د. شامية محمد فتحي',en:'Dr. Shamia Mohamed Fathy',specAr:'النساء والولادة',specEn:'OB/GYN',branchAr:'الرياض',branchEn:'Riyadh',years:15,langs:'العربية'},
+      {ar:'د. أحمد أبو هديمة',en:'Dr. Ahmed Abu Hudaima',specAr:'الباطنية',specEn:'Internal Medicine',branchAr:'المدينة',branchEn:'Madinah',years:20,langs:'العربية'},
+      {ar:'د. أحمد أمين صالح حسين',en:'Dr. Ahmed Amin',specAr:'العظام',specEn:'Orthopedics',branchAr:'الرياض',branchEn:'Riyadh',years:16,langs:'العربية، الإنجليزية'},
+      {ar:'د. أحمد السعيد عبد الهادي',en:'Dr. Ahmed Al-Saeed',specAr:'القلب',specEn:'Cardiology',branchAr:'جازان',branchEn:'Jazan',years:18,langs:'العربية'},
+      {ar:'د. أحمد العوامري',en:'Dr. Ahmed Al-Awamri',specAr:'الأنف والأذن',specEn:'ENT',branchAr:'خميس',branchEn:'Khamis',years:14,langs:'العربية'},
+      {ar:'د. أحمد حسني ندا',en:'Dr. Ahmed Hosni Nada',specAr:'المسالك البولية',specEn:'Urology',branchAr:'الرياض',branchEn:'Riyadh',years:22,langs:'العربية، الإنجليزية'},
+      {ar:'د. أحمد حمود أحمد فهمي',en:'Dr. Ahmed Hamoud',specAr:'الأعصاب',specEn:'Neurology',branchAr:'المدينة',branchEn:'Madinah',years:17,langs:'العربية'},
+      {ar:'د. أحمد لطفي المشد',en:'Dr. Ahmed Lotfy',specAr:'الجراحة العامة',specEn:'General Surgery',branchAr:'جازان',branchEn:'Jazan',years:19,langs:'العربية، الإنجليزية'},
+      {ar:'د. أحمد مسعد بيومي',en:'Dr. Ahmed Massad',specAr:'الباطنية',specEn:'Internal Medicine',branchAr:'عنيزة',branchEn:'Unayzah',years:13,langs:'العربية'},
+      {ar:'د. أحمد نبيل خلاف',en:'Dr. Ahmed Nabil',specAr:'الطب العام',specEn:'General Medicine',branchAr:'خميس',branchEn:'Khamis',years:10,langs:'العربية'},
+      {ar:'د. أسامه أحمد المنصور',en:'Dr. Osama Al-Mansour',specAr:'المسالك البولية',specEn:'Urology',branchAr:'الرياض',branchEn:'Riyadh',years:25,langs:'العربية، الإنجليزية'},
+      {ar:'د. أسماء فوزي أحمد',en:'Dr. Asmaa Fawzi',specAr:'النساء والولادة',specEn:'OB/GYN',branchAr:'المدينة',branchEn:'Madinah',years:14,langs:'العربية'},
+      {ar:'د. أشرف عبدالله مرسي',en:'Dr. Ashraf Abdallah',specAr:'التجميل',specEn:'Plastic Surgery',branchAr:'الرياض',branchEn:'Riyadh',years:20,langs:'العربية، الإنجليزية'},
+      {ar:'د. إبراهيم أحمد إبراهيم',en:'Dr. Ibrahim Ahmed',specAr:'العظام',specEn:'Orthopedics',branchAr:'جازان',branchEn:'Jazan',years:16,langs:'العربية'},
+      {ar:'د. إسلام فتحي محمد عوض',en:'Dr. Islam Fathy',specAr:'الجلدية',specEn:'Dermatology',branchAr:'خميس',branchEn:'Khamis',years:11,langs:'العربية'},
+      {ar:'د. إبراهيم محمد القرموط',en:'Dr. Ibrahim Al-Qarmout',specAr:'القلب',specEn:'Cardiology',branchAr:'الرياض',branchEn:'Riyadh',years:23,langs:'العربية، الإنجليزية'},
+      {ar:'د. أحمد أسامة عبد المجيد',en:'Dr. Ahmed Osama',specAr:'الأطفال',specEn:'Pediatrics',branchAr:'المدينة',branchEn:'Madinah',years:15,langs:'العربية'},
+      {ar:'د. أحمد الهيزي',en:'Dr. Ahmed Al-Heezi',specAr:'الأنف والأذن',specEn:'ENT',branchAr:'عنيزة',branchEn:'Unayzah',years:12,langs:'العربية'},
+      {ar:'د. أحمد حسانيين',en:'Dr. Ahmed Hassanein',specAr:'الباطنية',specEn:'Internal Medicine',branchAr:'جازان',branchEn:'Jazan',years:18,langs:'العربية'},
+      {ar:'د. أحمد سلامة ناصر',en:'Dr. Ahmed Salama',specAr:'العظام',specEn:'Orthopedics',branchAr:'الرياض',branchEn:'Riyadh',years:21,langs:'العربية، الإنجليزية'},
+      {ar:'د. أحمد صلاح الدين مصطفى',en:'Dr. Ahmed Salah',specAr:'الأعصاب',specEn:'Neurology',branchAr:'خميس',branchEn:'Khamis',years:19,langs:'العربية'},
+      {ar:'د. أحمد محمد مصطفى',en:'Dr. Ahmed Mohamed',specAr:'الجراحة العامة',specEn:'General Surgery',branchAr:'المدينة',branchEn:'Madinah',years:17,langs:'العربية'},
+      {ar:'د. إسلام أحمد محمد',en:'Dr. Islam Ahmed',specAr:'النساء والولادة',specEn:'OB/GYN',branchAr:'عنيزة',branchEn:'Unayzah',years:13,langs:'العربية'},
+      {ar:'د. إسلام شلبي',en:'Dr. Islam Shalaby',specAr:'الطب العام',specEn:'General Medicine',branchAr:'جازان',branchEn:'Jazan',years:8,langs:'العربية، الإنجليزية'},
+      {ar:'د. إسلام محمد عبد الغفار',en:'Dr. Islam Mohamed A.',specAr:'الباطنية',specEn:'Internal Medicine',branchAr:'الرياض',branchEn:'Riyadh',years:14,langs:'العربية'},
+      {ar:'د. إسماء محمد علي',en:'Dr. Ismaa Mohamed',specAr:'الأطفال',specEn:'Pediatrics',branchAr:'خميس',branchEn:'Khamis',years:12,langs:'العربية'},
+      {ar:'د. الآء ماجد ابو جامع',en:'Dr. Alaa Majed',specAr:'الجلدية',specEn:'Dermatology',branchAr:'المدينة',branchEn:'Madinah',years:10,langs:'العربية'},
+      {ar:'د. الحسين محمد خواجي',en:'Dr. Al-Hussein',specAr:'القلب',specEn:'Cardiology',branchAr:'الرياض',branchEn:'Riyadh',years:24,langs:'العربية، الإنجليزية'},
+      {ar:'د. السعودي الشاعر',en:'Dr. Al-Saudi',specAr:'العظام',specEn:'Orthopedics',branchAr:'عنيزة',branchEn:'Unayzah',years:16,langs:'العربية'},
+      {ar:'د. أميرة عادل الحفني',en:'Dr. Amira Adel',specAr:'النساء والولادة',specEn:'OB/GYN',branchAr:'جازان',branchEn:'Jazan',years:11,langs:'العربية'},
+      {ar:'د. بهاء الدين جابر',en:'Dr. Bahaa Gaber',specAr:'الأعصاب',specEn:'Neurology',branchAr:'الرياض',branchEn:'Riyadh',years:20,langs:'العربية، الإنجليزية'},
+      {ar:'د. جلال حمود ابو حليمة',en:'Dr. Jalal Hamoud',specAr:'الباطنية',specEn:'Internal Medicine',branchAr:'خميس',branchEn:'Khamis',years:15,langs:'العربية'},
+      {ar:'د. جيهان حمدي',en:'Dr. Gihan Hamdy',specAr:'النساء والولادة',specEn:'OB/GYN',branchAr:'المدينة',branchEn:'Madinah',years:18,langs:'العربية'},
+      {ar:'د. حسام أبو موسى',en:'Dr. Hossam Abu Moussa',specAr:'التجميل',specEn:'Plastic Surgery',branchAr:'الرياض',branchEn:'Riyadh',years:16,langs:'العربية، الإنجليزية'},
+      {ar:'د. حسام محمود مختار',en:'Dr. Hossam Mahmoud',specAr:'الجراحة العامة',specEn:'General Surgery',branchAr:'جازان',branchEn:'Jazan',years:19,langs:'العربية'},
+      {ar:'د. حسين إبراهيم قصادي',en:'Dr. Hussein Ibrahim',specAr:'الأنف والأذن',specEn:'ENT',branchAr:'عنيزة',branchEn:'Unayzah',years:14,langs:'العربية'},
+      {ar:'د. خالد الراجحي',en:'Dr. Khaled Al-Rajhi',specAr:'العظام',specEn:'Orthopedics',branchAr:'الرياض',branchEn:'Riyadh',years:22,langs:'العربية'},
+      {ar:'د. خالد مصباح صلاح',en:'Dr. Khaled Misbah',specAr:'القلب',specEn:'Cardiology',branchAr:'خميس',branchEn:'Khamis',years:17,langs:'العربية، الإنجليزية'},
+      {ar:'د. ديمه عبدالله',en:'Dr. Dima Abdallah',specAr:'الطب العام',specEn:'General Medicine',branchAr:'المدينة',branchEn:'Madinah',years:9,langs:'العربية'},
+      {ar:'د. رانيا عزت عامر',en:'Dr. Rania Ezzat',specAr:'النساء والولادة',specEn:'OB/GYN',branchAr:'الرياض',branchEn:'Riyadh',years:15,langs:'العربية، الإنجليزية'},
+      {ar:'د. زينب أحمد التاجاني',en:'Dr. Zeinab Ahmed',specAr:'الأطفال',specEn:'Pediatrics',branchAr:'جازان',branchEn:'Jazan',years:12,langs:'العربية'},
+      {ar:'د. سارة مدحت إبراهيم',en:'Dr. Sarah Medhat',specAr:'الجلدية',specEn:'Dermatology',branchAr:'عنيزة',branchEn:'Unayzah',years:10,langs:'العربية'},
+      {ar:'د. سارة هاشم محمد',en:'Dr. Sarah Hashem',specAr:'الباطنية',specEn:'Internal Medicine',branchAr:'الرياض',branchEn:'Riyadh',years:14,langs:'العربية'},
+      {ar:'د. سامح محمد الجرف',en:'Dr. Sameh Al-Garf',specAr:'الأعصاب',specEn:'Neurology',branchAr:'خميس',branchEn:'Khamis',years:21,langs:'العربية، الإنجليزية'},
+      {ar:'د. سحر حسيني',en:'Dr. Sahar Hosseini',specAr:'النساء والولادة',specEn:'OB/GYN',branchAr:'المدينة',branchEn:'Madinah',years:16,langs:'العربية'},
+      {ar:'د. سلوى ابو الفتاح',en:'Dr. Salwa Abu Al-Fotouh',specAr:'الأطفال',specEn:'Pediatrics',branchAr:'الرياض',branchEn:'Riyadh',years:19,langs:'العربية'},
+      {ar:'د. سميرة عبدالرؤوف',en:'Dr. Samira Abdulraouf',specAr:'الطب العام',specEn:'General Medicine',branchAr:'جازان',branchEn:'Jazan',years:11,langs:'العربية'},
+      {ar:'د. شروق عادل محمد',en:'Dr. Shorouk Adel',specAr:'الجلدية',specEn:'Dermatology',branchAr:'عنيزة',branchEn:'Unayzah',years:8,langs:'العربية، الإنجليزية'},
+      {ar:'د. صفاء إبراهيم أحمد',en:'Dr. Safaa Ibrahim',specAr:'الباطنية',specEn:'Internal Medicine',branchAr:'خميس',branchEn:'Khamis',years:13,langs:'العربية'},
+      {ar:'د. طارق إبراهيم محمد',en:'Dr. Tarek Ibrahim',specAr:'الجراحة العامة',specEn:'General Surgery',branchAr:'الرياض',branchEn:'Riyadh',years:20,langs:'العربية، الإنجليزية'},
+      {ar:'د. طاهر بن يحيى صميلي',en:'Dr. Taher Yahya',specAr:'الأنف والأذن',specEn:'ENT',branchAr:'المدينة',branchEn:'Madinah',years:15,langs:'العربية'},
+      {ar:'د. ظافر محمد الشهري',en:'Dr. Dhaffer Al-Shahrani',specAr:'العظام',specEn:'Orthopedics',branchAr:'خميس',branchEn:'Khamis',years:18,langs:'العربية'},
+      {ar:'د. عائشة الرفاعي',en:'Dr. Aisha Al-Rifai',specAr:'النساء والولادة',specEn:'OB/GYN',branchAr:'الرياض',branchEn:'Riyadh',years:17,langs:'العربية، الإنجليزية'},
+      {ar:'د. عادل لملوم',en:'Dr. Adel Lamloum',specAr:'القلب',specEn:'Cardiology',branchAr:'جازان',branchEn:'Jazan',years:22,langs:'العربية'},
+      {ar:'د. عبدالله الهلالي',en:'Dr. Abdallah Al-Hilali',specAr:'المسالك البولية',specEn:'Urology',branchAr:'عنيزة',branchEn:'Unayzah',years:16,langs:'العربية'},
+      {ar:'د. عبدالله بن عبدالعزيز',en:'Dr. Abdallah A.',specAr:'الأعصاب',specEn:'Neurology',branchAr:'الرياض',branchEn:'Riyadh',years:23,langs:'العربية، الإنجليزية'},
+      {ar:'د. عبدالله يوسف المرشد',en:'Dr. Abdallah Y.',specAr:'الباطنية',specEn:'Internal Medicine',branchAr:'المدينة',branchEn:'Madinah',years:14,langs:'العربية'},
+      {ar:'د. عبدالنبي الدخشان',en:'Dr. Abdulnabi',specAr:'الجراحة العامة',specEn:'General Surgery',branchAr:'خميس',branchEn:'Khamis',years:19,langs:'العربية'},
+      {ar:'د. عزه جمال محمد',en:'Dr. Azza Gamal',specAr:'النساء والولادة',specEn:'OB/GYN',branchAr:'الرياض',branchEn:'Riyadh',years:13,langs:'العربية'},
+      {ar:'د. عماد الدين محمد',en:'Dr. Emad Eddin',specAr:'الأطفال',specEn:'Pediatrics',branchAr:'جازان',branchEn:'Jazan',years:15,langs:'العربية'},
+      {ar:'د. عماد حمدي طايل',en:'Dr. Emad Hamdy',specAr:'العظام',specEn:'Orthopedics',branchAr:'عنيزة',branchEn:'Unayzah',years:20,langs:'العربية، الإنجليزية'},
+      {ar:'د. عمرو جلال بسيوني',en:'Dr. Amr Jalal',specAr:'القلب',specEn:'Cardiology',branchAr:'الرياض',branchEn:'Riyadh',years:18,langs:'العربية'},
+      {ar:'د. عمرو مصطفى الدرديري',en:'Dr. Amr Mostafa',specAr:'الباطنية',specEn:'Internal Medicine',branchAr:'خميس',branchEn:'Khamis',years:16,langs:'العربية'},
+      {ar:'د. فادية نبهان تركي',en:'Dr. Fadia N.',specAr:'الجلدية',specEn:'Dermatology',branchAr:'المدينة',branchEn:'Madinah',years:12,langs:'العربية'},
+      {ar:'د. فادية عبدالله خيري',en:'Dr. Fadia A.',specAr:'النساء والولادة',specEn:'OB/GYN',branchAr:'الرياض',branchEn:'Riyadh',years:21,langs:'العربية، الإنجليزية'},
+      {ar:'د. كريم نصر علي',en:'Dr. Karim Nasr',specAr:'الأعصاب',specEn:'Neurology',branchAr:'جازان',branchEn:'Jazan',years:14,langs:'العربية'},
+      {ar:'د. محمد أحمد الأحزمي',en:'Dr. Mohamed Al-Ahzami',specAr:'العظام',specEn:'Orthopedics',branchAr:'عنيزة',branchEn:'Unayzah',years:17,langs:'العربية'},
+      {ar:'د. محمد إسماعيل غريب',en:'Dr. Mohamed Ismail',specAr:'الجراحة العامة',specEn:'General Surgery',branchAr:'الرياض',branchEn:'Riyadh',years:22,langs:'العربية، الإنجليزية'},
+      {ar:'د. محمد إبراهيم المعاطي',en:'Dr. Mohamed I.',specAr:'الباطنية',specEn:'Internal Medicine',branchAr:'خميس',branchEn:'Khamis',years:15,langs:'العربية'},
+      {ar:'د. محمد الشافعي',en:'Dr. Mohamed Al-Shafi',specAr:'الأنف والأذن',specEn:'ENT',branchAr:'المدينة',branchEn:'Madinah',years:19,langs:'العربية'},
+      {ar:'د. محمد الشبراوي',en:'Dr. Mohamed Al-Shabrawy',specAr:'القلب',specEn:'Cardiology',branchAr:'الرياض',branchEn:'Riyadh',years:24,langs:'العربية، الإنجليزية'},
+      {ar:'د. محمد الضالع',en:'Dr. Mohamed Al-Dale',specAr:'المسالك البولية',specEn:'Urology',branchAr:'جازان',branchEn:'Jazan',years:16,langs:'العربية'},
+      {ar:'د. محمد العوضي',en:'Dr. Mohamed Al-Awdi',specAr:'الأطفال',specEn:'Pediatrics',branchAr:'عنيزة',branchEn:'Unayzah',years:13,langs:'العربية'},
+      {ar:'د. محمد حامد أبوالفضل',en:'Dr. Mohamed Hamid',specAr:'العظام',specEn:'Orthopedics',branchAr:'الرياض',branchEn:'Riyadh',years:20,langs:'العربية'},
+      {ar:'د. محمد سعيد سلامة',en:'Dr. Mohamed Saeed',specAr:'الباطنية',specEn:'Internal Medicine',branchAr:'خميس',branchEn:'Khamis',years:18,langs:'العربية'},
+      {ar:'د. محمد سليمان حجازي',en:'Dr. Mohamed S.',specAr:'الأعصاب',specEn:'Neurology',branchAr:'المدينة',branchEn:'Madinah',years:21,langs:'العربية، الإنجليزية'},
+      {ar:'د. محمد صابر محمد',en:'Dr. Mohamed Saber',specAr:'الجراحة العامة',specEn:'General Surgery',branchAr:'الرياض',branchEn:'Riyadh',years:17,langs:'العربية'},
+      {ar:'د. محمد صالح حميدة',en:'Dr. Mohamed Saleh',specAr:'الجلدية',specEn:'Dermatology',branchAr:'جازان',branchEn:'Jazan',years:12,langs:'العربية'},
+      {ar:'د. محمد عبد اللطيف',en:'Dr. Mohamed A.',specAr:'القلب',specEn:'Cardiology',branchAr:'عنيزة',branchEn:'Unayzah',years:23,langs:'العربية'},
+      {ar:'د. محمد عبد الرؤوف السيسي',en:'Dr. Mohamed R.',specAr:'النساء والولادة',specEn:'OB/GYN',branchAr:'الرياض',branchEn:'Riyadh',years:19,langs:'العربية، الإنجليزية'},
+      {ar:'د. محمد مدخلي',en:'Dr. Mohamed Madkhali',specAr:'الطوارئ',specEn:'Emergency',branchAr:'خميس',branchEn:'Khamis',years:10,langs:'العربية'},
+      {ar:'د. محمد محمد مجدي',en:'Dr. Mohamed M.',specAr:'الطب العام',specEn:'General Medicine',branchAr:'المدينة',branchEn:'Madinah',years:8,langs:'العربية'},
+      {ar:'د. محمد مؤنس محمد',en:'Dr. Mohamed Mounes',specAr:'الأعصاب',specEn:'Neurology',branchAr:'الرياض',branchEn:'Riyadh',years:16,langs:'العربية'}
+    ];
+
+    let visibleCount = 32;
+    let filteredDoctors = [...allDoctors];
+
+    function renderDoctors() {
+      const grid = document.getElementById('doctorsGrid');
+      const l = HNH.currentLang();
+      const toShow = filteredDoctors.slice(0, visibleCount);
+      grid.innerHTML = toShow.map((d, i) => `
+        <div class="card doctor-card animate-on-scroll delay-${(i%4)+1}">
+          <div class="doctor-photo">${(l==='ar'?d.ar:d.en).split(' ').pop().charAt(0)}</div>
+          <h4>${l==='ar'?d.ar:d.en}</h4>
+          <div class="specialty">${l==='ar'?d.specAr:d.specEn}</div>
+          <div class="branch-tag">${l==='ar'?d.branchAr:d.branchEn}</div>
+          <a href="contact.html" class="btn btn-primary btn-sm">${l==='ar'?'احجز الآن':'Book Now'}</a>
+        </div>
+      `).join('');
+      document.getElementById('loadMoreBtn').style.display = visibleCount >= filteredDoctors.length ? 'none' : '';
+      setTimeout(() => {
+        document.querySelectorAll('.animate-on-scroll:not(.animated)').forEach(el => {
+          new IntersectionObserver((entries) => {
+            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('animated'); });
+          }, {threshold:0.1}).observe(el);
+        });
+      }, 50);
+    }
+
+    function filterDoctors() {
+      const search = document.getElementById('doctorSearch').value.toLowerCase();
+      const dept = document.getElementById('deptFilter').value;
+      const branch = document.getElementById('branchFilter').value;
+      const l = HNH.currentLang();
+      filteredDoctors = allDoctors.filter(d => {
+        const name = (l==='ar'?d.ar:d.en).toLowerCase();
+        const spec = (l==='ar'?d.specAr:d.specEn);
+        const br = (l==='ar'?d.branchAr:d.branchEn);
+        return (!search || name.includes(search)) &&
+               (!dept || spec.includes(dept)) &&
+               (!branch || br.includes(branch));
+      });
+      visibleCount = 32;
+      loadDoctors();
+  async function loadDoctors() {
+    try {
+      const res = await fetch(API_URL + '/api/providers');
+      const data = await res.json();
+      if (data.providers && data.providers.length > 0) {
+        allDoctors = data.providers.map(p => ({
+          ar: p.name_ar || '',
+          en: p.name_en || '',
+          specAr: p.specialty || p.department || 'الطب العام',
+          specEn: p.department || 'General Medicine',
+          branchAr: p.branch || 'الرياض',
+          branchEn: p.branch_id || 'Riyadh',
+          years: p.experience_years || 10,
+          langs: 'العربية'
+        })).filter(d => d.ar);
+      }
+    } catch(e) {}
+    if (allDoctors.length === 0) allDoctors = staticDoctors;
+    visibleCount = 32;
+    renderDoctors();
+    filterDoctors();
+  }
+
+  renderDoctors();
+    }
+
+    function loadMoreDoctors() {
+      visibleCount += 24;
+      renderDoctors();
+    }
+
+    renderDoctors();
+
+    function updateDoctorsContent() {
+      const l = HNH.currentLang();
+      document.getElementById('doctorsPageSub').textContent = l==='ar'?'فريق من أمهر الأطباء والاستشاريين — أكثر من 700 طبيب':'A team of skilled doctors and consultants — 700+ doctors';
+      document.getElementById('doctorSearch').placeholder = l==='ar'?'ابحث عن طبيب...':'Search doctors...';
+      renderDoctors();
+    }
+    const origToggle4 = HNH.toggleLanguage;
+    HNH.toggleLanguage = function() { origToggle4(); setTimeout(updateDoctorsContent, 50); };
+  </script>
+</body>
+</html>

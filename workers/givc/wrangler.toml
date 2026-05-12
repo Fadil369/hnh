@@ -1,0 +1,52 @@
+# GIVC — Integrated Provider Portal for HNH
+# Replaces givc.elfadil.com → hnh.brainsait.org/givc/*
+name = "givc-portal"
+main = "src/worker.js"
+compatibility_date = "2026-05-01"
+account_id = "d7b99530559ab4f2545e9bdc72a7ab9b"
+
+[ai]
+binding = "AI"
+
+# HNH Primary DB (patients, appointments, claims, providers)
+[[d1_databases]]
+binding = "DB"
+database_name = "hnh-gharnata"
+database_id = "d6960732-d5d0-4271-84e9-ba988c9c32dc"
+
+# Basma Production DB (RAG clinical docs, oracle_sync, patients)
+[[d1_databases]]
+binding = "BASMA_DB"
+database_name = "basma_production"
+database_id = "c30dd8f8-62f6-42f6-ad47-d442bf3bde7d"
+
+# HIS Database (appointments, drug formulary, records)
+[[d1_databases]]
+binding = "HIS_DB"
+database_name = "his_database"
+database_id = "f79d9487-fd6e-45e0-aaf1-ea9f2a69493d"
+
+[vars]
+ORACLE_BRIDGE_URL  = "https://oracle-bridge.brainsait.org"
+NPHIES_MIRROR_URL  = "https://nphies-mirror.brainsait-fadil.workers.dev"
+BASMA_API_URL      = "https://bsma.elfadil.com"
+HNH_API_URL        = "https://hnh.brainsait.org"
+FACILITY_LICENSE   = "10000000000988"
+OID_ROOT           = "1.3.6.1.4.1.61026"
+PORTAL_VERSION     = "3.0.0"
+
+# Secrets (wrangler secret put):
+#   API_KEY            ← protects /givc/api/* endpoints
+#   ORACLE_API_KEY     ← Oracle Bridge auth
+#   CLAIMLINC_KEY      ← ClaimLinc NPHIES key
+#   DEEPSEEK_API_KEY   ← AI clinical assistant
+#   ELEVENLABS_API_KEY ← Voice (Basma TTS)
+
+# Routes: hnh.brainsait.org/givc/* AND givc.elfadil.com/* (redirect)
+[[routes]]
+pattern = "hnh.brainsait.org/givc/*"
+zone_name = "brainsait.org"
+
+[[routes]]
+pattern = "givc.elfadil.com/*"
+zone_name = "elfadil.com"

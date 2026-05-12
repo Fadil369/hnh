@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الأقسام الطبية | مستشفيات الحياة الوطني</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body>
+
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html" data-i18n="nav.home">الرئيسية</a><span>/</span><span data-i18n="nav.departments">الأقسام الطبية</span></div>
+      <h1 data-i18n="departments.title">الأقسام الطبية</h1>
+      <p id="deptPageSub">نغطي أكثر من 30 تخصصًا طبيًا لخدمة صحتكم</p>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="container">
+      <div class="filter-bar animate-on-scroll">
+        <input type="text" id="deptSearch" placeholder="ابحث عن قسم..." oninput="filterDepartments()">
+        <button class="filter-chip active" onclick="filterDeptCat(this,'all')">الكل</button>
+        <button class="filter-chip" onclick="filterDeptCat(this,'surgical')">جراحية</button>
+        <button class="filter-chip" onclick="filterDeptCat(this,'medical')">طبية</button>
+        <button class="filter-chip" onclick="filterDeptCat(this,'support')">مساندة</button>
+      </div>
+      <div class="grid-3" id="allDeptsGrid"></div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2 data-i18n="cta.title">صحتك أولاً</h2>
+      <p data-i18n="cta.subtitle">احجز موعدك الآن واحصل على أفضل رعاية طبية</p>
+      <div class="cta-buttons">
+        <a href="contact.html" class="btn btn-accent btn-lg" data-i18n="cta.bookBtn">احجز موعد</a>
+        <a href="tel:966920000094" class="btn btn-white btn-lg" data-i18n="cta.callBtn">اتصل بنا</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/common.js"></script>
+  <script>
+    const allDepartments = [
+      {id:1,cat:'medical',icon:'<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',ar:'أمراض القلب والشرايين والقسطرة القلبية',en:'Heart & Arterial Diseases & Cardiac Catheterization'},
+      {id:2,cat:'surgical',icon:'<svg viewBox="0 0 24 24"><path d="M12 2L4 19h16L12 2z" fill="none" stroke="currentColor" stroke-width="2"/></svg>',ar:'جراحة العظام والمفاصل',en:'Orthopedic & Joint Surgery'},
+      {id:3,cat:'medical',icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M12 14c-4 0-8 2-8 4v2h16v-2c0-2-4-4-8-4z"/></svg>',ar:'طب الأطفال وحديثي الولادة',en:'Pediatrics & Neonatology'},
+      {id:4,cat:'medical',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',ar:'النساء والولادة',en:'Obstetrics & Gynecology'},
+      {id:5,cat:'medical',icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="currentColor" opacity="0.3"/></svg>',ar:'الجلدية والتجميل والليزر',en:'Dermatology, Cosmetics & Laser'},
+      {id:6,cat:'medical',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/></svg>',ar:'الباطنية والجهاز الهضمي',en:'Internal Medicine & Digestive System'},
+      {id:7,cat:'surgical',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-5h2v2h-2zm0-8h2v6h-2z"/></svg>',ar:'الجراحة العامة',en:'General Surgery'},
+      {id:8,cat:'medical',icon:'<svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>',ar:'الأعصاب',en:'Neurology'},
+      {id:9,cat:'surgical',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>',ar:'جراحة المخ والأعصاب',en:'Neurosurgery'},
+      {id:10,cat:'surgical',icon:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2"/></svg>',ar:'جراحة المسالك البولية',en:'Urology'},
+      {id:11,cat:'surgical',icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 14s1.5 2 4 2 4-2 4-2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/></svg>',ar:'جراحة التجميل',en:'Plastic Surgery'},
+      {id:12,cat:'medical',icon:'<svg viewBox="0 0 24 24"><path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10zm0-18c4.42 0 8 3.58 8 8s-3.58 8-8 8-8-3.58-8-8 3.58-8 8-8z"/><path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7z"/></svg>',ar:'طب الصدر والتنفس',en:'Pulmonology & Respiratory'},
+      {id:13,cat:'medical',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-4h2v2h-2zm0-8h2v6h-2z"/></svg>',ar:'الطب النفسي والأعصاب',en:'Psychiatry & Neurology'},
+      {id:14,cat:'medical',icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" fill="none" stroke="currentColor" stroke-width="2"/></svg>',ar:'الغدد الصماء والسكري',en:'Endocrinology & Diabetes'},
+      {id:15,cat:'medical',icon:'<svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6z"/></svg>',ar:'أمراض الحساسية والمناعة',en:'Allergy & Immunology'},
+      {id:16,cat:'medical',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',ar:'أمراض الروماتيزم',en:'Rheumatic Diseases'},
+      {id:17,cat:'medical',icon:'<svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 12H7v-2h10v2zm0-4H7V8h10v2z"/></svg>',ar:'أمراض الدم',en:'Hematology'},
+      {id:18,cat:'medical',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>',ar:'أمراض الكلى',en:'Nephrology'},
+      {id:19,cat:'medical',icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M12 14c-4 0-8 2-8 4v2h16v-2c0-2-4-4-8-4z"/></svg>',ar:'طب القلب للأطفال',en:'Pediatric Cardiology'},
+      {id:20,cat:'surgical',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/></svg>',ar:'جراحة القلب والصدر',en:'Cardiac & Thoracic Surgery'},
+      {id:21,cat:'surgical',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2"/></svg>',ar:'جراحة الأوعية الدموية',en:'Vascular Surgery'},
+      {id:22,cat:'surgical',icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 9h6v6H9z" fill="none" stroke="currentColor" stroke-width="2"/></svg>',ar:'أنف وأذن وحنجرة',en:'ENT (Ear, Nose & Throat)'},
+      {id:23,cat:'medical',icon:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2"/></svg>',ar:'طب الأسنان وجراحة الفكين',en:'Dentistry & Maxillofacial Surgery'},
+      {id:24,cat:'medical',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',ar:'طب الأسرة وكبار السن',en:'Family Medicine & Geriatrics'},
+      {id:25,cat:'medical',icon:'<svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z" fill="currentColor"/></svg>',ar:'الأورام',en:'Oncology'},
+      {id:26,cat:'support',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/></svg>',ar:'التغذية العلاجية',en:'Therapeutic Nutrition'},
+      {id:27,cat:'support',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>',ar:'العلاج الطبيعي',en:'Physical Therapy'},
+      {id:28,cat:'support',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',ar:'الطب العام',en:'General Medicine'},
+      {id:29,cat:'support',icon:'<svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 7V5a4 4 0 00-8 0v2" fill="none" stroke="currentColor" stroke-width="2"/></svg>',ar:'الأشعة',en:'Radiology'},
+      {id:30,cat:'support',icon:'<svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6z"/></svg>',ar:'المختبر',en:'Laboratory'},
+      {id:31,cat:'support',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/></svg>',ar:'الطوارئ',en:'Emergency'},
+      {id:32,cat:'support',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>',ar:'العناية المركزة',en:'ICU'},
+      {id:33,cat:'support',icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M12 14c-4 0-8 2-8 4v2h16v-2c0-2-4-4-8-4z"/></svg>',ar:'العناية المركزة للأطفال',en:'Pediatric ICU'},
+      {id:34,cat:'support',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',ar:'تفتيت الحصوات',en:'Lithotripsy'},
+      {id:35,cat:'support',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2"/></svg>',ar:'القسطرة القلبية',en:'Cardiac Catheterization'},
+      {id:36,cat:'support',icon:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 12h10M12 7v10" stroke="currentColor" stroke-width="2"/></svg>',ar:'تنظير الجهاز الهضمي',en:'GI Endoscopy'},
+      {id:37,cat:'support',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',ar:'المناظير التشخيصية',en:'Diagnostic Endoscopy'},
+      {id:38,cat:'support',icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 14s1.5 2 4 2 4-2 4-2" fill="none" stroke="currentColor" stroke-width="2"/></svg>',ar:'العناية بالشعر والبشرة',en:'Hair & Skin Care'},
+      {id:39,cat:'medical',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><circle cx="12" cy="8" r="3" fill="white"/><path d="M12 14c-3 0-6 1.5-6 3v1h12v-1c0-1.5-3-3-6-3z" fill="white"/></svg>',ar:'عقم الرجال',en:'Male Infertility'},
+      {id:40,cat:'support',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z" fill="white"/></svg>',ar:'السمنة المرضية',en:'Bariatric Surgery'},
+      {id:41,cat:'support',icon:'<svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 7h6M9 11h6M9 15h4" stroke="currentColor" stroke-width="2"/></svg>',ar:'الصيدلية',en:'Pharmacy'},
+      {id:42,cat:'support',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/></svg>',ar:'تنظيم الأسرة',en:'Family Planning'},
+      {id:43,cat:'support',icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4 2" stroke="white" stroke-width="2" fill="none"/></svg>',ar:'وحدة الحروق',en:'Burns Unit'}
+    ];
+
+    let currentCat = 'all';
+
+    function renderDepartments() {
+      const grid = document.getElementById('allDeptsGrid');
+      const search = document.getElementById('deptSearch').value.toLowerCase();
+      const l = HNH.currentLang();
+      const filtered = allDepartments.filter(d => {
+        const matchCat = currentCat === 'all' || d.cat === currentCat;
+        const name = l === 'ar' ? d.ar : d.en;
+        const matchSearch = !search || name.toLowerCase().includes(search);
+        return matchCat && matchSearch;
+      });
+      grid.innerHTML = filtered.map((d, i) => `
+        <div class="card dept-card animate-on-scroll delay-${(i%6)+1}" data-cat="${d.cat}">
+          <div class="dept-icon">${d.icon}</div>
+          <h4>${l === 'ar' ? d.ar : d.en}</h4>
+          <p style="font-size:0.85rem;color:var(--text-light);">${l === 'ar' ? d.en : d.ar}</p>
+        </div>
+      `).join('');
+      // Re-observe new elements
+      setTimeout(() => {
+        document.querySelectorAll('.animate-on-scroll:not(.animated)').forEach(el => {
+          new IntersectionObserver((entries) => {
+            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('animated'); });
+          }, {threshold:0.1}).observe(el);
+        });
+      }, 50);
+    }
+
+    function filterDeptCat(btn, cat) {
+      currentCat = cat;
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderDepartments();
+    }
+
+    function filterDepartments() { renderDepartments(); }
+
+    renderDepartments();
+
+    function updateDeptContent() {
+      const l = HNH.currentLang();
+      document.getElementById('deptPageSub').textContent = l === 'ar' ? 'نغطي أكثر من 30 تخصصًا طبيًا لخدمة صحتكم' : 'Covering 30+ medical specialties for your health';
+      document.getElementById('deptSearch').placeholder = l === 'ar' ? 'ابحث عن قسم...' : 'Search departments...';
+      renderDepartments();
+    }
+    const origToggle3 = HNH.toggleLanguage;
+    HNH.toggleLanguage = function() { origToggle3(); setTimeout(updateDeptContent, 50); };
+  </script>
+</body>
+</html>

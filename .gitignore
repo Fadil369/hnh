@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+*.tsbuildinfo
+
+# Wrangler / Cloudflare
+.wrangler/
+**/.wrangler/
+
+# Secrets
+.secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / Agent runtime
+.openclaw/
+.opencode/
+opencode.json
+*.bak
+*.swp
+
+# Python (NPHIES helpers)
+__pycache__/
+*.pyc
+
+# Playwright
+playwright-report/
+test-results/
+
+# Frontend backups during refactor
+apps/frontend/app/**/*.bak
+apps/frontend/app/globals.css.bak

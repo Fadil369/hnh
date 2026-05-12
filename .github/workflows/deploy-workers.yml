@@ -1,0 +1,82 @@
+name: Deploy Satellite Workers
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'workers/**'
+      - '.github/workflows/deploy-workers.yml'
+  workflow_dispatch:
+    inputs:
+      worker:
+        description: 'Worker to deploy (basma-portal | basma-crm | givc | all)'
+        default: 'all'
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      basma_portal: ${{ steps.f.outputs.basma_portal }}
+      basma_crm:    ${{ steps.f.outputs.basma_crm }}
+      givc:         ${{ steps.f.outputs.givc }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
+      - id: f
+        run: |
+          set -eu
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            W="${{ github.event.inputs.worker }}"
+            for k in basma-portal basma-crm givc; do
+              if [ "$W" = "all" ] || [ "$W" = "$k" ]; then
+                echo "${k//-/_}=true" >> "$GITHUB_OUTPUT"
+              else
+                echo "${k//-/_}=false" >> "$GITHUB_OUTPUT"
+              fi
+            done
+          else
+            CHANGED="$(git diff --name-only HEAD^ HEAD || echo '')"
+            for k in basma-portal basma-crm givc; do
+              if echo "$CHANGED" | grep -q "^workers/$k/"; then
+                echo "${k//-/_}=true" >> "$GITHUB_OUTPUT"
+              else
+                echo "${k//-/_}=false" >> "$GITHUB_OUTPUT"
+              fi
+            done
+          fi
+
+  basma-portal:
+    needs: detect
+    if: needs.detect.outputs.basma_portal == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: d7b99530559ab4f2545e9bdc72a7ab9b
+          workingDirectory: workers/basma-portal
+
+  basma-crm:
+    needs: detect
+    if: needs.detect.outputs.basma_crm == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: d7b99530559ab4f2545e9bdc72a7ab9b
+          workingDirectory: workers/basma-crm
+
+  givc:
+    needs: detect
+    if: needs.detect.outputs.givc == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: d7b99530559ab4f2545e9bdc72a7ab9b
+          workingDirectory: workers/givc
