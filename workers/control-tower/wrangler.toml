@@ -21,13 +21,19 @@ SLA_TARGET_PERCENT = "99.5"
 ALERT_COOLDOWN_MINUTES = "20"
 ORACLE_SESSION_PROBE_PATH = "/portal/session/health"
 AI_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+BASELINE_AVAILABILITY_PCT = "98.0"
+MANUAL_CHECK_MINUTES_PER_RUN = "8"
+OUTAGE_COST_PER_HOUR_USD = "1200"
+OPS_HOURLY_RATE_USD = "45"
+EXECUTIVE_DIGEST_ENABLED = "true"
+EXECUTIVE_DIGEST_DAYS = "30"
 
 [[routes]]
 pattern = "portals.brainsait.org/control-tower*"
 zone_name = "brainsait.org"
 
 [triggers]
-crons = ["*/5 * * * *"]
+crons = ["*/5 * * * *", "0 7 * * 1"]
 
 # Optional secrets:
 #   ORACLE_API_KEY

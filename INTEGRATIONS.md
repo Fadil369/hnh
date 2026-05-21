@@ -63,6 +63,7 @@ All via Cloudflare tunnel to Oracle Oasis+ ERP. Login at `/prod/faces/Login.jsf`
 - **SLA API**: https://portals.brainsait.org/control-tower/sla
 - **History API**: https://portals.brainsait.org/control-tower/history?hours=24
 - **Business case API**: https://portals.brainsait.org/control-tower/business-case?days=30
+- **Executive digest test API**: POST https://portals.brainsait.org/control-tower/executive-digest/test
 - **Manual alert test**: https://portals.brainsait.org/control-tower/alerts/test
 - **OpenClaw training update**: POST https://portals.brainsait.org/control-tower/train-update
 - **OpenClaw→Telegram gateway**: POST https://portals.brainsait.org/control-tower/gateway/openclaw-telegram
@@ -111,6 +112,13 @@ Executive proof / business value model:
   - `MANUAL_CHECK_MINUTES_PER_RUN` (default `8`)
   - `OUTAGE_COST_PER_HOUR_USD` (default `1200`)
   - `OPS_HOURLY_RATE_USD` (default `45`)
+
+Executive automation cadence:
+- Every 5 minutes: operational health probe + alert logic.
+- Every Monday 07:00 UTC: scheduled executive digest via OpenClaw+Telegram AI gateway.
+- Digest feature flags:
+  - `EXECUTIVE_DIGEST_ENABLED` (default `true`)
+  - `EXECUTIVE_DIGEST_DAYS` (default `30`)
 
 ---
 

@@ -510,6 +510,45 @@ async function getBusinessCase(env, days = 30) {
     };
 }
 
+function toInt(value, fallback) {
+    const n = Number.parseInt(String(value), 10);
+    return Number.isFinite(n) ? n : fallback;
+}
+
+function buildExecutiveDigestSummary(report) {
+    if (!report?.available) {
+        return 'Executive digest unavailable: Control Tower D1 telemetry source is not configured.';
+    }
+
+    const k = report.executive_kpis || {};
+    const b = report.business_case || {};
+    const days = report.window_days || 30;
+
+    return [
+        `Executive KPI Digest (${days}d)`,
+        `Availability: ${k.availability_pct}% (min ${k.min_availability_pct}%)`,
+        `SLA breaches: ${k.sla_breach_runs} | Alerts: ${k.alerts_total} (critical ${k.alerts_critical})`,
+        `Oracle portals: ${k.oracle_portal_availability_pct}% | Integrations: ${k.integration_endpoint_availability_pct}%`,
+        `Automation checks: ${k.automated_checks} | Monitored runs: ${k.monitored_runs}`,
+        `Estimated value: $${b.estimated_value_usd} (savings $${b.automation_savings_usd}, outage loss avoided $${b.outage_loss_avoided_usd})`,
+        'Tags: HIPAA + NPHIES + PDPL',
+    ].join('\n');
+}
+
+async function dispatchExecutiveDigest(env, days = 30, source = 'manual') {
+    const report = await getBusinessCase(env, days);
+    const summary = buildExecutiveDigestSummary(report);
+    const training = await trainOpenClawUpdate(env, summary, {
+        source,
+        report,
+    });
+
+    return {
+        report,
+        training,
+    };
+}
+
 async function shouldSendAlert(env, alertType, fingerprint) {
     if (!env.CT_DB) return true;
     const cooldownMinutes = Math.max(1, Number(env.ALERT_COOLDOWN_MINUTES || 20));
@@ -715,15 +754,16 @@ export default {
         const isSla = path === '/control-tower/sla';
         const isHistory = path === '/control-tower/history';
         const isBusinessCase = path === '/control-tower/business-case';
+        const isExecutiveDigestTest = path === '/control-tower/executive-digest/test';
         const isAlertTest = path === '/control-tower/alerts/test';
         const isTrainUpdate = path === '/control-tower/train-update';
         const isGatewayBridge = path === '/control-tower/gateway/openclaw-telegram';
 
-        if (!isRoot && !isStatus && !isSla && !isHistory && !isBusinessCase && !isAlertTest && !isTrainUpdate && !isGatewayBridge) {
+        if (!isRoot && !isStatus && !isSla && !isHistory && !isBusinessCase && !isExecutiveDigestTest && !isAlertTest && !isTrainUpdate && !isGatewayBridge) {
             return json({ success: false, message: 'not_found' }, 404);
         }
 
-        const requiresAuth = isStatus || isSla || isHistory || isBusinessCase || isAlertTest || isTrainUpdate || isGatewayBridge;
+        const requiresAuth = isStatus || isSla || isHistory || isBusinessCase || isExecutiveDigestTest || isAlertTest || isTrainUpdate || isGatewayBridge;
         if (requiresAuth && !mustAuth(request, env)) {
             return json({ success: false, message: 'unauthorized' }, 401);
         }
@@ -763,6 +803,13 @@ export default {
             return json({ success: true, report });
         }
 
+        if (isExecutiveDigestTest && request.method === 'POST') {
+            const body = await request.json().catch(() => ({}));
+            const days = toInt(body.days || url.searchParams.get('days') || '30', 30);
+            const result = await dispatchExecutiveDigest(env, days, 'manual_test');
+            return json({ success: true, result });
+        }
+
         if (isSla) {
             const { status, sla, runId } = await collectAndOptionallyPersist(env, toBool(url.searchParams.get('persist')));
             return json({ success: true, run_id: runId, status, sla });
@@ -784,8 +831,14 @@ export default {
         });
     },
 
-    async scheduled(_event, env, ctx) {
+    async scheduled(event, env, ctx) {
         ctx.waitUntil((async () => {
+            if (event?.cron === '0 7 * * 1' && toBool(env.EXECUTIVE_DIGEST_ENABLED || 'true')) {
+                const digestDays = toInt(env.EXECUTIVE_DIGEST_DAYS || '30', 30);
+                await dispatchExecutiveDigest(env, digestDays, 'scheduled_weekly');
+                return;
+            }
+
             const { status, sla } = await collectAndOptionallyPersist(env, true);
             await dispatchOperationalAlert(env, status, sla, 'scheduled_probe');
         })());
