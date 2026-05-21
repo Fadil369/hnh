@@ -102,23 +102,103 @@ async function check(url, timeoutMs = 5000, headers = {}) {
     }
 }
 
-async function sendTelegram(env, message) {
-    if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) {
+async function callTelegramApi(env, method, payload = {}) {
+    if (!env.TELEGRAM_BOT_TOKEN) {
         return { sent: false, reason: 'not_configured' };
     }
-    const url = `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`;
-    const payload = {
-        chat_id: env.TELEGRAM_CHAT_ID,
+
+    const url = `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/${method}`;
+    try {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+        const body = await res.json().catch(() => ({}));
+
+        if (body?.ok !== true) {
+            return {
+                sent: false,
+                status: res.status,
+                reason: 'telegram_api_error',
+                description: body?.description || 'Telegram API request failed',
+                error_code: body?.error_code,
+                parameters: body?.parameters,
+            };
+        }
+
+        return {
+            sent: true,
+            status: res.status,
+            result: body?.result,
+        };
+    } catch {
+        return {
+            sent: false,
+            reason: 'telegram_network_error',
+        };
+    }
+}
+
+async function resolveTelegramChatId(env) {
+    if (env.TELEGRAM_CHAT_ID) {
+        return { chatId: env.TELEGRAM_CHAT_ID, source: 'env' };
+    }
+
+    const updates = await callTelegramApi(env, 'getUpdates', { limit: 10, timeout: 0 });
+    if (!updates.sent || !Array.isArray(updates.result) || updates.result.length === 0) {
+        return {
+            chatId: null,
+            source: 'unavailable',
+            error: updates,
+        };
+    }
+
+    const latestWithChat = [...updates.result]
+        .reverse()
+        .find((item) => item?.message?.chat?.id || item?.channel_post?.chat?.id);
+
+    const discoveredChatId = latestWithChat?.message?.chat?.id || latestWithChat?.channel_post?.chat?.id || null;
+    if (!discoveredChatId) {
+        return {
+            chatId: null,
+            source: 'unavailable',
+            error: {
+                sent: false,
+                reason: 'no_chat_id_in_updates',
+            },
+        };
+    }
+
+    return { chatId: String(discoveredChatId), source: 'updates' };
+}
+
+async function sendTelegram(env, message) {
+    if (!env.TELEGRAM_BOT_TOKEN) {
+        return { sent: false, reason: 'not_configured' };
+    }
+
+    const chat = await resolveTelegramChatId(env);
+    if (!chat.chatId) {
+        return {
+            sent: false,
+            reason: 'chat_id_not_available',
+            resolve_chat: chat.error || null,
+        };
+    }
+
+    const sendResult = await callTelegramApi(env, 'sendMessage', {
+        chat_id: chat.chatId,
         text: message,
         parse_mode: 'Markdown',
         disable_web_page_preview: true,
-    };
-    const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(payload),
     });
-    return { sent: res.ok, status: res.status };
+
+    return {
+        ...sendResult,
+        chat_id_source: chat.source,
+        chat_id_used: chat.chatId,
+    };
 }
 
 async function sendOpenClaw(env, payload) {
