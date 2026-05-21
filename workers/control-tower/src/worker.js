@@ -141,7 +141,10 @@ async function callTelegramApi(env, method, payload = {}) {
 }
 
 async function resolveTelegramChatId(env) {
-    if (env.TELEGRAM_CHAT_ID) {
+    const me = await callTelegramApi(env, 'getMe', {});
+    const botId = me.sent ? String(me.result?.id || '') : '';
+
+    if (env.TELEGRAM_CHAT_ID && String(env.TELEGRAM_CHAT_ID) !== botId) {
         return { chatId: env.TELEGRAM_CHAT_ID, source: 'env' };
     }
 
@@ -156,7 +159,10 @@ async function resolveTelegramChatId(env) {
 
     const latestWithChat = [...updates.result]
         .reverse()
-        .find((item) => item?.message?.chat?.id || item?.channel_post?.chat?.id);
+        .find((item) => {
+            const id = item?.message?.chat?.id || item?.channel_post?.chat?.id;
+            return id && String(id) !== botId;
+        });
 
     const discoveredChatId = latestWithChat?.message?.chat?.id || latestWithChat?.channel_post?.chat?.id || null;
     if (!discoveredChatId) {
@@ -165,7 +171,8 @@ async function resolveTelegramChatId(env) {
             source: 'unavailable',
             error: {
                 sent: false,
-                reason: 'no_chat_id_in_updates',
+                reason: 'no_valid_chat_id_in_updates',
+                bot_id: botId || undefined,
             },
         };
     }
