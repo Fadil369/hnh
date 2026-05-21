@@ -62,6 +62,7 @@ All via Cloudflare tunnel to Oracle Oasis+ ERP. Login at `/prod/faces/Login.jsf`
 - **Status API**: https://portals.brainsait.org/control-tower/status
 - **SLA API**: https://portals.brainsait.org/control-tower/sla
 - **History API**: https://portals.brainsait.org/control-tower/history?hours=24
+- **Business case API**: https://portals.brainsait.org/control-tower/business-case?days=30
 - **Manual alert test**: https://portals.brainsait.org/control-tower/alerts/test
 - **OpenClaw training update**: POST https://portals.brainsait.org/control-tower/train-update
 - **OpenClaw→Telegram gateway**: POST https://portals.brainsait.org/control-tower/gateway/openclaw-telegram
@@ -100,6 +101,16 @@ OpenClaw + Telegram awareness/training:
 - Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
 - Control Tower v2 sends operational alerts and training updates to both channels through an AI gateway.
 - AI gateway uses Workers AI (`env.AI`) with `AI_MODEL` to summarize payloads before Telegram dispatch.
+
+Executive proof / business value model:
+- `GET /control-tower/business-case?days=30` returns audited KPIs from D1 (`runs`, `checks`, `alerts`) and an estimated value model.
+- KPI fields include availability, SLA breaches, endpoint availability, Oracle portal availability, alert counts, monitored runs, and automated checks.
+- Value fields include automation hours saved, automation savings, outage hours avoided, and estimated total value.
+- Optional tuning vars in worker environment:
+  - `BASELINE_AVAILABILITY_PCT` (default `98.0`)
+  - `MANUAL_CHECK_MINUTES_PER_RUN` (default `8`)
+  - `OUTAGE_COST_PER_HOUR_USD` (default `1200`)
+  - `OPS_HOURLY_RATE_USD` (default `45`)
 
 ---
 

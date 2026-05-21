@@ -402,6 +402,114 @@ async function getHistory(env, hours = 24) {
     };
 }
 
+function toNum(value, fallback) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+}
+
+function round2(value) {
+    return Math.round((value + Number.EPSILON) * 100) / 100;
+}
+
+async function getBusinessCase(env, days = 30) {
+    if (!env.CT_DB) {
+        return { available: false, reason: 'ct_db_not_configured' };
+    }
+
+    const safeDays = Math.min(365, Math.max(1, Number(days) || 30));
+    const windowExpr = `-${safeDays} days`;
+
+    const [runsAgg, endpointAgg, portalAgg, alertsAgg] = await Promise.all([
+        env.CT_DB.prepare(
+            `SELECT
+                COUNT(*) AS run_count,
+                ROUND(AVG(availability_pct), 2) AS avg_availability_pct,
+                ROUND(MIN(availability_pct), 2) AS min_availability_pct,
+                ROUND(AVG(p95_latency_ms), 2) AS avg_p95_latency_ms,
+                SUM(CASE WHEN breach = 1 THEN 1 ELSE 0 END) AS breach_runs,
+                ROUND(AVG(oracle_online), 2) AS avg_oracle_online,
+                ROUND(AVG(oracle_total), 2) AS avg_oracle_total
+             FROM control_tower_runs
+             WHERE recorded_at >= datetime('now', ?)`
+        ).bind(windowExpr).first(),
+        env.CT_DB.prepare(
+            `SELECT
+                ROUND((100.0 * SUM(CASE WHEN ok = 1 THEN 1 ELSE 0 END)) / COUNT(*), 2) AS endpoint_availability_pct,
+                ROUND(AVG(latency_ms), 2) AS endpoint_avg_latency_ms
+             FROM control_tower_checks
+             WHERE scope = 'endpoint' AND recorded_at >= datetime('now', ?)`
+        ).bind(windowExpr).first(),
+        env.CT_DB.prepare(
+            `SELECT
+                ROUND((100.0 * SUM(CASE WHEN ok = 1 THEN 1 ELSE 0 END)) / COUNT(*), 2) AS portal_availability_pct,
+                ROUND(AVG(latency_ms), 2) AS portal_avg_latency_ms
+             FROM control_tower_checks
+             WHERE scope = 'oracle_portal' AND recorded_at >= datetime('now', ?)`
+        ).bind(windowExpr).first(),
+        env.CT_DB.prepare(
+            `SELECT
+                COUNT(*) AS alert_total,
+                SUM(CASE WHEN severity = 'critical' THEN 1 ELSE 0 END) AS critical_alerts,
+                SUM(CASE WHEN severity = 'high' THEN 1 ELSE 0 END) AS high_alerts,
+                SUM(CASE WHEN severity = 'medium' THEN 1 ELSE 0 END) AS medium_alerts
+             FROM control_tower_alerts
+             WHERE created_at >= datetime('now', ?)`
+        ).bind(windowExpr).first(),
+    ]);
+
+    const runCount = toNum(runsAgg?.run_count, 0);
+    const checksPerRun = 11;
+    const checksAutomated = runCount * checksPerRun;
+
+    const manualMinutesPerRun = toNum(env.MANUAL_CHECK_MINUTES_PER_RUN, 8);
+    const baselineAvailabilityPct = toNum(env.BASELINE_AVAILABILITY_PCT, 98.0);
+    const outageCostPerHour = toNum(env.OUTAGE_COST_PER_HOUR_USD, 1200);
+    const opsHourlyRate = toNum(env.OPS_HOURLY_RATE_USD, 45);
+
+    const automationHoursSaved = round2((runCount * manualMinutesPerRun) / 60);
+    const automationSavingsUsd = round2(automationHoursSaved * opsHourlyRate);
+
+    const observedAvailability = toNum(runsAgg?.avg_availability_pct, 0);
+    const improvementPct = Math.max(0, observedAvailability - baselineAvailabilityPct);
+    const outageHoursAvoided = round2((safeDays * 24 * improvementPct) / 100);
+    const outageLossAvoidedUsd = round2(outageHoursAvoided * outageCostPerHour);
+    const estimatedValueUsd = round2(automationSavingsUsd + outageLossAvoidedUsd);
+
+    return {
+        available: true,
+        window_days: safeDays,
+        generated_at: new Date().toISOString(),
+        executive_kpis: {
+            availability_pct: toNum(runsAgg?.avg_availability_pct, 0),
+            min_availability_pct: toNum(runsAgg?.min_availability_pct, 0),
+            p95_latency_ms: toNum(runsAgg?.avg_p95_latency_ms, 0),
+            sla_breach_runs: toNum(runsAgg?.breach_runs, 0),
+            alerts_total: toNum(alertsAgg?.alert_total, 0),
+            alerts_critical: toNum(alertsAgg?.critical_alerts, 0),
+            alerts_high: toNum(alertsAgg?.high_alerts, 0),
+            alerts_medium: toNum(alertsAgg?.medium_alerts, 0),
+            oracle_portal_availability_pct: toNum(portalAgg?.portal_availability_pct, 0),
+            integration_endpoint_availability_pct: toNum(endpointAgg?.endpoint_availability_pct, 0),
+            monitored_runs: runCount,
+            automated_checks: checksAutomated,
+        },
+        business_case: {
+            estimated_value_usd: estimatedValueUsd,
+            automation_hours_saved: automationHoursSaved,
+            automation_savings_usd: automationSavingsUsd,
+            outage_hours_avoided: outageHoursAvoided,
+            outage_loss_avoided_usd: outageLossAvoidedUsd,
+        },
+        assumptions: {
+            baseline_availability_pct: baselineAvailabilityPct,
+            manual_check_minutes_per_run: manualMinutesPerRun,
+            outage_cost_per_hour_usd: outageCostPerHour,
+            ops_hourly_rate_usd: opsHourlyRate,
+            checks_per_run: checksPerRun,
+        },
+    };
+}
+
 async function shouldSendAlert(env, alertType, fingerprint) {
     if (!env.CT_DB) return true;
     const cooldownMinutes = Math.max(1, Number(env.ALERT_COOLDOWN_MINUTES || 20));
@@ -606,15 +714,16 @@ export default {
         const isStatus = path === '/control-tower/status' || path === '/control-tower/api/status';
         const isSla = path === '/control-tower/sla';
         const isHistory = path === '/control-tower/history';
+        const isBusinessCase = path === '/control-tower/business-case';
         const isAlertTest = path === '/control-tower/alerts/test';
         const isTrainUpdate = path === '/control-tower/train-update';
         const isGatewayBridge = path === '/control-tower/gateway/openclaw-telegram';
 
-        if (!isRoot && !isStatus && !isSla && !isHistory && !isAlertTest && !isTrainUpdate && !isGatewayBridge) {
+        if (!isRoot && !isStatus && !isSla && !isHistory && !isBusinessCase && !isAlertTest && !isTrainUpdate && !isGatewayBridge) {
             return json({ success: false, message: 'not_found' }, 404);
         }
 
-        const requiresAuth = isStatus || isSla || isHistory || isAlertTest || isTrainUpdate || isGatewayBridge;
+        const requiresAuth = isStatus || isSla || isHistory || isBusinessCase || isAlertTest || isTrainUpdate || isGatewayBridge;
         if (requiresAuth && !mustAuth(request, env)) {
             return json({ success: false, message: 'unauthorized' }, 401);
         }
@@ -646,6 +755,12 @@ export default {
             const hours = Number(url.searchParams.get('hours') || '24');
             const history = await getHistory(env, hours);
             return json({ success: true, history });
+        }
+
+        if (isBusinessCase) {
+            const days = Number(url.searchParams.get('days') || '30');
+            const report = await getBusinessCase(env, days);
+            return json({ success: true, report });
         }
 
         if (isSla) {
