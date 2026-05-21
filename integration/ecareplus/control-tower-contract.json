@@ -1,0 +1,61 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Control Tower Status Contract",
+    "type": "object",
+    "required": [
+        "success",
+        "service",
+        "version",
+        "timestamp",
+        "compliance_tags",
+        "endpoints",
+        "oracle_portals"
+    ],
+    "properties": {
+        "success": {
+            "type": "boolean"
+        },
+        "service": {
+            "const": "control-tower"
+        },
+        "version": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "compliance_tags": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "HIPAA",
+                    "NPHIES",
+                    "PDPL"
+                ]
+            },
+            "minItems": 3,
+            "uniqueItems": true
+        },
+        "endpoints": {
+            "type": "object",
+            "required": [
+                "hnh",
+                "oracle_bridge",
+                "oracle_authenticated_probe",
+                "nphies_mirror",
+                "nphies_core"
+            ]
+        },
+        "oracle_portals": {
+            "type": "object",
+            "required": [
+                "total",
+                "online",
+                "offline",
+                "branches"
+            ]
+        }
+    }
+}

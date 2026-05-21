@@ -18,6 +18,8 @@
     "workers:basma-portal:deploy": "wrangler deploy --config workers/basma-portal/wrangler.toml",
     "workers:basma-crm:deploy": "wrangler deploy --config workers/basma-crm/wrangler.toml",
     "workers:givc:deploy": "wrangler deploy --config workers/givc/wrangler.toml",
+    "workers:control-tower:deploy": "wrangler deploy --config workers/control-tower/wrangler.toml",
+    "workers:control-tower:dry": "wrangler deploy --config workers/control-tower/wrangler.toml --dry-run",
     "migrate:remote": "wrangler d1 migrations apply hnh-gharnata --remote",
     "migrate:local": "wrangler d1 migrations apply hnh-gharnata --local",
     "test:e2e": "playwright test"

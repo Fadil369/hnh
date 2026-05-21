@@ -56,6 +56,39 @@ All via Cloudflare tunnel to Oracle Oasis+ ERP. Login at `/prod/faces/Login.jsf`
 
 ---
 
+## Control Tower
+
+- **Public URL**: https://portals.brainsait.org/control-tower
+- **Status API**: https://portals.brainsait.org/control-tower/status
+- **Worker config**: workers/control-tower/wrangler.toml
+- **Worker source**: workers/control-tower/src/worker.js
+
+Deep integration coverage:
+- HNH health API status
+- Oracle bridge status
+- Oracle authenticated session probe (via Oracle bridge)
+- NPHIES mirror and NPHIES core health checks
+- Branch-level Oracle portal probes:
+  - oracle-riyadh.brainsait.org
+  - oracle-madinah.brainsait.org
+  - oracle-unaizah.brainsait.org
+  - oracle-khamis.brainsait.org
+  - oracle-jizan.brainsait.org
+  - oracle-abha.brainsait.org
+
+Deployment:
+```bash
+npm run workers:control-tower:dry
+npm run workers:control-tower:deploy
+```
+
+Security:
+- Set `CONTROL_TOWER_KEY` to protect JSON status API.
+- Access protected status endpoint with header: `x-control-tower-key: <value>`.
+- Optional Oracle session probe path can be set with `ORACLE_SESSION_PROBE_PATH` (default `/portal/session/health`).
+
+---
+
 ## Voice & Telephony
 
 ### ElevenLabs TTS

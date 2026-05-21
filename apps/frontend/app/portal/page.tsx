@@ -1,14 +1,22 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import {
-  ArrowRight, Hospital, Stethoscope, Wallet, Landmark, Database, ExternalLink, CircleDot, Video, GraduationCap,
-} from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useT } from '@/lib/i18n'
+import { motion } from 'framer-motion'
+import {
+  ArrowRight,
+  CircleDot,
+  Database, ExternalLink,
+  GraduationCap,
+  Hospital,
+  Landmark,
+  Radar,
+  Stethoscope,
+  Video,
+  Wallet,
+} from 'lucide-react'
+import Link from 'next/link'
 
 type Portal = {
   id: string
@@ -78,6 +86,15 @@ const PORTALS: Portal[] = [
     icon: GraduationCap, href: '/academy',
     features: ['تشغيل التطبيب', 'ترميز SBS', 'جاهزية نفيس', 'تواصل بسمة'],
     tone: 'from-fuchsia-500 to-violet-700',
+  },
+  {
+    id: 'control_tower', name: 'Control Tower', nameAr: 'برج التحكم',
+    title: 'Operational Control Tower', titleAr: 'برج التحكم التشغيلي',
+    desc: 'Live status for Oracle hospital portals, NPHIES, and cross-agent operations.',
+    descAr: 'حالة مباشرة لبوابات Oracle ونفيس وتشغيل الوكلاء عبر المنصة.',
+    icon: Radar, href: 'https://portals.brainsait.org/control-tower',
+    features: ['Oracle portals', 'NPHIES mirror', 'Control APIs', 'Live telemetry'],
+    tone: 'from-cyan-500 to-sky-700',
   },
   {
     id: 'oracle', name: 'Oracle HIS', nameAr: 'أوراكل',

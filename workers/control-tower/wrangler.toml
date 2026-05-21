@@ -1,0 +1,19 @@
+name = "control-tower"
+main = "src/worker.js"
+compatibility_date = "2026-05-21"
+account_id = "d7b99530559ab4f2545e9bdc72a7ab9b"
+
+[vars]
+HNH_API_URL = "https://hnh.brainsait.org"
+ORACLE_BRIDGE_URL = "https://oracle-bridge.brainsait.org"
+NPHIES_MIRROR_URL = "https://nphies-mirror.brainsait-fadil.workers.dev"
+PORTAL_VERSION = "1.0.0"
+
+[[routes]]
+pattern = "portals.brainsait.org/control-tower*"
+zone_name = "brainsait.org"
+
+# Optional secrets:
+#   ORACLE_API_KEY
+#   CLAIMLINC_KEY
+#   CONTROL_TOWER_KEY
