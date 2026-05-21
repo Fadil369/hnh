@@ -3,6 +3,9 @@ main = "src/worker.js"
 compatibility_date = "2026-05-21"
 account_id = "d7b99530559ab4f2545e9bdc72a7ab9b"
 
+[ai]
+binding = "AI"
+
 [[d1_databases]]
 binding = "CT_DB"
 database_name = "control_tower_observability"
@@ -17,6 +20,7 @@ PORTAL_VERSION = "2.0.0"
 SLA_TARGET_PERCENT = "99.5"
 ALERT_COOLDOWN_MINUTES = "20"
 ORACLE_SESSION_PROBE_PATH = "/portal/session/health"
+AI_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
 
 [[routes]]
 pattern = "portals.brainsait.org/control-tower*"

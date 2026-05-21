@@ -64,6 +64,7 @@ All via Cloudflare tunnel to Oracle Oasis+ ERP. Login at `/prod/faces/Login.jsf`
 - **History API**: https://portals.brainsait.org/control-tower/history?hours=24
 - **Manual alert test**: https://portals.brainsait.org/control-tower/alerts/test
 - **OpenClaw training update**: POST https://portals.brainsait.org/control-tower/train-update
+- **OpenClaw→Telegram gateway**: POST https://portals.brainsait.org/control-tower/gateway/openclaw-telegram
 - **Worker config**: workers/control-tower/wrangler.toml
 - **Worker source**: workers/control-tower/src/worker.js
 - **D1 migrations**: workers/control-tower/migrations/
@@ -97,7 +98,8 @@ Security:
 OpenClaw + Telegram awareness/training:
 - Set `OPENCLAW_AGENT_WEBHOOK_URL` and optional `OPENCLAW_AGENT_TOKEN`.
 - Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
-- Control Tower v2 sends operational alerts and training updates to both channels.
+- Control Tower v2 sends operational alerts and training updates to both channels through an AI gateway.
+- AI gateway uses Workers AI (`env.AI`) with `AI_MODEL` to summarize payloads before Telegram dispatch.
 
 ---
 

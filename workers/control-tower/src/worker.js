@@ -137,6 +137,73 @@ async function sendOpenClaw(env, payload) {
     return { sent: res.ok, status: res.status };
 }
 
+async function summarizeForGateway(env, mode, payload) {
+    const model = env.AI_MODEL || '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+    const fallback = {
+        text: payload?.message || 'Control Tower update received.',
+        model,
+        via_ai: false,
+    };
+
+    if (!env.AI || typeof env.AI.run !== 'function') {
+        return fallback;
+    }
+
+    const systemPrompt = mode === 'alert'
+        ? 'You are an operations triage assistant. Write a concise Telegram-ready incident alert for healthcare operations. Keep it under 900 chars. Include severity, impacted systems, recommended next action, and preserve HIPAA+NPHIES+PDPL tags.'
+        : 'You are an operations enablement assistant. Write a concise Telegram-ready training/update digest for engineering and operations. Keep it under 900 chars. Include what changed, why it matters, immediate actions, and preserve HIPAA+NPHIES+PDPL tags.';
+
+    const userPrompt = JSON.stringify(payload).slice(0, 8000);
+    try {
+        const response = await env.AI.run(model, {
+            messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: userPrompt },
+            ],
+            max_tokens: 500,
+            temperature: 0.2,
+        });
+
+        const text = response?.response || response?.result?.response || response?.text || fallback.text;
+        return {
+            text,
+            model,
+            via_ai: true,
+        };
+    } catch {
+        return fallback;
+    }
+}
+
+async function openClawToTelegramGateway(env, mode, payload) {
+    const ai = await summarizeForGateway(env, mode, payload);
+    const enrichedPayload = {
+        ...payload,
+        gateway: {
+            source: 'control-tower-v2',
+            mode,
+            ai_model: ai.model,
+            ai_summary: ai.text,
+            via_ai: ai.via_ai,
+            timestamp: new Date().toISOString(),
+        },
+    };
+
+    const [openclaw, telegram] = await Promise.all([
+        sendOpenClaw(env, enrichedPayload),
+        sendTelegram(env, ai.text),
+    ]);
+
+    return {
+        mode,
+        ai,
+        channels: {
+            openclaw,
+            telegram,
+        },
+    };
+}
+
 async function buildStatus(env) {
     const oracleHeaders = env.ORACLE_API_KEY ? { 'x-api-key': env.ORACLE_API_KEY } : {};
     const authProbePath = env.ORACLE_SESSION_PROBE_PATH || '/portal/session/health';
@@ -312,29 +379,31 @@ async function dispatchOperationalAlert(env, status, sla, reason = 'auto') {
         'Tags: HIPAA + NPHIES + PDPL',
     ].join('\n');
 
-    const [telegram, openclaw] = await Promise.all([
-        sendTelegram(env, message),
-        sendOpenClaw(env, {
-            source: 'control-tower-v2',
-            intent: 'incident-awareness',
-            training_mode: true,
-            severity,
-            message,
-            timestamp: status.timestamp,
-            context: { sla, criticalDown, oracle_portals: status.oracle_portals },
-        }),
-    ]);
+    const gatewayResult = await openClawToTelegramGateway(env, 'alert', {
+        source: 'control-tower-v2',
+        intent: 'incident-awareness',
+        training_mode: true,
+        severity,
+        message,
+        timestamp: status.timestamp,
+        context: { sla, criticalDown, oracle_portals: status.oracle_portals },
+    });
 
     await storeAlert(env, {
         alert_type: 'operational',
         severity,
         fingerprint,
-        message,
-        channels: { telegram, openclaw },
+        message: gatewayResult.ai.text,
+        channels: gatewayResult.channels,
         payload: { status, sla },
     });
 
-    return { sent: true, severity, fingerprint, telegram, openclaw };
+    return {
+        sent: true,
+        severity,
+        fingerprint,
+        gateway: gatewayResult,
+    };
 }
 
 async function trainOpenClawUpdate(env, summary, metadata = {}) {
@@ -345,26 +414,28 @@ async function trainOpenClawUpdate(env, summary, metadata = {}) {
         'Objective: keep OpenClaw + Telegram ops channel aware and continuously trained on latest platform state.',
     ].join('\n');
 
-    const [telegram, openclaw] = await Promise.all([
-        sendTelegram(env, message),
-        sendOpenClaw(env, {
-            source: 'control-tower-v2',
-            intent: 'training-update',
-            training_mode: true,
-            message,
-            metadata,
-            timestamp: new Date().toISOString(),
-        }),
-    ]);
+    const gatewayResult = await openClawToTelegramGateway(env, 'training', {
+        source: 'control-tower-v2',
+        intent: 'training-update',
+        training_mode: true,
+        message,
+        metadata,
+        timestamp: new Date().toISOString(),
+    });
 
     if (env.CT_DB) {
         await env.CT_DB.prepare(
             `INSERT INTO control_tower_training_events (created_at, summary, channels_json, metadata_json)
              VALUES (datetime('now'), ?, ?, ?)`
-        ).bind(summary, JSON.stringify({ telegram, openclaw }), JSON.stringify(metadata)).run();
+        ).bind(summary, JSON.stringify(gatewayResult.channels), JSON.stringify(metadata)).run();
     }
 
-    return { summary, telegram, openclaw };
+    return {
+        summary,
+        gateway: gatewayResult,
+        telegram: gatewayResult.channels.telegram,
+        openclaw: gatewayResult.channels.openclaw,
+    };
 }
 
 function renderHtml(status, sla) {
@@ -450,14 +521,25 @@ export default {
         const isHistory = path === '/control-tower/history';
         const isAlertTest = path === '/control-tower/alerts/test';
         const isTrainUpdate = path === '/control-tower/train-update';
+        const isGatewayBridge = path === '/control-tower/gateway/openclaw-telegram';
 
-        if (!isRoot && !isStatus && !isSla && !isHistory && !isAlertTest && !isTrainUpdate) {
+        if (!isRoot && !isStatus && !isSla && !isHistory && !isAlertTest && !isTrainUpdate && !isGatewayBridge) {
             return json({ success: false, message: 'not_found' }, 404);
         }
 
-        const requiresAuth = isStatus || isSla || isHistory || isAlertTest || isTrainUpdate;
+        const requiresAuth = isStatus || isSla || isHistory || isAlertTest || isTrainUpdate || isGatewayBridge;
         if (requiresAuth && !mustAuth(request, env)) {
             return json({ success: false, message: 'unauthorized' }, 401);
+        }
+
+        if (isGatewayBridge && request.method === 'POST') {
+            const body = await request.json().catch(() => ({}));
+            const mode = body.mode === 'alert' ? 'alert' : 'training';
+            const payload = body.payload && typeof body.payload === 'object'
+                ? body.payload
+                : { message: body.message || 'Gateway bridge update from control tower.' };
+            const result = await openClawToTelegramGateway(env, mode, payload);
+            return json({ success: true, result });
         }
 
         if (isTrainUpdate && request.method === 'POST') {
