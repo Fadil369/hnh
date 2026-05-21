@@ -20,6 +20,9 @@
     "workers:givc:deploy": "wrangler deploy --config workers/givc/wrangler.toml",
     "workers:control-tower:deploy": "wrangler deploy --config workers/control-tower/wrangler.toml",
     "workers:control-tower:dry": "wrangler deploy --config workers/control-tower/wrangler.toml --dry-run",
+    "workers:control-tower:migrate:remote": "wrangler d1 migrations apply control_tower_observability --config workers/control-tower/wrangler.toml --remote",
+    "workers:control-tower:migrate:local": "wrangler d1 migrations apply control_tower_observability --config workers/control-tower/wrangler.toml --local",
+    "workers:control-tower:test:aggressive": "node --check workers/control-tower/src/worker.js && wrangler deploy --config workers/control-tower/wrangler.toml --dry-run && curl -fsS https://portals.brainsait.org/control-tower >/dev/null && echo control_tower_aggressive_tests_ok",
     "migrate:remote": "wrangler d1 migrations apply hnh-gharnata --remote",
     "migrate:local": "wrangler d1 migrations apply hnh-gharnata --local",
     "test:e2e": "playwright test"

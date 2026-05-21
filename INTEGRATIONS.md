@@ -60,8 +60,13 @@ All via Cloudflare tunnel to Oracle Oasis+ ERP. Login at `/prod/faces/Login.jsf`
 
 - **Public URL**: https://portals.brainsait.org/control-tower
 - **Status API**: https://portals.brainsait.org/control-tower/status
+- **SLA API**: https://portals.brainsait.org/control-tower/sla
+- **History API**: https://portals.brainsait.org/control-tower/history?hours=24
+- **Manual alert test**: https://portals.brainsait.org/control-tower/alerts/test
+- **OpenClaw training update**: POST https://portals.brainsait.org/control-tower/train-update
 - **Worker config**: workers/control-tower/wrangler.toml
 - **Worker source**: workers/control-tower/src/worker.js
+- **D1 migrations**: workers/control-tower/migrations/
 
 Deep integration coverage:
 - HNH health API status
@@ -78,14 +83,21 @@ Deep integration coverage:
 
 Deployment:
 ```bash
+npm run workers:control-tower:migrate:remote
 npm run workers:control-tower:dry
 npm run workers:control-tower:deploy
+npm run workers:control-tower:test:aggressive
 ```
 
 Security:
 - Set `CONTROL_TOWER_KEY` to protect JSON status API.
 - Access protected status endpoint with header: `x-control-tower-key: <value>`.
 - Optional Oracle session probe path can be set with `ORACLE_SESSION_PROBE_PATH` (default `/portal/session/health`).
+
+OpenClaw + Telegram awareness/training:
+- Set `OPENCLAW_AGENT_WEBHOOK_URL` and optional `OPENCLAW_AGENT_TOKEN`.
+- Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
+- Control Tower v2 sends operational alerts and training updates to both channels.
 
 ---
 

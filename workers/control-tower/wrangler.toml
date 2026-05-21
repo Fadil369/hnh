@@ -3,17 +3,33 @@ main = "src/worker.js"
 compatibility_date = "2026-05-21"
 account_id = "d7b99530559ab4f2545e9bdc72a7ab9b"
 
+[[d1_databases]]
+binding = "CT_DB"
+database_name = "control_tower_observability"
+database_id = "8a9ef796-e9f8-43bf-90be-eab0eb074545"
+migrations_dir = "migrations"
+
 [vars]
 HNH_API_URL = "https://hnh.brainsait.org"
 ORACLE_BRIDGE_URL = "https://oracle-bridge.brainsait.org"
 NPHIES_MIRROR_URL = "https://nphies-mirror.brainsait-fadil.workers.dev"
-PORTAL_VERSION = "1.0.0"
+PORTAL_VERSION = "2.0.0"
+SLA_TARGET_PERCENT = "99.5"
+ALERT_COOLDOWN_MINUTES = "20"
+ORACLE_SESSION_PROBE_PATH = "/portal/session/health"
 
 [[routes]]
 pattern = "portals.brainsait.org/control-tower*"
 zone_name = "brainsait.org"
 
+[triggers]
+crons = ["*/5 * * * *"]
+
 # Optional secrets:
 #   ORACLE_API_KEY
 #   CLAIMLINC_KEY
 #   CONTROL_TOWER_KEY
+#   TELEGRAM_BOT_TOKEN
+#   TELEGRAM_CHAT_ID
+#   OPENCLAW_AGENT_WEBHOOK_URL
+#   OPENCLAW_AGENT_TOKEN
